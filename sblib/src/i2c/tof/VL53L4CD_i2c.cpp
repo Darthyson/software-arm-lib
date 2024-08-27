@@ -4,7 +4,7 @@
  *  published by the Free Software Foundation.
  */
 
-#include <sblib/i2c/VL53Lx_i2c.h>
+#include <sblib/i2c/tof/VL53Lx_i2c.h>
 
 uint8_t VL53L4CD_Read(Dev_t i2cAddress, uint16_t registerAddress, void *value, uint8_t size)
 {

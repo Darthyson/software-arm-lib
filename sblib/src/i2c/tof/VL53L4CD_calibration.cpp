@@ -32,8 +32,8 @@
  */
 
 #include <math.h>
-#include <sblib/i2c/VL53L4CD_api.h>
-#include <sblib/i2c/VL53L4CD_calibration.h>
+#include <sblib/i2c/tof/VL53L4CD_api.h>
+#include <sblib/i2c/tof/VL53L4CD_calibration.h>
 
 VL53L4CD_Error VL53L4CD_CalibrateOffset(
         Dev_t dev,
