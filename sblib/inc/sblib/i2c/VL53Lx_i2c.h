@@ -36,6 +36,38 @@
 typedef uint16_t Dev_t;
 
 /**
+ * Reads data from the VL53Lx sensor.
+ *
+ * @details This function reads data from a specified register of the VL53Lx sensor.
+ *          It initializes the i2c communication, sets up the transfer structure,
+ *          and performs the i2c read operation.
+ *
+ * @param i2cAddress      The i2c address of the sensor.
+ * @param registerAddress The register address from where data needs to be read.
+ * @param value           A pointer to a buffer where the read data will be stored.
+ * @param size            The size of the data to be read.
+ *
+ * @return @ref VL53LX_ERROR_NONE on success, otherwise @ref VL53LX_ERROR_TIMEOUT
+ */
+uint8_t VL53L4CD_Read(Dev_t i2cAddress, uint16_t registerAddress, void *value, uint8_t size);
+
+/**
+ * Writes data to the VL53Lx sensor.
+ *
+ * @details This function writes data to a specified register of the VL53Lx sensor.
+ *          It initializes the i2c communication, prepares the transmission buffer with
+ *          the register address and data, and performs the i2c write operation.
+ *
+ * @param i2cAddress      The i2c address of the sensor.
+ * @param registerAddress The register address where data needs to be written.
+ * @param value           A pointer to the data that needs to be written.
+ * @param size            The size of the data to be written.
+ *
+ * @return @ref VL53LX_ERROR_NONE on success, otherwise @ref VL53LX_ERROR_TIMEOUT
+ */
+uint8_t VL53L4CD_Write(Dev_t i2cAddress, uint16_t registerAddress, void *value, uint8_t size);
+
+/**
  * Reads an 8-bit value from a specified register via I2C.
  *
  * @param i2cAddress      The device address.
