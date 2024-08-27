@@ -1,5 +1,5 @@
 /*
- *  VL53Lx_i2c.h - Basic i2c read/write functions for the ToF Sensor VL54L4CD.
+ *  VL53Lx_i2c.h - Basic i2c read/write functions for the ToF Sensor family VL53Lx.
  *
  *  This program is free software; you can redistribute it and/or modify
  *  it under the terms of the GNU General Public License version 3 as
@@ -10,13 +10,6 @@
 #define _SB_LIB_VL53LX_I2C_H_
 
 #include <stdint.h>
-
-/**
- * @def VL53L4CD_I2C_FAST_MODE_PLUS
- * Configures the i2c to run in Fast Mode Plus (up to 1MHz).
- * Default max value is 400kHz if this macro is not defined.
- */
-//#define VL53L4CD_I2C_FAST_MODE_PLUS
 
 /**
  * Indicates no error in the i2c operation.
@@ -49,7 +42,7 @@ typedef uint16_t Dev_t;
  *
  * @return @ref VL53LX_ERROR_NONE on success, otherwise @ref VL53LX_ERROR_TIMEOUT
  */
-uint8_t VL53L4CD_Read(Dev_t i2cAddress, uint16_t registerAddress, void *value, uint8_t size);
+uint8_t VL53Lx_Read(Dev_t i2cAddress, uint16_t registerAddress, void *value, uint8_t size);
 
 /**
  * Writes data to the VL53Lx sensor.
@@ -65,7 +58,7 @@ uint8_t VL53L4CD_Read(Dev_t i2cAddress, uint16_t registerAddress, void *value, u
  *
  * @return @ref VL53LX_ERROR_NONE on success, otherwise @ref VL53LX_ERROR_TIMEOUT
  */
-uint8_t VL53L4CD_Write(Dev_t i2cAddress, uint16_t registerAddress, void *value, uint8_t size);
+uint8_t VL53Lx_Write(Dev_t i2cAddress, uint16_t registerAddress, void *value, uint8_t size);
 
 /**
  * Reads an 8-bit value from a specified register via I2C.
@@ -76,7 +69,7 @@ uint8_t VL53L4CD_Write(Dev_t i2cAddress, uint16_t registerAddress, void *value, 
  *
  * @return @ref VL53LX_ERROR_NONE if successful, otherwise @ref VL53LX_ERROR_TIMEOUT
  */
-uint8_t VL53L4CD_RdByte(Dev_t i2cAddress, uint16_t registerAddress, uint8_t *value);
+uint8_t VL53Lx_RdByte(Dev_t i2cAddress, uint16_t registerAddress, uint8_t *value);
 
 /**
  * Reads a 16-bit value from a specified register via I2C.
@@ -87,7 +80,7 @@ uint8_t VL53L4CD_RdByte(Dev_t i2cAddress, uint16_t registerAddress, uint8_t *val
  *
  * @return @ref VL53LX_ERROR_NONE if successful, otherwise @ref VL53LX_ERROR_TIMEOUT
  */
-uint8_t VL53L4CD_RdWord(Dev_t i2cAddress, uint16_t registerAddress, uint16_t *value);
+uint8_t VL53Lx_RdWord(Dev_t i2cAddress, uint16_t registerAddress, uint16_t *value);
 
 /**
  * Reads a 32-bit value from a specified register via I2C.
@@ -98,7 +91,7 @@ uint8_t VL53L4CD_RdWord(Dev_t i2cAddress, uint16_t registerAddress, uint16_t *va
  *
  * @return @ref VL53LX_ERROR_NONE if successful, otherwise @ref VL53LX_ERROR_TIMEOUT
  */
-uint8_t VL53L4CD_RdDWord(Dev_t i2cAddress, uint16_t registerAddress, uint32_t *value);
+uint8_t VL53Lx_RdDWord(Dev_t i2cAddress, uint16_t registerAddress, uint32_t *value);
 
 /**
  * Writes an 8-bit value to a specified register via I2C.
@@ -109,7 +102,7 @@ uint8_t VL53L4CD_RdDWord(Dev_t i2cAddress, uint16_t registerAddress, uint32_t *v
  *
  * @return @ref VL53LX_ERROR_NONE if successful, otherwise @ref VL53LX_ERROR_TIMEOUT
  */
-uint8_t VL53L4CD_WrByte(Dev_t i2cAddress, uint16_t registerAddress, uint8_t value);
+uint8_t VL53Lx_WrByte(Dev_t i2cAddress, uint16_t registerAddress, uint8_t value);
 
 /**
  * Writes a 16-bit value to a specified register via I2C.
@@ -120,7 +113,7 @@ uint8_t VL53L4CD_WrByte(Dev_t i2cAddress, uint16_t registerAddress, uint8_t valu
  *
  * @return @ref VL53LX_ERROR_NONE if successful, otherwise @ref VL53LX_ERROR_TIMEOUT
  */
-uint8_t VL53L4CD_WrWord(Dev_t i2cAddress, uint16_t registerAddress, uint16_t value);
+uint8_t VL53Lx_WrWord(Dev_t i2cAddress, uint16_t registerAddress, uint16_t value);
 
 /**
  * Writes a 32-bit value to a specified register via I2C.
@@ -131,7 +124,7 @@ uint8_t VL53L4CD_WrWord(Dev_t i2cAddress, uint16_t registerAddress, uint16_t val
  *
  * @return @ref VL53LX_ERROR_NONE if successful, otherwise @ref VL53LX_ERROR_TIMEOUT
  */
-uint8_t VL53L4CD_WrDWord(Dev_t i2cAddress, uint16_t registerAddress, uint32_t value);
+uint8_t VL53Lx_WrDWord(Dev_t i2cAddress, uint16_t registerAddress, uint32_t value);
 
  /**
   * Waits for the specified number of milliseconds.
@@ -141,6 +134,6 @@ uint8_t VL53L4CD_WrDWord(Dev_t i2cAddress, uint16_t registerAddress, uint32_t va
   *
   * @return Always @ref VL53LX_ERROR_NONE
   */
-uint8_t VL53L4CD_WaitMs(Dev_t i2cAddress, uint32_t timeMs);
+uint8_t VL53Lx_WaitMs(Dev_t i2cAddress, uint32_t timeMs);
 
 #endif // _SB_LIB_VL53LX_I2C_H_

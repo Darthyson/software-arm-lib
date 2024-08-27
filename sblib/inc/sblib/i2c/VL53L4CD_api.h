@@ -29,7 +29,7 @@
 #ifndef VL53L4CD_API_H_
 #define VL53L4CD_API_H_
 
-#include <sblib/i2c/VL53Lx_i2c.h>
+#include <sblib/i2c/VL53L4CD_i2c.h>
 
 /**
  *  @brief Driver version

@@ -14,15 +14,15 @@
  * @details This function initializes the I2C communication interface and sets the clock rate to 400kHz.
  *          It must be called before performing any other I2C operations.
  */
-static void VL53L4CD_Init()
+static void VL53Lx_Init()
 {
     i2c_lpcopen_init();
     Chip_I2C_SetClockRate(I2C0, 400000);
 }
 
-uint8_t VL53L4CD_Read(Dev_t i2cAddress, uint16_t registerAddress, void *value, uint8_t size)
+uint8_t VL53Lx_Read(Dev_t i2cAddress, uint16_t registerAddress, void *value, uint8_t size)
 {
-    VL53L4CD_Init();
+    VL53Lx_Init();
     static_assert(sizeof(registerAddress) == 2);
     uint8_t reg[sizeof(registerAddress)];
     reg[0] = (registerAddress >> 8) & 0xFF; // high byte
@@ -55,9 +55,9 @@ uint8_t VL53L4CD_Read(Dev_t i2cAddress, uint16_t registerAddress, void *value, u
     return VL53LX_ERROR_NONE;
 }
 
-uint8_t VL53L4CD_Write(Dev_t i2cAddress, uint16_t registerAddress, void *value, uint8_t size)
+uint8_t VL53Lx_Write(Dev_t i2cAddress, uint16_t registerAddress, void *value, uint8_t size)
 {
-    VL53L4CD_Init();
+    VL53Lx_Init();
     static_assert(sizeof(registerAddress) == 2);
     uint8_t txBufferSize = sizeof(registerAddress) + size;
     uint8_t txBuffer[txBufferSize];
@@ -80,37 +80,37 @@ uint8_t VL53L4CD_Write(Dev_t i2cAddress, uint16_t registerAddress, void *value, 
     return VL53LX_ERROR_NONE;
 }
 
-uint8_t VL53L4CD_RdByte(Dev_t i2cAddress, uint16_t registerAddress, uint8_t *value)
+uint8_t VL53Lx_RdByte(Dev_t i2cAddress, uint16_t registerAddress, uint8_t *value)
 {
-    return VL53L4CD_Read(i2cAddress, registerAddress, value, sizeof(uint8_t));
+    return VL53Lx_Read(i2cAddress, registerAddress, value, sizeof(uint8_t));
 }
 
-uint8_t VL53L4CD_RdWord(Dev_t i2cAddress, uint16_t registerAddress, uint16_t *value)
+uint8_t VL53Lx_RdWord(Dev_t i2cAddress, uint16_t registerAddress, uint16_t *value)
 {
-    return VL53L4CD_Read(i2cAddress, registerAddress, value, sizeof(uint16_t));
+    return VL53Lx_Read(i2cAddress, registerAddress, value, sizeof(uint16_t));
 }
 
-uint8_t VL53L4CD_RdDWord(Dev_t i2cAddress, uint16_t registerAddress, uint32_t *value)
+uint8_t VL53Lx_RdDWord(Dev_t i2cAddress, uint16_t registerAddress, uint32_t *value)
 {
-    return VL53L4CD_Read(i2cAddress, registerAddress, value, sizeof(uint32_t));
+    return VL53Lx_Read(i2cAddress, registerAddress, value, sizeof(uint32_t));
 }
 
-uint8_t VL53L4CD_WrByte(Dev_t i2cAddress, uint16_t registerAddress, uint8_t value)
+uint8_t VL53Lx_WrByte(Dev_t i2cAddress, uint16_t registerAddress, uint8_t value)
 {
-    return VL53L4CD_Write(i2cAddress, registerAddress, &value, sizeof(uint8_t));
+    return VL53Lx_Write(i2cAddress, registerAddress, &value, sizeof(uint8_t));
 }
 
-uint8_t VL53L4CD_WrWord(Dev_t i2cAddress, uint16_t registerAddress, uint16_t value)
+uint8_t VL53Lx_WrWord(Dev_t i2cAddress, uint16_t registerAddress, uint16_t value)
 {
-    return VL53L4CD_Write(i2cAddress, registerAddress, &value, sizeof(uint16_t));
+    return VL53Lx_Write(i2cAddress, registerAddress, &value, sizeof(uint16_t));
 }
 
-uint8_t VL53L4CD_WrDWord(Dev_t i2cAddress, uint16_t registerAddress, uint32_t value)
+uint8_t VL53Lx_WrDWord(Dev_t i2cAddress, uint16_t registerAddress, uint32_t value)
 {
-    return VL53L4CD_Write(i2cAddress, registerAddress, &value, sizeof(uint32_t));
+    return VL53Lx_Write(i2cAddress, registerAddress, &value, sizeof(uint32_t));
 }
 
-uint8_t VL53L4CD_WaitMs(Dev_t i2cAddress, uint32_t TimeMs)
+uint8_t VL53Lx_WaitMs(Dev_t i2cAddress, uint32_t TimeMs)
 {
     if (TimeMs > MAX_DELAY_MILLISECONDS)
     {
