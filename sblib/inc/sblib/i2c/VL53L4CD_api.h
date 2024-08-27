@@ -38,7 +38,7 @@
 #define VL53L4CD_IMPLEMENTATION_VER_MAJOR       2
 #define VL53L4CD_IMPLEMENTATION_VER_MINOR       2
 #define VL53L4CD_IMPLEMENTATION_VER_BUILD       1
-#define VL53L4CD_IMPLEMENTATION_VER_REVISION  	0
+#define VL53L4CD_IMPLEMENTATION_VER_REVISION    0
 
 /**
  *  @brief Driver error type
@@ -46,10 +46,10 @@
 
 typedef uint8_t VL53L4CD_Error;
 
-#define VL53L4CD_ERROR_NONE					((uint8_t)0U)
-#define VL53L4CD_ERROR_XTALK_FAILED			((uint8_t)253U)
-#define VL53L4CD_ERROR_INVALID_ARGUMENT		((uint8_t)254U)
-#define VL53L4CD_ERROR_TIMEOUT				((uint8_t)255U)
+#define VL53L4CD_ERROR_NONE                 ((uint8_t)0U)
+#define VL53L4CD_ERROR_XTALK_FAILED         ((uint8_t)253U)
+#define VL53L4CD_ERROR_INVALID_ARGUMENT     ((uint8_t)254U)
+#define VL53L4CD_ERROR_TIMEOUT              ((uint8_t)255U)
 
 
 /**
@@ -94,10 +94,10 @@ typedef uint8_t VL53L4CD_Error;
  */
 
 typedef struct {
-	uint8_t      major;    /*!< major number */
-	uint8_t      minor;    /*!< minor number */
-	uint8_t      build;    /*!< build number */
-	uint32_t     revision; /*!< revision number */
+    uint8_t      major;    /*!< major number */
+    uint8_t      minor;    /*!< minor number */
+    uint8_t      build;    /*!< build number */
+    uint32_t     revision; /*!< revision number */
 } VL53L4CD_Version_t;
 
 /**
@@ -106,22 +106,22 @@ typedef struct {
 
 typedef struct {
 
-	/* Status of measurements. If the status is equal to 0, the data are valid*/
-	uint8_t range_status;
-	/* Measured distance in millimeters */
-	uint16_t distance_mm;
-	/* Ambient noise in kcps */
-	uint16_t ambient_rate_kcps;
-	/* Ambient noise in kcps/SPAD */
-	uint16_t ambient_per_spad_kcps;
-	/* Measured signal of the target in kcps */
-	uint16_t signal_rate_kcps;
-	/* Measured signal of the target in kcps/SPAD */
-	uint16_t signal_per_spad_kcps;
-	/* Number of SPADs enabled */
-	uint16_t number_of_spad;
-	/* Estimated measurements std deviation in mm */
-	uint16_t sigma_mm;
+    /* Status of measurements. If the status is equal to 0, the data are valid*/
+    uint8_t range_status;
+    /* Measured distance in millimeters */
+    uint16_t distance_mm;
+    /* Ambient noise in kcps */
+    uint16_t ambient_rate_kcps;
+    /* Ambient noise in kcps/SPAD */
+    uint16_t ambient_per_spad_kcps;
+    /* Measured signal of the target in kcps */
+    uint16_t signal_rate_kcps;
+    /* Measured signal of the target in kcps/SPAD */
+    uint16_t signal_per_spad_kcps;
+    /* Number of SPADs enabled */
+    uint16_t number_of_spad;
+    /* Estimated measurements std deviation in mm */
+    uint16_t sigma_mm;
 } VL53L4CD_ResultsData_t;
 
 /**
@@ -132,7 +132,7 @@ typedef struct {
  */
 
 VL53L4CD_Error VL53L4CD_GetSWVersion(
-		VL53L4CD_Version_t *pVersion);
+        VL53L4CD_Version_t *pVersion);
 
 
 /**
@@ -145,8 +145,8 @@ VL53L4CD_Error VL53L4CD_GetSWVersion(
  */
 
 VL53L4CD_Error VL53L4CD_SetI2CAddress(
-		Dev_t dev,
-		uint8_t new_address);
+        Dev_t dev,
+        uint8_t new_address);
 
 /**
  * @brief This function is used to get the sensor id of VL53L4CD. The sensor id
@@ -157,8 +157,8 @@ VL53L4CD_Error VL53L4CD_SetI2CAddress(
  */
 
 VL53L4CD_Error VL53L4CD_GetSensorId(
-		Dev_t dev,
-		uint16_t *p_id);
+        Dev_t dev,
+        uint16_t *p_id);
 
 /**
  * @brief This function is used to initialize the sensor.
@@ -167,7 +167,7 @@ VL53L4CD_Error VL53L4CD_GetSensorId(
  */
 
 VL53L4CD_Error VL53L4CD_SensorInit(
-		Dev_t dev);
+        Dev_t dev);
 
 /**
  * @brief This function clears the interrupt. It needs to be called after a
@@ -177,7 +177,7 @@ VL53L4CD_Error VL53L4CD_SensorInit(
  */
 
 VL53L4CD_Error VL53L4CD_ClearInterrupt(
-		Dev_t dev);
+        Dev_t dev);
 
 /**
  * @brief This function starts a ranging session. The ranging operation is
@@ -188,7 +188,7 @@ VL53L4CD_Error VL53L4CD_ClearInterrupt(
  */
 
 VL53L4CD_Error VL53L4CD_StartRanging(
-		Dev_t dev);
+        Dev_t dev);
 
 /**
  * @brief This function stops the ranging in progress.
@@ -197,7 +197,7 @@ VL53L4CD_Error VL53L4CD_StartRanging(
  */
 
 VL53L4CD_Error VL53L4CD_StopRanging(
-		Dev_t dev);
+        Dev_t dev);
 
 /**
  * @brief This function check if a new data is available by polling a dedicated
@@ -209,8 +209,8 @@ VL53L4CD_Error VL53L4CD_StopRanging(
  */
 
 VL53L4CD_Error VL53L4CD_CheckForDataReady(
-		Dev_t dev,
-		uint8_t *p_is_data_ready);
+        Dev_t dev,
+        uint8_t *p_is_data_ready);
 
 /**
  * @brief This function sets new range timing. Timing are composed of
@@ -230,9 +230,9 @@ VL53L4CD_Error VL53L4CD_CheckForDataReady(
  */
 
 VL53L4CD_Error VL53L4CD_SetRangeTiming(
-		Dev_t dev,
-		uint32_t timing_budget_ms,
-		uint32_t inter_measurement_ms);
+        Dev_t dev,
+        uint32_t timing_budget_ms,
+        uint32_t inter_measurement_ms);
 
 /**
  * @brief This function gets the current range timing. Timing are composed of
@@ -249,9 +249,9 @@ VL53L4CD_Error VL53L4CD_SetRangeTiming(
  */
 
 VL53L4CD_Error VL53L4CD_GetRangeTiming(
-		Dev_t dev,
-		uint32_t *p_timing_budget_ms,
-		uint32_t *p_inter_measurement_ms);
+        Dev_t dev,
+        uint32_t *p_timing_budget_ms,
+        uint32_t *p_inter_measurement_ms);
 
 /**
  * @brief This function gets the results reported by the sensor.
@@ -327,9 +327,9 @@ VL53L4CD_Error VL53L4CD_GetXtalk(Dev_t dev, uint16_t *p_xtalk_kcps);
  */
 
 VL53L4CD_Error VL53L4CD_SetDetectionThresholds(Dev_t dev,
-		uint16_t distance_low_mm,
-		uint16_t distance_high_mm,
-		uint8_t window);
+        uint16_t distance_low_mm,
+        uint16_t distance_high_mm,
+        uint8_t window);
 
 
 /**
@@ -347,9 +347,9 @@ VL53L4CD_Error VL53L4CD_SetDetectionThresholds(Dev_t dev,
  */
 
 VL53L4CD_Error VL53L4CD_GetDetectionThresholds(Dev_t dev,
-		uint16_t *p_distance_low_mm,
-		uint16_t *p_distance_high_mm,
-		uint8_t *p_window);
+        uint16_t *p_distance_low_mm,
+        uint16_t *p_distance_high_mm,
+        uint8_t *p_window);
 
 /**
  * @brief This function sets a new signal threshold in kcps. If a
@@ -374,7 +374,7 @@ VL53L4CD_Error VL53L4CD_SetSignalThreshold(Dev_t dev, uint16_t signal_kcps);
  */
 
 VL53L4CD_Error VL53L4CD_GetSignalThreshold(Dev_t dev,
-		uint16_t *p_signal_kcps);
+        uint16_t *p_signal_kcps);
 
 /**
  * @brief This function programs a new sigma threshold. The sigma corresponds to
@@ -389,8 +389,8 @@ VL53L4CD_Error VL53L4CD_GetSignalThreshold(Dev_t dev,
  */
 
 VL53L4CD_Error VL53L4CD_SetSigmaThreshold(
-		Dev_t dev,
-		uint16_t 	sigma_mm);
+        Dev_t dev,
+        uint16_t sigma_mm);
 
 /**
  * @brief This function gets the current sigma threshold. The sigma corresponds
@@ -403,8 +403,8 @@ VL53L4CD_Error VL53L4CD_SetSigmaThreshold(
  */
 
 VL53L4CD_Error VL53L4CD_GetSigmaThreshold(
-		Dev_t dev,
-		uint16_t 	*p_sigma_mm);
+        Dev_t dev,
+        uint16_t *p_sigma_mm);
 
 /**
  * @brief This function can be called when the temperature might have changed by
