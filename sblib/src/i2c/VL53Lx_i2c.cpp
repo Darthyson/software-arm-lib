@@ -20,21 +20,7 @@ static void VL53L4CD_Init()
     Chip_I2C_SetClockRate(I2C0, 400000);
 }
 
-/**
- * Reads data from the VL53L4CD sensor.
- *
- * @details This function reads data from a specified register of the VL53L4CD sensor.
- *          It initializes the i2c communication, sets up the transfer structure,
- *          and performs the i2c read operation.
- *
- * @param i2cAddress      The i2c address of the sensor.
- * @param registerAddress The register address from where data needs to be read.
- * @param value           A pointer to a buffer where the read data will be stored.
- * @param size            The size of the data to be read.
- *
- * @return @ref VL53LX_ERROR_NONE on success, otherwise @ref VL53LX_ERROR_TIMEOUT
- */
-static uint8_t VL53L4CD_Read(Dev_t i2cAddress, uint16_t registerAddress, void *value, uint8_t size)
+uint8_t VL53L4CD_Read(Dev_t i2cAddress, uint16_t registerAddress, void *value, uint8_t size)
 {
     VL53L4CD_Init();
     static_assert(sizeof(registerAddress) == 2);
@@ -69,21 +55,7 @@ static uint8_t VL53L4CD_Read(Dev_t i2cAddress, uint16_t registerAddress, void *v
     return VL53LX_ERROR_NONE;
 }
 
-/**
- * Writes data to the VL53L4CD sensor.
- *
- * @details This function writes data to a specified register of the VL53L4CD sensor.
- *          It initializes the i2c communication, prepares the transmission buffer with
- *          the register address and data, and performs the i2c write operation.
- *
- * @param i2cAddress      The i2c address of the sensor.
- * @param registerAddress The register address where data needs to be written.
- * @param value           A pointer to the data that needs to be written.
- * @param size            The size of the data to be written.
- *
- * @return @ref VL53LX_ERROR_NONE on success, otherwise @ref VL53LX_ERROR_TIMEOUT
- */
-static uint8_t VL53L4CD_Write(Dev_t i2cAddress, uint16_t registerAddress, void *value, uint8_t size)
+uint8_t VL53L4CD_Write(Dev_t i2cAddress, uint16_t registerAddress, void *value, uint8_t size)
 {
     VL53L4CD_Init();
     static_assert(sizeof(registerAddress) == 2);
