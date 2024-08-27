@@ -25,10 +25,10 @@ uint8_t VL53Lx_Read(Dev_t i2cAddress, uint16_t registerAddress, void *value, uin
     VL53Lx_Init();
     static_assert(sizeof(registerAddress) == 2);
     uint8_t reg[sizeof(registerAddress)];
-    reg[0] = (registerAddress >> 8) & 0xFF; // high byte
-    reg[1] = registerAddress & 0xFF;        // low byte
+    reg[0] = static_cast<uint8_t>((registerAddress >> 8) & 0xff); // high byte
+    reg[1] = static_cast<uint8_t>(registerAddress & 0xff);        // low byte
     I2C_XFER_T xfer = {0};
-    xfer.slaveAddr = i2cAddress;
+    xfer.slaveAddr = static_cast<uint8_t>(i2cAddress);
     xfer.txBuff = reg;
     xfer.txSz = sizeof(reg)/sizeof(reg[0]);
     xfer.rxBuff = reinterpret_cast<uint8_t*>(value);
@@ -61,17 +61,17 @@ uint8_t VL53Lx_Write(Dev_t i2cAddress, uint16_t registerAddress, void *value, ui
     static_assert(sizeof(registerAddress) == 2);
     uint8_t txBufferSize = sizeof(registerAddress) + size;
     uint8_t txBuffer[txBufferSize];
-    txBuffer[0] = (registerAddress >> 8) & 0xff;
-    txBuffer[1] = registerAddress & 0xff;
+    txBuffer[0] = static_cast<uint8_t>((registerAddress >> 8) & 0xff);
+    txBuffer[1] = static_cast<uint8_t>(registerAddress & 0xff);
     uint8_t *pTxBuffer = &txBuffer[sizeof(registerAddress)];
 
     // Reverse value bytes
-    for (int i = 0; i < size; ++i)
+    for (uint8_t i = 0; i < size; ++i)
     {
         pTxBuffer[i] = ((uint8_t *)value)[size - 1 - i];
     }
 
-    uint8_t sent = Chip_I2C_MasterSend(I2C0, i2cAddress, txBuffer, txBufferSize);
+    int32_t sent = Chip_I2C_MasterSend(I2C0, static_cast<uint8_t>(i2cAddress), txBuffer, txBufferSize);
 
     if (sent != txBufferSize)
     {
