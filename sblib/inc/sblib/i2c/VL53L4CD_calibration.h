@@ -55,10 +55,10 @@
  */
 
 VL53L4CD_Error VL53L4CD_CalibrateOffset(
-		Dev_t dev,
-		int16_t TargetDistInMm,
-		int16_t *p_measured_offset_mm,
-		int16_t nb_samples);
+        Dev_t dev,
+        int16_t TargetDistInMm,
+        int16_t *p_measured_offset_mm,
+        int16_t nb_samples);
 
 
 /**
@@ -81,9 +81,9 @@ VL53L4CD_Error VL53L4CD_CalibrateOffset(
  */
    
 VL53L4CD_Error VL53L4CD_CalibrateXtalk(
-		Dev_t dev,
-		int16_t TargetDistInMm,
-		uint16_t *p_measured_xtalk_kcps,
-		int16_t nb_samples);
+        Dev_t dev,
+        int16_t TargetDistInMm,
+        uint16_t *p_measured_xtalk_kcps,
+        int16_t nb_samples);
 
 #endif //VL53L4CD_CALIBRATION_H_
