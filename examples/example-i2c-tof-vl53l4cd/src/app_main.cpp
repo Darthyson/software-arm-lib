@@ -17,8 +17,8 @@
 #include <sblib/io_pin_names.h>
 #include <sblib/eibBCU1.h>
 #include <sblib/serial.h>
-#include <sblib/i2c/VL53L4CD_api.h>
-#include <sblib/i2c/VL53L4CD_calibration.h>
+#include <sblib/i2c/tof/VL53L4CD_api.h>
+#include <sblib/i2c/tof/VL53L4CD_calibration.h>
 
 constexpr uint8_t VL53L4CD_DEFAULT_I2C_ADDRESS = 0x29;
 BCU1 bcu = BCU1();

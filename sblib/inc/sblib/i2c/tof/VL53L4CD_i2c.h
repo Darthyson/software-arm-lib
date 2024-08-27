@@ -10,7 +10,7 @@
 #define _SB_LIB_VL53L4CD_I2C_H_
 
 #include <stdint.h>
-#include <sblib/i2c/VL53Lx_i2c.h>
+#include <sblib/i2c/tof/VL53Lx_i2c.h>
 
 /**
  * @def VL53L4CD_I2C_FAST_MODE_PLUS

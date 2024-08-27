@@ -4,7 +4,7 @@
  *  published by the Free Software Foundation.
  */
 
-#include <sblib/i2c/VL53Lx_i2c.h>
+#include <sblib/i2c/tof/VL53Lx_i2c.h>
 #include <sblib/timer.h>
 #include <sblib/i2c.h>
 
