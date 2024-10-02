@@ -9,10 +9,20 @@
  */
 
 #include <sblib/eib/datapoint_types.h>
+#include <limits>
 
 // Sign for a negative DPT9 float value
 #define DPT_FLOAT_NEG_SIGN 0x8000
 
+
+// Check that float is encoded in IEEE 754,
+// otherwise DPT14 conversions are not valid
+static_assert(std::numeric_limits<float>::is_iec559 == true);
+
+union Dpt14Float{
+    float floatValue;
+    uint32_t intBytes;
+};
 
 unsigned short floatToDpt9(int value)
 {
@@ -59,4 +69,18 @@ int dpt9ToFloat(unsigned short dptValue)
         value <<= 1;
 
     return value;
+}
+
+uint32_t floatToDpt14(float value)
+{
+    Dpt14Float toConvert;
+    toConvert.floatValue = value;
+    return toConvert.intBytes;
+}
+
+float dpt14ToFloat(uint32_t dptValue)
+{
+    Dpt14Float toConvert;
+    toConvert.intBytes = dptValue;
+    return toConvert.floatValue;
 }
