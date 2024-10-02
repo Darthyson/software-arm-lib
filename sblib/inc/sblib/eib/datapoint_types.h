@@ -10,6 +10,7 @@
 #ifndef sblib_datapoint_types_h
 #define sblib_datapoint_types_h
 
+#include <stdint.h>
 
 /**
  * An invalid 2 byte float (DPT9/EIS5).
@@ -39,5 +40,23 @@ unsigned short floatToDpt9(int value);
  */
 int dpt9ToFloat(unsigned short dptValue);
 
+
+/**
+ * Convert a "float" value to 4 byte DPT14.xxx
+ *
+ * @param value The float value to convert.
+ * @return The corresponding DPT14.xxx representation.
+ * @note KNX Spec. 2.1 3/7/2 3.15 p.37 for details on DPT14.xxx
+ */
+uint32_t floatToDpt14(float value);
+
+/**
+ * Convert a 4 byte DPT14.xxx to float.
+ *
+ * @param dptValue The 4 byte DPT14.xxx to convert
+ * @return The value as float
+ * @note KNX Spec. 2.1 3/7/2 3.15 p.37 for details on DPT14.xxx
+ */
+float dpt14ToFloat(uint32_t dptValue);
 
 #endif /*sblib_datapoint_types_h*/
