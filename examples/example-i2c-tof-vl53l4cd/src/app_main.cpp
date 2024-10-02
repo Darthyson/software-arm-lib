@@ -73,13 +73,14 @@ BcuBase* setup()
 void printResult(const VL53L4CD_ResultsData_t *result)
 {
     serial.print("state: ", result->range_status, DEC, 3);
-    serial.print(" dist (mm): ", result->distance_mm, DEC, 5);
-    serial.print(" sigma (mm): ", result->sigma_mm, DEC, 5);
-    serial.print(" ambient (kcps): ", result->ambient_rate_kcps, DEC, 5);
-    serial.print(" ambient (kcps/SPAD): ", result->ambient_per_spad_kcps, DEC, 5);
-    serial.print(" target sig (kcps): ", result->signal_rate_kcps, DEC, 5);
-    serial.print(" target sig (kcps/SPAD): ", result->signal_per_spad_kcps, DEC, 5);
-    serial.print(" #SPADs enabled: ", result->number_of_spad, DEC, 5);
+    serial.print(" mm: ", result->distance_mm, DEC, 5);
+    serial.print(char(229)); // sigma (standard deviation)
+    serial.print(": ", result->sigma_mm, DEC, 5);
+    serial.print(" amb. kcps: ", result->ambient_rate_kcps, DEC, 5);
+    serial.print(" amb. kcps/SPAD: ", result->ambient_per_spad_kcps, DEC, 5);
+    serial.print(" target kcps: ", result->signal_rate_kcps, DEC, 5);
+    serial.print(" target kcps/SPAD: ", result->signal_per_spad_kcps, DEC, 5);
+    serial.print(" #SPADs active: ", result->number_of_spad, DEC, 5);
     serial.println();
 }
 
