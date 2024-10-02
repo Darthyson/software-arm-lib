@@ -39,10 +39,11 @@ typedef uint16_t Dev_t;
  * @param registerAddress The register address from where data needs to be read.
  * @param value           A pointer to a buffer where the read data will be stored.
  * @param size            The size of the data to be read.
+ * @param convertToLittleEndianess If true, received value is converted to little endian format.
  *
  * @return @ref VL53LX_ERROR_NONE on success, otherwise @ref VL53LX_ERROR_TIMEOUT
  */
-uint8_t VL53Lx_Read(Dev_t i2cAddress, uint16_t registerAddress, void *value, uint8_t size);
+uint8_t VL53Lx_Read(Dev_t i2cAddress, uint16_t registerAddress, void *value, uint8_t size, bool convertToLittleEndianess);
 
 /**
  * Writes data to the VL53Lx sensor.
@@ -55,10 +56,11 @@ uint8_t VL53Lx_Read(Dev_t i2cAddress, uint16_t registerAddress, void *value, uin
  * @param registerAddress The register address where data needs to be written.
  * @param value           A pointer to the data that needs to be written.
  * @param size            The size of the data to be written.
+ * @param convertToBigEndianess If true, value is converted to big-endian format before sending.
  *
  * @return @ref VL53LX_ERROR_NONE on success, otherwise @ref VL53LX_ERROR_TIMEOUT
  */
-uint8_t VL53Lx_Write(Dev_t i2cAddress, uint16_t registerAddress, void *value, uint8_t size);
+uint8_t VL53Lx_Write(Dev_t i2cAddress, uint16_t registerAddress, void *value, uint8_t size, bool convertToBigEndianess);
 
 /**
  * Reads an 8-bit value from a specified register via I2C.

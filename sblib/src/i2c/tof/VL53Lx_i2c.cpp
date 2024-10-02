@@ -20,7 +20,7 @@ static void VL53Lx_Init()
     Chip_I2C_SetClockRate(I2C0, 400000);
 }
 
-uint8_t VL53Lx_Read(Dev_t i2cAddress, uint16_t registerAddress, void *value, uint8_t size)
+uint8_t VL53Lx_Read(Dev_t i2cAddress, uint16_t registerAddress, void *value, uint8_t size, bool convertToLittleEndianess)
 {
     VL53Lx_Init();
     static_assert(sizeof(registerAddress) == 2);
@@ -45,17 +45,21 @@ uint8_t VL53Lx_Read(Dev_t i2cAddress, uint16_t registerAddress, void *value, uin
         return VL53LX_ERROR_TIMEOUT;
     }
 
-    for (uint8_t i = 0; i < size / 2; ++i)
+    if (!convertToLittleEndianess)
     {
-      uint8_t temp = reinterpret_cast<uint8_t*>(value)[i];
-      reinterpret_cast<uint8_t*>(value)[i] = reinterpret_cast<uint8_t*>(value)[size - i - 1];
-      reinterpret_cast<uint8_t*>(value)[size - i - 1] = temp;
+        return VL53LX_ERROR_NONE;
     }
 
+    for (uint8_t i = 0; i < size / 2; ++i)
+    {
+        uint8_t temp = reinterpret_cast<uint8_t*>(value)[i];
+        reinterpret_cast<uint8_t*>(value)[i] = reinterpret_cast<uint8_t*>(value)[size - i - 1];
+        reinterpret_cast<uint8_t*>(value)[size - i - 1] = temp;
+    }
     return VL53LX_ERROR_NONE;
 }
 
-uint8_t VL53Lx_Write(Dev_t i2cAddress, uint16_t registerAddress, void *value, uint8_t size)
+uint8_t VL53Lx_Write(Dev_t i2cAddress, uint16_t registerAddress, void *value, uint8_t size, bool convertToBigEndianess)
 {
     VL53Lx_Init();
     static_assert(sizeof(registerAddress) == 2);
@@ -65,10 +69,13 @@ uint8_t VL53Lx_Write(Dev_t i2cAddress, uint16_t registerAddress, void *value, ui
     txBuffer[1] = static_cast<uint8_t>(registerAddress & 0xff);
     uint8_t *pTxBuffer = &txBuffer[sizeof(registerAddress)];
 
-    // Reverse value bytes
-    for (uint8_t i = 0; i < size; ++i)
+    if (convertToBigEndianess)
     {
-        pTxBuffer[i] = ((uint8_t *)value)[size - 1 - i];
+        // Reverse value bytes
+        for (uint8_t i = 0; i < size; ++i)
+        {
+            pTxBuffer[i] = ((uint8_t *)value)[size - 1 - i];
+        }
     }
 
     int32_t sent = Chip_I2C_MasterSend(I2C0, static_cast<uint8_t>(i2cAddress), txBuffer, txBufferSize);
@@ -82,32 +89,32 @@ uint8_t VL53Lx_Write(Dev_t i2cAddress, uint16_t registerAddress, void *value, ui
 
 uint8_t VL53Lx_RdByte(Dev_t i2cAddress, uint16_t registerAddress, uint8_t *value)
 {
-    return VL53Lx_Read(i2cAddress, registerAddress, value, sizeof(uint8_t));
+    return VL53Lx_Read(i2cAddress, registerAddress, value, sizeof(uint8_t), true);
 }
 
 uint8_t VL53Lx_RdWord(Dev_t i2cAddress, uint16_t registerAddress, uint16_t *value)
 {
-    return VL53Lx_Read(i2cAddress, registerAddress, value, sizeof(uint16_t));
+    return VL53Lx_Read(i2cAddress, registerAddress, value, sizeof(uint16_t), true);
 }
 
 uint8_t VL53Lx_RdDWord(Dev_t i2cAddress, uint16_t registerAddress, uint32_t *value)
 {
-    return VL53Lx_Read(i2cAddress, registerAddress, value, sizeof(uint32_t));
+    return VL53Lx_Read(i2cAddress, registerAddress, value, sizeof(uint32_t), true);
 }
 
 uint8_t VL53Lx_WrByte(Dev_t i2cAddress, uint16_t registerAddress, uint8_t value)
 {
-    return VL53Lx_Write(i2cAddress, registerAddress, &value, sizeof(uint8_t));
+    return VL53Lx_Write(i2cAddress, registerAddress, &value, sizeof(uint8_t), true);
 }
 
 uint8_t VL53Lx_WrWord(Dev_t i2cAddress, uint16_t registerAddress, uint16_t value)
 {
-    return VL53Lx_Write(i2cAddress, registerAddress, &value, sizeof(uint16_t));
+    return VL53Lx_Write(i2cAddress, registerAddress, &value, sizeof(uint16_t), true);
 }
 
 uint8_t VL53Lx_WrDWord(Dev_t i2cAddress, uint16_t registerAddress, uint32_t value)
 {
-    return VL53Lx_Write(i2cAddress, registerAddress, &value, sizeof(uint32_t));
+    return VL53Lx_Write(i2cAddress, registerAddress, &value, sizeof(uint32_t), true);
 }
 
 uint8_t VL53Lx_WaitMs(Dev_t i2cAddress, uint32_t TimeMs)
