@@ -1362,3 +1362,33 @@ void Bus::loop()
     debugBus();
 #endif
 }
+
+void Bus::maxSendRetries(int retries)
+{
+    sendRetriesMax = retries;
+}
+
+void Bus::maxSendBusyRetries(int retries)
+{
+    sendBusyRetriesMax = retries;
+}
+
+bool Bus::sendingFrame() const
+{
+    return sendCurTelegram != nullptr || sendAck != 0;
+}
+
+bool Bus::telegramReceived() const
+{
+    return telegramLen != 0;
+}
+
+void Bus::discardReceivedTelegram()
+{
+    telegramLen = 0;
+}
+
+void Bus::end()
+{
+    pause(true);
+}

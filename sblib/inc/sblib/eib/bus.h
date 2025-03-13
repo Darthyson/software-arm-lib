@@ -276,37 +276,4 @@ private:
 #define BUS_TIMER_INTERRUPT_HANDLER(handler, busObj) \
     extern "C" void handler() { busObj.timerInterruptHandler(); }
 
-//
-//  Inline functions
-//
-inline void Bus::maxSendRetries(int retries)
-{
-    sendRetriesMax = retries;
-}
-
-inline void Bus::maxSendBusyRetries(int retries)
-{
-    sendBusyRetriesMax = retries;
-}
-
-inline bool Bus::sendingFrame() const
-{
-    return sendCurTelegram != nullptr || sendAck != 0;
-}
-
-inline bool Bus::telegramReceived() const
-{
-    return telegramLen != 0;
-}
-
-inline void Bus::discardReceivedTelegram()
-{
-    telegramLen = 0;
-}
-
-inline void Bus::end()
-{
-    pause(true);
-}
-
 #endif /*sblib_bus_h*/
