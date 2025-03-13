@@ -18,14 +18,12 @@
  published by the Free Software Foundation.
  ---------------------------------------------------------------------------*/
 
-
+#include <cstring>
 #include <sblib/timeout.h>
-#include <sblib/timer.h>
 #include <sblib/eib/knx_tlayer4.h>
 #include <sblib/eib/knx_lpdu.h>
 #include <sblib/eib/knx_npdu.h>
 #include <sblib/libconfig.h>
-#include <cstring>
 
 #if defined(INCLUDE_SERIAL)
 #   include <sblib/serial.h>

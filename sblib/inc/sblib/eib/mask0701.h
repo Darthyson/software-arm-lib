@@ -15,8 +15,6 @@
 
 #include <sblib/eib/bcu2.h>
 #include <sblib/eib/userEepromMASK0701.h>
-#include <sblib/eib/userRamMASK0701.h>
-#include <sblib/eib/com_objectsBCU2.h>
 #include <sblib/eib/addr_tablesMASK0701.h>
 #include <sblib/eib/propertiesMASK0701.h>
 

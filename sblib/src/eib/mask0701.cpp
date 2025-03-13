@@ -5,10 +5,8 @@
  *      Author: dridders
  */
 
-#include <sblib/eib/mask0701.h>
-#include <sblib/eib/propertiesMASK0701.h>
 #include <cstring>
-#include <sblib/utils.h>
+#include <sblib/eib/mask0701.h>
 
 #if defined(INCLUDE_SERIAL)
 #   include <sblib/serial.h>
