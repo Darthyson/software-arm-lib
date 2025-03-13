@@ -21,11 +21,13 @@
  -----------------------------------------------------------------------------*/
 
 #include <cstring>
-#include <sblib/eib/bus.h>
+#include <sblib/digital_pin.h>
+#include <sblib/bits.h>
 #include <sblib/eib/knx_tpdu.h>
 #include <sblib/eib/apci.h>
 #include <sblib/internal/iap.h>
 #include <sblib/io_pin_names.h>
+#include <sblib/version.h>
 
 #include "upd_protocol.h"
 #include "flash.h"

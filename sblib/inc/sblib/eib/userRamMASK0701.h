@@ -8,7 +8,7 @@
 #ifndef SBLIB_EIB_USERRAM_MASK0701_H_
 #define SBLIB_EIB_USERRAM_MASK0701_H_
 
-#include <stdint.h>
+#include <cstdint>
 #include <sblib/eib/userRamBCU2.h>
 
 /**

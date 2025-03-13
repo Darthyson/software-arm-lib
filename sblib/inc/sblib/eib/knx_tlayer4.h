@@ -22,7 +22,7 @@
 #ifndef TLAYER4_H_
 #define TLAYER4_H_
 
-#include <stdint.h>
+#include <cstdint>
 #include <sblib/eib/knx_tpdu.h>
 #include <sblib/eib/apci.h>
 
