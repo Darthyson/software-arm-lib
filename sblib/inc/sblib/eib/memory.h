@@ -21,7 +21,7 @@
 #ifndef SBLIB_EIB_MEMORY_H_
 #define SBLIB_EIB_MEMORY_H_
 
-#include <stdint.h>
+#include <cstdint>
 #include <sblib/types.h>
 
 /**
