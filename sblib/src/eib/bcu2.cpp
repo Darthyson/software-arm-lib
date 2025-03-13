@@ -174,7 +174,19 @@ bool BCU2::processBroadCastTelegram(ApciCommand apciCmd, unsigned char *telegram
             {
                 return (false);
             }
+
             setOwnAddress(makeWord(telegram[14], telegram[15]));
+            if (userEeprom->isModified())
+            {
+                ///\todo uncomment after deletion of Class Bus forward declaration in bcu_base.h
+                /// Right now this produces compile error "invalid use of imcomplete type 'class Bus'
+                /// uncomment on release
+                /*
+                while (bus->sendingFrame())
+                    ;
+                */
+                userEeprom->writeUserEeprom();
+            }
             break;
 
         case APCI_INDIVIDUALADDRESS_SERIALNUMBER_READ_PDU:
