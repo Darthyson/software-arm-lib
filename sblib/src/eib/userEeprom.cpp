@@ -5,11 +5,11 @@
  *      Author: dridders
  */
 
+#include <cstring>
 #include <sblib/eib/userEeprom.h>
 #include <sblib/internal/iap.h>
-#include <sblib/eib/bcu_base.h>
-#include <sblib/eib/bus.h>
-#include <cstring>
+#include <sblib/interrupt.h>
+#include <sblib/timer.h>
 
 uint32_t UserEeprom::flashSize() const
 {

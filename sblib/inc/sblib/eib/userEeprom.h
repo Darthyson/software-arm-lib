@@ -9,8 +9,6 @@
 #define SBLIB_EIB_USEREEPROM_H_
 
 #include <sblib/eib/memory.h>
-#include <sblib/eib/types.h>
-#include <sblib/platform.h>
 #include <sblib/bits.h>
 
 /** number of interface objects supported */
