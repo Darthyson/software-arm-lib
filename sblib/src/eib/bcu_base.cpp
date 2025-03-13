@@ -11,6 +11,7 @@
 #include <sblib/eib/knx_lpdu.h>
 #include <sblib/eib/bcu_base.h>
 #include <sblib/eib/bus.h>
+#include <sblib/eib/bcu_const.h>
 
 static Bus* timerBusObj;
 // The interrupt handler for the EIB bus access object
@@ -21,7 +22,7 @@ BUS_TIMER_INTERRUPT_HANDLER(TIMER16_1_IRQHandler, (*timerBusObj))
 #endif
 
 BcuBase::BcuBase(UserRam* userRam, AddrTables* addrTables) :
-        TLayer4(maxTelegramSize()),
+        TLayer4(TelegramBufferSize),
         bus(new Bus(this, timer16_1, PIN_EIB_RX, PIN_EIB_TX, CAP0, MAT0)),
         progPin(PIN_PROG),
         userRam(userRam),
@@ -161,11 +162,6 @@ void BcuBase::end()
 bool BcuBase::programmingMode() const
 {
     return (userRam->status() & BCU_STATUS_PROGRAMMING_MODE) == BCU_STATUS_PROGRAMMING_MODE;
-}
-
-int BcuBase::maxTelegramSize()
-{
-    return 23;
 }
 
 void BcuBase::discardReceivedTelegram()

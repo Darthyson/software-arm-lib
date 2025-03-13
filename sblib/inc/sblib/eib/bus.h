@@ -15,6 +15,7 @@
 
 #include <sblib/timer.h>
 #include <sblib/eib/types.h>
+#include <sblib/eib/bcu_const.h>
 
 /**
  * Low level class for EIB bus access.
@@ -210,6 +211,8 @@ private:
      */
     void handleTelegram(bool valid);
 
+    constexpr size_t maxTelegramSize() const {return TelegramBufferSize;};
+
 private:
     BcuBase* bcu;
     Timer& timer;                //!< The timer
@@ -218,7 +221,6 @@ private:
     TimerMatch pwmChannel;       //!< The timer channel for PWM for sending
     TimerMatch timeChannel;      //!< The timer channel for timeouts
 
-private:
     /** The states of the telegram sending/receiving state machine */
     enum State
     {
@@ -249,7 +251,7 @@ private:
     int currentByte;               //!< The current byte that is received/sent, including the parity bit
     int sendTelegramLen;           //!< The size of the to be sent telegram in bytes (including the checksum).
     byte *sendCurTelegram;         //!< The telegram that is currently being sent.
-    byte *rx_telegram = new byte[bcu->maxTelegramSize()](); //!< Telegram buffer for the L1/L2 receiving process
+    byte *rx_telegram;             //!< Telegram buffer for the L1/L2 receiving process
 
     int bitMask;
     int bitTime;                   //!< The bit-time within a byte when receiving
