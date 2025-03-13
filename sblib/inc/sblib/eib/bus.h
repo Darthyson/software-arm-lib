@@ -244,7 +244,7 @@ private:
     int sendBusyRetries;           //!< The number of busy repeats when sending a telegram
     int sendBusyRetriesMax;        //!< The maximum number of busy repeats when sending a telegram. Default: 3
     int sendAck;                   //!< Send an acknowledge or not-acknowledge byte if != 0
-    int nextByteIndex;             //!< The number of the next byte in the telegram
+    uint16_t nextByteIndex;        //!< The number of the next byte in the telegram
 
     int currentByte;               //!< The current byte that is received/sent, including the parity bit
     int sendTelegramLen;           //!< The size of the to be sent telegram in bytes (including the checksum).
