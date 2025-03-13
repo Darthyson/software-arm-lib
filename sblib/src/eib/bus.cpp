@@ -50,12 +50,13 @@ Bus::Bus(BcuBase* bcuInstance, Timer& aTimer, int aRxPin, int aTxPin, TimerCaptu
  *
  * //todo get defined values from usereprom for busy-retry and nack-retry
  */
-void Bus::begin()
+void Bus::begin(uint16_t physicalAddress)
 {
     //todo load send-retries from eprom -- this should actually be done by the BCU
     //sendRetriesMax = userEeprom.maxRetransmit & 0x03;
     //sendBusyRetriesMax = (userEeprom.maxRetransmit >> 5) & 0x03;
 
+    setOwnAddress(physicalAddress);
     telegramLen = 0;
     rx_error = RX_OK;
 
@@ -103,10 +104,10 @@ void Bus::begin()
         serial.println(" ttimer value: ", ttimer.value(), DEC, 6);
         serial.print("nak retries: ", sendRetriesMax, DEC, 6);
         serial.print(" busy retries: ", sendBusyRetriesMax, DEC, 6);
-        serial.print(" phy addr: ", PHY_ADDR_AREA(bcu->ownAddress()), DEC);
-        serial.print(".", PHY_ADDR_LINE(bcu->ownAddress()), DEC);
-        serial.print(".", PHY_ADDR_DEVICE(bcu->ownAddress()), DEC);
-        serial.print(" (0x",  bcu->ownAddress(), HEX, 4);
+        serial.print(" phy addr: ", PHY_ADDR_AREA(ownAddress), DEC);
+        serial.print(".", PHY_ADDR_LINE(ownAddress), DEC);
+        serial.print(".", PHY_ADDR_DEVICE(ownAddress), DEC);
+        serial.print(" (0x", ownAddress, HEX, 4);
         serial.println(")");
     ); // DB_BUS
 
@@ -181,7 +182,7 @@ bool Bus::canPause(bool waitForTelegramSent)
 
 void Bus::prepareTelegram(unsigned char* telegram, unsigned short length) const
 {
-    setSenderAddress(telegram, (uint16_t)bcu->ownAddress());
+    setSenderAddress(telegram, ownAddress);
 
     // Calculate the checksum
     unsigned char checksum = 0xff;
@@ -386,7 +387,7 @@ void Bus::handleTelegram(bool valid)
             processTel = (destAddr == 0); // broadcast
             processTel |= (bcu->addrTables != nullptr) && (bcu->addrTables->indexOfAddr(destAddr) >= 0); // known group address
         }
-        else if (destAddr == bcu->ownAddress())
+        else if (destAddr == ownAddress)
         {
             processTel = true;
         }
@@ -1392,4 +1393,9 @@ void Bus::discardReceivedTelegram()
 void Bus::end()
 {
     pause(true);
+}
+
+void Bus::setOwnAddress(uint16_t newAddress)
+{
+    ownAddress = newAddress;
 }

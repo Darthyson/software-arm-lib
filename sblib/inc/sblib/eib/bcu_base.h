@@ -33,6 +33,15 @@ public:
     ~BcuBase() = default;
 
     /**
+     * Sets the own physical KNX address of the BCU.
+     *
+     * @details It also invokes the methods of @ref Bus and @ref TLayer4 with the provided address.
+     *
+     * @param addr The physical KNX address to be set as the bcu´s own address.
+     */
+    void setOwnAddress(uint16_t addr) override;
+
+    /**
      * Set ProgPin of board, must be called before begin method
      * @param progPin Pin definition
      */
