@@ -84,8 +84,6 @@ public:
     AddrTables* addrTables;
     ComObjects* comObjects;
 
-    virtual int maxTelegramSize();
-
 protected:
     /**
      * Special initialization for the BCU

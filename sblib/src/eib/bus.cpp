@@ -37,7 +37,8 @@ Bus::Bus(BcuBase* bcuInstance, Timer& aTimer, int aRxPin, int aTxPin, TimerCaptu
     sendRetriesMax = NACK_RETRY_DEFAULT;
     sendBusyRetriesMax = BUSY_RETRY_DEFAULT;
     setKNX_TX_Pin(txPin);
-    telegram = new byte[bcu->maxTelegramSize()]();
+    telegram = new byte[maxTelegramSize()]();
+    rx_telegram = new byte[maxTelegramSize()]();
 }
 
 /**
@@ -374,7 +375,7 @@ void Bus::handleTelegram(bool valid)
     // Received a valid telegram with correct checksum and valid control byte (normal data frame with preamble bits)?
     //todo extended tel, check tel len, give upper layer error info
     if (nextByteIndex >= 8 && valid && (( rx_telegram[0] & VALID_DATA_FRAME_TYPE_MASK) == VALID_DATA_FRAME_TYPE_VALUE)
-        && nextByteIndex <= bcu->maxTelegramSize()  )
+        && nextByteIndex <= maxTelegramSize()  )
     {
         int destAddr = (rx_telegram[3] << 8) | rx_telegram[4];
         bool processTel = false;
@@ -785,7 +786,7 @@ __attribute__((optimize("Os"))) void Bus::timerInterruptHandler()
             if ( (!nextByteIndex) && (currentByte & PREAMBLE_MASK) )
                 rx_error |= RX_PREAMBLE_ERROR;// preamble error, continue to read bytes - possibility to discard the telegram at higher layer
 
-            if (nextByteIndex < bcu->maxTelegramSize())
+            if (nextByteIndex < maxTelegramSize())
             {
                 rx_telegram[nextByteIndex++] = currentByte;
                 checksum ^= currentByte;

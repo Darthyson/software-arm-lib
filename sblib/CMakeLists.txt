@@ -9,7 +9,7 @@ set(CMAKE_C_STANDARD_REQUIRED ON)
 set(SBLPC_DIR ${CMAKE_SOURCE_DIR}/../../CMSIS_CORE_LPC11xx CACHE PATH "Where the CMSIS_CORE_LPC11xx lib is")
 # todo write docu how to get/set our CMAKE_TOOLCHAIN_FILE (CMSIS_CORE_LPC11xx/LPC11xx.cmake).
 # Set it here only, if cross-compiling, otherwise sblib-test and lib-test-cases builds will fail
-# Set toolchain file, if cross-compiling and itÂ´s not specified
+# Set toolchain file, if cross-compiling and it´s not specified
 if(CMAKE_CROSSCOMPILING AND NOT DEFINED CMAKE_TOOLCHAIN_FILE)
     get_filename_component(CMAKE_TOOLCHAIN_FILE ${SBLPC_DIR}/LPC11xx.cmake REALPATH CACHE)
 endif()
