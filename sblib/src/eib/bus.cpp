@@ -11,6 +11,7 @@
  *
  **/
 
+#include <cstring>
 #include <sblib/eib/bus.h>
 #include <sblib/eib/knx_lpdu.h>
 #include <sblib/eib/knx_npdu.h>
@@ -425,7 +426,7 @@ void Bus::handleTelegram(bool valid)
                 // store data in telegram buffer for higher layers, set telegramLen to indicate data available
                 if (!already_received)
                 {
-                    for (int i = 0; i < nextByteIndex; i++) telegram[i] = rx_telegram[i];
+                    memcpy(telegram, rx_telegram, nextByteIndex);
                     telegramLen = nextByteIndex;
                     rx_error = RX_OK;
                 }
