@@ -40,7 +40,7 @@ BcuBase::BcuBase(UserRam* userRam, AddrTables* addrTables) :
 void BcuBase::_begin()
 {
     TLayer4::_begin();
-    bus->begin();
+    bus->begin(ownAddress());
     progButtonDebouncer.init(1);
 }
 
@@ -202,4 +202,10 @@ void BcuBase::softSystemReset()
 void BcuBase::setProgPin(int prgPin) {
     progPin=prgPin;
     setFatalErrorPin(progPin);
+}
+
+void BcuBase::setOwnAddress(uint16_t addr)
+{
+    bus->setOwnAddress(addr);
+    TLayer4::setOwnAddress(addr);
 }

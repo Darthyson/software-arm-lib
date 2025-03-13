@@ -45,8 +45,10 @@ public:
      *
      * This powers on all used components.
      * This method must be called before the bus can be used.
+     *
+     * @param physicalAddress - The physical KNX address to use for bus communication.
      */
-    void begin();
+    void begin(uint16_t physicalAddress);
 
     /**
      * Waits for a safe time to pause bus access, then pauses bus access.
@@ -134,6 +136,8 @@ public:
      * @param retries - the number of retries. Default: 3.
      */
     void maxSendBusyRetries(int retries);
+
+    void setOwnAddress(uint16_t newAddress);
 
     /**
      * The received telegram.
@@ -264,6 +268,7 @@ private:
     bool busy_wait_from_remote;    //!< remote side is busy, re-send telegram after 150bit time wait
     bool repeatTelegram;           //!< need to repeat last  telegram sent
     uint8_t collisions;            //!< Number of collisions when sending @ref sendCurTelegram
+    uint16_t ownAddress;           //!< The physical KNX address to use for bus communication
 };
 
 
