@@ -612,3 +612,7 @@ bool BcuDefault::flushUserMemory(UsrCallbackType reason)
     return (true);
 }
 
+uint8_t& BcuDefault::layerStatus()
+{
+    return userRam->status();
+}

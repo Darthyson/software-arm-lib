@@ -9,17 +9,15 @@
 #ifndef sblib_BcuBase_h
 #define sblib_BcuBase_h
 
-#include <sblib/types.h>
-#include <sblib/utils.h>
-#include <sblib/eib/userRam.h>
-#include <sblib/eib/addr_tables.h>
 #include <sblib/eib/com_objects.h>
 #include <sblib/timeout.h>
-#include <sblib/timer.h>
 #include <sblib/debounce.h>
 #include <sblib/eib/knx_tlayer4.h>
+#include <sblib/eib/bus.h>
+#include <sblib/eib/userRam.h>
+#include <sblib/eib/callback_bcu.h>
 
-class Bus;
+class CallbackBcu;
 
 /**
  * Class for controlling minimum BCU related things.
@@ -27,10 +25,11 @@ class Bus;
 class BcuBase: public TLayer4
 {
 public:
-    Bus* bus;
     BcuBase(UserRam* userRam, AddrTables* addrTables);
     BcuBase() = delete;
     ~BcuBase() = default;
+
+    Bus* bus;
 
     /**
      * Sets the own physical KNX address of the BCU.
@@ -58,7 +57,7 @@ public:
      *
      * @return True if the programming mode is active, false if not.
      */
-    bool programmingMode() const;
+    bool programmingMode();
 
     /**
      * Test if the user application is active. The application is active if the
@@ -88,6 +87,8 @@ public:
       * @warning This function will never return.
       */
     virtual void softSystemReset();
+
+    virtual uint8_t& layerStatus() = 0;
 
     UserRam* userRam;
     AddrTables* addrTables;
@@ -137,8 +138,11 @@ protected:
     void scheduleRestart(RestartType type);
 
 private:
+    CallbackBcu* callback;
+
     RestartType restartType;
     bool restartSendDisconnect;
     Timeout restartTimeout;
 };
+
 #endif /*sblib_BcuBase_h*/

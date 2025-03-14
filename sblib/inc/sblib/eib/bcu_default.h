@@ -10,15 +10,10 @@
 #ifndef sblib_BcuDefault_h
 #define sblib_BcuDefault_h
 
-#include <sblib/types.h>
-#include <sblib/utils.h>
 #include <sblib/mem_mapper.h>
 #include <sblib/usr_callback.h>
 #include <sblib/eib/userEeprom.h>
-#include <sblib/timer.h>
 #include <sblib/eib/bcu_base.h>
-
-class Bus;
 
 /**
  * Class for controlling all BCU related things.
@@ -174,6 +169,8 @@ public:
      * @param limit - the maximum number of telegrams per second.
      */
     void setGroupTelRateLimit(unsigned int limit);
+
+    uint8_t& layerStatus() override;
 
 protected:
     /*

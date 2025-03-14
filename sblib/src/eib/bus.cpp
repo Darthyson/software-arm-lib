@@ -13,24 +13,25 @@
 
 #include <cstring>
 #include <sblib/eib/bus.h>
+#include <sblib/interrupt.h>
+#include <sblib/digital_pin.h>
 #include <sblib/eib/knx_lpdu.h>
 #include <sblib/eib/knx_npdu.h>
-#include <sblib/core.h>
-#include <sblib/interrupt.h>
-#include <sblib/platform.h>
-#include <sblib/eib/addr_tables.h>
-#include <sblib/eib/bcu_base.h>
 #include <sblib/eib/bus_const.h>
 #include <sblib/eib/bus_debug.h>
+#include <sblib/eib/bcu_const.h>
 
 // constructor for Bus object. Initialize basic interface parameter to bus and set SM to IDLE
-Bus::Bus(BcuBase* bcuInstance, Timer& aTimer, int aRxPin, int aTxPin, TimerCapture aCaptureChannel, TimerMatch aPwmChannel)
-:bcu(bcuInstance)
+Bus::Bus(AddrTables* addrTable, Timer& aTimer, const int& aRxPin, const int& aTxPin,
+        const TimerCapture& aCaptureChannel, const TimerMatch& aPwmChannel, CallbackBus* aCallback)
+:
+addressTable(addrTable)
 ,timer(aTimer)
 ,rxPin(aRxPin)
 ,txPin(aTxPin)
 ,captureChannel(aCaptureChannel)
 ,pwmChannel(aPwmChannel)
+,callBack(aCallback)
 {
     timeChannel = (TimerMatch) ((pwmChannel + 2) & 3);  // +2 to be compatible to old code during refactoring
     state = Bus::INIT;
@@ -385,7 +386,7 @@ void Bus::handleTelegram(bool valid)
         if (rx_telegram[5] & 0x80) // group address or physical address
         {
             processTel = (destAddr == 0); // broadcast
-            processTel |= (bcu->addrTables != nullptr) && (bcu->addrTables->indexOfAddr(destAddr) >= 0); // known group address
+            processTel |= (addressTable != nullptr) && (addressTable->indexOfAddr(destAddr) >= 0); // known group address
         }
         else if (destAddr == ownAddress)
         {
@@ -393,7 +394,7 @@ void Bus::handleTelegram(bool valid)
         }
 
         // with disabled TL we also process the telegram, so the application (e.g. ft12, knx-if) can handle it completely by itself
-        processTel |= !(bcu->userRam->status() & BCU_STATUS_TRANSPORT_LAYER);
+        processTel |= !(callBack->getLayerStatus() & BCU_STATUS_TRANSPORT_LAYER);
 
         DB_TELEGRAM(telRXNotProcessed = !processTel);
 
@@ -435,7 +436,7 @@ void Bus::handleTelegram(bool valid)
             }
 
             // LL_ACK only allowed, if link layer is in normal mode, not busmonitor mode
-            auto suppressAck = !(bcu->userRam->status() & BCU_STATUS_LINK_LAYER);
+            auto suppressAck = !(callBack->getLayerStatus() & BCU_STATUS_LINK_LAYER);
             // LL_ACK only allowed for L_Data frames
             suppressAck |= rx_telegram[0] & SB_TEL_DATA_FRAME_FLAG;
             if (suppressAck)
@@ -538,7 +539,7 @@ void Bus::finishSendingTelegram()
     if (sendCurTelegram != nullptr)
     {
         sendCurTelegram = nullptr;
-        bcu->finishedSendingTelegram(!(tx_error & TX_RETRY_ERROR));
+        callBack->finishedSendingTelegram(!(tx_error & TX_RETRY_ERROR));
     }
 
     prepareForSending();
