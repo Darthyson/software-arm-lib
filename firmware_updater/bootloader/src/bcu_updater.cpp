@@ -48,12 +48,8 @@
     }
 #endif
 
-BcuUpdate::BcuUpdate() : BcuUpdate(new UserRamUpdater())
-{
-}
-
-BcuUpdate::BcuUpdate(UserRamUpdater* userRamUpdater) :
-    BcuBase(userRamUpdater, nullptr)
+BcuUpdate::BcuUpdate() :
+    BcuBase(nullptr, nullptr)
 {
 }
 
@@ -88,8 +84,6 @@ bool BcuUpdate::processApci(ApciCommand apciCmd, unsigned char * telegram, uint8
 
 void BcuUpdate::begin()
 {
-    userRam->status() |= BCU_STATUS_LINK_LAYER | BCU_STATUS_TRANSPORT_LAYER | BCU_STATUS_APPLICATION_LAYER | BCU_STATUS_USER_MODE;
-    userRam->runState() = 1;
     BcuBase::_begin();
 }
 
@@ -105,6 +99,11 @@ bool BcuUpdate::processBroadCastTelegram(ApciCommand apciCmd, unsigned char *tel
 bool BcuUpdate::processGroupAddressTelegram(ApciCommand apciCmd, uint16_t groupAddress, unsigned char *telegram, uint8_t telLength)
 {
     return (true);
+}
+
+uint8_t& BcuUpdate::layerStatus()
+{
+    return bcuStatus;
 }
 
 /** @}*/
