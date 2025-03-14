@@ -9,6 +9,7 @@
  */
 
 #include "protocol.h"
+#include <sblib/main.h>
 #include <sblib/eib/knx_npdu.h>
 #include <sblib/internal/iap.h>
 #include <sblib/eib/bus_const.h>

@@ -7,10 +7,11 @@
  *  published by the Free Software Foundation.
  */
 
+#include <sblib/eib/bcu_base.h>
+#include <sblib/interrupt.h>
+#include <sblib/digital_pin.h>
 #include <sblib/io_pin_names.h>
 #include <sblib/eib/knx_lpdu.h>
-#include <sblib/eib/bcu_base.h>
-#include <sblib/eib/bus.h>
 #include <sblib/eib/bcu_const.h>
 
 static Bus* timerBusObj;
@@ -23,7 +24,7 @@ BUS_TIMER_INTERRUPT_HANDLER(TIMER16_1_IRQHandler, (*timerBusObj))
 
 BcuBase::BcuBase(UserRam* userRam, AddrTables* addrTables) :
         TLayer4(TelegramBufferSize),
-        bus(new Bus(this, timer16_1, PIN_EIB_RX, PIN_EIB_TX, CAP0, MAT0)),
+        bus(new Bus(addrTables, timer16_1, PIN_EIB_RX, PIN_EIB_TX, CAP0, MAT0, new CallbackBcu(this))),
         progPin(PIN_PROG),
         userRam(userRam),
         addrTables(addrTables),
@@ -60,7 +61,7 @@ void BcuBase::loop()
     //        Bus timer is configured to pull the bus low (send a 0 bit) for some time
     //        and the MCU continues timer operation, even when a breakpoint is active.
     //
-    if (bus->telegramReceived() && !bus->sendingFrame() && (userRam->status() & BCU_STATUS_TRANSPORT_LAYER))
+    if (bus->telegramReceived() && !bus->sendingFrame() && (layerStatus() & BCU_STATUS_TRANSPORT_LAYER))
     {
         processTelegram(bus->telegram, (uint8_t)bus->telegramLen); // if processed successfully, received telegram will be discarded by processTelegram()
     }
@@ -72,7 +73,7 @@ void BcuBase::loop()
         int oldValue = progButtonDebouncer.value();
         if (!progButtonDebouncer.debounce(digitalRead(progPin), 50) && oldValue)
         {
-            userRam->status() ^= BCU_STATUS_PARITY | BCU_STATUS_PROGRAMMING_MODE;  // toggle programming mode and parity bit
+            layerStatus() ^= BCU_STATUS_PARITY | BCU_STATUS_PROGRAMMING_MODE;  // toggle programming mode and parity bit
         }
         pinMode(progPin, OUTPUT);
         digitalWrite(progPin, !programmingMode());
@@ -122,7 +123,7 @@ bool BcuBase::setProgrammingMode(bool newMode)
 
     if (newMode != programmingMode())
     {
-        userRam->status() ^= BCU_STATUS_PARITY | BCU_STATUS_PROGRAMMING_MODE;  // toggle programming mode and parity bit
+        layerStatus() ^= BCU_STATUS_PARITY | BCU_STATUS_PROGRAMMING_MODE;  // toggle programming mode and parity bit
     }
     pinMode(progPin, OUTPUT);
     digitalWrite(progPin, !programmingMode());
@@ -159,9 +160,9 @@ void BcuBase::end()
     bus->end();
 }
 
-bool BcuBase::programmingMode() const
+bool BcuBase::programmingMode()
 {
-    return (userRam->status() & BCU_STATUS_PROGRAMMING_MODE) == BCU_STATUS_PROGRAMMING_MODE;
+    return (layerStatus() & BCU_STATUS_PROGRAMMING_MODE) == BCU_STATUS_PROGRAMMING_MODE;
 }
 
 void BcuBase::discardReceivedTelegram()

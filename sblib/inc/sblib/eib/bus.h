@@ -10,12 +10,10 @@
 #ifndef sblib_bus_h
 #define sblib_bus_h
 
-#include <sblib/core.h>
-#include <sblib/eib/bcu_base.h>
-
 #include <sblib/timer.h>
-#include <sblib/eib/types.h>
+#include <sblib/eib/addr_tables.h>
 #include <sblib/eib/bcu_const.h>
+#include <sblib/eib/callback_bus.h>
 
 /**
  * Low level class for EIB bus access.
@@ -32,13 +30,16 @@ public:
     /**
      * Create a bus access object.
      *
-     * @param timer - The timer to use.
-     * @param rxPin - The pin for receiving from the bus, e.g. PIO1_8
-     * @param txPin - The pin for sending to the bus, e.g. PIO1_10
-     * @param captureChannel - the timer capture channel of rxPin, e.g. CAP0
-     * @param matchChannel - the timer match channel of txPin, e.g. MAT0
+     * @param addrTable       - The address table of the associated bcu
+     * @param aTimer          - The timer to use.
+     * @param aRxPin          - The pin for receiving from the bus, e.g. PIO1_8
+     * @param aTxPin          - The pin for sending to the bus, e.g. PIO1_10
+     * @param aCaptureChannel - the timer capture channel of rxPin, e.g. CAP0
+     * @param aPwmChannel     - the timer match channel of txPin, e.g. MAT0
+     * @param aCallback       - Callback class to inform bcu of events, e.g. telegram sending finished
      */
-    Bus(BcuBase* bcu, Timer& timer, int rxPin, int txPin, TimerCapture captureChannel, TimerMatch matchChannel);
+    Bus(AddrTables* addrTable, Timer& aTimer, const int& aRxPin, const int& aTxPin,
+            const TimerCapture& aCaptureChannel, const TimerMatch& aPwmChannel, CallbackBus* aCallback);
 
     /**
      * Begin using the bus.
@@ -218,7 +219,7 @@ private:
     constexpr size_t maxTelegramSize() const {return TelegramBufferSize;};
 
 private:
-    BcuBase* bcu;
+    AddrTables* addressTable;    //!< Address table to check, if a telegram should be processed or not.
     Timer& timer;                //!< The timer
     int rxPin, txPin;            //!< The pins for bus receiving and sending
     TimerCapture captureChannel; //!< The timer channel that captures the timer value on the bus-in pin
@@ -269,6 +270,8 @@ private:
     bool repeatTelegram;           //!< need to repeat last  telegram sent
     uint8_t collisions;            //!< Number of collisions when sending @ref sendCurTelegram
     uint16_t ownAddress;           //!< The physical KNX address to use for bus communication
+
+    CallbackBus* callBack;         //!< Callback instance to inform bcu of events, e.g. telegram sending finished
 };
 
 
