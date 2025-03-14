@@ -29,9 +29,9 @@
 class MASK0705 : public MASK0701
 {
 public:
-	MASK0705();
-	MASK0705(UserRamMASK0705* userRam, UserEepromMASK0705* userEeprom, ComObjectsMASK0705* comObjects, AddrTablesMASK0705* addrTables, PropertiesMASK0705* properties);
-	~MASK0705() = default;
+    MASK0705();
+    MASK0705(UserRamMASK0705* userRam, UserEepromMASK0705* userEeprom, ComObjectsMASK0705* comObjects, AddrTablesMASK0705* addrTables, PropertiesMASK0705* properties);
+    ~MASK0705() = default;
 
     virtual const char* getBcuType() const override { return "BIM112_75"; }
     virtual uint16_t getMaskVersion() const override { return  0x705; }
@@ -44,7 +44,7 @@ public:
     /** The size of the user RAM in bytes. */
     const int userRamSize = (0x304 + extraUserRamSize);
     /** How many bytes have to be allocated at the end of the RAM
-    	for shadowed values
+        for shadowed values
     */
     const int userRamShadowSize = 3;
 };

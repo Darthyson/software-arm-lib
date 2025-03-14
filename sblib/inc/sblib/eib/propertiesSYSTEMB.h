@@ -18,17 +18,17 @@ class SYSTEMB;
 class PropertiesSYSTEMB : public PropertiesMASK0701
 {
 public:
-	PropertiesSYSTEMB(SYSTEMB* bcuInstance) : PropertiesMASK0701((MASK0701*)bcuInstance), bcu(bcuInstance) {};
-	~PropertiesSYSTEMB() = default;
+    PropertiesSYSTEMB(SYSTEMB* bcuInstance) : PropertiesMASK0701((MASK0701*)bcuInstance), bcu(bcuInstance) {};
+    ~PropertiesSYSTEMB() = default;
 
-	virtual LoadState handleAllocAbsDataSegment(const int objectIdx, const byte* payLoad, const int len);
-	virtual LoadState handleDataRelativeAllocation(const int objectIdx, const byte* payLoad, const int len);
-	virtual uint16_t crc16(uint8_t* ptr, int len);
-	virtual int loadProperty(int objectIdx, const byte* data, int len);
-	virtual bool propertyValueReadTelegram(int objectIdx, PropertyID propertyId, int count, int start, uint8_t * sendBuffer);
-	virtual bool propertyValueWriteTelegram(int objectIdx, PropertyID propertyId, int count, int start, uint8_t * sendBuffer);
+    virtual LoadState handleAllocAbsDataSegment(const int objectIdx, const byte* payLoad, const int len);
+    virtual LoadState handleDataRelativeAllocation(const int objectIdx, const byte* payLoad, const int len);
+    virtual uint16_t crc16(uint8_t* ptr, int len);
+    virtual int loadProperty(int objectIdx, const byte* data, int len);
+    virtual bool propertyValueReadTelegram(int objectIdx, PropertyID propertyId, int count, int start, uint8_t * sendBuffer);
+    virtual bool propertyValueWriteTelegram(int objectIdx, PropertyID propertyId, int count, int start, uint8_t * sendBuffer);
 
 private:
-	SYSTEMB* bcu;
+    SYSTEMB* bcu;
 };
 #endif /*sblib_properties_systemb_h*/

@@ -56,9 +56,9 @@ void SHT2xClass::Init(void)
   byte result;
   if (Chip_I2C_MasterCmdRead(I2C0, eSHT2xAddress, eReadUserReg, &result, 1) == 1)
   {
-	  const uint8_t data[] = { (uint8_t)eWriteUserReg, (uint8_t)(result & 0x7E) };
-	  Chip_I2C_MasterSend(I2C0, eSHT2xAddress, data, sizeof(data));
-	  initialized = true;
+      const uint8_t data[] = { (uint8_t)eWriteUserReg, (uint8_t)(result & 0x7E) };
+      Chip_I2C_MasterSend(I2C0, eSHT2xAddress, data, sizeof(data));
+      initialized = true;
   }
 }
 
@@ -87,7 +87,7 @@ int SHT2xClass::GetTemperature(void)
   value = 17572 * value;
   value = value / 65536;
   value = value - 4685;
-  return value; //-4685 + 17572 / 65536 * value;	//changed to int and factor 100
+  return value; //-4685 + 17572 / 65536 * value;    //changed to int and factor 100
 }
 
 float SHT2xClass::GetDewPoint(void)

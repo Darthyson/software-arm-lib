@@ -153,20 +153,20 @@ extern Timer timer32_1;
 class Timer
 {
 public:
-	/**
-	 * Create a timer object for the specified timer.
-	 *
-	 * @param timerNum - the number of the timer: TIMER16_0, TIMER32_1, ...
-	 */
-	Timer(byte timerNum);
+    /**
+     * Create a timer object for the specified timer.
+     *
+     * @param timerNum - the number of the timer: TIMER16_0, TIMER32_1, ...
+     */
+    Timer(byte timerNum);
 
-	/**
-	 * Begin using the timer.
-	 *
-	 * This powers the timer on and the system clock is connected to the timer.
-	 * This method must be called before any other method of the timer can be used.
-	 */
-	void begin();
+    /**
+     * Begin using the timer.
+     *
+     * This powers the timer on and the system clock is connected to the timer.
+     * This method must be called before any other method of the timer can be used.
+     */
+    void begin();
 
     /**
      * End using the timer.
@@ -176,22 +176,22 @@ public:
      */
     void end();
 
-	/**
-	 * Set the prescaler. The prescaler can be used to divide the peripheral clock before it is
-	 * applied to the timer. The factor may be 16 bit for a 16 bit timer, and 32 bit for a
-	 * 32 bit timer. The prescaler causes the timer to increment on every peripheral clock when
-	 * factor = 0, every 2 peripheral clocks when factor = 1, etc.
-	 *
-	 * @param factor - the prescaler division factor.
-	 */
-	void prescaler(unsigned int factor);
+    /**
+     * Set the prescaler. The prescaler can be used to divide the peripheral clock before it is
+     * applied to the timer. The factor may be 16 bit for a 16 bit timer, and 32 bit for a
+     * 32 bit timer. The prescaler causes the timer to increment on every peripheral clock when
+     * factor = 0, every 2 peripheral clocks when factor = 1, etc.
+     *
+     * @param factor - the prescaler division factor.
+     */
+    void prescaler(unsigned int factor);
 
-	/**
-	 * Get the prescaler division factor. The factor is 16 bit for a 16 bit timer, and 32 bit
-	 * for a 32 bit timer. The prescaler causes the timer to increment on every peripheral clock
-	 * when factor = 0, every 2 peripheral clocks when factor = 1, etc.
-	 */
-	unsigned int prescaler() const;
+    /**
+     * Get the prescaler division factor. The factor is 16 bit for a 16 bit timer, and 32 bit
+     * for a 32 bit timer. The prescaler causes the timer to increment on every peripheral clock
+     * when factor = 0, every 2 peripheral clocks when factor = 1, etc.
+     */
+    unsigned int prescaler() const;
 
     /**
      * Start the timer.
@@ -487,7 +487,7 @@ public:
     void setIRQPriority(uint32_t newPriority);
 
 protected:
-	LPC_TMR_TypeDef* timer;
+    LPC_TMR_TypeDef* timer;
     byte timerNum;
 };
 

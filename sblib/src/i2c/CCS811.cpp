@@ -186,7 +186,7 @@ bool CCS811Class::getData(void) {
 
   if (len != 4)
   {
-	  return false;
+      return false;
   }
 
   CO2 = ((uint8_t) buffer[0] << 8) + buffer[1];

@@ -28,8 +28,8 @@ int Debouncer::debounce(int current, unsigned int timeout)
     }
     else if (time && ((int) (now - (time + timeout)) >= 0))
     {
-		time = 0;
-		valid = current;
+        time = 0;
+        valid = current;
     }
 
     return valid;

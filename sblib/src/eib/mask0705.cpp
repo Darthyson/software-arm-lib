@@ -12,6 +12,6 @@ MASK0705::MASK0705() : MASK0705(new UserRamMASK0705(), new UserEepromMASK0705(),
 {}
 
 MASK0705::MASK0705(UserRamMASK0705* userRam, UserEepromMASK0705* userEeprom, ComObjectsMASK0705* comObjects, AddrTablesMASK0705* addrTables, PropertiesMASK0705* properties) :
-		MASK0701(userRam, userEeprom, comObjects, addrTables, properties)
+        MASK0701(userRam, userEeprom, comObjects, addrTables, properties)
 {}
 

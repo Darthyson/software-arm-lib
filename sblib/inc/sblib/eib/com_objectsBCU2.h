@@ -5,10 +5,10 @@
  *
  *
  **  last update: Jan. 2021 Horst Rauch
- *  			 - added some explanation on the functions of this interface between
- *  			   the user application and the communication functions of the knx bus.
- *  			 - changed some function for the transmission of object from
- *  			 user appl. to knx bus and vice versa as there was an endless loop in some cases
+ *               - added some explanation on the functions of this interface between
+ *                 the user application and the communication functions of the knx bus.
+ *               - changed some function for the transmission of object from
+ *               user appl. to knx bus and vice versa as there was an endless loop in some cases
  *
  *  This program is the main interface for the communication of the user application of the knx bus device,
  *  based on the functions of a BCUx or BIMx provided by the complete library.
@@ -42,16 +42,16 @@ class ComObjectsBCU2 : public ComObjectsBCU1
 public:
     ComObjectsBCU2() = delete;
     ComObjectsBCU2(BcuDefault* bcuInstance) : ComObjectsBCU1(bcuInstance) {}
-	~ComObjectsBCU2() = default;
+    ~ComObjectsBCU2() = default;
 
 protected:
-	virtual byte* objectValuePtr(int objno) override;
-	virtual byte* objectConfigTable() override;
-	virtual byte* objectFlagsTable() override;
-	const ComConfig& objectConfig(int objno) override;
+    virtual byte* objectValuePtr(int objno) override;
+    virtual byte* objectConfigTable() override;
+    virtual byte* objectFlagsTable() override;
+    const ComConfig& objectConfig(int objno) override;
 
 private:
-	const ComConfigBCU2* objectConfigBCU2(int objno);
+    const ComConfigBCU2* objectConfigBCU2(int objno);
 };
 
 #endif /*sblib_com_objects_BCU2_h*/

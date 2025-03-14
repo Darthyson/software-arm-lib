@@ -18,17 +18,17 @@ uint32_t UserEeprom::flashSize() const
 
 unsigned int UserEeprom::numEepromPages() const
 {
-	return FLASH_SECTOR_SIZE / flashSize();
+    return FLASH_SECTOR_SIZE / flashSize();
 }
 
 byte* UserEeprom::lastEepromPage() const
 {
-	return flashSectorAddress() + flashSize() * (numEepromPages() - 1);
+    return flashSectorAddress() + flashSize() * (numEepromPages() - 1);
 }
 
 byte* UserEeprom::flashSectorAddress() const
 {
-	return (FLASH_BASE_ADDRESS + iapFlashSize() - FLASH_SECTOR_SIZE);
+    return (FLASH_BASE_ADDRESS + iapFlashSize() - FLASH_SECTOR_SIZE);
 }
 
 byte* UserEeprom::findValidPage()
@@ -76,7 +76,7 @@ void UserEeprom::writeUserEeprom()
     else if (page)
         page += userEepromFlashSize;
     else{
-    	page = flashSectorAddress();
+        page = flashSectorAddress();
     }
 
     if (page == flashSectorAddress())
@@ -96,16 +96,16 @@ void UserEeprom::writeUserEeprom()
 
     for (unsigned int i = 0; i < size(); i += 1024)
     {
-    	int chunk = size() - i;
-    	if (chunk > 1024)
-    	{
-    		chunk = 1024;
-    	}
-    	rc = iapProgram(page + i, userEepromData + i, chunk);
-    	if (rc != IAP_SUCCESS)
-    	{
+        int chunk = size() - i;
+        if (chunk > 1024)
+        {
+            chunk = 1024;
+        }
+        rc = iapProgram(page + i, userEepromData + i, chunk);
+        if (rc != IAP_SUCCESS)
+        {
             fatalError(); // flashing failed
-    	}
+        }
     }
 
     modified(false);
@@ -113,9 +113,9 @@ void UserEeprom::writeUserEeprom()
 }
 
 UserEeprom::UserEeprom(unsigned int start, unsigned int size, unsigned int flashSize) :
-		Memory(start, size),
-		userEepromData(new byte[size]()),
-		userEepromFlashSize(flashSize)
+        Memory(start, size),
+        userEepromData(new byte[size]()),
+        userEepromFlashSize(flashSize)
 {
     readUserEeprom();
 }

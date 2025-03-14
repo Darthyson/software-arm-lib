@@ -17,10 +17,10 @@
 class UserRamSYSTEMB : public UserRamMASK0701
 {
 public:
-	UserRamSYSTEMB() : UserRamMASK0701(0x5FC, 0x304, 3) {}
+    UserRamSYSTEMB() : UserRamMASK0701(0x5FC, 0x304, 3) {}
 
 protected:
-	UserRamSYSTEMB(uint32_t start, uint32_t size, uint32_t shadowSize) : UserRamMASK0701(start, size, shadowSize) {}
+    UserRamSYSTEMB(uint32_t start, uint32_t size, uint32_t shadowSize) : UserRamMASK0701(start, size, shadowSize) {}
 
 private:
 

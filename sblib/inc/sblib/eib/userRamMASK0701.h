@@ -17,10 +17,10 @@
 class UserRamMASK0701 : public UserRamBCU2
 {
 public:
-	UserRamMASK0701() : UserRamBCU2(0x5FC, 0x304, 3) {}
+    UserRamMASK0701() : UserRamBCU2(0x5FC, 0x304, 3) {}
 
 protected:
-	UserRamMASK0701(uint32_t start, uint32_t size, uint32_t shadowSize) : UserRamBCU2(start, size, shadowSize) {}
+    UserRamMASK0701(uint32_t start, uint32_t size, uint32_t shadowSize) : UserRamBCU2(start, size, shadowSize) {}
 private:
 
 };

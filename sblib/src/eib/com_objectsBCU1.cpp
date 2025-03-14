@@ -160,10 +160,10 @@ inline const ComConfig& ComObjectsBCU1::objectConfig(int objno) { return objectC
 
 inline const ComConfigBCU1* ComObjectsBCU1::objectConfigBCU1(int objno)
 {
-	byte *objConfigTable = objectConfigTable();
-	if (objConfigTable == nullptr)
-	{
-	    return (nullptr);
-	}
+    byte *objConfigTable = objectConfigTable();
+    if (objConfigTable == nullptr)
+    {
+        return (nullptr);
+    }
     return (const ComConfigBCU1*) (objConfigTable + 1 + sizeof(ComConfigBCU1::DataPtrType) + objno * sizeof(ComConfigBCU1) );
 }

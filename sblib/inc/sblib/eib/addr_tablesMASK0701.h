@@ -18,8 +18,8 @@ class BCU2;
 class AddrTablesMASK0701 : public AddrTablesBCU2
 {
 public:
-	AddrTablesMASK0701(MASK0701* bcuInstance) : AddrTablesBCU2((BCU2*)bcuInstance) {}
-	~AddrTablesMASK0701() = default;
+    AddrTablesMASK0701(MASK0701* bcuInstance) : AddrTablesBCU2((BCU2*)bcuInstance) {}
+    ~AddrTablesMASK0701() = default;
 };
 
 #endif /*sblib_addr_tables_MASK0701_h*/

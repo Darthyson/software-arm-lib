@@ -5,10 +5,10 @@
  *
  *
  **  last update: Jan. 2021 Horst Rauch
- *  			 - added some explanation on the functions of this interface between
- *  			   the user application and the communication functions of the knx bus.
- *  			 - changed some function for the transmission of object from
- *  			 user appl. to knx bus and vice versa as there was an endless loop in some cases
+ *               - added some explanation on the functions of this interface between
+ *                 the user application and the communication functions of the knx bus.
+ *               - changed some function for the transmission of object from
+ *               user appl. to knx bus and vice versa as there was an endless loop in some cases
  *
  *  This program is the main interface for the communication of the user application of the knx bus device,
  *  based on the functions of a BCUx or BIMx provided by the complete library.
@@ -46,17 +46,17 @@ class ComObjectsBCU1 : public ComObjects
 {
 public:
     ComObjectsBCU1() = delete;
-	ComObjectsBCU1(BcuDefault* bcuInstance) : ComObjects((BcuBase*)bcuInstance) {}
-	~ComObjectsBCU1() = default;
+    ComObjectsBCU1(BcuDefault* bcuInstance) : ComObjects((BcuBase*)bcuInstance) {}
+    ~ComObjectsBCU1() = default;
 
-	virtual const ComConfig& objectConfig(int objno) override;
-	virtual int objectSize(int objno) override;
-	virtual byte* objectValuePtr(int objno) override;
-	virtual void processGroupTelegram(uint16_t addr, int apci, byte* tel, int trg_objno) override;
-	virtual byte* objectConfigTable() override;
-	virtual byte* objectFlagsTable() override;
+    virtual const ComConfig& objectConfig(int objno) override;
+    virtual int objectSize(int objno) override;
+    virtual byte* objectValuePtr(int objno) override;
+    virtual void processGroupTelegram(uint16_t addr, int apci, byte* tel, int trg_objno) override;
+    virtual byte* objectConfigTable() override;
+    virtual byte* objectFlagsTable() override;
 
-	const ComConfigBCU1* objectConfigBCU1(int objno); ///\todo make protected again after ramLocation fix, see setup.cpp fixRamLoc(.) of 4sense-bcu1
+    const ComConfigBCU1* objectConfigBCU1(int objno); ///\todo make protected again after ramLocation fix, see setup.cpp fixRamLoc(.) of 4sense-bcu1
 };
 
 #endif /*sblib_com_objects_BCU1_h*/

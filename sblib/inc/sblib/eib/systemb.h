@@ -29,9 +29,9 @@
 class SYSTEMB : public MASK0701
 {
 public:
-	SYSTEMB();
-	SYSTEMB(UserRamSYSTEMB* userRam, UserEepromSYSTEMB* userEeprom, ComObjectsSYSTEMB* comObjects, AddrTablesSYSTEMB* addrTables, PropertiesSYSTEMB* properties);
-	virtual ~SYSTEMB() = default;
+    SYSTEMB();
+    SYSTEMB(UserRamSYSTEMB* userRam, UserEepromSYSTEMB* userEeprom, ComObjectsSYSTEMB* comObjects, AddrTablesSYSTEMB* addrTables, PropertiesSYSTEMB* properties);
+    virtual ~SYSTEMB() = default;
 
     virtual const char* getBcuType() const override { return "SYSTEM_B"; }
     virtual uint16_t getMaskVersion() const override { return 0x7B0; }

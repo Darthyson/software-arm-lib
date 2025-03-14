@@ -5,10 +5,10 @@
  *
  *
  **  last update: Jan. 2021 Horst Rauch
- *  			 - added some explanation on the functions of this interface between
- *  			   the user application and the communication functions of the knx bus.
- *  			 - changed some function for the transmission of object from
- *  			 user appl. to knx bus and vice versa as there was an endless loop in some cases
+ *               - added some explanation on the functions of this interface between
+ *                 the user application and the communication functions of the knx bus.
+ *               - changed some function for the transmission of object from
+ *               user appl. to knx bus and vice versa as there was an endless loop in some cases
  *
  *  This program is the main interface for the communication of the user application of the knx bus device,
  *  based on the functions of a BCUx or BIMx provided by the complete library.
@@ -39,8 +39,8 @@ class BcuDefault;
 class ComObjectsMASK0701 : public ComObjectsBCU2
 {
 public:
-	ComObjectsMASK0701(BcuDefault* bcuInstance) : ComObjectsBCU2(bcuInstance) {};
-	~ComObjectsMASK0701() = default;
+    ComObjectsMASK0701(BcuDefault* bcuInstance) : ComObjectsBCU2(bcuInstance) {};
+    ~ComObjectsMASK0701() = default;
 };
 
 #endif /*sblib_com_objects_MASK0701_h*/

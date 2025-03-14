@@ -153,7 +153,7 @@ LoadState PropertiesSYSTEMB::handleDataRelativeAllocation(const int objectIdx, c
 
     unsigned int reqMemSize = ((payLoad[0] << 24) | (payLoad[1] << 16) | (payLoad[2] << 8) | payLoad[3]);
     word*    tableAddress[] = {&bcu->userEeprom->addrTabAddr(), &bcu->userEeprom->assocTabAddr(), &bcu->userEeprom->commsTabAddr(),
-	                       &bcu->userEeprom->eibObjAddr(), &bcu->userEeprom->commsSeg0Addr()};
+                           &bcu->userEeprom->eibObjAddr(), &bcu->userEeprom->commsSeg0Addr()};
 
     UserEepromSYSTEMB* userEeprom = (UserEepromSYSTEMB*) bcu->userEeprom;
 
