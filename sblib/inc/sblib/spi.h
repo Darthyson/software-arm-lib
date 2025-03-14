@@ -89,7 +89,7 @@ enum SpiMode
     /**
      * High clock polarity: the clock pin will be high between transmits.
      */
-    SPI_CPOL_HIGH = (1<<6),
+    SPI_CPOL_HIGH = (1 << 6),
 
     /**
      * Capture data on the rising edge of the SPI clock.
@@ -99,7 +99,7 @@ enum SpiMode
     /**
      * Capture data on the falling edge of the SPI clock.
      */
-    SPI_CPHASE_FALL = (1<<7),
+    SPI_CPHASE_FALL = (1 << 7),
 };
 
 // The default SPI mode settings
@@ -199,7 +199,7 @@ public:
      * @param recData   - pointer to the buffer where the received bytes should be copied to. this can be null
      * @param asynchron - if true, the buffer will be transfered using an interrupt service routine
      */
-    void transferBlock(uint16_t * sndData, int bytes, uint16_t * recData = 0, bool asynchron = false);
+    void transferBlock(uint16_t* sndData, int bytes, uint16_t* recData = 0, bool asynchron = false);
 
     /**
      * Continue a started block transfer. This function should not be called from the user. It will be called by
@@ -217,13 +217,14 @@ protected:
     LPC_SSP_TypeDef& port;
     int clockDiv;
 
-    uint16_t * sndData;
-    uint16_t * recData;
-    int        sndCount;
-    int        recCount;
-    int        errors;
+    uint16_t* sndData;
+    uint16_t* recData;
+    int sndCount;
+    int recCount;
+    int errors;
+
 public:
-    bool       finished;
+    bool finished;
 };
 
 

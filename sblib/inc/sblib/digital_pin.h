@@ -303,12 +303,12 @@ enum PinInterruptMode
     /**
      * Configure the interrupt to be level triggered activated by a LOW level.
      */
-    INTERRUPT_LEVEL_LOW    = 0x0100,
+    INTERRUPT_LEVEL_LOW = 0x0100,
 
     /**
      * Configure the interrupt to be level triggered activated by a HIGH level.
      */
-    INTERRUPT_LEVEL_HIGH   = 0x0101,
+    INTERRUPT_LEVEL_HIGH = 0x0101,
 
     /**
      * Configure the interrupt to be triggered by a falling edge on the I/O pin.
@@ -318,17 +318,17 @@ enum PinInterruptMode
     /**
      * Configure the interrupt to be triggered by a rising edge on the I/O pin.
      */
-    INTERRUPT_EDGE_RISING  = 0x0001,
+    INTERRUPT_EDGE_RISING = 0x0001,
 
     /**
      * Configure the interrupt to be triggered by a both edges on the I/O pin.
      */
-    INTERRUPT_EDGE_BOTH    = 0x0010,
+    INTERRUPT_EDGE_BOTH = 0x0010,
 
     /**
      * After the configuration enable the interrupt.
      */
-    INTERRUPT_ENABLED      = 0x1000,
+    INTERRUPT_ENABLED = 0x1000,
 };
 
 //
@@ -351,7 +351,7 @@ ALWAYS_INLINE void pinEnableInterrupt(int pin)
     LPC_GPIO_TypeDef* port = gpioPorts[digitalPinToPort(pin)];
     unsigned short mask = digitalPinToBitMask(pin);
 
-    port->IE  |=  mask;
+    port->IE |= mask;
 }
 
 ALWAYS_INLINE void pinDisableInterrupt(int pin)
@@ -359,8 +359,7 @@ ALWAYS_INLINE void pinDisableInterrupt(int pin)
     LPC_GPIO_TypeDef* port = gpioPorts[digitalPinToPort(pin)];
     unsigned short mask = digitalPinToBitMask(pin);
 
-    port->IE  &= ~mask;
-
+    port->IE &= ~mask;
 }
 
 #endif /*sblib_digital_pin_h*/

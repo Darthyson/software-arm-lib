@@ -1,4 +1,4 @@
-/**************************************************************************//**
+/******************************************************************************
  * @addtogroup SBLIB Selfbus KNX-Library sblib
  * @defgroup SBLIB_CORE CORE
  * @ingroup SBLIB
@@ -29,7 +29,7 @@
 #ifndef SBLIB_LIBCONFIG_H_
 #define SBLIB_LIBCONFIG_H_
 
-/**************************************************************************//**
+/******************************************************************************
  * Things to configure in the sblib
  ******************************************************************************/
 
@@ -55,9 +55,7 @@
 //#define ROUTER /// \todo create a new class derived from BcuDefault to build a ROUTER
 
 
-
-
-/**************************************************************************//**
+/******************************************************************************
  * Debugging stuff follows below
  *
  * for every debugging or dumping #define, make sure to add a #undef below,
@@ -102,7 +100,7 @@
 // LOGGING              /// \todo from in bh1750.h
 // DEBUG_ACTIVE         /// \todo from in debug.cpp
 
-/**************************************************************************//**
+/******************************************************************************
  *
  * Change things below only, if you know what you are doing.
  *
@@ -116,7 +114,7 @@
 #   undef DEBUG_BUS_BITLEVEL
 #   undef BUSMONITOR
 #   undef DUMP_TELEGRAMS
-#    undef PIO_FOR_TEL_END_IND
+#   undef PIO_FOR_TEL_END_IND
 #   undef DUMP_COM_OBJ
 #   undef DUMP_MEM_OPS
 #   undef DUMP_PROPERTIES

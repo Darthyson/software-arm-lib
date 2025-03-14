@@ -1,4 +1,4 @@
-/**************************************************************************//**
+/******************************************************************************
  * @addtogroup SBLIB_SENSOR Selfbus library sensors
  * @defgroup SBLIB_SENSOR_SHT1x SHT1x Temperature/humidity sensor
  * @ingroup SBLIB_SENSOR
@@ -61,8 +61,8 @@ void SHT1x::clockCycle()
 float SHT1x::convertRawTemperature(const float& temperature, eScale type)
 {
     // Conversion coefficients from SHT1x datasheet
-    const float D1 = -39.7f;  // @ 3.5V VDD (-39.6 @ 3.0V)
-    float D2 = 0.01f; // default
+    const float D1 = -39.7f; // @ 3.5V VDD (-39.6 @ 3.0V)
+    float D2 = 0.01f;        // default
     switch (type)
     {
         case CELCIUS:
@@ -108,8 +108,8 @@ bool SHT1x::readTemperatureF(float* newTemperature)
 bool SHT1x::readHumidity(float* humidity)
 {
     lastHumidity = INVALID_HUMIDITY;
-    int _val;                   // Raw humidity value returned from sensor
-    float linearHumidity;       // Humidity with linear correction applied
+    int _val;             // Raw humidity value returned from sensor
+    float linearHumidity; // Humidity with linear correction applied
     float temperatureC;
 
     // Conversion coefficients from SHT15 datasheet (I don't see this Cx values in the datasheet
@@ -117,11 +117,11 @@ bool SHT1x::readHumidity(float* humidity)
     // const float C2 =  0.0405f;    // for 12 Bit
     // const float C3 = -0.0000028f; // for 12 Bit
 
-    const float T1 =  0.01f;      // for 14 Bit @ 5V
-    const float T2 =  0.00008f;   // for 14 Bit @ 5V
+    const float T1 = 0.01f;    // for 14 Bit @ 5V
+    const float T2 = 0.00008f; // for 14 Bit @ 5V
 
-    const float C1 = -2.0468f;       // for 12 Bit
-    const float C2 =  0.0367f;    // for 12 Bit
+    const float C1 = -2.0468f;    // for 12 Bit
+    const float C2 = 0.0367f;     // for 12 Bit
     const float C3 = -1.5955E-6f; // for 12 Bit
 
     // Get current temperature for humidity correction
@@ -147,7 +147,7 @@ bool SHT1x::readHumidity(float* humidity)
     linearHumidity = C1 + C2 * _val + C3 * _val * _val;
 
     // Correct humidity value for current temperature
-    *humidity = (temperatureC - 25.0f ) * (T1 + T2 * _val) + linearHumidity;
+    *humidity = (temperatureC - 25.0f) * (T1 + T2 * _val) + linearHumidity;
     lastHumidity = (uint16_t)trunc(*humidity * 100);
     return (true);
 }
@@ -210,14 +210,16 @@ bool SHT1x::sendByteToSHT(uint8_t toSend, bool isCommand)
     digitalWrite(clockPin, false); // (end of 9th clock cycle)
     __NOP();
     uint8_t i = 0;
-    do {
+    do
+    {
         if (digitalRead(dataPin) == true)
         {
             return (true);
         }
         delayMicroseconds(MAX_DELAY_MICROSECONDS); // need to wait, seems like DATA-pin needs ~8-100ms to raise to high
         i++;
-    } while ((i < 25));
+    }
+    while ((i < 25));
     //serial.println("Ack Error 2, DATA not high");
     return (false);
 }
@@ -237,7 +239,8 @@ bool SHT1x::waitForResultSHT()
             i++;
             delay(WAIT_STEP_MS);
         }
-    } while ((i * WAIT_STEP_MS) <= MAX_WAIT_MS);
+    }
+    while ((i * WAIT_STEP_MS) <= MAX_WAIT_MS);
     //serial.println("Error, wait for DATA low failed");
     return (false);
 }
@@ -308,9 +311,9 @@ float SHT1x::GetDewPoint()
         return (INVALID_DEW_POINT);
     }
 
-    float temperature = getLastTemperature()/100;
+    float temperature = getLastTemperature() / 100;
 
-// Specify the constants for water vapor and barometric pressure.
+    // Specify the constants for water vapor and barometric pressure.
 #define WATER_VAPOR 17.62f
 #define BAROMETRIC_PRESSURE 243.5f
 
@@ -367,5 +370,3 @@ bool SHT1x::softReset()
     }
     return (true);
 }
-
-

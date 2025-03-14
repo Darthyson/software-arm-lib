@@ -12,7 +12,7 @@
 #include <sblib/platform.h>
 #include <sblib/types.h>
 
-#define IAP_UID_LENGTH (16)                  //!< Buffer size in bytes for @ref iapReadUID
+#define IAP_UID_LENGTH (16) //!< Buffer size in bytes for @ref iapReadUID
 
 /**
  * Status code of IAP (In Application Programming (Flash)) commands
@@ -37,12 +37,12 @@ enum IAP_Status
  * Number of bytes allowed to write in a single iapProgram (4096, 1024, 512, 256)
  * @note See IAP limitations in UM10398 26.7.2 p. 442
  */
-constexpr uint16_t IapBlockSize[4] = {16*FLASH_PAGE_SIZE, 4*FLASH_PAGE_SIZE, 2*FLASH_PAGE_SIZE, FLASH_PAGE_SIZE};
+constexpr uint16_t IapBlockSize[4] = {16 * FLASH_PAGE_SIZE, 4 * FLASH_PAGE_SIZE, 2 * FLASH_PAGE_SIZE, FLASH_PAGE_SIZE};
 
 /**
  *  Number of elements in @ref blockSize
  */
-constexpr uint8_t IapBlockSizesCount = sizeof(IapBlockSize)/sizeof(IapBlockSize[0]);
+constexpr uint8_t IapBlockSizesCount = sizeof(IapBlockSize) / sizeof(IapBlockSize[0]);
 
 /**
  * Get the index of the FLASH sector for the passed address.
@@ -66,7 +66,7 @@ unsigned int iapPageOfAddress(const byte* address);
  * @param page - the page index inside the FLASH
  * @return The address of the given page index.
  */
-uint8_t * iapAddressOfPage(const unsigned int page);
+uint8_t* iapAddressOfPage(const unsigned int page);
 
 /**
  * Get the address of the given FLASH sector index.
@@ -74,7 +74,7 @@ uint8_t * iapAddressOfPage(const unsigned int page);
  * @param sector - the sector index inside the FLASH
  * @return The address of the given sector index.
  */
-uint8_t * iapAddressOfSector(const unsigned int sector);
+uint8_t* iapAddressOfSector(const unsigned int sector);
 
 /**
  * Erase the specified sector.

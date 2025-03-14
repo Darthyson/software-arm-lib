@@ -1,4 +1,4 @@
-/**************************************************************************//**
+/******************************************************************************
  * @addtogroup SBLIB_MAIN_GROUP Selfbus KNX-Library
  * @defgroup SBLIB_SUB_GROUP_KNX KNX TP1 debugging
  * @ingroup SBLIB_MAIN_GROUP
@@ -100,22 +100,23 @@ void dumpTelegrams();
 
     // dump telegram data in buffer
 #   define tb2(s, ptc, t,  ptcv, pttv, pttmv,  i) \
-            td_b[i].ts=s; \
-            td_b[i].tt=t; \
-            td_b[i].tc=ptc; \
-            td_b[i].tcv=ptcv; \
-            td_b[i].ttv=pttv; \
-            td_b[i].ttmv=pttmv;  \
-            if ( ++i>=tb_lngth) \
+            td_b[i].ts = s; \
+            td_b[i].tt = t; \
+            td_b[i].tc = ptc; \
+            td_b[i].tcv = ptcv; \
+            td_b[i].ttv = pttv; \
+            td_b[i].ttmv = pttmv;  \
+            if (++i >= tb_lngth) \
             { \
-                i=0; tb_in_ov = true; \
+                i = 0; \
+                tb_in_ov = true; \
             }
 
     //dump a timer value
     #define tb_t(s, t,  i ) \
-            td_b[i].ts=s+2000; \
-            td_b[i].tt=t; \
-            if (++i>=tb_lngth) \
+            td_b[i].ts = s + 2000; \
+            td_b[i].tt = t; \
+            if (++i >= tb_lngth) \
             { \
                 i=0; \
                 tb_in_ov = true; \
@@ -123,21 +124,21 @@ void dumpTelegrams();
 
     // dump a hex value
 #   define tb_h(s, t,  i ) \
-        td_b[i].ts=s+4000; \
-        td_b[i].tt=t; \
-        if (++i>=tb_lngth) \
+        td_b[i].ts = s + 4000; \
+        td_b[i].tt = t; \
+        if (++i >= tb_lngth) \
         { \
-            i=0; \
+            i = 0; \
             tb_in_ov = true; \
         }
 
     // dump a decimal value
 #   define tb_d(s, t,  i ) \
-        td_b[i].ts=s+5000; \
-        td_b[i].tt=t; \
-        if (++i>=tb_lngth) \
+        td_b[i].ts = s + 5000; \
+        td_b[i].tt = t; \
+        if (++i >= tb_lngth) \
         { \
-            i=0; \
+            i = 0; \
             tb_in_ov = true; \
         }
 
@@ -179,7 +180,7 @@ void dumpTelegrams();
             }
 #   endif
 #else
-    // no dump at all
+// no dump at all
 #    define tb2(s, ptc, t,  ptcv, pttv, pttmv,  i) ;
 #    define tb_t(s, t,  i ) ;
 #    define tb_h(s, t,  i ) ;

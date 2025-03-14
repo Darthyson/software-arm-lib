@@ -363,7 +363,6 @@ protected:
     int transmitting_object_no; //!< Object number of last transmitted bus message - status should be in transmitting
     int sendNextObjIndex;       //!< Next object number which  will be checked in sendNextGroupTelegram() for transmission
     int nextUpdatedObjIndex;    //!< Next object number which  will be checked in nextUpdatedObject() for processing by the application
-
 };
 
 
@@ -373,18 +372,19 @@ protected:
 
 inline void ComObjects::objectEndian(int val)
 {
-    le_ptr=val;
+    le_ptr = val;
 }
 
 inline void ComObjects::processGroupTelegram(int addr, int apci, byte* tel)
-{ // call with neg/invalid object
+{
+    // call with neg/invalid object
 
     processGroupTelegram(addr, apci, tel, INVALID_OBJECT_NUMBER);
 }
 
 inline ComType ComObjects::objectType(int objno)
 {
-    return (ComType) objectConfig(objno).type;
+    return (ComType)objectConfig(objno).type;
 }
 
 inline void ComObjects::requestObjectRead(int objno)

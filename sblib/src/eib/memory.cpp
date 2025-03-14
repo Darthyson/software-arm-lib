@@ -1,4 +1,4 @@
-/**************************************************************************//**
+/******************************************************************************
  * @addtogroup SBLIB_MAIN_GROUP Main Group Description
  * @defgroup SBLIB_SUB_GROUP_1 Sub Group 1 Description
  * @ingroup SBLIB_MAIN_GROUP
@@ -21,11 +21,10 @@
 
 #include <sblib/eib/memory.h>
 
-Memory::Memory(uint32_t  start, uint32_t size):
-      startAddress(start),
-      endAddress(start + size - 1),
-      sizeTotal(size)
-{}
+Memory::Memory(uint32_t start, uint32_t size):
+    startAddress(start),
+    endAddress(start + size - 1),
+    sizeTotal(size) {}
 
 uint32_t Memory::startAddr() const
 {
@@ -53,8 +52,6 @@ bool Memory::inRange(uint32_t start, uint32_t end) const
             (start >= startAddr()) &&
             (end <= endAddr()));
 }
-
-
 
 
 /** @}*/

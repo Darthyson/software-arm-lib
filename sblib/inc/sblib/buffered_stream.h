@@ -15,7 +15,7 @@
 /**
  * A stream class that has a read and a write buffer.
  */
-class BufferedStream: public Stream
+class BufferedStream : public Stream
 {
 public:
     /**
@@ -47,16 +47,16 @@ public:
 
     enum
     {
-        BUFFER_SIZE = 128,  //!< The size of the internal read/write buffers in bytes.
-        BUFFER_SIZE_MASK = BUFFER_SIZE-1
+        BUFFER_SIZE = 128, //!< The size of the internal read/write buffers in bytes.
+        BUFFER_SIZE_MASK = BUFFER_SIZE - 1
     };
 
 protected:
     volatile int readHead, readTail;   //!< head and tail index for the read buffer
     volatile int writeHead, writeTail; //!< head and tail index for the write buffer
 
-    byte readBuffer[BUFFER_SIZE];      //!< the read buffer
-    byte writeBuffer[BUFFER_SIZE];     //!< the write buffer
+    byte readBuffer[BUFFER_SIZE];  //!< the read buffer
+    byte writeBuffer[BUFFER_SIZE]; //!< the write buffer
 
     /**
      * Test if the read buffer is full.

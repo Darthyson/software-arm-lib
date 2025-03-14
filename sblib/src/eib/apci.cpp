@@ -1,4 +1,4 @@
-/**************************************************************************//**
+/******************************************************************************
  * @addtogroup SBLIB Selfbus library
  * @defgroup
  * @brief
@@ -20,7 +20,7 @@
 #include <sblib/eib/apci.h>
 #include <sblib/utils.h>
 
-ApciCommand apciCommand(unsigned char *telegram)
+ApciCommand apciCommand(unsigned char* telegram)
 {
     unsigned short apci = (unsigned short)(((telegram[APCI_HIGH_BYTE] & 0x03) << 8) | telegram[APCI_LOW_BYTE]);
     unsigned short shortCommand = apci & APCI_GROUP_MASK;
@@ -30,14 +30,14 @@ ApciCommand apciCommand(unsigned char *telegram)
         case APCI_MEMORY_READ_PDU:
         case APCI_MEMORY_WRITE_PDU:
         case APCI_DEVICEDESCRIPTOR_READ_PDU:
-            return ((ApciCommand) shortCommand);
+            return ((ApciCommand)shortCommand);
 
         default:
-            return ((ApciCommand) apci);
+            return ((ApciCommand)apci);
     }
 }
 
-void setApciCommand(unsigned char *telegram, ApciCommand newApciCommand, byte additionalData)
+void setApciCommand(unsigned char* telegram, ApciCommand newApciCommand, byte additionalData)
 {
     telegram[APCI_HIGH_BYTE] = HIGH_BYTE(newApciCommand);
     telegram[APCI_LOW_BYTE] = lowByte(newApciCommand);

@@ -1,4 +1,4 @@
-/**************************************************************************//**
+/******************************************************************************
  * @addtogroup SBLIB_MAIN_GROUP Selfbus KNX-Library
  * @defgroup SBLIB_SUB_GROUP_KNX KNX NPDU Handling
  * @ingroup SBLIB_MAIN_GROUP
@@ -22,7 +22,7 @@
 #ifndef SBLIB_KNX_NPDU_H_
 #define SBLIB_KNX_NPDU_H_
 
-#define NPDU_CONTROL_BYTE           (5)
+#define NPDU_CONTROL_BYTE   (5)
 
 enum NPDU
 {
@@ -32,10 +32,7 @@ enum NPDU
     N_DATA_SYSTEM_BROADCAST
 };
 
-enum Hop_count_type
-{
-
-};
+enum Hop_count_type {};
 
 /**
  * Get the size of a telegram, including the protocol header but excluding

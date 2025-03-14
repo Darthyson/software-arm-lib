@@ -21,8 +21,8 @@ public:
 
 protected:
     UserRamMASK0701(uint32_t start, uint32_t size, uint32_t shadowSize) : UserRamBCU2(start, size, shadowSize) {}
-private:
 
+private:
 };
 
 #endif /* SBLIB_EIB_USERRAM_MASK0701_H_ */

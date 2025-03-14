@@ -39,7 +39,7 @@ public:
      * @param aCallback       - Callback class to inform bcu of events, e.g. telegram sending finished
      */
     Bus(AddrTables* addrTable, Timer& aTimer, const int& aRxPin, const int& aTxPin,
-            const TimerCapture& aCaptureChannel, const TimerMatch& aPwmChannel, CallbackBus* aCallback);
+        const TimerCapture& aCaptureChannel, const TimerMatch& aPwmChannel, CallbackBus* aCallback);
 
     /**
      * Begin using the bus.
@@ -216,7 +216,7 @@ private:
      */
     void handleTelegram(bool valid);
 
-    constexpr size_t maxTelegramSize() const {return TelegramBufferSize;};
+    constexpr size_t maxTelegramSize() const { return TelegramBufferSize; };
 
 private:
     AddrTables* addressTable;    //!< Address table to check, if a telegram should be processed or not.
@@ -229,34 +229,34 @@ private:
     /** The states of the telegram sending/receiving state machine */
     enum State
     {
-        INIT,   //!< The Lib is initializing, waiting for 50bit time inactivity on the bus
-        IDLE,   //!< The lib is idle. there was no receiving or sending for at least 50bit times, only cap intr enabled, no timeout intr
-        INIT_RX_FOR_RECEIVING_NEW_TEL,      //!< The Lib received a cap event and we need to start/init receiving of a new Telegram
-        RECV_WAIT_FOR_STARTBIT_OR_TELEND,   //!< The lib is waiting for Startbit (cap intr (low bit received) or timeout (end of stop bit: char end)) intr enabeld
-        RECV_BITS_OF_BYTE,                  //!< The lib is collecting all bit of a character
-        RECV_WAIT_FOR_ACK_TX_START,         //!< After Tel is received the lib is waiting for start sending an ACK to remote side.
-        WAIT_50BT_FOR_NEXT_RX_OR_PENDING_TX_OR_IDLE,    //!< Timeout event: Start sending the telegram (also triggered in sbSendTelegram[]), cap event: start RX of a new tel
-        SEND_START_BIT,                 //!< Send a start bit
-        SEND_BIT_0,                     //!< Send the first bit of the current byte
-        SEND_BITS_OF_BYTE,              //!< Send the bits of the current byte
-        SEND_END_OF_BYTE,               //!< Middle of stop bit reached, decide what to do next
-        SEND_END_OF_TX,                 //!< Finish sending current byte
-        SEND_WAIT_FOR_RX_ACK_WINDOW,    //!< after sending we wait for the ack receive window to start, only timeout event enabled
-        SEND_WAIT_FOR_RX_ACK            //!< after sending we wait for the ack in the ack receive window, cap event: rx start, timeout: repeat tel
+        INIT,                                        //!< The Lib is initializing, waiting for 50bit time inactivity on the bus
+        IDLE,                                        //!< The lib is idle. there was no receiving or sending for at least 50bit times, only cap intr enabled, no timeout intr
+        INIT_RX_FOR_RECEIVING_NEW_TEL,               //!< The Lib received a cap event and we need to start/init receiving of a new Telegram
+        RECV_WAIT_FOR_STARTBIT_OR_TELEND,            //!< The lib is waiting for Startbit (cap intr (low bit received) or timeout (end of stop bit: char end)) intr enabeld
+        RECV_BITS_OF_BYTE,                           //!< The lib is collecting all bit of a character
+        RECV_WAIT_FOR_ACK_TX_START,                  //!< After Tel is received the lib is waiting for start sending an ACK to remote side.
+        WAIT_50BT_FOR_NEXT_RX_OR_PENDING_TX_OR_IDLE, //!< Timeout event: Start sending the telegram (also triggered in sbSendTelegram[]), cap event: start RX of a new tel
+        SEND_START_BIT,                              //!< Send a start bit
+        SEND_BIT_0,                                  //!< Send the first bit of the current byte
+        SEND_BITS_OF_BYTE,                           //!< Send the bits of the current byte
+        SEND_END_OF_BYTE,                            //!< Middle of stop bit reached, decide what to do next
+        SEND_END_OF_TX,                              //!< Finish sending current byte
+        SEND_WAIT_FOR_RX_ACK_WINDOW,                 //!< after sending we wait for the ack receive window to start, only timeout event enabled
+        SEND_WAIT_FOR_RX_ACK                         //!< after sending we wait for the ack in the ack receive window, cap event: rx start, timeout: repeat tel
     };
 
-    State state;                   //!< The state of the lib's telegram sending/receiving
-    int sendRetries;               //!< The number of repeats when sending a telegram
-    int sendRetriesMax;            //!< The maximum number of repeats when sending a telegram. Default: 3
-    int sendBusyRetries;           //!< The number of busy repeats when sending a telegram
-    int sendBusyRetriesMax;        //!< The maximum number of busy repeats when sending a telegram. Default: 3
-    int sendAck;                   //!< Send an acknowledge or not-acknowledge byte if != 0
-    uint16_t nextByteIndex;        //!< The number of the next byte in the telegram
+    State state;            //!< The state of the lib's telegram sending/receiving
+    int sendRetries;        //!< The number of repeats when sending a telegram
+    int sendRetriesMax;     //!< The maximum number of repeats when sending a telegram. Default: 3
+    int sendBusyRetries;    //!< The number of busy repeats when sending a telegram
+    int sendBusyRetriesMax; //!< The maximum number of busy repeats when sending a telegram. Default: 3
+    int sendAck;            //!< Send an acknowledge or not-acknowledge byte if != 0
+    uint16_t nextByteIndex; //!< The number of the next byte in the telegram
 
-    int currentByte;               //!< The current byte that is received/sent, including the parity bit
-    int sendTelegramLen;           //!< The size of the to be sent telegram in bytes (including the checksum).
-    byte *sendCurTelegram;         //!< The telegram that is currently being sent.
-    byte *rx_telegram;             //!< Telegram buffer for the L1/L2 receiving process
+    int currentByte;       //!< The current byte that is received/sent, including the parity bit
+    int sendTelegramLen;   //!< The size of the to be sent telegram in bytes (including the checksum).
+    byte* sendCurTelegram; //!< The telegram that is currently being sent.
+    byte* rx_telegram;     //!< Telegram buffer for the L1/L2 receiving process
 
     int bitMask;
     int bitTime;                   //!< The bit-time within a byte when receiving
@@ -271,7 +271,7 @@ private:
     uint8_t collisions;            //!< Number of collisions when sending @ref sendCurTelegram
     uint16_t ownAddress;           //!< The physical KNX address to use for bus communication
 
-    CallbackBus* callBack;         //!< Callback instance to inform bcu of events, e.g. telegram sending finished
+    CallbackBus* callBack; //!< Callback instance to inform bcu of events, e.g. telegram sending finished
 };
 
 

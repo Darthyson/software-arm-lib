@@ -1,4 +1,4 @@
-/**************************************************************************//**
+/******************************************************************************
  * @addtogroup SBLIB_SENSOR Selfbus library sensors
  * @defgroup SBLIB_SENSOR_SHT1x SHT1x Temperature/humidity sensor
  * @ingroup SBLIB_SENSOR
@@ -43,7 +43,7 @@
  */
 class SHT1x
 {
-  public:
+public:
     /**
      * Constructor for the SHT1x class to
      * @param dataP     Pin to use as DATA line
@@ -100,7 +100,7 @@ class SHT1x
      * Get the last measured humidity
      * @return The last humidity with factor 100 (2045 = 20,45%rH)
      */
-    uint16_t getLastHumidity() {return lastHumidity;}
+    uint16_t getLastHumidity() { return lastHumidity; }
 
     /**
     * Get temperature as integer from sensor in degree Celsius
@@ -114,7 +114,7 @@ class SHT1x
      * Get the last measured temperature in degree Celsius
      * @return The last measured temperature with factor 100 (2045 = 20,45°C)
      */
-    int16_t getLastTemperature() {return lastTemperatureC;}
+    int16_t getLastTemperature() { return lastTemperatureC; }
 
     /**
      * Gets the current dew point based on the current humidity and temperature
@@ -143,12 +143,13 @@ private:
     /**
      * SHT1x control commands
      */
-    enum SHT1xCommand {
-        sht1xMeasureTemperature      = 0x03, //!< Request Temperature from SHT1x
+    enum SHT1xCommand
+    {
+        sht1xMeasureTemperature = 0x03,      //!< Request Temperature from SHT1x
         sht1xMeasureRelativeHumidity = 0x05, //!< Request relative humidity from SHT1x
-        sht1xReadStatusRegister      = 0x07, //!< Read the status register of the SHT1x
-        sht1xWriteStatusRegister     = 0x06, //!< Write to the status register of the SHT1x
-        sht1xSoftReset               = 0x1e, //!< Reset the interface, clears the status register to default values
+        sht1xReadStatusRegister = 0x07,      //!< Read the status register of the SHT1x
+        sht1xWriteStatusRegister = 0x06,     //!< Write to the status register of the SHT1x
+        sht1xSoftReset = 0x1e,               //!< Reset the interface, clears the status register to default values
     };
 
     SHT1x() = delete;

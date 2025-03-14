@@ -104,7 +104,7 @@ public:
      *
      * @return The number of bytes that were written.
      */
-    int print(const void * ptr);
+    int print(const void* ptr);
 
     /**
      * Print a zero terminated string followed by an unsigned number.
@@ -126,7 +126,7 @@ public:
      *
      * @return The number of bytes that were written.
      */
-    int print(const char* str, const void * ptr);
+    int print(const char* str, const void* ptr);
 
     /**
      * Print a zero terminated string followed by a float with a given precision.
@@ -196,7 +196,7 @@ public:
      *
      * @return The number of bytes that were written.
      */
-    int println(const void * ptr);
+    int println(const void* ptr);
 
     /**
      * Print a float with a given precision followed by a new line.
@@ -227,7 +227,7 @@ public:
      *
      * @return The number of bytes that were written.
      */
-    int println(const char* str, const void * ptr);
+    int println(const char* str, const void* ptr);
 
     /**
      * Print a zero terminated string followed by a float with a given precision and a new line.
@@ -285,14 +285,14 @@ inline int Print::print(const char* str)
     return this->write(str);
 }
 
-inline int Print::print(const void * ptr)
+inline int Print::print(const void* ptr)
 {
-    return print((uintptr_t)ptr, HEX, sizeof(void *));
+    return print((uintptr_t)ptr, HEX, sizeof(void*));
 }
 
-inline int Print::print(const char* str, const void * ptr)
+inline int Print::print(const char* str, const void* ptr)
 {
-    return print(str, (uintptr_t)ptr, HEX, sizeof(void *));
+    return print(str, (uintptr_t)ptr, HEX, sizeof(void*));
 }
 
 inline int Print::println(const char* str)
@@ -310,12 +310,12 @@ inline int Print::println(uintptr_t value, Base base, int digits)
     return print(value, base, digits) + println();
 }
 
-inline int Print::println(const void * ptr)
+inline int Print::println(const void* ptr)
 {
     return print(ptr) + println();
 }
 
-inline int Print::println(const char* str, const void * ptr)
+inline int Print::println(const char* str, const void* ptr)
 {
     return print(str, ptr) + println();
 }

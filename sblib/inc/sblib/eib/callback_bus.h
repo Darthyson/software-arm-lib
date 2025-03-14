@@ -17,5 +17,4 @@ public:
 };
 
 
-
 #endif /* SBLIB_EIB_CALLBACK_BUS_H_ */

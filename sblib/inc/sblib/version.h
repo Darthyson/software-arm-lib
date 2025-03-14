@@ -35,6 +35,6 @@
  *
  * @return @ref APP_VERSION_STRING
  */
-volatile const char * __attribute__((optimize("O0"))) getAppVersion();
+volatile const char* __attribute__((optimize("O0"))) getAppVersion();
 
 #endif /*sblib_version_h*/
