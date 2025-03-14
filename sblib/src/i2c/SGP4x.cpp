@@ -86,15 +86,15 @@ SGP4xResult SGP4xClass::readSensor(Sgp4xCommand command, uint8_t * commandBuffer
 
 SGP4xResult SGP4xClass::init(uint32_t samplingIntervalMs)
 {
-	i2c_lpcopen_init();
-	rawVocTics = 0;
-	rawNoxTics = 0;
-	vocIndexValue = -1;
-	noxIndexValue = -1;
-	// init VOC index algorithm with provided sampling interval
-	GasIndexAlgorithm_init_with_sampling_interval(&voc_algorithm_params, GasIndexAlgorithm_ALGORITHM_TYPE_VOC, (float)(samplingIntervalMs/1000.f));
-	// init NOx index algorithm with provided sampling interval
-	GasIndexAlgorithm_init_with_sampling_interval(&nox_algorithm_params, GasIndexAlgorithm_ALGORITHM_TYPE_NOX, (float)(samplingIntervalMs/1000.f));
+    i2c_lpcopen_init();
+    rawVocTics = 0;
+    rawNoxTics = 0;
+    vocIndexValue = -1;
+    noxIndexValue = -1;
+    // init VOC index algorithm with provided sampling interval
+    GasIndexAlgorithm_init_with_sampling_interval(&voc_algorithm_params, GasIndexAlgorithm_ALGORITHM_TYPE_VOC, (float)(samplingIntervalMs/1000.f));
+    // init NOx index algorithm with provided sampling interval
+    GasIndexAlgorithm_init_with_sampling_interval(&nox_algorithm_params, GasIndexAlgorithm_ALGORITHM_TYPE_NOX, (float)(samplingIntervalMs/1000.f));
     return executeConditioning();
 }
 
@@ -180,13 +180,13 @@ SGP4xResult SGP4xClass::measureRawSignal(float relativeHumidity, float temperatu
         return result;
     }
 
-	rawVocTics = makeWord(readBuffer[0], readBuffer[1]);
-	GasIndexAlgorithm_process(&voc_algorithm_params, rawVocTics , &vocIndexValue);
+    rawVocTics = makeWord(readBuffer[0], readBuffer[1]);
+    GasIndexAlgorithm_process(&voc_algorithm_params, rawVocTics , &vocIndexValue);
 
-	rawNoxTics = makeWord(readBuffer[3], readBuffer[4]);
-	GasIndexAlgorithm_process(&nox_algorithm_params, rawNoxTics, &noxIndexValue);
+    rawNoxTics = makeWord(readBuffer[3], readBuffer[4]);
+    GasIndexAlgorithm_process(&nox_algorithm_params, rawNoxTics, &noxIndexValue);
 
-	return SGP4xResult::success;
+    return SGP4xResult::success;
 }
 
 SGP4xResult SGP4xClass::measureRawSignal()
@@ -196,8 +196,8 @@ SGP4xResult SGP4xClass::measureRawSignal()
 
 SGP4xResult SGP4xClass::getSerialnumber(uint8_t * serialNumber, uint8_t length)
 {
-	uint8_t readBuffer[9];
-	uint8_t readBufferSize = sizeof(readBuffer)/sizeof(*readBuffer);
+    uint8_t readBuffer[9];
+    uint8_t readBufferSize = sizeof(readBuffer)/sizeof(*readBuffer);
     uint8_t cmdBuffer[2];
     uint8_t commandBufferSize = sizeof(cmdBuffer)/sizeof(*cmdBuffer);
 
@@ -222,7 +222,7 @@ SGP4xResult SGP4xClass::getSerialnumber(uint8_t * serialNumber, uint8_t length)
         }
     }
 
-	return SGP4xResult::success;
+    return SGP4xResult::success;
 }
 
 SGP4xResult SGP4xClass::turnHeaterOffAndReturnToIdle()

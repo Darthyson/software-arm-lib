@@ -21,7 +21,7 @@ public:
     UserRamBCU2() : UserRamBCU1(0, 0x100, 3) {};
 
 protected:
-	UserRamBCU2(uint32_t start, uint32_t size, uint32_t shadowSize) : UserRamBCU1(start, size, shadowSize) {}
+    UserRamBCU2(uint32_t start, uint32_t size, uint32_t shadowSize) : UserRamBCU1(start, size, shadowSize) {}
 };
 
 #endif /* SBLIB_EIB_USERRAM_BCU2_H_ */

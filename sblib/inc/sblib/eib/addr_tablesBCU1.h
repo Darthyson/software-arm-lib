@@ -16,43 +16,43 @@
 class AddrTablesBCU1 : public AddrTables
 {
 public:
-	AddrTablesBCU1(UserEeprom* aUserEeprom) : userEeprom(aUserEeprom) {};
-	~AddrTablesBCU1() = default;
+    AddrTablesBCU1(UserEeprom* aUserEeprom) : userEeprom(aUserEeprom) {};
+    ~AddrTablesBCU1() = default;
 
-	/**
-	 * Get the index of a group address in the address table.
-	 *
-	 * @param addr - the address to find.
-	 * @return The index of the address, -1 if not found.
-	 *
-	 * @brief The address table contains the configured group addresses and our
-	 * own physical address. This function skips the own physical address and
-	 * only scans the group addresses.
-	 */
-	int indexOfAddr(int addr) override;
+    /**
+     * Get the index of a group address in the address table.
+     *
+     * @param addr - the address to find.
+     * @return The index of the address, -1 if not found.
+     *
+     * @brief The address table contains the configured group addresses and our
+     * own physical address. This function skips the own physical address and
+     * only scans the group addresses.
+     */
+    int indexOfAddr(int addr) override;
 
-	/**
-	 * Get the address table. The address table contains the configured group addresses
-	 * and our own physical address.
-	 *
-	 * @return The pointer to the address table.
-	 *
-	 * @brief The first byte of the table contains the number of entries. The rest of
-	 * the table consists of the addresses: 2 bytes per address.
-	 */
-	byte* addrTable() override;
+    /**
+     * Get the address table. The address table contains the configured group addresses
+     * and our own physical address.
+     *
+     * @return The pointer to the address table.
+     *
+     * @brief The first byte of the table contains the number of entries. The rest of
+     * the table consists of the addresses: 2 bytes per address.
+     */
+    byte* addrTable() override;
 
-	/**
-	 * Get the association table. The association table connects group addresses
-	 * with communication objects.
-	 *
-	 * @return The pointer to the association table.
-	 *
-	 * @brief The first byte of the table contains the number of entries. The rest of
-	 * the table consists of the associations - 2 bytes per association:
-	 * 1 byte addr-table index, 1 byte com-object number.
-	 */
-	byte* assocTable() override;
+    /**
+     * Get the association table. The association table connects group addresses
+     * with communication objects.
+     *
+     * @return The pointer to the association table.
+     *
+     * @brief The first byte of the table contains the number of entries. The rest of
+     * the table consists of the associations - 2 bytes per association:
+     * 1 byte addr-table index, 1 byte com-object number.
+     */
+    byte* assocTable() override;
 
 private:
     UserEeprom* userEeprom;

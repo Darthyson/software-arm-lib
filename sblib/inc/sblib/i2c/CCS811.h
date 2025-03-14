@@ -34,13 +34,13 @@
 #define CCS_811_ADDR            0x5A   // when I2C_ADDR pin is LOW
 //#define CCS_811_ADDR            0x5B   // when I2C_ADDR pin is HIGH
 
-const uint8_t STATUS = 		    0x00;
-const uint8_t MEAS_MODE =     	0x01;
+const uint8_t STATUS =             0x00;
+const uint8_t MEAS_MODE =         0x01;
 const uint8_t ALG_RESULT_DATA = 0x02;
-const uint8_t ENV_DATA =		0x05;
-const uint8_t APP_START =     	0xF4;
+const uint8_t ENV_DATA =        0x05;
+const uint8_t APP_START =         0xF4;
 const uint8_t BASELINE_REG =    0x11;
-const uint8_t HW_ID =	        0x20;
+const uint8_t HW_ID =            0x20;
 const uint8_t ERROR_ID =        0xE0;
 const uint8_t SW_RESET =        0xFF;
 

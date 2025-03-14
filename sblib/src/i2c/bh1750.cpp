@@ -121,7 +121,7 @@ bool BH1750::configure(Mode mode) {
  * MT reg = Measurement Time register
  * @param MTreg a value between 32 and 254. Default: 69
  * @return bool true if MTReg successful set
- * 		false if MTreg not changed or parameter out of range
+ *         false if MTreg not changed or parameter out of range
  */
 bool BH1750::setMTreg(byte MTreg) {
   LOG("setMTreg %d", MTreg);
@@ -206,8 +206,8 @@ bool BH1750::measurementReady(bool maxWait) {
  * The return value range differs if the MTreg value is changed. The global
  * maximum value is noted in the square brackets.
  * @return Light level in lux (0.0 ~ 54612,5 [117758,203])
- * 	   -1 : no valid return value
- * 	   -2 : sensor not configured
+ *        -1 : no valid return value
+ *        -2 : sensor not configured
  */
 float BH1750::readLightLevel() {
 

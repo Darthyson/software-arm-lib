@@ -75,7 +75,7 @@ void ComObjectsSYSTEMB::processGroupTelegram(uint16_t addr, int apci, byte* tel,
         {
             objno = makeWord(assocTab[idx +2], assocTab[idx +3]);  // Get the com-object number from the assoc table
             if (objno == trg_objno)
-             	continue; // no update of the object triggered by the app
+                 continue; // no update of the object triggered by the app
 
             objConf = configTab[objno].config;
 
@@ -89,7 +89,7 @@ void ComObjectsSYSTEMB::processGroupTelegram(uint16_t addr, int apci, byte* tel,
             {
                 // Check if communication and read are enabled
                 if ((objConf & COMCONF_READ_COMM) == COMCONF_READ_COMM)
-                   	// we received read-request from bus - so send response back and search for more associations
+                       // we received read-request from bus - so send response back and search for more associations
                     sendGroupWriteTelegram(objno, addr, true);
             }
         }
@@ -106,7 +106,7 @@ byte* ComObjectsSYSTEMB::objectFlagsTable()
 {
     const byte* configTable = objectConfigTable();
     if(le_ptr == LITTLE_ENDIAN)
-    	return ((BcuDefault*)bcu)->userMemoryPtr(makeWord(configTable[2], configTable[1]));
+        return ((BcuDefault*)bcu)->userMemoryPtr(makeWord(configTable[2], configTable[1]));
 
     return ((BcuDefault*)bcu)->userMemoryPtr(makeWord(configTable[1], configTable[2]));
 }

@@ -17,7 +17,7 @@
  */
 struct ComConfigSYSTEMB
 {
-	ComConfig baseConfig;
+    ComConfig baseConfig;
 };
 
 #endif /*sblib_eib_types_systemb_h*/

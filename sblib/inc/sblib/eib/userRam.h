@@ -55,18 +55,18 @@ public:
      *
      * @return Pointer to the device control byte
      */
-	virtual uint8_t& deviceControl() const = 0;
+    virtual uint8_t& deviceControl() const = 0;
 
     /**
      * PEI type
      * @details This is the type of the physical external interface that is connected to the device.
      * @warning not implemented
      */
-	virtual uint8_t& peiType() const = 0;
+    virtual uint8_t& peiType() const = 0;
 
-	void setUserRamStart(const uint32_t &newRamStart);
+    void setUserRamStart(const uint32_t &newRamStart);
 
-	uint8_t& operator[](uint32_t address) override;
+    uint8_t& operator[](uint32_t address) override;
     uint8_t getUInt8(uint32_t address) const override;
     uint16_t getUInt16(uint32_t address) const override;
 

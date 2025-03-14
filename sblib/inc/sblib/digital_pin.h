@@ -300,35 +300,35 @@ enum PinMode
 
 enum PinInterruptMode
 {
-	/**
-	 * Configure the interrupt to be level triggered activated by a LOW level.
-	 */
-	INTERRUPT_LEVEL_LOW    = 0x0100,
+    /**
+     * Configure the interrupt to be level triggered activated by a LOW level.
+     */
+    INTERRUPT_LEVEL_LOW    = 0x0100,
 
-	/**
-	 * Configure the interrupt to be level triggered activated by a HIGH level.
-	 */
-	INTERRUPT_LEVEL_HIGH   = 0x0101,
+    /**
+     * Configure the interrupt to be level triggered activated by a HIGH level.
+     */
+    INTERRUPT_LEVEL_HIGH   = 0x0101,
 
-	/**
-	 * Configure the interrupt to be triggered by a falling edge on the I/O pin.
-	 */
-	INTERRUPT_EDGE_FALLING = 0x0000,
+    /**
+     * Configure the interrupt to be triggered by a falling edge on the I/O pin.
+     */
+    INTERRUPT_EDGE_FALLING = 0x0000,
 
-	/**
-	 * Configure the interrupt to be triggered by a rising edge on the I/O pin.
-	 */
-	INTERRUPT_EDGE_RISING  = 0x0001,
+    /**
+     * Configure the interrupt to be triggered by a rising edge on the I/O pin.
+     */
+    INTERRUPT_EDGE_RISING  = 0x0001,
 
-	/**
-	 * Configure the interrupt to be triggered by a both edges on the I/O pin.
-	 */
-	INTERRUPT_EDGE_BOTH    = 0x0010,
+    /**
+     * Configure the interrupt to be triggered by a both edges on the I/O pin.
+     */
+    INTERRUPT_EDGE_BOTH    = 0x0010,
 
-	/**
-	 * After the configuration enable the interrupt.
-	 */
-	INTERRUPT_ENABLED      = 0x1000,
+    /**
+     * After the configuration enable the interrupt.
+     */
+    INTERRUPT_ENABLED      = 0x1000,
 };
 
 //

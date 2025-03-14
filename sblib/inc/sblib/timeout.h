@@ -32,101 +32,101 @@ class Timeout
  */
 {
 public:
-	/** Create a new timeout object and put it into the stopped state */
-	Timeout(void)
-	{
-		stop();
-	};
+    /** Create a new timeout object and put it into the stopped state */
+    Timeout(void)
+    {
+        stop();
+    };
 
-	/** Set the new timeout to be in ms seconds
-	 * @param   ms  The timeout value in milli seconds
-	 */
-	void start(unsigned int ms)
-	{
-		if (0 == ms)
-			stop();
-		else
-		{
-			timeout = millis() + ms;
-			if(timeout == Timeout::STOPPED) timeout++;
-		}
-	};
+    /** Set the new timeout to be in ms seconds
+     * @param   ms  The timeout value in milli seconds
+     */
+    void start(unsigned int ms)
+    {
+        if (0 == ms)
+            stop();
+        else
+        {
+            timeout = millis() + ms;
+            if(timeout == Timeout::STOPPED) timeout++;
+        }
+    };
 
-	/** Returns wether the timeout has expired or not
-	 *
-	 * @return If the timeout has exipred
-	 */
-	bool expired(void)
-	{
-		if (timeout != Timeout::STOPPED)
-		{
-			if(((int)(millis() - timeout)) >= 0)
-			{
-				stop();
-				return true;
-			}
-		}
-		return false;
-	};
+    /** Returns wether the timeout has expired or not
+     *
+     * @return If the timeout has exipred
+     */
+    bool expired(void)
+    {
+        if (timeout != Timeout::STOPPED)
+        {
+            if(((int)(millis() - timeout)) >= 0)
+            {
+                stop();
+                return true;
+            }
+        }
+        return false;
+    };
 
-	/** Returns if the timeout has been started or nor
-	 *
-	 * @return If the time as been started
-	 */
-	bool started(void)
-	{
-		return timeout != Timeout::STOPPED;
-	}
+    /** Returns if the timeout has been started or nor
+     *
+     * @return If the time as been started
+     */
+    bool started(void)
+    {
+        return timeout != Timeout::STOPPED;
+    }
 
-	/** Returns if the timeout is currently stopped
-	 *
-	 * @return If the time as been stopped
-	 */
-	bool stopped(void)
-	{
-		return timeout == Timeout::STOPPED;
-	}
+    /** Returns if the timeout is currently stopped
+     *
+     * @return If the time as been stopped
+     */
+    bool stopped(void)
+    {
+        return timeout == Timeout::STOPPED;
+    }
 
-	/** Stops the currently running timeout */
-	void stop(void)
-	{
-		timeout = Timeout::STOPPED;
-	};
+    /** Stops the currently running timeout */
+    void stop(void)
+    {
+        timeout = Timeout::STOPPED;
+    };
 
 protected:
-	unsigned int timeout;
-	enum STATE { STOPPED  = 0};
+    unsigned int timeout;
+    enum STATE { STOPPED  = 0};
 };
 
 #if 0
 class Periodic_Timeout : public Timeout
 {
 public:
-	void start(unsigned int ms)
-	{
-		Timeout::start(ms);
-		period = ms;
-	}
+    void start(unsigned int ms)
+    {
+        Timeout::start(ms);
+        period = ms;
+    }
 
-	bool expired(void)
-	{
-		if (timeout != Timeout::STOPPED)
-		{
-			if(((int)(millis() - timeout)) > 0)
-			{
-				if (period)
-				{
-					start (timeout + period);
-				}
-				else
-					stop();
-				return true;
-			}
-		}
-		return false;
-	};
+    bool expired(void)
+    {
+        if (timeout != Timeout::STOPPED)
+        {
+            if(((int)(millis() - timeout)) > 0)
+            {
+                if (period)
+                {
+                    start (timeout + period);
+                }
+                else
+                    stop();
+                return true;
+            }
+        }
+        return false;
+    };
 protected:
-	unsigned int period;
+    unsigned int period;
 };
 #endif
 

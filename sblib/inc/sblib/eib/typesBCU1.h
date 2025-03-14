@@ -17,14 +17,14 @@
  */
 struct ComConfigBCU1
 {
-	/**
-	 * Depending on the BCU type define the size of the pointer to the RAM
-	 * location of the value for a com object
-	 */
-	typedef byte DataPtrType;
+    /**
+     * Depending on the BCU type define the size of the pointer to the RAM
+     * location of the value for a com object
+     */
+    typedef byte DataPtrType;
 
-	/**
-	 * Data pointer, low byte. Depending on the COMCONF_VALUE_TYPE flag in the
+    /**
+     * Data pointer, low byte. Depending on the COMCONF_VALUE_TYPE flag in the
      * config byte, this pointer points to userRam or userEeprom.
      */
     DataPtrType dataPtr;

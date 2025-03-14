@@ -27,9 +27,9 @@
 class MASK0701 : public BCU2
 {
 public:
-	MASK0701();
-	MASK0701(UserRamMASK0701* userRam, UserEepromMASK0701* userEeprom, ComObjectsBCU2* comObjects, AddrTablesMASK0701* addrTables, PropertiesMASK0701* properties);
-	~MASK0701() = default;
+    MASK0701();
+    MASK0701(UserRamMASK0701* userRam, UserEepromMASK0701* userEeprom, ComObjectsBCU2* comObjects, AddrTablesMASK0701* addrTables, PropertiesMASK0701* properties);
+    ~MASK0701() = default;
 
     virtual const char* getBcuType() const override { return "BIM112"; }
     virtual uint16_t getMaskVersion() const override { return 0x701; }

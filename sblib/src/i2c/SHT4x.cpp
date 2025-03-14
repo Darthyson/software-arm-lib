@@ -49,11 +49,11 @@
 
 bool SHT4xClass::init(void)
 {
-	i2c_lpcopen_init();
+    i2c_lpcopen_init();
 
-	bool initialized = writeCommand(Sht4xCommand::softReset);
-	delay(1);
-	return initialized;
+    bool initialized = writeCommand(Sht4xCommand::softReset);
+    delay(1);
+    return initialized;
 }
 
 bool SHT4xClass::measureHighPrecision()
@@ -73,7 +73,7 @@ bool SHT4xClass::measureHighPrecision()
 
 bool SHT4xClass::measureHighPrecisionTicks(uint16_t &temperatureTicks, uint16_t &humidityTicks)
 {
-	uint8_t buffer[6] = {};
+    uint8_t buffer[6] = {};
 
     if (!readSensor(Sht4xCommand::measHi, buffer, sizeof(buffer) / sizeof(*buffer)))
     {
@@ -102,12 +102,12 @@ float SHT4xClass::convertTicksToPercentRH(uint16_t ticks)
 
 float SHT4xClass::getHumidity(void)
 {
-	return this->humidity;
+    return this->humidity;
 }
 
 float SHT4xClass::getTemperature(void)
 {
-	return this->temperature;
+    return this->temperature;
 }
 
 float SHT4xClass::getDewPoint(void)
@@ -128,19 +128,19 @@ float SHT4xClass::getDewPoint(void)
 
 uint32_t SHT4xClass::getSerialnumber(void)
 {
-	uint8_t result[6] = {};
-	uint32_t serialnumber;
+    uint8_t result[6] = {};
+    uint32_t serialnumber;
 
-	if (!readSensor(Sht4xCommand::getSerial, result, sizeof(result) / sizeof(*result)))
-	{
-	    return 0;
-	}
+    if (!readSensor(Sht4xCommand::getSerial, result, sizeof(result) / sizeof(*result)))
+    {
+        return 0;
+    }
 
     serialnumber = static_cast<uint32_t>(result[0]) << 24;
     serialnumber |= static_cast<uint32_t>(result[1]) << 16;
     serialnumber |= static_cast<uint32_t>(result[3]) << 8;
     serialnumber |= static_cast<uint32_t>(result[4]);
-	return serialnumber;
+    return serialnumber;
 }
 
 /******************************************************************************
@@ -148,28 +148,28 @@ uint32_t SHT4xClass::getSerialnumber(void)
  ******************************************************************************/
 bool SHT4xClass::writeCommand(Sht4xCommand command)
 {
-	uint8_t cmd = (uint8_t)command;
+    uint8_t cmd = (uint8_t)command;
 
-	return Chip_I2C_MasterSend(I2C0, eSHT4xAddress, &cmd, sizeof(cmd)) == sizeof(cmd);
+    return Chip_I2C_MasterSend(I2C0, eSHT4xAddress, &cmd, sizeof(cmd)) == sizeof(cmd);
 }
 
 bool SHT4xClass::readSensor(Sht4xCommand command, uint8_t* buffer, uint8_t bufferLength)
 {
-	uint8_t resultLength;
+    uint8_t resultLength;
 
-	// each response is 6 bytes in size, so if buffer is smaller we can't process the response
-	// as the crc would be incomplete
-	if (bufferLength < 6)
-	{
-	    return false;
-	}
+    // each response is 6 bytes in size, so if buffer is smaller we can't process the response
+    // as the crc would be incomplete
+    if (bufferLength < 6)
+    {
+        return false;
+    }
 
     if (!writeCommand(command))
     {
         return false;
     }
 
-	uint32_t timeout = millis() + 300; // 300ms timeout for I2C communication
+    uint32_t timeout = millis() + 300; // 300ms timeout for I2C communication
     // loop to receive measurement result within the timeout period
     do
     {

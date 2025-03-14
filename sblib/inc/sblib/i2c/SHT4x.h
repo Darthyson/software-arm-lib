@@ -39,25 +39,25 @@
 #include <stdint.h>
 
 enum class Sht4xCommand : uint8_t {
-	measHi 				= 0xFD,
-	measMed 			= 0xF6,
-	measLo				= 0xE0,
-	getSerial 			= 0x89,
-	softReset			= 0x94,
-	measHiHeatHiLong	= 0x39,
-	measHiHeatHiShort	= 0x32,
-	measHiHeatMidLong	= 0x2F,
-	measHiHeatMidShort 	= 0x24,
-	measHiHeatLoLong	= 0x1E,
-	measHiHeatLoShort 	= 0x15,
-	testTrash			= 0x0D
+    measHi                 = 0xFD,
+    measMed             = 0xF6,
+    measLo                = 0xE0,
+    getSerial             = 0x89,
+    softReset            = 0x94,
+    measHiHeatHiLong    = 0x39,
+    measHiHeatHiShort    = 0x32,
+    measHiHeatMidLong    = 0x2F,
+    measHiHeatMidShort     = 0x24,
+    measHiHeatLoLong    = 0x1E,
+    measHiHeatLoShort     = 0x15,
+    testTrash            = 0x0D
 };
 
 class SHT4xClass
 {
 private:
-	float temperature;
-	float humidity;
+    float temperature;
+    float humidity;
 
     bool readSensor(Sht4xCommand command, uint8_t* buffer, uint8_t bufferLength);
     bool writeCommand(Sht4xCommand command);

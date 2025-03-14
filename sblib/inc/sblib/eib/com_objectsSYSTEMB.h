@@ -5,10 +5,10 @@
  *
  *
  **  last update: Jan. 2021 Horst Rauch
- *  			 - added some explanation on the functions of this interface between
- *  			   the user application and the communication functions of the knx bus.
- *  			 - changed some function for the transmission of object from
- *  			 user appl. to knx bus and vice versa as there was an endless loop in some cases
+ *               - added some explanation on the functions of this interface between
+ *                 the user application and the communication functions of the knx bus.
+ *               - changed some function for the transmission of object from
+ *               user appl. to knx bus and vice versa as there was an endless loop in some cases
  *
  *  This program is the main interface for the communication of the user application of the knx bus device,
  *  based on the functions of a BCUx or BIMx provided by the complete library.
@@ -39,17 +39,17 @@ class BcuDefault;
 class ComObjectsSYSTEMB : public ComObjectsMASK0701
 {
 public:
-	ComObjectsSYSTEMB(BcuDefault* bcuInstance) : ComObjectsMASK0701(bcuInstance) {}
-	~ComObjectsSYSTEMB() = default;
+    ComObjectsSYSTEMB(BcuDefault* bcuInstance) : ComObjectsMASK0701(bcuInstance) {}
+    ~ComObjectsSYSTEMB() = default;
 
-	virtual inline const ComConfig& objectConfig(int objno) override;
+    virtual inline const ComConfig& objectConfig(int objno) override;
 
 protected:
-	virtual int objectSize(int objno) override;
-	virtual byte* objectValuePtr(int objno) override;
-	virtual void processGroupTelegram(uint16_t addr, int apci, byte* tel, int trg_objno) override;
-	virtual byte* objectConfigTable() override;
-	virtual byte* objectFlagsTable() override;
+    virtual int objectSize(int objno) override;
+    virtual byte* objectValuePtr(int objno) override;
+    virtual void processGroupTelegram(uint16_t addr, int apci, byte* tel, int trg_objno) override;
+    virtual byte* objectConfigTable() override;
+    virtual byte* objectFlagsTable() override;
 
 };
 

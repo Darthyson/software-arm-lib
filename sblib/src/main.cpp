@@ -27,7 +27,7 @@
  */
 static inline void lib_setup()
 {
-	SysTick_Config(SystemCoreClock / 1000);
+    SysTick_Config(SystemCoreClock / 1000);
 }
 
 /**

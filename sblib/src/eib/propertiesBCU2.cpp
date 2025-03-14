@@ -174,13 +174,13 @@ LoadState PropertiesBCU2::handleAllocAbsTaskSegment(const int objectIdx, const b
         }
         case OT_APPLICATION:
         {
-        	bcu->userEeprom->appPeiType() = payLoad[2];
-        	bcu->userEeprom->manufacturerH() = payLoad[3];
-        	bcu->userEeprom->manufacturerL() = payLoad[4];
-        	bcu->userEeprom->deviceTypeH() = payLoad[5];
-        	bcu->userEeprom->deviceTypeL() = payLoad[6];
-        	bcu->userEeprom->version() = payLoad[7];
-        	DB_PROPERTIES(
+            bcu->userEeprom->appPeiType() = payLoad[2];
+            bcu->userEeprom->manufacturerH() = payLoad[3];
+            bcu->userEeprom->manufacturerL() = payLoad[4];
+            bcu->userEeprom->deviceTypeH() = payLoad[5];
+            bcu->userEeprom->deviceTypeL() = payLoad[6];
+            bcu->userEeprom->version() = payLoad[7];
+            DB_PROPERTIES(
                     serial.println("  ----> userEeprom->appPeiType = 0x", bcu->userEeprom->appPeiType(), HEX, 2);
                     serial.println("  ----> userEeprom->manufacturerH & L = 0x", makeWord(bcu->userEeprom->manufacturerH(), bcu->userEeprom->manufacturerL()), HEX, 4);
                     serial.println("  ----> userEeprom->deviceTypeH & L = 0x", makeWord(bcu->userEeprom->deviceTypeH(), bcu->userEeprom->deviceTypeL()), HEX, 4);

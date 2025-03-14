@@ -116,7 +116,7 @@
 #   undef DEBUG_BUS_BITLEVEL
 #   undef BUSMONITOR
 #   undef DUMP_TELEGRAMS
-#	undef PIO_FOR_TEL_END_IND
+#    undef PIO_FOR_TEL_END_IND
 #   undef DUMP_COM_OBJ
 #   undef DUMP_MEM_OPS
 #   undef DUMP_PROPERTIES
