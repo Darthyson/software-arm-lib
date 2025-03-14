@@ -10,10 +10,6 @@
 
 #include <sblib/eib/addr_tables.h>
 
-#include <sblib/eib/property_types.h>
-#include <sblib/bits.h>
-#include <sblib/eib/userEeprom.h>
-
 uint16_t AddrTables::addrCount()
 {
     byte* ptrAddrTable = addrTable();

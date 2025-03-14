@@ -6,7 +6,6 @@
  */
 
 #include <sblib/eib/addr_tablesBCU1.h>
-#include <sblib/eib/bcu1.h>
 
 int AddrTablesBCU1::indexOfAddr(int addr)
 {
@@ -31,10 +30,10 @@ int AddrTablesBCU1::indexOfAddr(int addr)
 
 byte* AddrTablesBCU1::addrTable()
 {
-    return (byte*) &bcu->userEeprom->addrTabSize();
+    return (byte*) &userEeprom->addrTabSize();
 }
 
 byte* AddrTablesBCU1::assocTable()
 {
-    return bcu->userEeprom->userEepromData + bcu->userEeprom->assocTabPtr();
+    return userEeprom->userEepromData + userEeprom->assocTabPtr();
 }

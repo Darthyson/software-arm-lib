@@ -11,13 +11,12 @@
 #define sblib_addr_tables_BCU1_h
 
 #include <sblib/eib/addr_tables.h>
-
-class BCU1;
+#include <sblib/eib/userEeprom.h>
 
 class AddrTablesBCU1 : public AddrTables
 {
 public:
-	AddrTablesBCU1(BCU1* bcuInstance) : bcu(bcuInstance) {};
+	AddrTablesBCU1(UserEeprom* aUserEeprom) : userEeprom(aUserEeprom) {};
 	~AddrTablesBCU1() = default;
 
 	/**
@@ -56,7 +55,7 @@ public:
 	byte* assocTable() override;
 
 private:
-	BCU1* bcu;
+    UserEeprom* userEeprom;
 };
 
 #endif /*sblib_addr_tables_BCU1_h*/
