@@ -23,17 +23,13 @@
 #ifndef BCU_UPDATER_H_
 #define BCU_UPDATER_H_
 
-#include <sblib/timeout.h>
-#include <sblib/io_pin_names.h>
 #include <sblib/eib/bcu_base.h>
-#include "userRamUpdater.h"
 #include "update.h"
 
 class BcuUpdate: public BcuBase
 {
 public:
     BcuUpdate();
-    BcuUpdate(UserRamUpdater* userRamUpdater);
     ~BcuUpdate() = default;
     using BcuBase::setProgrammingMode; // make it public so we can use it in bootloader.cpp
     void begin();
@@ -43,11 +39,11 @@ protected:
     bool processApci(ApciCommand apciCmd, unsigned char * telegram, uint8_t telLength, uint8_t * sendBuffer) override;
     bool processGroupAddressTelegram(ApciCommand apciCmd, uint16_t groupAddress, unsigned char *telegram, uint8_t telLength) override;
     bool processBroadCastTelegram(ApciCommand apciCmd, unsigned char *telegram, uint8_t telLength) override;
-};
 
-#ifndef INSIDE_BCU_CPP
-#   undef begin_BCU
-#endif
+    uint8_t& layerStatus() override;
+private:
+    uint8_t bcuStatus = BCU_STATUS_LINK_LAYER | BCU_STATUS_TRANSPORT_LAYER | BCU_STATUS_APPLICATION_LAYER | BCU_STATUS_USER_MODE;
+};
 
 #endif /* BCU_UPDATER_H_ */
 
