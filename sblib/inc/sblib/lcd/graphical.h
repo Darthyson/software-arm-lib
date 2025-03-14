@@ -18,7 +18,7 @@ class Font;
 /**
  * Base class for graphical LCD displays.
  */
-class LcdGraphical: public Print
+class LcdGraphical : public Print
 {
 public:
     /**

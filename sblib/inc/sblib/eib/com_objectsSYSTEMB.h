@@ -50,7 +50,6 @@ protected:
     virtual void processGroupTelegram(uint16_t addr, int apci, byte* tel, int trg_objno) override;
     virtual byte* objectConfigTable() override;
     virtual byte* objectFlagsTable() override;
-
 };
 
 #endif /*sblib_com_objects_SYSTEMB_h*/

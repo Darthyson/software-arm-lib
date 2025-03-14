@@ -74,7 +74,7 @@ enum ObjectType
     OT_CEMI_SERVER = 8,
 
     /** Group object table object */
-    OT_GROUP_OBJECT_TABLE  = 9,
+    OT_GROUP_OBJECT_TABLE = 9,
 
     /** Polling master object */
     OT_POLLING_MASTER = 10,
@@ -135,7 +135,7 @@ enum LoadControl
     LC_START_LOADING = 1,
 
     /** complete the Loading of the loadable part */
-    LC_LOAD_COMPLETED  = 2,
+    LC_LOAD_COMPLETED = 2,
 
     /**
      * used to transfer additional load information
@@ -194,7 +194,7 @@ enum MemoryType
      * start 0xBD (189) length 0x18 (24) or start 0xC8 (200) length 0x23 (35)
      */
     MT_ZERO_PAGE_RAM = 1,
-    MT_RAM = 2, //!> RAM
+    MT_RAM = 2,   //!> RAM
     MT_EEPROM = 3 //!> EEPROM
     // these memory types there found in 38 product databases (all Siemens HVAC) with MaskVersion MV-0300-01000000000000000000
     // and interface object ID OT_INTERFACE_PROGRAM = 4
@@ -255,13 +255,13 @@ public:
 
     virtual LoadState handleDataRelativeAllocation(const int objectIdx, const byte* payLoad, const int len);
 
-    virtual bool propertyValueReadTelegram(int objectIdx, PropertyID propertyId, int count, int start, uint8_t * sendBuffer);
+    virtual bool propertyValueReadTelegram(int objectIdx, PropertyID propertyId, int count, int start, uint8_t* sendBuffer);
 
-    virtual bool propertyValueWriteTelegram(int objectIdx, PropertyID propertyId, int count, int start, uint8_t * sendBuffer);
+    virtual bool propertyValueWriteTelegram(int objectIdx, PropertyID propertyId, int count, int start, uint8_t* sendBuffer);
 
-    virtual bool propertyDescReadTelegram(int objectIdx, PropertyID propertyId, int index, uint8_t * sendBuffer);
+    virtual bool propertyDescReadTelegram(int objectIdx, PropertyID propertyId, int index, uint8_t* sendBuffer);
 
-    #ifdef DUMP_PROPERTIES
+#ifdef DUMP_PROPERTIES
 
     /**
      * Prints the value (in hex) of objectIdx and its clear name
@@ -298,7 +298,7 @@ public:
      */
     virtual void printData(const byte* data, int len);
 
-    #endif /*DUMP_PROPERTIES*/
+#endif /*DUMP_PROPERTIES*/
 
 protected:
     virtual const PropertyDef* const* propertiesTab() const;
@@ -313,39 +313,39 @@ private:
     const PropertyDef deviceObjectProps[12] =
     {
         /** Interface object type: 2 bytes */
-        { PID_OBJECT_TYPE, PDT_UNSIGNED_INT, OT_DEVICE },
+        {PID_OBJECT_TYPE, PDT_UNSIGNED_INT, OT_DEVICE},
 
         /** Device control */
-        { PID_DEVICE_CONTROL, PDT_GENERIC_01|PC_WRITABLE|PC_POINTER, PD_USER_RAM_OFFSET(_deviceControlOffset) },
+        {PID_DEVICE_CONTROL, PDT_GENERIC_01 | PC_WRITABLE | PC_POINTER, PD_USER_RAM_OFFSET(_deviceControlOffset)},
 
         /** Load state control */
-        { PID_LOAD_STATE_CONTROL, PDT_CONTROL|PC_WRITABLE|PC_POINTER, PD_USER_EEPROM_OFFSET(loadStateOffset + OT_DEVICE) },
+        {PID_LOAD_STATE_CONTROL, PDT_CONTROL | PC_WRITABLE | PC_POINTER, PD_USER_EEPROM_OFFSET(loadStateOffset + OT_DEVICE)},
 
         /** Service control: 2 bytes stored in userEeprom.serviceControl */
-        { PID_SERVICE_CONTROL, PDT_UNSIGNED_INT|PC_WRITABLE|PC_POINTER, PD_USER_EEPROM_OFFSET(serviceControlOffset) },
+        {PID_SERVICE_CONTROL, PDT_UNSIGNED_INT | PC_WRITABLE | PC_POINTER, PD_USER_EEPROM_OFFSET(serviceControlOffset)},
 
         /** Firmware revision: 1 byte */
-        { PID_FIRMWARE_REVISION, PDT_UNSIGNED_CHAR, SBLIB_VERSION },
+        {PID_FIRMWARE_REVISION, PDT_UNSIGNED_CHAR, SBLIB_VERSION},
 
         /** Serial number: 6 byte data, stored in userEeprom.serial */
-        { PID_SERIAL_NUMBER, PDT_GENERIC_06|PC_POINTER, PD_USER_EEPROM_OFFSET(serialOffset) },
+        {PID_SERIAL_NUMBER, PDT_GENERIC_06 | PC_POINTER, PD_USER_EEPROM_OFFSET(serialOffset)},
 
         /** Manufacturer ID: unsigned int, stored in userEeprom.manufacturerH (and manufacturerL)
          *  Configured as PDT_GENERIC_02 and not as PDT_UNSIGNED_INT to avoid swapping the byte order
          */
-        { PID_MANUFACTURER_ID, PDT_GENERIC_02|PC_POINTER, PD_USER_EEPROM_OFFSET(manufacturerHOffset) },
+        {PID_MANUFACTURER_ID, PDT_GENERIC_02 | PC_POINTER, PD_USER_EEPROM_OFFSET(manufacturerHOffset)},
 
         /** Order number: 10 byte data, stored in userEeprom->orderInfo(), last two bytes represent sblib version in hex */
-        { PID_ORDER_INFO, PDT_GENERIC_10|PC_POINTER, PD_USER_EEPROM_OFFSET(orderInfoOffset) },
+        {PID_ORDER_INFO, PDT_GENERIC_10 | PC_POINTER, PD_USER_EEPROM_OFFSET(orderInfoOffset)},
 
         /** PEI type: 1 byte */
-        { PID_PEI_TYPE, PDT_UNSIGNED_CHAR|PC_POINTER, PD_USER_RAM_OFFSET(_peiTypeOffset) },
+        {PID_PEI_TYPE, PDT_UNSIGNED_CHAR | PC_POINTER, PD_USER_RAM_OFFSET(_peiTypeOffset)},
 
         /** Port A configuration: 1 byte, stored in userEeprom.portADDR */
-        { PID_PORT_CONFIGURATION, PDT_UNSIGNED_CHAR|PC_POINTER, PD_USER_EEPROM_OFFSET(portADDROffset) },
+        {PID_PORT_CONFIGURATION, PDT_UNSIGNED_CHAR | PC_POINTER, PD_USER_EEPROM_OFFSET(portADDROffset)},
 
         /** Hardware type: 6 byte data */
-        { PID_HARDWARE_TYPE, PDT_GENERIC_06|PC_WRITABLE|PC_POINTER, PD_USER_EEPROM_OFFSET(orderOffset) },
+        {PID_HARDWARE_TYPE, PDT_GENERIC_06 | PC_WRITABLE | PC_POINTER, PD_USER_EEPROM_OFFSET(orderOffset)},
 
         /** End of table */
         PROPERTY_DEF_TABLE_END
@@ -358,16 +358,16 @@ private:
     const PropertyDef addrTabObjectProps[5] =
     {
         /** Interface object type: 2 bytes */
-        { PID_OBJECT_TYPE, PDT_UNSIGNED_INT, OT_ADDR_TABLE },
+        {PID_OBJECT_TYPE, PDT_UNSIGNED_INT, OT_ADDR_TABLE},
 
         /** Load state control */
-        { PID_LOAD_STATE_CONTROL, PDT_CONTROL|PC_WRITABLE|PC_POINTER, PD_USER_EEPROM_OFFSET(loadStateOffset + OT_ADDR_TABLE) },
+        {PID_LOAD_STATE_CONTROL, PDT_CONTROL | PC_WRITABLE | PC_POINTER, PD_USER_EEPROM_OFFSET(loadStateOffset + OT_ADDR_TABLE)},
 
         /** Pointer to the address table */
-        { PID_TABLE_REFERENCE, PDT_UNSIGNED_INT|PC_ARRAY_POINTER, PD_USER_EEPROM_OFFSET(addrTabAddrOffset) },
+        {PID_TABLE_REFERENCE, PDT_UNSIGNED_INT | PC_ARRAY_POINTER, PD_USER_EEPROM_OFFSET(addrTabAddrOffset)},
 
         /** Pointer to the memory control block */
-        { PID_MCB_TABLE, PDT_GENERIC_08|PC_POINTER|PC_WRITABLE, PD_USER_EEPROM_OFFSET(addrTabMcbOffset) },
+        {PID_MCB_TABLE, PDT_GENERIC_08 | PC_POINTER | PC_WRITABLE, PD_USER_EEPROM_OFFSET(addrTabMcbOffset)},
 
         /** End of table */
         PROPERTY_DEF_TABLE_END
@@ -380,19 +380,19 @@ private:
     const PropertyDef assocTabObjectProps[6] =
     {
         /** Interface object type: 2 bytes */
-        { PID_OBJECT_TYPE, PDT_UNSIGNED_INT, OT_ASSOC_TABLE },
+        {PID_OBJECT_TYPE, PDT_UNSIGNED_INT, OT_ASSOC_TABLE},
 
         /** Load state control */
-        { PID_LOAD_STATE_CONTROL, PDT_CONTROL|PC_WRITABLE|PC_POINTER, PD_USER_EEPROM_OFFSET(loadStateOffset + OT_ASSOC_TABLE) },
+        {PID_LOAD_STATE_CONTROL, PDT_CONTROL | PC_WRITABLE | PC_POINTER, PD_USER_EEPROM_OFFSET(loadStateOffset + OT_ASSOC_TABLE)},
 
         /** Pointer to the association table */
-        { PID_TABLE_REFERENCE, PDT_UNSIGNED_INT|PC_ARRAY_POINTER, PD_USER_EEPROM_OFFSET(assocTabAddrOffset) },
+        {PID_TABLE_REFERENCE, PDT_UNSIGNED_INT | PC_ARRAY_POINTER, PD_USER_EEPROM_OFFSET(assocTabAddrOffset)},
 
         /** */
-        { PID_TABLE, PDT_GENERIC_04|PC_WRITABLE, 0x00FF },
+        {PID_TABLE, PDT_GENERIC_04 | PC_WRITABLE, 0x00FF},
 
         /** Pointer to the memory control block */
-        { PID_MCB_TABLE, PDT_GENERIC_08|PC_POINTER|PC_WRITABLE, PD_USER_EEPROM_OFFSET(assocTabMcbOffset) },
+        {PID_MCB_TABLE, PDT_GENERIC_08 | PC_POINTER | PC_WRITABLE, PD_USER_EEPROM_OFFSET(assocTabMcbOffset)},
 
         /** End of table */
         PROPERTY_DEF_TABLE_END
@@ -405,25 +405,25 @@ private:
     const PropertyDef appObjectProps[8] =
     {
         /** Interface object type: 2 bytes */
-        { PID_OBJECT_TYPE, PDT_UNSIGNED_INT, OT_APPLICATION },
+        {PID_OBJECT_TYPE, PDT_UNSIGNED_INT, OT_APPLICATION},
 
         /** Load state control */
-        { PID_LOAD_STATE_CONTROL, PDT_CONTROL|PC_WRITABLE|PC_POINTER, PD_USER_EEPROM_OFFSET(loadStateOffset + OT_APPLICATION) },
+        {PID_LOAD_STATE_CONTROL, PDT_CONTROL | PC_WRITABLE | PC_POINTER, PD_USER_EEPROM_OFFSET(loadStateOffset + OT_APPLICATION)},
 
         /** Run state control */
-        { PID_RUN_STATE_CONTROL, PDT_UNSIGNED_CHAR|PC_POINTER, PD_USER_RAM_OFFSET(_runStateOffset) },
+        {PID_RUN_STATE_CONTROL, PDT_UNSIGNED_CHAR | PC_POINTER, PD_USER_RAM_OFFSET(_runStateOffset)},
 
         /** Program version */
-        { PID_PROGRAM_VERSION, PDT_GENERIC_05|PC_POINTER, PD_USER_EEPROM_OFFSET(manufacturerHOffset) },
+        {PID_PROGRAM_VERSION, PDT_GENERIC_05 | PC_POINTER, PD_USER_EEPROM_OFFSET(manufacturerHOffset)},
 
         /** Pointer to the communication objects table */
-        { PID_TABLE_REFERENCE, PDT_UNSIGNED_INT|PC_ARRAY_POINTER, PD_USER_EEPROM_OFFSET(commsTabAddrOffset) },
+        {PID_TABLE_REFERENCE, PDT_UNSIGNED_INT | PC_ARRAY_POINTER, PD_USER_EEPROM_OFFSET(commsTabAddrOffset)},
 
         /** Pointer to the memory control block */
-        { PID_MCB_TABLE, PDT_GENERIC_08|PC_POINTER|PC_WRITABLE, PD_USER_EEPROM_OFFSET(commsTabMcbOffset) },
+        {PID_MCB_TABLE, PDT_GENERIC_08 | PC_POINTER | PC_WRITABLE, PD_USER_EEPROM_OFFSET(commsTabMcbOffset)},
 
         /** ABB_CUSTOM */
-        { PID_ABB_CUSTOM, PDT_GENERIC_10|PC_POINTER|PC_WRITABLE, PD_USER_RAM_OFFSET(_user2Offset) },
+        {PID_ABB_CUSTOM, PDT_GENERIC_10 | PC_POINTER | PC_WRITABLE, PD_USER_RAM_OFFSET(_user2Offset)},
 
         /** End of table */
         PROPERTY_DEF_TABLE_END
@@ -432,19 +432,19 @@ private:
     const PropertyDef interfaceObjectProps[6] =
     {
         /** Interface object type: 2 bytes */
-        { PID_OBJECT_TYPE, PDT_UNSIGNED_INT, OT_INTERFACE_PROGRAM },
+        {PID_OBJECT_TYPE, PDT_UNSIGNED_INT, OT_INTERFACE_PROGRAM},
 
         /** Load state control */
-        { PID_LOAD_STATE_CONTROL, PDT_CONTROL|PC_WRITABLE|PC_POINTER, PD_USER_EEPROM_OFFSET(loadStateOffset + OT_INTERFACE_PROGRAM) },
+        {PID_LOAD_STATE_CONTROL, PDT_CONTROL | PC_WRITABLE | PC_POINTER, PD_USER_EEPROM_OFFSET(loadStateOffset + OT_INTERFACE_PROGRAM)},
 
         /** Pointer to the interface objects table */
-        { PID_TABLE_REFERENCE, PDT_UNSIGNED_INT|PC_ARRAY_POINTER, PD_USER_EEPROM_OFFSET(eibObjAddrOffset) },
+        {PID_TABLE_REFERENCE, PDT_UNSIGNED_INT | PC_ARRAY_POINTER, PD_USER_EEPROM_OFFSET(eibObjAddrOffset)},
 
         /** */
-        { PID_PROGRAM_VERSION, PDT_GENERIC_05|PC_WRITABLE|PC_ARRAY_POINTER, PD_USER_EEPROM_OFFSET(eibObjVerOffset) },
+        {PID_PROGRAM_VERSION, PDT_GENERIC_05 | PC_WRITABLE | PC_ARRAY_POINTER, PD_USER_EEPROM_OFFSET(eibObjVerOffset)},
 
         /** Pointer to the memory control block */
-        { PID_MCB_TABLE, PDT_GENERIC_08|PC_POINTER|PC_WRITABLE, PD_USER_EEPROM_OFFSET(eibObjMcbOffset) },
+        {PID_MCB_TABLE, PDT_GENERIC_08 | PC_POINTER | PC_WRITABLE, PD_USER_EEPROM_OFFSET(eibObjMcbOffset)},
 
         /** Error code */
         PROPERTY_DEF_TABLE_END
@@ -457,19 +457,19 @@ private:
     {
         // XXX check correct properties for object OT_KNX_OBJECT_ASSOCIATATION_TABLE
         /** Interface object type: 2 bytes */
-        { PID_OBJECT_TYPE, PDT_UNSIGNED_INT, OT_KNX_OBJECT_ASSOCIATATION_TABLE },
+        {PID_OBJECT_TYPE, PDT_UNSIGNED_INT, OT_KNX_OBJECT_ASSOCIATATION_TABLE},
 
         /** Load state control */
-        { PID_LOAD_STATE_CONTROL, PDT_CONTROL|PC_WRITABLE|PC_POINTER, PD_USER_EEPROM_OFFSET(loadStateOffset + OT_KNX_OBJECT_ASSOCIATATION_TABLE) },
+        {PID_LOAD_STATE_CONTROL, PDT_CONTROL | PC_WRITABLE | PC_POINTER, PD_USER_EEPROM_OFFSET(loadStateOffset + OT_KNX_OBJECT_ASSOCIATATION_TABLE)},
 
         /** Pointer to the communication objects table */
-        { PID_TABLE_REFERENCE, PDT_UNSIGNED_INT|PC_ARRAY_POINTER, PD_USER_EEPROM_OFFSET(commsSeg0AddrOffset) },
+        {PID_TABLE_REFERENCE, PDT_UNSIGNED_INT | PC_ARRAY_POINTER, PD_USER_EEPROM_OFFSET(commsSeg0AddrOffset)},
 
         /** */
-        { PID_PROGRAM_VERSION, PDT_GENERIC_05|PC_WRITABLE|PC_ARRAY_POINTER, PD_USER_EEPROM_OFFSET(commsSeg0VerOffset) },
+        {PID_PROGRAM_VERSION, PDT_GENERIC_05 | PC_WRITABLE | PC_ARRAY_POINTER, PD_USER_EEPROM_OFFSET(commsSeg0VerOffset)},
 
         /** Error code */
-        { PID_ERROR_CODE, PDT_GENERIC_01, 0 }, // XXX implement PID_ERROR_CODE handling
+        {PID_ERROR_CODE, PDT_GENERIC_01, 0}, // XXX implement PID_ERROR_CODE handling
 
         // XXX implement properties PID_TABLE, PID_MCB_TABLE and maybe more
 

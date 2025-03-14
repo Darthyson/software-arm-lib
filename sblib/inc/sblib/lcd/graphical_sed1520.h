@@ -26,7 +26,7 @@
  * This code is only half done !
  *
  */
-class LcdGraphicalSED1520: public LcdGraphical
+class LcdGraphicalSED1520 : public LcdGraphical
 {
 public:
     /**
@@ -41,7 +41,7 @@ public:
      * @param font - the font to use for text output, e.g. font_5x7
      */
     LcdGraphicalSED1520(int dataPort, int pinA0, int pinCS1, int pinCS2, int pinRD,
-        int pinWR, const Font& font);
+                        int pinWR, const Font& font);
 
     /**
      * Position the cursor. 0/0 is the top/left position

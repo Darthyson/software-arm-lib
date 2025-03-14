@@ -1,4 +1,4 @@
-/**************************************************************************//**
+/******************************************************************************
  * @addtogroup SBLIB_MAIN_GROUP Main Group Description
  * @defgroup SBLIB_SUB_GROUP_1 Sub Group 1 Description
  * @ingroup SBLIB_MAIN_GROUP
@@ -23,11 +23,11 @@
 #include <cstring>
 
 UserRam::UserRam(uint32_t start, uint32_t size, uint32_t shadowSize) :
-        Memory(start, size + shadowSize),
-        userRamData(new uint8_t[size + shadowSize]()),
-        _status(0),
-        _runState(0),
-        shadowSize(shadowSize)
+    Memory(start, size + shadowSize),
+    userRamData(new uint8_t[size + shadowSize]()),
+    _status(0),
+    _runState(0),
+    shadowSize(shadowSize)
 {
     endAddress -= shadowSize;
     sizeTotal -= shadowSize;
@@ -50,7 +50,7 @@ bool UserRam::isStatusAddress(uint32_t address) const
     return (address == statusOffset());
 }
 
-void UserRam::cpyToUserRam(uint32_t address, unsigned char * buffer, uint32_t count)
+void UserRam::cpyToUserRam(uint32_t address, unsigned char* buffer, uint32_t count)
 {
     ///\todo check the real location of status for a BIM112, is it also 0x60 like for a bcu1 and 2?
     if ((address == statusOffset()) && (count == 1))
@@ -69,16 +69,16 @@ void UserRam::cpyToUserRam(uint32_t address, unsigned char * buffer, uint32_t co
         while (count--)
         {
             if (address == statusOffset())
-                _status = * buffer;
+                _status = *buffer;
             else
-                userRamData[address] = * buffer;
+                userRamData[address] = *buffer;
             buffer++;
             address++;
         }
     }
 }
 
-void UserRam::cpyFromUserRam(uint32_t address, unsigned char * buffer, uint32_t count)
+void UserRam::cpyFromUserRam(uint32_t address, unsigned char* buffer, uint32_t count)
 {
     ///\todo check the real location of status for a BIM112, is it also 0x60 like for a bcu1 and 2?
     if ((address == statusOffset()) && (count == 1))
@@ -97,16 +97,16 @@ void UserRam::cpyFromUserRam(uint32_t address, unsigned char * buffer, uint32_t 
         while (count--)
         {
             if (address == statusOffset())
-                * buffer = _status;
+                *buffer = _status;
             else
-                * buffer = userRamData[address];
+                *buffer = userRamData[address];
             buffer++;
             address++;
         }
     }
 }
 
-void UserRam::setUserRamStart(const uint32_t &newRamStart)
+void UserRam::setUserRamStart(const uint32_t& newRamStart)
 {
     startAddress = newRamStart;
     endAddress = startAddress + sizeTotal - 1;

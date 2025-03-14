@@ -6,10 +6,11 @@
 #define SBLIB_UNITS_H
 
 // Temperature conversions types
-typedef enum eScale {
-  CELCIUS   = 0,
-  FARENHEIT = 1,
-  KELVIN    = 2
+typedef enum eScale
+{
+    CELCIUS = 0,
+    FARENHEIT = 1,
+    KELVIN = 2
 } eScale;
 
 

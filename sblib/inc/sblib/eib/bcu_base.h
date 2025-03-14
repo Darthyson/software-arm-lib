@@ -22,7 +22,7 @@ class CallbackBcu;
 /**
  * Class for controlling minimum BCU related things.
  */
-class BcuBase: public TLayer4
+class BcuBase : public TLayer4
 {
 public:
     BcuBase(UserRam* userRam, AddrTables* addrTables);
@@ -118,7 +118,7 @@ protected:
      * @param sendBuffer    Pointer to the buffer for a potential response telegram
      * @return True if a response telegram was prepared, otherwise false
      */
-    virtual bool processApci(ApciCommand apciCmd, unsigned char * telegram, uint8_t telLength, uint8_t * sendBuffer);
+    virtual bool processApci(ApciCommand apciCmd, unsigned char* telegram, uint8_t telLength, uint8_t* sendBuffer);
 
     void sendApciIndividualAddressReadResponse();
 

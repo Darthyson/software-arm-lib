@@ -16,20 +16,20 @@
 #define MS2TICKS(m) (m)
 
 class Timeout
-/**
- * A simple timeout class which
- * - can be queried if the specified timeout has expired
- * - can be stopped
- * - queried if the timeout has been started
- *
- * Example:
- *
- *     Timeout t;
- *     ...
- *     t.start(10); // starts a timeout which will expire in 10ms
- *
- *     t.expired(); // returns of the timeout has already expired or not
- */
+        /**
+         * A simple timeout class which
+         * - can be queried if the specified timeout has expired
+         * - can be stopped
+         * - queried if the timeout has been started
+         *
+         * Example:
+         *
+         *     Timeout t;
+         *     ...
+         *     t.start(10); // starts a timeout which will expire in 10ms
+         *
+         *     t.expired(); // returns of the timeout has already expired or not
+         */
 {
 public:
     /** Create a new timeout object and put it into the stopped state */
@@ -48,7 +48,8 @@ public:
         else
         {
             timeout = millis() + ms;
-            if(timeout == Timeout::STOPPED) timeout++;
+            if (timeout == Timeout::STOPPED)
+                timeout++;
         }
     };
 
@@ -60,7 +61,7 @@ public:
     {
         if (timeout != Timeout::STOPPED)
         {
-            if(((int)(millis() - timeout)) >= 0)
+            if (((int)(millis() - timeout)) >= 0)
             {
                 stop();
                 return true;
@@ -95,7 +96,8 @@ public:
 
 protected:
     unsigned int timeout;
-    enum STATE { STOPPED  = 0};
+
+    enum STATE { STOPPED = 0 };
 };
 
 #if 0

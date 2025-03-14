@@ -31,6 +31,7 @@ public:
      * only scans the group addresses.
      */
     int indexOfAddr(int addr) override;
+
 private:
     SYSTEMB* bcu;
 };

@@ -18,7 +18,6 @@
 // See BCU2 help:
 // System Architecture > Interface Objects > User Interface Objects > Attributes of Properties
 
-
 /**
  * Data type of a property
  * <p>See KNX 3/7/3 4.0 p.18 Property Datatypes Identifiers</p>
@@ -28,72 +27,71 @@
  */
 enum PropertyDataType : uint8_t
 {
-    PDT_CONTROL             = 0,    //!< length: 1 read, 10 write
-    PDT_CHAR                = 1,    //!< length: 1
-    PDT_UNSIGNED_CHAR       = 2,    //!< length: 1
-    PDT_INT                 = 3,    //!< length: 2
-    PDT_UNSIGNED_INT        = 4,    //!< length: 2
-    PDT_EIB_FLOAT           = 5,    //!< length: 2
-    PDT_DATE                = 6,    //!< length: 3
-    PDT_TIME                = 7,    //!< length: 3
-    PDT_LONG                = 8,    //!< length: 4
-    PDT_UNSIGNED_LONG       = 9,    //!< length: 4
-    PDT_FLOAT               = 0x0a, //!< length: 4
-    PDT_DOUBLE              = 0x0b, //!< length: 8
-    PDT_CHAR_BLOCK          = 0x0c, //!< length: 10
-    PDT_POLL_GROUP_SETTING  = 0x0d, //!< length: 3
-    PDT_SHORT_CHAR_BLOCK    = 0x0e, //!< length: 5
-    PDT_DATE_TIME           = 0x0f, //!< length: 8
-    PDT_VARIABLE_LENGTH     = 0x10, //!< length: variable
-    PDT_GENERIC_01          = 0x11, //!< length: 1
-    PDT_GENERIC_02          = 0x12, //!< length: 2
-    PDT_GENERIC_03          = 0x13, //!< length: 3
-    PDT_GENERIC_04          = 0x14, //!< length: 4
-    PDT_GENERIC_05          = 0x15, //!< length: 5
-    PDT_GENERIC_06          = 0x16, //!< length: 6
-    PDT_GENERIC_07          = 0x17, //!< length: 7
-    PDT_GENERIC_08          = 0x18, //!< length: 8
-    PDT_GENERIC_09          = 0x19, //!< length: 9
-    PDT_GENERIC_10          = 0x1a, //!< length: 10
-    PDT_GENERIC_11          = 0x1b, //!< length: 11
-    PDT_GENERIC_12          = 0x1c, //!< length: 12
-    PDT_GENERIC_13          = 0x1d, //!< length: 13
-    PDT_GENERIC_14          = 0x1e, //!< length: 14
-    PDT_GENERIC_15          = 0x1f, //!< length: 15
-    PDT_GENERIC_16          = 0x20, //!< length: 16
-    PDT_GENERIC_17          = 0x21, //!< length: 17
-    PDT_GENERIC_18          = 0x22, //!< length: 18
-    PDT_GENERIC_19          = 0x23, //!< length: 19
-    PDT_GENERIC_20          = 0x24, //!< length: 20
-    PDT_RESERVED_0x25       = 0x25, //!< reserved
-    PDT_RESERVED_0x26       = 0x26, //!< reserved
-    PDT_RESERVED_0x27       = 0x27, //!< reserved
-    PDT_RESERVED_0x28       = 0x28, //!< reserved
-    PDT_RESERVED_0x29       = 0x29, //!< reserved
-    PDT_RESERVED_0x2a       = 0x2a, //!< reserved
-    PDT_RESERVED_0x2b       = 0x2b, //!< reserved
-    PDT_RESERVED_0x2c       = 0x2c, //!< reserved
-    PDT_RESERVED_0x2d       = 0x2d, //!< reserved
-    PDT_RESERVED_0x2e       = 0x2e, //!< reserved
-    PDT_UTF_8               = 0x2f, //!< length: variable
-    PDT_VERSION             = 0x30, //!< length: 2
-    PDT_ALARM_INFO          = 0x31, //!< length: 6
-    PDT_BINARY_INFORMATION  = 0x32, //!< length: 1 bit?
-    PDT_BITSET8             = 0x33, //!< length: 1
-    PDT_BITSET16            = 0x34, //!< length: 2
-    PDT_ENUM8               = 0x35, //!< length: 1
-    PDT_SCALING             = 0x36, //!< length: 1
-    PDT_RESERVED_0x37       = 0x37, //!< reserved
-    PDT_RESERVED_0x38       = 0x38, //!< reserved
-    PDT_RESERVED_0x39       = 0x39, //!< reserved
-    PDT_RESERVED_0x3a       = 0x3a, //!< reserved
-    PDT_RESERVED_0x3b       = 0x3b, //!< reserved
-    PDT_NE_VL               = 0x3c, //!< length: undefined
-    PDT_NE_FL               = 0x3d, //!< length: undefined
-    PDT_FUNCTION            = 0x3e, //!< length: usage dependent
-    PDT_ESCAPE              = 0x3f  //!< length: defined or undefined
+    PDT_CONTROL = 0,               //!< length: 1 read, 10 write
+    PDT_CHAR = 1,                  //!< length: 1
+    PDT_UNSIGNED_CHAR = 2,         //!< length: 1
+    PDT_INT = 3,                   //!< length: 2
+    PDT_UNSIGNED_INT = 4,          //!< length: 2
+    PDT_EIB_FLOAT = 5,             //!< length: 2
+    PDT_DATE = 6,                  //!< length: 3
+    PDT_TIME = 7,                  //!< length: 3
+    PDT_LONG = 8,                  //!< length: 4
+    PDT_UNSIGNED_LONG = 9,         //!< length: 4
+    PDT_FLOAT = 0x0a,              //!< length: 4
+    PDT_DOUBLE = 0x0b,             //!< length: 8
+    PDT_CHAR_BLOCK = 0x0c,         //!< length: 10
+    PDT_POLL_GROUP_SETTING = 0x0d, //!< length: 3
+    PDT_SHORT_CHAR_BLOCK = 0x0e,   //!< length: 5
+    PDT_DATE_TIME = 0x0f,          //!< length: 8
+    PDT_VARIABLE_LENGTH = 0x10,    //!< length: variable
+    PDT_GENERIC_01 = 0x11,         //!< length: 1
+    PDT_GENERIC_02 = 0x12,         //!< length: 2
+    PDT_GENERIC_03 = 0x13,         //!< length: 3
+    PDT_GENERIC_04 = 0x14,         //!< length: 4
+    PDT_GENERIC_05 = 0x15,         //!< length: 5
+    PDT_GENERIC_06 = 0x16,         //!< length: 6
+    PDT_GENERIC_07 = 0x17,         //!< length: 7
+    PDT_GENERIC_08 = 0x18,         //!< length: 8
+    PDT_GENERIC_09 = 0x19,         //!< length: 9
+    PDT_GENERIC_10 = 0x1a,         //!< length: 10
+    PDT_GENERIC_11 = 0x1b,         //!< length: 11
+    PDT_GENERIC_12 = 0x1c,         //!< length: 12
+    PDT_GENERIC_13 = 0x1d,         //!< length: 13
+    PDT_GENERIC_14 = 0x1e,         //!< length: 14
+    PDT_GENERIC_15 = 0x1f,         //!< length: 15
+    PDT_GENERIC_16 = 0x20,         //!< length: 16
+    PDT_GENERIC_17 = 0x21,         //!< length: 17
+    PDT_GENERIC_18 = 0x22,         //!< length: 18
+    PDT_GENERIC_19 = 0x23,         //!< length: 19
+    PDT_GENERIC_20 = 0x24,         //!< length: 20
+    PDT_RESERVED_0x25 = 0x25,      //!< reserved
+    PDT_RESERVED_0x26 = 0x26,      //!< reserved
+    PDT_RESERVED_0x27 = 0x27,      //!< reserved
+    PDT_RESERVED_0x28 = 0x28,      //!< reserved
+    PDT_RESERVED_0x29 = 0x29,      //!< reserved
+    PDT_RESERVED_0x2a = 0x2a,      //!< reserved
+    PDT_RESERVED_0x2b = 0x2b,      //!< reserved
+    PDT_RESERVED_0x2c = 0x2c,      //!< reserved
+    PDT_RESERVED_0x2d = 0x2d,      //!< reserved
+    PDT_RESERVED_0x2e = 0x2e,      //!< reserved
+    PDT_UTF_8 = 0x2f,              //!< length: variable
+    PDT_VERSION = 0x30,            //!< length: 2
+    PDT_ALARM_INFO = 0x31,         //!< length: 6
+    PDT_BINARY_INFORMATION = 0x32, //!< length: 1 bit?
+    PDT_BITSET8 = 0x33,            //!< length: 1
+    PDT_BITSET16 = 0x34,           //!< length: 2
+    PDT_ENUM8 = 0x35,              //!< length: 1
+    PDT_SCALING = 0x36,            //!< length: 1
+    PDT_RESERVED_0x37 = 0x37,      //!< reserved
+    PDT_RESERVED_0x38 = 0x38,      //!< reserved
+    PDT_RESERVED_0x39 = 0x39,      //!< reserved
+    PDT_RESERVED_0x3a = 0x3a,      //!< reserved
+    PDT_RESERVED_0x3b = 0x3b,      //!< reserved
+    PDT_NE_VL = 0x3c,              //!< length: undefined
+    PDT_NE_FL = 0x3d,              //!< length: undefined
+    PDT_FUNCTION = 0x3e,           //!< length: usage dependent
+    PDT_ESCAPE = 0x3f              //!< length: defined or undefined
 };
-
 
 /**
  * Definition of a property.
@@ -129,7 +127,7 @@ struct PropertyDef
      *
      * @return The pointer to the property value.
      */
-    byte* valuePointer(BcuBase *bcu) const;
+    byte* valuePointer(BcuBase* bcu) const;
 
     /**
      * Test if the valuePointer() points to the userEeprom.
@@ -152,7 +150,6 @@ struct PropertyDef
      */
     int size() const;
 };
-
 
 /**
  * Property ID.
@@ -463,19 +460,17 @@ enum PropertyID : uint8_t
     PID_ABB_CUSTOM = 0xcc
 };
 
-
 /**
  * Property control constants.
  */
 enum PropertyControl : uint8_t
 {
-    PC_WRITABLE = 0x80,       //!< The property can be modified
-    PC_ARRAY = 0x40,          //!< The property is an array (max. 255 bytes)
-    PC_POINTER = 0x20,        //!< valPtr of the property definition is a pointer
-    PC_ARRAY_POINTER = 0x60,  //!< Combination of PC_ARRAY|PC_POINTER
-    PC_TYPE_MASK = 0x1f       //!< Bit mask for the property type
+    PC_WRITABLE = 0x80,      //!< The property can be modified
+    PC_ARRAY = 0x40,         //!< The property is an array (max. 255 bytes)
+    PC_POINTER = 0x20,       //!< valPtr of the property definition is a pointer
+    PC_ARRAY_POINTER = 0x60, //!< Combination of PC_ARRAY|PC_POINTER
+    PC_TYPE_MASK = 0x1f      //!< Bit mask for the property type
 };
-
 
 /**
  * Property pointer type.
@@ -487,7 +482,6 @@ enum PropertyPointerType
     PPT_MASK = 0x7000,        //!< Bitmask for property pointer types
     PPT_OFFSET_MASK = 0x0fff  //!< Bitmask for property pointer offsets
 };
-
 
 /** Define a PropertyDef pointer to variable v in the internal constants table */
 #define PD_CONSTANTS_OFFSET(v) (OFFSET_OF(ConstPropValues, v) + PPT_CONSTANTS)
@@ -502,7 +496,7 @@ enum PropertyPointerType
 
 inline PropertyDataType PropertyDef::type() const
 {
-    return (PropertyDataType) (control & 31);
+    return (PropertyDataType)(control & 31);
 }
 
 inline bool PropertyDef::isEepromPointer() const

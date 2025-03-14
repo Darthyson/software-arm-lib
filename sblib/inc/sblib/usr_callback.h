@@ -15,9 +15,10 @@
 
 #include <stdint.h>
 
-enum class UsrCallbackType : uint8_t {
-    reset = 1, //!< Wird aufgerufen direkt vor einem µC-Reset
-    flash = 2, //!< Wird aufgerufen allgemein wenn Änderungen am User_Eeprom vorgenommen worden sind
+enum class UsrCallbackType : uint8_t
+{
+    reset = 1,   //!< Wird aufgerufen direkt vor einem µC-Reset
+    flash = 2,   //!< Wird aufgerufen allgemein wenn Änderungen am User_Eeprom vorgenommen worden sind
     bcu_end = 3, //!< Kommt eigentlich nicht vor, wird bislang nicht mal bei einem Busspannungsausfall aufgerufen. Es können aber die Schritte wie bei den anderen Fällen ausgeführt werden.
     recallAppStartup = 4,
     recallAppInit = 5,
@@ -29,8 +30,7 @@ enum class UsrCallbackType : uint8_t {
 class UsrCallback
 {
 public:
-
-    virtual void Notify(UsrCallbackType type)=0;
+    virtual void Notify(UsrCallbackType type) =0;
 };
 
 #endif

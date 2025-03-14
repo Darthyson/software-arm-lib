@@ -1,4 +1,4 @@
-/**************************************************************************//**
+/******************************************************************************
  * @addtogroup SBLIB_MAIN_GROUP Selfbus KNX-Library
  * @defgroup SBLIB_SUB_GROUP_KNX KNX TP1 debugging
  * @ingroup SBLIB_MAIN_GROUP

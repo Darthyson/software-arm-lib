@@ -35,7 +35,7 @@ public:
      * @param autoAddPage - when set to true non existing pages are allocated automatically
      */
     MemMapper(unsigned int flashBase = 0xf000, unsigned int flashSize = 0x1000,
-            bool autoAddPage = false);
+              bool autoAddPage = false);
 
     /**
      * Write a single byte to virtual address
@@ -56,7 +56,7 @@ public:
      * @param length - number of bytes to write
      * @return 0 on success, else error
      */
-    virtual int writeMemPtr(int virtAddress, byte *data, int length);
+    virtual int writeMemPtr(int virtAddress, byte* data, int length);
 
     /**
      * Read a single byte from virtual address
@@ -67,7 +67,7 @@ public:
      * @param forceFlash - force pending data to be flashed before operation
      * @return 0 on success, else error
      */
-    int readMem(int virtAddress, byte &data, bool forceFlash = false);
+    int readMem(int virtAddress, byte& data, bool forceFlash = false);
 
     /**
      * Read a single byte from virtual address
@@ -79,8 +79,8 @@ public:
      * @param forceFlash - force pending data to be flashed before operation
      * @return 0 on success, else error
      */
-    virtual int readMemPtr(int virtAddress, byte *data, int length, bool forceFlash =
-            false);
+    virtual int readMemPtr(int virtAddress, byte* data, int length, bool forceFlash =
+                                   false);
 
     /**
      * Add a prereserved range
@@ -117,7 +117,7 @@ public:
      * @return The data byte.
      */
     unsigned char getUInt8(int virtAddress);
-    unsigned char &operator[] (const int nIndex) const;
+    unsigned char& operator[](const int nIndex) const;
 
     /**
      * Access the user EEPROM to get a unsigned short
@@ -195,7 +195,7 @@ private:
     unsigned int getUIntX(int virtAddress, int length);
     int setUIntX(int virtAddress, int length, int val);
 
-    uint8_t * flashBase; //memory layout: flashBase + 0 = allocTable, flashBase + 1 = usableMemory
+    uint8_t* flashBase; //memory layout: flashBase + 0 = allocTable, flashBase + 1 = usableMemory
     unsigned int flashBasePage;
 
     unsigned int flashSize;

@@ -27,7 +27,7 @@
  * This code is only half done !
  *
  */
-class LcdGraphicalEADOGS: public LcdGraphical
+class LcdGraphicalEADOGS : public LcdGraphical
 {
 public:
     /**

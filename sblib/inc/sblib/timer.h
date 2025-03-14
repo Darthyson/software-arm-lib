@@ -586,12 +586,12 @@ ALWAYS_INLINE int Timer::flagMask(TimerCapture capture)
 
 ALWAYS_INLINE void Timer::interrupts()
 {
-    NVIC_EnableIRQ((IRQn_Type) (TIMER_16_0_IRQn + timerNum));
+    NVIC_EnableIRQ((IRQn_Type)(TIMER_16_0_IRQn + timerNum));
 }
 
 ALWAYS_INLINE void Timer::noInterrupts()
 {
-    NVIC_DisableIRQ((IRQn_Type) (TIMER_16_0_IRQn + timerNum));
+    NVIC_DisableIRQ((IRQn_Type)(TIMER_16_0_IRQn + timerNum));
 }
 
 
@@ -624,8 +624,8 @@ ALWAYS_INLINE void Timer::matchModePinConfig(int channel, int mode)
 {
     int offset = channel << 1;
     timer->EMR = (timer->EMR
-               & ~(0x30 << offset))
-               | ((mode & 0x30) << offset);
+                  & ~(0x30 << offset))
+                 | ((mode & 0x30) << offset);
 }
 
 ALWAYS_INLINE bool Timer::is32bitTimer(void)
@@ -651,15 +651,15 @@ static inline void delay_cycles(unsigned int cycles) __attribute__((always_inlin
 
 static inline void delay_cycles(unsigned int cycles)
 {
-  __asm__ volatile (".syntax unified" "\n\t"
+    __asm__ volatile (".syntax unified" "\n\t"
         " .align 4\n"
         "1: subs %[cycles], %[cycles], #1" "\n\t"
         "cmp %[cycles], #0" "\n\t"
         "bne 1b"
         : [cycles] "=l" (cycles)
-          // not really used as output, but the register
-          // is modified so the compiler must not rely on
-          // the old contents
+        // not really used as output, but the register
+        // is modified so the compiler must not rely on
+        // the old contents
         : "0" (cycles) // this is also an input value
         : "cc");
 }

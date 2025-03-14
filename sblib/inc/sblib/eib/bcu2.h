@@ -79,7 +79,7 @@ public:
     /**
      * Process a broadcast telegram.
      */
-    bool processBroadCastTelegram(ApciCommand apciCmd, unsigned char *telegram, uint8_t telLength) override;
+    bool processBroadCastTelegram(ApciCommand apciCmd, unsigned char* telegram, uint8_t telLength) override;
 
     //  BCU 2, mask version 2.0
     virtual const char* getBcuType() const override { return "BCU2"; }
@@ -135,11 +135,11 @@ protected:
      * @param sendBuffer    Pointer to the buffer for a potential response telegram
      * @return True if a response telegram was prepared, otherwise false
      */
-    bool processApci(ApciCommand apciCmd, unsigned char *telegram, uint8_t telLength, uint8_t * sendBuffer) override;
+    bool processApci(ApciCommand apciCmd, unsigned char* telegram, uint8_t telLength, uint8_t* sendBuffer) override;
 
     void sendApciIndividualAddressSerialNumberReadResponse();
 
-    word commObjectTableAddressStatic;       //!> The read-only CommObjectTable address which can't be changed by KNX telegrams
+    word commObjectTableAddressStatic; //!> The read-only CommObjectTable address which can't be changed by KNX telegrams
 };
 
 #endif /*sblib_bcu2_h*/

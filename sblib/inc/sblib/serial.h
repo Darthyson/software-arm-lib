@@ -46,30 +46,30 @@ extern Serial serial;
  */
 enum SerialConfig
 {
-    SERIAL_5N1 = 0x00,  //!< 5 data bits, no parity, 1 stop bit
-    SERIAL_6N1 = 0x01,  //!< 6 data bits, no parity, 1 stop bit
-    SERIAL_7N1 = 0x02,  //!< 7 data bits, no parity, 1 stop bit
-    SERIAL_8N1 = 0x03,  //!< 8 data bits, no parity, 1 stop bit
-    SERIAL_5N2 = 0x04,  //!< 5 data bits, no parity, 2 stop bits
-    SERIAL_6N2 = 0x05,  //!< 6 data bits, no parity, 2 stop bits
-    SERIAL_7N2 = 0x06,  //!< 7 data bits, no parity, 2 stop bits
-    SERIAL_8N2 = 0x07,  //!< 8 data bits, no parity, 2 stop bits
-    SERIAL_5O1 = 0x08,  //!< 5 data bits, odd parity, 1 stop bit
-    SERIAL_6O1 = 0x09,  //!< 6 data bits, odd parity, 1 stop bit
-    SERIAL_7O1 = 0x0a,  //!< 7 data bits, odd parity, 1 stop bit
-    SERIAL_8O1 = 0x0b,  //!< 8 data bits, odd parity, 1 stop bit
-    SERIAL_5O2 = 0x0c,  //!< 5 data bits, odd parity, 2 stop bits
-    SERIAL_6O2 = 0x0d,  //!< 6 data bits, odd parity, 2 stop bits
-    SERIAL_7O2 = 0x0e,  //!< 7 data bits, odd parity, 2 stop bits
-    SERIAL_8O2 = 0x0f,  //!< 8 data bits, odd parity, 2 stop bits
-    SERIAL_5E1 = 0x18,  //!< 5 data bits, even parity, 1 stop bit
-    SERIAL_6E1 = 0x19,  //!< 6 data bits, even parity, 1 stop bit
-    SERIAL_7E1 = 0x1a,  //!< 7 data bits, even parity, 1 stop bit
-    SERIAL_8E1 = 0x1b,  //!< 8 data bits, even parity, 1 stop bit
-    SERIAL_5E2 = 0x1c,  //!< 5 data bits, even parity, 2 stop bits
-    SERIAL_6E2 = 0x1d,  //!< 6 data bits, even parity, 2 stop bits
-    SERIAL_7E2 = 0x1e,  //!< 7 data bits, even parity, 2 stop bits
-    SERIAL_8E2 = 0x1f   //!< 8 data bits, even parity, 2 stop bits
+    SERIAL_5N1 = 0x00, //!< 5 data bits, no parity, 1 stop bit
+    SERIAL_6N1 = 0x01, //!< 6 data bits, no parity, 1 stop bit
+    SERIAL_7N1 = 0x02, //!< 7 data bits, no parity, 1 stop bit
+    SERIAL_8N1 = 0x03, //!< 8 data bits, no parity, 1 stop bit
+    SERIAL_5N2 = 0x04, //!< 5 data bits, no parity, 2 stop bits
+    SERIAL_6N2 = 0x05, //!< 6 data bits, no parity, 2 stop bits
+    SERIAL_7N2 = 0x06, //!< 7 data bits, no parity, 2 stop bits
+    SERIAL_8N2 = 0x07, //!< 8 data bits, no parity, 2 stop bits
+    SERIAL_5O1 = 0x08, //!< 5 data bits, odd parity, 1 stop bit
+    SERIAL_6O1 = 0x09, //!< 6 data bits, odd parity, 1 stop bit
+    SERIAL_7O1 = 0x0a, //!< 7 data bits, odd parity, 1 stop bit
+    SERIAL_8O1 = 0x0b, //!< 8 data bits, odd parity, 1 stop bit
+    SERIAL_5O2 = 0x0c, //!< 5 data bits, odd parity, 2 stop bits
+    SERIAL_6O2 = 0x0d, //!< 6 data bits, odd parity, 2 stop bits
+    SERIAL_7O2 = 0x0e, //!< 7 data bits, odd parity, 2 stop bits
+    SERIAL_8O2 = 0x0f, //!< 8 data bits, odd parity, 2 stop bits
+    SERIAL_5E1 = 0x18, //!< 5 data bits, even parity, 1 stop bit
+    SERIAL_6E1 = 0x19, //!< 6 data bits, even parity, 1 stop bit
+    SERIAL_7E1 = 0x1a, //!< 7 data bits, even parity, 1 stop bit
+    SERIAL_8E1 = 0x1b, //!< 8 data bits, even parity, 1 stop bit
+    SERIAL_5E2 = 0x1c, //!< 5 data bits, even parity, 2 stop bits
+    SERIAL_6E2 = 0x1d, //!< 6 data bits, even parity, 2 stop bits
+    SERIAL_7E2 = 0x1e, //!< 7 data bits, even parity, 2 stop bits
+    SERIAL_8E2 = 0x1f  //!< 8 data bits, even parity, 2 stop bits
 };
 
 extern "C" void UART_IRQHandler();
@@ -78,7 +78,7 @@ extern "C" void UART_IRQHandler();
 /**
  * Serial port access. All ARM processors have a serial port, also known as UART.
  */
-class Serial: public BufferedStream
+class Serial : public BufferedStream
 {
 public:
     /**
@@ -95,12 +95,14 @@ public:
      * @param rxPin - the pin to use for RXD: PIO1_6, PIO2_7, PIO3_1, or PIO3_4
      */
     void setRxPin(int rxPin);
+
     /**
      * Set tx pin for serial communication.
      *
      * @param txPin - the pin to use for TXD: PIO1_7, PIO2_8, PIO3_0, or PIO3_5
      */
     void setTxPin(int txPin);
+
     /**
      * Begin using the serial port with the specified baud rate and 8 data bits,
      * no parity bit, and 1 stop bit (SERIAL_8N1).
@@ -150,14 +152,14 @@ public:
      *
      * @return true if serial port is enabled, otherwise false
      */
-    operator bool() const {return enabled_;}
+    operator bool() const { return enabled_; }
 
     /**
      * @brief Check if serial port enabled and available for transmission
      *
      * @return true if serial port is enabled, otherwise false
      */
-    bool enabled(void) {return enabled_;}
+    bool enabled(void) { return enabled_; }
 
 protected:
     // Allow the interrupt handler to call our protected methods
@@ -170,7 +172,6 @@ protected:
 
 private:
     bool enabled_; //!> true if serial port is enabled, otherwise false
-
 };
 
 
@@ -185,5 +186,6 @@ inline void Serial::begin(int baudRate)
     }
     begin(baudRate, SERIAL_8N1);
 }
+
 /** @}*/
 #endif /*sblib_serial_h*/

@@ -45,7 +45,7 @@ public:
 
     //  BCU 1, mask version 1.2
     const char* getBcuType() const override { return "BCU1"; }
-    uint16_t getMaskVersion() const override { return  0x12; }
+    uint16_t getMaskVersion() const override { return 0x12; }
 };
 
 #endif /*sblib_bcu1_h*/

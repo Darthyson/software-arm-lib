@@ -18,7 +18,7 @@
  * Base class for character-based streams.
  * Streams can be read from and written to.
  */
-class Stream: public Print
+class Stream : public Print
 {
 public:
     /**
@@ -286,37 +286,37 @@ inline int Stream::readBytes(char* buffer, int length)
 
 inline int Stream::readBytes(byte* buffer, int length)
 {
-    return _readBytesUntil(-1, (char*) buffer, length);
+    return _readBytesUntil(-1, (char*)buffer, length);
 }
 
 inline int Stream::readBytesUntil(char terminator, char* buffer, int length)
 {
-    return _readBytesUntil(terminator, (char*) buffer, length);
+    return _readBytesUntil(terminator, (char*)buffer, length);
 }
 
 inline int Stream::readBytesUntil(char terminator, byte* buffer, int length)
 {
-    return _readBytesUntil(terminator, (char*) buffer, length);
+    return _readBytesUntil(terminator, (char*)buffer, length);
 }
 
 inline bool Stream::find(const char* target)
 {
-    return findUntil(target, strlen(target), (const char*) 0, 0);
+    return findUntil(target, strlen(target), (const char*)0, 0);
 }
 
 inline bool Stream::find(const byte* target)
 {
-    return find((const char*) target);
+    return find((const char*)target);
 }
 
 inline bool Stream::find(const char* target, int length)
 {
-    return findUntil(target, length, (const char*) 0, 0);
+    return findUntil(target, length, (const char*)0, 0);
 }
 
 inline bool Stream::find(const byte* target, int length)
 {
-    return find((const char*) target, length);
+    return find((const char*)target, length);
 }
 
 inline bool Stream::findUntil(const char* target, const char* terminator)
@@ -326,12 +326,12 @@ inline bool Stream::findUntil(const char* target, const char* terminator)
 
 inline bool Stream::findUntil(const byte* target, const char* terminator)
 {
-    return findUntil((const char*) target, terminator);
+    return findUntil((const char*)target, terminator);
 }
 
 inline bool Stream::findUntil(const byte* target, int targetLen, const char* terminate, int termLen)
 {
-    return findUntil((const char*) target, targetLen, terminate, termLen);
+    return findUntil((const char*)target, targetLen, terminate, termLen);
 }
 
 #endif /*sblib_stream_h*/

@@ -164,7 +164,7 @@ ALWAYS_INLINE void setPendingInterrupt(IRQn_Type interruptType)
 
 ALWAYS_INLINE bool isInsideInterrupt(void)
 {
-    return (SCB->ICSR & SCB_ICSR_VECTACTIVE_Msk) != 0 ;
+    return (SCB->ICSR & SCB_ICSR_VECTACTIVE_Msk) != 0;
 }
 
 ALWAYS_INLINE bool getInterruptEnabled(IRQn_Type interruptType)

@@ -114,7 +114,8 @@
 /**
  * Struct to hold all parameters and states of the gas algorithm.
  */
-typedef struct {
+typedef struct
+{
     int mAlgorithm_Type;
     float mSamplingInterval;
     float mIndex_Offset;

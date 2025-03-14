@@ -21,7 +21,7 @@
  * In order to use the EIB bus, you need to call bcu.begin() once in your application's
  * setup() function.
  */
-class BcuDefault: public BcuBase
+class BcuDefault : public BcuBase
 {
 public:
     BcuDefault(UserRam* userRam, UserEeprom* userEeprom, ComObjects* comObjects, AddrTables* addrTables);
@@ -54,7 +54,7 @@ public:
      * and is called automatically by main() when the BCU is activated with bcu.begin().
      */
     virtual void loop() override;
-    
+
     /**
      * Process a APCI_MEMORY_WRITE_PDU
      * see KNX Spec. 3/3/7 �3.5.4 p.73 A_Memory_Write-service
@@ -65,7 +65,7 @@ public:
      *
      * @return true if successfully written, otherwise false
      */
-    virtual bool processApciMemoryWritePDU(int addressStart, byte *payLoad, int lengthPayLoad);
+    virtual bool processApciMemoryWritePDU(int addressStart, byte* payLoad, int lengthPayLoad);
 
     /**
      * Process a APCI_MEMORY_READ_PDU
@@ -77,7 +77,7 @@ public:
      *
      * @return true if successfully read, otherwise false
      */
-    virtual bool processApciMemoryReadPDU(int addressStart, byte *payLoad, int lengthPayLoad);
+    virtual bool processApciMemoryReadPDU(int addressStart, byte* payLoad, int lengthPayLoad);
 
     /**
      * Process a APCI_MEMORY_READ_PDU or APCI_MEMORY_WRITE_PDU depending on
@@ -89,7 +89,7 @@ public:
      *
      * @return true if successfully, otherwise false
      */
-    bool processApciMemoryOperation(unsigned int addressStart, byte *payLoad, unsigned int lengthPayLoad, const bool &readMem);
+    bool processApciMemoryOperation(unsigned int addressStart, byte* payLoad, unsigned int lengthPayLoad, const bool& readMem);
 
     /**
      * Process a APCI_MASTER_RESET_PDU
@@ -101,7 +101,7 @@ public:
      *
      * @return true if a response message should be sent, otherwise false
      */
-    bool processApciMasterResetPDU(uint8_t * sendBuffer, uint8_t eraseCode, uint8_t channelNumber);
+    bool processApciMasterResetPDU(uint8_t* sendBuffer, uint8_t eraseCode, uint8_t channelNumber);
 
     /**
      * Processes @ref APCI_ADC_READ_PDU,
@@ -119,7 +119,7 @@ public:
      * @param sendBuffer    Pointer to the buffer for a potential response telegram
      * @return True if a response telegram was prepared, otherwise false
      */
-    virtual bool processApci(ApciCommand apciCmd, unsigned char * telegram, uint8_t telLength, uint8_t * sendBuffer);
+    virtual bool processApci(ApciCommand apciCmd, unsigned char* telegram, uint8_t telLength, uint8_t* sendBuffer);
 
     /**
       * @brief Performs a system reset by calling @ref NVIC_SystemReset
@@ -143,14 +143,13 @@ public:
      * Allow an user provided memory mapper to store parameter data via memory write / read
      * @param mapper - a pointer to an instance of a MemMapper object
      */
-    void setMemMapper(MemMapper *mapper);
-
+    void setMemMapper(MemMapper* mapper);
 
 
     /**
      * Set a callback class to notify the user program of some events
      */
-    void setUsrCallback(UsrCallback *callback);
+    void setUsrCallback(UsrCallback* callback);
 
     /**
      * Enable/Disable sending of group write or group response telegrams.
@@ -189,12 +188,12 @@ protected:
     /**
      * Process a group address (T_Data_Group) telegram.
      */
-    virtual bool processGroupAddressTelegram(ApciCommand apciCmd, uint16_t groupAddress, unsigned char *telegram, uint8_t telLength) override;
+    virtual bool processGroupAddressTelegram(ApciCommand apciCmd, uint16_t groupAddress, unsigned char* telegram, uint8_t telLength) override;
 
     /**
      * Process a broadcast telegram.
      */
-    virtual bool processBroadCastTelegram(ApciCommand apciCmd, unsigned char *telegram, uint8_t telLength) override;
+    virtual bool processBroadCastTelegram(ApciCommand apciCmd, unsigned char* telegram, uint8_t telLength) override;
 
     /**
      * Process a device-descriptor-read request.
@@ -204,7 +203,7 @@ protected:
      *
      * @return True on success, false on failure
      */
-    bool processDeviceDescriptorReadTelegram(uint8_t * sendBuffer, int id);
+    bool processDeviceDescriptorReadTelegram(uint8_t* sendBuffer, int id);
 
     /**
      * Flushes all pending write operations to user memory (eeprom, memmapper) and sends a callback to the user
@@ -214,9 +213,9 @@ protected:
      */
     bool flushUserMemory(UsrCallbackType reason);
 
-    MemMapper *memMapper;
-    UsrCallback *usrCallback;
-    bool sendGrpTelEnabled;        //!< Sending of group telegrams is enabled. Usually set, but can be disabled.
+    MemMapper* memMapper;
+    UsrCallback* usrCallback;
+    bool sendGrpTelEnabled; //!< Sending of group telegrams is enabled. Usually set, but can be disabled.
     unsigned int groupTelWaitMillis;
     unsigned int groupTelSent;
 

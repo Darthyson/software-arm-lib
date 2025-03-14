@@ -113,7 +113,6 @@ enum TimerID
      * ID of the 32 bit timer #1
      */
     TIMER32_1
-
 };
 
 

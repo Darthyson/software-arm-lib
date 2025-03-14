@@ -38,19 +38,20 @@
 
 #include <stdint.h>
 
-enum class Sht4xCommand : uint8_t {
-    measHi                 = 0xFD,
-    measMed             = 0xF6,
-    measLo                = 0xE0,
-    getSerial             = 0x89,
-    softReset            = 0x94,
-    measHiHeatHiLong    = 0x39,
-    measHiHeatHiShort    = 0x32,
-    measHiHeatMidLong    = 0x2F,
-    measHiHeatMidShort     = 0x24,
-    measHiHeatLoLong    = 0x1E,
-    measHiHeatLoShort     = 0x15,
-    testTrash            = 0x0D
+enum class Sht4xCommand : uint8_t
+{
+    measHi = 0xFD,
+    measMed = 0xF6,
+    measLo = 0xE0,
+    getSerial = 0x89,
+    softReset = 0x94,
+    measHiHeatHiLong = 0x39,
+    measHiHeatHiShort = 0x32,
+    measHiHeatMidLong = 0x2F,
+    measHiHeatMidShort = 0x24,
+    measHiHeatLoLong = 0x1E,
+    measHiHeatLoShort = 0x15,
+    testTrash = 0x0D
 };
 
 class SHT4xClass
@@ -91,40 +92,38 @@ private:
     static const uint8_t eSHT4xAddress = 0x44;
 
 public:
-  /**
-   * Initialize the SHT4x sensor
-   * @return True if successfully initialized, otherwise false
-   */
-  bool init(void);
+    /**
+     * Initialize the SHT4x sensor
+     * @return True if successfully initialized, otherwise false
+     */
+    bool init(void);
 
-  /**
-   * Get relative humidity from SHT4x sensor
-   * @return the relative humidity in %RH as float
-   */
-  float getHumidity(void);
+    /**
+     * Get relative humidity from SHT4x sensor
+     * @return the relative humidity in %RH as float
+     */
+    float getHumidity(void);
 
-  /**
-   * Get Temperature from SHT4x sensor
-   * @return the current temperature in degree C as float
-   */
-  float getTemperature(void);
+    /**
+     * Get Temperature from SHT4x sensor
+     * @return the current temperature in degree C as float
+     */
+    float getTemperature(void);
 
-  /**
-   * SHT4x command for a single shot measurement with high repeatability.
-   * @return true on success, and false otherwise
-   */
-  bool measureHighPrecision();
+    /**
+     * SHT4x command for a single shot measurement with high repeatability.
+     * @return true on success, and false otherwise
+     */
+    bool measureHighPrecision();
 
-  /**
-   * Gets the current dew point based on the current humidity and temperature
-   * @return the dew point in Deg C
-   * @warning not implemented
-   */
-  float getDewPoint(void);
+    /**
+     * Gets the current dew point based on the current humidity and temperature
+     * @return the dew point in Deg C
+     * @warning not implemented
+     */
+    float getDewPoint(void);
 
-  uint32_t getSerialnumber(void);
+    uint32_t getSerialnumber(void);
 };
 
 #endif  /*sblib_SHT4x_h*/
-
-

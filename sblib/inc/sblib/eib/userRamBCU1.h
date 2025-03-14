@@ -29,17 +29,17 @@ public:
      * BCU 1 device control (address 0x62). See enum @ref DeviceControl
      */
     static const uint32_t _deviceControlOffset = 0x62; ///\todo properties still need this to be public
-    static const uint32_t _peiTypeOffset = 0x63; ///\todo properties still need this to be public
-    static const uint32_t _user2Offset = 0xC8; ///\todo properties still need this to be public
+    static const uint32_t _peiTypeOffset = 0x63;       ///\todo properties still need this to be public
+    static const uint32_t _user2Offset = 0xC8;         ///\todo properties still need this to be public
 
     virtual uint8_t& deviceControl() const override { return userRamData[_deviceControlOffset]; }
-    virtual uint8_t& peiType() const override{ return userRamData[_peiTypeOffset]; }
+    virtual uint8_t& peiType() const override { return userRamData[_peiTypeOffset]; }
 
 protected:
     UserRamBCU1(unsigned int start, unsigned int size, unsigned int shadowSize) : UserRam(start, size, shadowSize) {}
 
-    virtual uint32_t statusOffset() const override {return _statusOffset;}
-    virtual uint32_t runStateOffset() const override {return _runStateOffset;}
+    virtual uint32_t statusOffset() const override { return _statusOffset; }
+    virtual uint32_t runStateOffset() const override { return _runStateOffset; }
 
     /**
      * BCU 1 system status (address 0x60). See enum @ref BcuStatus

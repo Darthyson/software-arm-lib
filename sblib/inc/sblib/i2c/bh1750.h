@@ -44,42 +44,43 @@
 // Default MTreg value
 #define BH1750_DEFAULT_MTREG 69
 
-class BH1750 {
-
+class BH1750
+{
 public:
-  enum Mode {
-    // same as Power Down
-    UNCONFIGURED = 0,
-    // Measurement at 1 lux resolution. Measurement time is approx 120ms.
-    CONTINUOUS_HIGH_RES_MODE = 0x10,
-    // Measurement at 0.5 lux resolution. Measurement time is approx 120ms.
-    CONTINUOUS_HIGH_RES_MODE_2 = 0x11,
-    // Measurement at 4 lux resolution. Measurement time is approx 16ms.
-    CONTINUOUS_LOW_RES_MODE = 0x13,
-    // Measurement at 1 lux resolution. Measurement time is approx 120ms.
-    ONE_TIME_HIGH_RES_MODE = 0x20,
-    // Measurement at 0.5 lux resolution. Measurement time is approx 120ms.
-    ONE_TIME_HIGH_RES_MODE_2 = 0x21,
-    // Measurement at 4 lux resolution. Measurement time is approx 16ms.
-    ONE_TIME_LOW_RES_MODE = 0x23
-  };
+    enum Mode
+    {
+        // same as Power Down
+        UNCONFIGURED = 0,
+        // Measurement at 1 lux resolution. Measurement time is approx 120ms.
+        CONTINUOUS_HIGH_RES_MODE = 0x10,
+        // Measurement at 0.5 lux resolution. Measurement time is approx 120ms.
+        CONTINUOUS_HIGH_RES_MODE_2 = 0x11,
+        // Measurement at 4 lux resolution. Measurement time is approx 16ms.
+        CONTINUOUS_LOW_RES_MODE = 0x13,
+        // Measurement at 1 lux resolution. Measurement time is approx 120ms.
+        ONE_TIME_HIGH_RES_MODE = 0x20,
+        // Measurement at 0.5 lux resolution. Measurement time is approx 120ms.
+        ONE_TIME_HIGH_RES_MODE_2 = 0x21,
+        // Measurement at 4 lux resolution. Measurement time is approx 16ms.
+        ONE_TIME_LOW_RES_MODE = 0x23
+    };
 
-  BH1750(byte addr = BH1750_DEFAULT_I2CADDR);
-  bool begin(Mode mode = CONTINUOUS_HIGH_RES_MODE, byte addr = BH1750_DEFAULT_I2CADDR);
-  bool configure(Mode mode);
-  bool setMTreg(byte MTreg);
-  bool measurementReady(bool maxWait = false);
-  float readLightLevel();
+    BH1750(byte addr = BH1750_DEFAULT_I2CADDR);
+    bool begin(Mode mode = CONTINUOUS_HIGH_RES_MODE, byte addr = BH1750_DEFAULT_I2CADDR);
+    bool configure(Mode mode);
+    bool setMTreg(byte MTreg);
+    bool measurementReady(bool maxWait = false);
+    float readLightLevel();
 
 private:
-  byte BH1750_I2CADDR;
-  byte BH1750_MTreg = (byte)BH1750_DEFAULT_MTREG;
-  // Correction factor used to calculate lux. Typical value is 1.2 but can
-  // range from 0.96 to 1.44. See the data sheet (p.2, Measurement Accuracy)
-  // for more information.
-  const float BH1750_CONV_FACTOR = 1.2f;
-  Mode BH1750_MODE = UNCONFIGURED;
-  unsigned long lastReadTimestamp;
+    byte BH1750_I2CADDR;
+    byte BH1750_MTreg = (byte)BH1750_DEFAULT_MTREG;
+    // Correction factor used to calculate lux. Typical value is 1.2 but can
+    // range from 0.96 to 1.44. See the data sheet (p.2, Measurement Accuracy)
+    // for more information.
+    const float BH1750_CONV_FACTOR = 1.2f;
+    Mode BH1750_MODE = UNCONFIGURED;
+    unsigned long lastReadTimestamp;
 };
 
 #endif

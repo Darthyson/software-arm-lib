@@ -1,4 +1,4 @@
-/**************************************************************************//**
+/******************************************************************************
  *
  * @author Doumanix <doumanix@gmx.de> Copyright (c) 2023
  * @bug No known bugs.
@@ -16,16 +16,17 @@
 #include <sblib/timer.h>
 #include <sblib/bits.h>
 
-typedef enum {
-    eSGP4xAddress = 0x59,  // SGP40 (VOC) and SGP41 (VOC & NOx)
+typedef enum
+{
+    eSGP4xAddress = 0x59, // SGP40 (VOC) and SGP41 (VOC & NOx)
 } HUM_SENSOR_T;
 
 SGP4xClass::SGP4xClass():
-        rawVocTics(0),
-        rawNoxTics(0),
-        vocIndexValue(-1),
-        noxIndexValue(-1),
-        featureSet(0)
+    rawVocTics(0),
+    rawNoxTics(0),
+    vocIndexValue(-1),
+    noxIndexValue(-1),
+    featureSet(0)
 {
     // init VOC index algorithm with default sampling interval
     GasIndexAlgorithm_init_with_sampling_interval(&voc_algorithm_params, GasIndexAlgorithm_ALGORITHM_TYPE_VOC, GasIndexAlgorithm_DEFAULT_SAMPLING_INTERVAL);
@@ -33,8 +34,8 @@ SGP4xClass::SGP4xClass():
     GasIndexAlgorithm_init_with_sampling_interval(&nox_algorithm_params, GasIndexAlgorithm_ALGORITHM_TYPE_NOX, GasIndexAlgorithm_DEFAULT_SAMPLING_INTERVAL);
 }
 
-SGP4xResult SGP4xClass::readSensor(Sgp4xCommand command, uint8_t * commandBuffer, uint8_t commandBufferSize,
-        uint8_t * readBuffer, uint8_t readBufferSize, uint16_t processDelayMs)
+SGP4xResult SGP4xClass::readSensor(Sgp4xCommand command, uint8_t* commandBuffer, uint8_t commandBufferSize,
+                                   uint8_t* readBuffer, uint8_t readBufferSize, uint16_t processDelayMs)
 {
     if ((commandBuffer == nullptr) || (commandBufferSize < 2))
     {
@@ -45,12 +46,14 @@ SGP4xResult SGP4xClass::readSensor(Sgp4xCommand command, uint8_t * commandBuffer
     commandBuffer[1] = lowByte((uint16_t)command);
 
     int32_t bytesProcessed = Chip_I2C_MasterSend(I2C0, eSGP4xAddress, commandBuffer, commandBufferSize);
-    if (bytesProcessed != commandBufferSize) {
+    if (bytesProcessed != commandBufferSize)
+    {
         i2c_lpcopen_init();
         return SGP4xResult::sendError;
     }
 
-    if (processDelayMs > 0) {
+    if (processDelayMs > 0)
+    {
         delay(processDelayMs);
     }
 
@@ -61,7 +64,8 @@ SGP4xResult SGP4xClass::readSensor(Sgp4xCommand command, uint8_t * commandBuffer
     }
 
     bytesProcessed = Chip_I2C_MasterRead(I2C0, eSGP4xAddress, readBuffer, readBufferSize);
-    if (bytesProcessed != readBufferSize) {
+    if (bytesProcessed != readBufferSize)
+    {
         i2c_lpcopen_init();
         return SGP4xResult::readError;
     }
@@ -75,7 +79,7 @@ SGP4xResult SGP4xClass::readSensor(Sgp4xCommand command, uint8_t * commandBuffer
 
     for (uint8_t i = 0; i < bytesProcessed; i = i + 3)
     {
-        if (crc8(&readBuffer[i], 2) != readBuffer[i+2])
+        if (crc8(&readBuffer[i], 2) != readBuffer[i + 2])
         {
             return SGP4xResult::crc8Mismatch;
         }
@@ -92,19 +96,19 @@ SGP4xResult SGP4xClass::init(uint32_t samplingIntervalMs)
     vocIndexValue = -1;
     noxIndexValue = -1;
     // init VOC index algorithm with provided sampling interval
-    GasIndexAlgorithm_init_with_sampling_interval(&voc_algorithm_params, GasIndexAlgorithm_ALGORITHM_TYPE_VOC, (float)(samplingIntervalMs/1000.f));
+    GasIndexAlgorithm_init_with_sampling_interval(&voc_algorithm_params, GasIndexAlgorithm_ALGORITHM_TYPE_VOC, (float)(samplingIntervalMs / 1000.f));
     // init NOx index algorithm with provided sampling interval
-    GasIndexAlgorithm_init_with_sampling_interval(&nox_algorithm_params, GasIndexAlgorithm_ALGORITHM_TYPE_NOX, (float)(samplingIntervalMs/1000.f));
+    GasIndexAlgorithm_init_with_sampling_interval(&nox_algorithm_params, GasIndexAlgorithm_ALGORITHM_TYPE_NOX, (float)(samplingIntervalMs / 1000.f));
     return executeConditioning();
 }
 
 SGP4xResult SGP4xClass::executeConditioning()
 {
     uint8_t readBuffer[3];
-    uint8_t readBufferSize = sizeof(readBuffer)/sizeof(*readBuffer);
+    uint8_t readBufferSize = sizeof(readBuffer) / sizeof(*readBuffer);
 
     uint8_t cmdBuffer[8] = {0x00, 0x00, 0x80, 0x00, 0xA2, 0x66, 0x66, 0x93};
-    uint8_t commandBufferSize = sizeof(cmdBuffer)/sizeof(*cmdBuffer);
+    uint8_t commandBufferSize = sizeof(cmdBuffer) / sizeof(*cmdBuffer);
 
     // max. duration for processing sgp41_execute_conditioning is 50ms
     SGP4xResult result = readSensor(Sgp4xCommand::selfConditioning, cmdBuffer, commandBufferSize, readBuffer, readBufferSize, 50);
@@ -112,12 +116,13 @@ SGP4xResult SGP4xClass::executeConditioning()
 }
 
 
-SGP4xResult SGP4xClass::executeSelfTest() {
+SGP4xResult SGP4xClass::executeSelfTest()
+{
     uint8_t cmdBuffer[2];
-    uint8_t commandBufferSize = sizeof(cmdBuffer)/sizeof(*cmdBuffer);
+    uint8_t commandBufferSize = sizeof(cmdBuffer) / sizeof(*cmdBuffer);
 
     uint8_t readBuffer[3];
-    uint8_t readBufferSize = sizeof(readBuffer)/sizeof(*readBuffer);
+    uint8_t readBufferSize = sizeof(readBuffer) / sizeof(*readBuffer);
 
     // max. duration for processing sgp41_execute_self_test is 320ms (we add a margin of 30ms to be on the safe side)
     SGP4xResult result = readSensor(Sgp4xCommand::selfTest, cmdBuffer, commandBufferSize, readBuffer, readBufferSize, 350);
@@ -131,12 +136,14 @@ SGP4xResult SGP4xClass::executeSelfTest() {
     // ignore bits 2,3
 
     // bit 0 set -> VOC pixel error
-    if ((readBuffer[1] & 0x1) != 0) {
+    if ((readBuffer[1] & 0x1) != 0)
+    {
         return SGP4xResult::vocPixelError;
     }
 
     // bit 1 set -> NOx pixel error
-    if ((readBuffer[1] & 0x2) != 0) {
+    if ((readBuffer[1] & 0x2) != 0)
+    {
         return SGP4xResult::noxPixelError;
     }
 
@@ -146,20 +153,20 @@ SGP4xResult SGP4xClass::executeSelfTest() {
 SGP4xResult SGP4xClass::measureRawSignal(float relativeHumidity, float temperature, bool useCompensation)
 {
     uint8_t readBuffer[6];
-    uint8_t readBufferSize = sizeof(readBuffer)/sizeof(*readBuffer);
+    uint8_t readBufferSize = sizeof(readBuffer) / sizeof(*readBuffer);
     // default static command without temperature/humidity correction
     // (same parameter byte values as with 50% relative humidity at 25 degree celsius)
     //                      0x26, 0x19, 0x80, 0x00, 0xA2, 0x66, 0x66, 0x93
     uint8_t cmdBuffer[8] = {0x00, 0x00, 0x80, 0x00, 0xA2, 0x66, 0x66, 0x93};
-    uint8_t commandBufferSize = sizeof(cmdBuffer)/sizeof(*cmdBuffer);
+    uint8_t commandBufferSize = sizeof(cmdBuffer) / sizeof(*cmdBuffer);
 
     uint16_t relativeHumidityTicks;
     uint16_t temperatureTicks;
 
     if (useCompensation)
     {
-        relativeHumidityTicks = relativeHumidity * 65535/100;
-        temperatureTicks = (temperature + 45.f) * 65535/175;
+        relativeHumidityTicks = relativeHumidity * 65535 / 100;
+        temperatureTicks = (temperature + 45.f) * 65535 / 175;
         // set provided relative humidity and temperature in command parameters
         // 2 bytes of data with most significant bit first!
         // 1 byte crc8 checksum
@@ -181,7 +188,7 @@ SGP4xResult SGP4xClass::measureRawSignal(float relativeHumidity, float temperatu
     }
 
     rawVocTics = makeWord(readBuffer[0], readBuffer[1]);
-    GasIndexAlgorithm_process(&voc_algorithm_params, rawVocTics , &vocIndexValue);
+    GasIndexAlgorithm_process(&voc_algorithm_params, rawVocTics, &vocIndexValue);
 
     rawNoxTics = makeWord(readBuffer[3], readBuffer[4]);
     GasIndexAlgorithm_process(&nox_algorithm_params, rawNoxTics, &noxIndexValue);
@@ -194,12 +201,12 @@ SGP4xResult SGP4xClass::measureRawSignal()
     return measureRawSignal(50.f, 25.f, false);
 }
 
-SGP4xResult SGP4xClass::getSerialnumber(uint8_t * serialNumber, uint8_t length)
+SGP4xResult SGP4xClass::getSerialnumber(uint8_t* serialNumber, uint8_t length)
 {
     uint8_t readBuffer[9];
-    uint8_t readBufferSize = sizeof(readBuffer)/sizeof(*readBuffer);
+    uint8_t readBufferSize = sizeof(readBuffer) / sizeof(*readBuffer);
     uint8_t cmdBuffer[2];
-    uint8_t commandBufferSize = sizeof(cmdBuffer)/sizeof(*cmdBuffer);
+    uint8_t commandBufferSize = sizeof(cmdBuffer) / sizeof(*cmdBuffer);
 
     // max. duration for processing sgp4x_get_serial_number is 1 second
     SGP4xResult result = readSensor(Sgp4xCommand::getSerial, cmdBuffer, commandBufferSize, readBuffer, readBufferSize, 1000);
@@ -228,19 +235,20 @@ SGP4xResult SGP4xClass::getSerialnumber(uint8_t * serialNumber, uint8_t length)
 SGP4xResult SGP4xClass::turnHeaterOffAndReturnToIdle()
 {
     uint8_t cmdBuffer[2];
-    uint8_t commandBufferSize = sizeof(cmdBuffer)/sizeof(*cmdBuffer);
+    uint8_t commandBufferSize = sizeof(cmdBuffer) / sizeof(*cmdBuffer);
 
     // max. duration for processing sgp4x_turn_heater_off is 1 second
     SGP4xResult result = readSensor(Sgp4xCommand::heaterOff, cmdBuffer, commandBufferSize, nullptr, 0, 1000);
     return result;
 }
 
-SGP4xResult SGP4xClass::readFeatureSet() {
+SGP4xResult SGP4xClass::readFeatureSet()
+{
     uint8_t cmdBuffer[2];
-    uint8_t commandBufferSize = sizeof(cmdBuffer)/sizeof(*cmdBuffer);
+    uint8_t commandBufferSize = sizeof(cmdBuffer) / sizeof(*cmdBuffer);
 
     uint8_t readBuffer[3];
-    uint8_t readBufferSize = sizeof(readBuffer)/sizeof(*readBuffer);
+    uint8_t readBufferSize = sizeof(readBuffer) / sizeof(*readBuffer);
 
     // max. duration 10ms
     SGP4xResult result = readSensor(Sgp4xCommand::featureSet, cmdBuffer, commandBufferSize, readBuffer, readBufferSize, 10);
@@ -278,29 +286,30 @@ uint16_t SGP4xClass::getFeatureSet()
     return featureSet;
 }
 
-uint8_t SGP4xClass::crc8(const uint8_t *data, int len) {
-  /*
-   *
-   * CRC-8 formula from page 14 of SHT spec pdf
-   *
-   * Test data 0xBE, 0xEF should yield 0x92
-   *
-   * Initialization data 0xFF
-   * Polynomial 0x31 (x8 + x5 +x4 +1)
-   * Final XOR 0x00
-   */
+uint8_t SGP4xClass::crc8(const uint8_t* data, int len)
+{
+    /*
+     *
+     * CRC-8 formula from page 14 of SHT spec pdf
+     *
+     * Test data 0xBE, 0xEF should yield 0x92
+     *
+     * Initialization data 0xFF
+     * Polynomial 0x31 (x8 + x5 +x4 +1)
+     * Final XOR 0x00
+     */
 
-  const uint8_t POLYNOMIAL(0x31);
-  uint8_t crc(0xFF);
+    const uint8_t POLYNOMIAL(0x31);
+    uint8_t crc(0xFF);
 
-  for (int j = len; j; --j)
-  {
-    crc ^= *data++;
-
-    for (int i = 8; i; --i)
+    for (int j = len; j; --j)
     {
-      crc = (crc & 0x80) ? (crc << 1) ^ POLYNOMIAL : (crc << 1);
+        crc ^= *data++;
+
+        for (int i = 8; i; --i)
+        {
+            crc = (crc & 0x80) ? (crc << 1) ^ POLYNOMIAL : (crc << 1);
+        }
     }
-  }
-  return crc;
+    return crc;
 }

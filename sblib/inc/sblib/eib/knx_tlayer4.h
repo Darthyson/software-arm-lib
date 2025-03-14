@@ -1,9 +1,9 @@
-/**************************************************************************//**
+/******************************************************************************
  * @addtogroup SBLIB_MAIN_GROUP Selfbus KNX-Library
  * @defgroup SBLIB_SUB_GROUP_KNX KNX Transport layer 4
  * @ingroup SBLIB_MAIN_GROUP
- * @brief   
- * @details 
+ * @brief
+ * @details
  *
  *
  * @{
@@ -35,8 +35,8 @@
 #   define LONG_PAUSE_THRESHOLD_MS (500)
 #endif
 
-extern uint16_t telegramCount;   //!< number of telegrams since system reset
-extern uint16_t disconnectCount; //!< number of disconnects since system reset
+extern uint16_t telegramCount;      //!< number of telegrams since system reset
+extern uint16_t disconnectCount;    //!< number of disconnects since system reset
 extern uint16_t repeatedT_ACKcount; //!< number of repeated @ref T_ACK_PDU in @ref actionA03sendAckPduAgain
 
 /**
@@ -52,6 +52,7 @@ public:
         OPEN_IDLE,
         OPEN_WAIT
     };
+
     TLayer4(uint8_t maxTelegramLength);
     TLayer4() = delete;
     virtual ~TLayer4() = default;
@@ -62,7 +63,7 @@ public:
      * @param telegram  The telegram to process
      * @param telLength Length of the telegram
      */
-    void processTelegram(unsigned char *telegram, uint8_t telLength);
+    void processTelegram(unsigned char* telegram, uint8_t telLength);
 
     /**
      * Test if a connection-oriented connection is open.
@@ -102,7 +103,7 @@ public:
     /**
      * Wait for @ref sendTelegram to be free and acquire it.
      */
-    uint8_t * acquireSendBuffer();
+    uint8_t* acquireSendBuffer();
 
     /**
      * Sends the telegram that was prepared in @ref sendTelegram.
@@ -126,12 +127,12 @@ protected:
     /**
      * Process a group address (T_Data_Group) telegram.
      */
-    virtual bool processGroupAddressTelegram(ApciCommand apciCmd, uint16_t groupAddress, unsigned char *telegram, uint8_t telLength) = 0;
+    virtual bool processGroupAddressTelegram(ApciCommand apciCmd, uint16_t groupAddress, unsigned char* telegram, uint8_t telLength) = 0;
 
     /**
      * Process a broadcast telegram.
      */
-    virtual bool processBroadCastTelegram(ApciCommand apciCmd, unsigned char *telegram, uint8_t telLength) = 0;
+    virtual bool processBroadCastTelegram(ApciCommand apciCmd, unsigned char* telegram, uint8_t telLength) = 0;
 
     /**
      * Processes a APCI telegram
@@ -142,7 +143,7 @@ protected:
      * @param sendBuffer    Pointer to the buffer for a potential response telegram
      * @return Always false
      */
-    virtual bool processApci(ApciCommand apciCmd, unsigned char * telegram, uint8_t telLength, uint8_t * sendBuffer);
+    virtual bool processApci(ApciCommand apciCmd, unsigned char* telegram, uint8_t telLength, uint8_t* sendBuffer);
 
     /**
      * Disconnect from connected client.
@@ -175,7 +176,7 @@ private:
     /**
      * Internal processing of the received telegram from bus.telegram. Called by processTelegram
      */
-    void processTelegramInternal(unsigned char *telegram, uint8_t telLength);
+    void processTelegramInternal(unsigned char* telegram, uint8_t telLength);
 
     /** Sets a new state @ref TL4State for the transport layer state machine
      *
@@ -192,7 +193,7 @@ private:
      *
      * @param tpci - the transport control field
      */
-    void processConControlTelegram(const uint16_t& senderAddr, const TPDU& tpci, unsigned char *telegram, const uint8_t& telLength);
+    void processConControlTelegram(const uint16_t& senderAddr, const TPDU& tpci, unsigned char* telegram, const uint8_t& telLength);
 
     /**
      * @brief Process a TP Layer 4 @ref T_CONNECT_PDU
@@ -220,7 +221,7 @@ private:
      * @param tpci the TPCI to process
      * @return true if successful, otherwise false
      */
-    bool processConControlAcknowledgmentPDU(uint16_t senderAddr, const TPDU& tpci, unsigned char *telegram, uint8_t telLength);
+    bool processConControlAcknowledgmentPDU(uint16_t senderAddr, const TPDU& tpci, unsigned char* telegram, uint8_t telLength);
 
     /**
      * Process a unicast telegram with our physical address as destination address.
@@ -230,7 +231,7 @@ private:
      *
      * @param apciCmd - The application control field command (APCI)
      */
-    void processDirectTelegram(ApciCommand apciCmd, unsigned char *telegram, uint8_t telLength);
+    void processDirectTelegram(ApciCommand apciCmd, unsigned char* telegram, uint8_t telLength);
 
     /**
      * Forward the connection-oriented telegram in @ref sendConnectedTelegram to @ref sendTelegram
@@ -240,7 +241,7 @@ private:
 
     void actionA00Nothing();
     void actionA01Connect(uint16_t address);
-    void actionA02sendAckPduAndProcessApci(ApciCommand apciCmd, const int8_t seqNo, unsigned char *telegram, uint8_t telLength);
+    void actionA02sendAckPduAndProcessApci(ApciCommand apciCmd, const int8_t seqNo, unsigned char* telegram, uint8_t telLength);
 
     /**
      * Performs action A3 as described in the KNX Spec. 2.1 3/3/4 5.3 p.19
@@ -286,28 +287,28 @@ private:
      */
     void actionA10Disconnect(uint16_t address);
 
-    TLayer4::TL4State state = TLayer4::CLOSED;  //!< Current state of the TL4 state machine
-    uint16_t connectedAddr = 0;                 //!< Remote address of the connected partner
-    int8_t seqNoSend = -1;                      //!< Sequence number for the next telegram we send
-    int8_t seqNoRcv = -1;                       //!< Sequence number of the last telegram received from connected partner
-    int8_t repCount = 0;                        //!< Telegram repetition count
-    int8_t conCtrlRepCount = 0;                 //!< Connection control telegram repetition count
-    uint32_t connectedTime = 0;                 //!< System time of the last connection oriented telegram
-    uint32_t sentTelegramTime = 0;              //!< System time of the last sent telegram
+    TLayer4::TL4State state = TLayer4::CLOSED; //!< Current state of the TL4 state machine
+    uint16_t connectedAddr = 0;                //!< Remote address of the connected partner
+    int8_t seqNoSend = -1;                     //!< Sequence number for the next telegram we send
+    int8_t seqNoRcv = -1;                      //!< Sequence number of the last telegram received from connected partner
+    int8_t repCount = 0;                       //!< Telegram repetition count
+    int8_t conCtrlRepCount = 0;                //!< Connection control telegram repetition count
+    uint32_t connectedTime = 0;                //!< System time of the last connection oriented telegram
+    uint32_t sentTelegramTime = 0;             //!< System time of the last sent telegram
 
-    volatile uint16_t ownAddr;                  //!< Our own physical address on the bus
+    volatile uint16_t ownAddr; //!< Our own physical address on the bus
 
     /**
      * A buffer for the telegram to send.
      */
-    byte *sendTelegram;
+    byte* sendTelegram;
 
     /**
      * Two buffers for connection-oriented telegrams to send. Separate from @ref sendTelegram as repeated sending
      * can be necessary after seconds, while other telegrams can be received and transmitted.
      */
-    byte *sendConnectedTelegram;
-    byte *sendConnectedTelegram2;
+    byte* sendConnectedTelegram;
+    byte* sendConnectedTelegram2;
 
     enum SendTelegramBufferState
     {

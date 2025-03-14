@@ -1,4 +1,4 @@
-/**************************************************************************//**
+/******************************************************************************
  * @addtogroup SBLIB_MAIN_GROUP Main Group Description
  * @defgroup SBLIB_SUB_GROUP_1 Sub Group 1 Description
  * @ingroup SBLIB_MAIN_GROUP
@@ -32,7 +32,7 @@ class Memory
 public:
     Memory() = delete;
     ~Memory() = default;
-    Memory(uint32_t  start, uint32_t size);
+    Memory(uint32_t start, uint32_t size);
 
     /**
      * Access the memory like an ordinary array
@@ -100,20 +100,18 @@ public:
     uint32_t size() const;
 
 protected:
-    uint32_t startAddress;  //!< virtual start address of the memory
-    uint32_t endAddress;    //!< virtual end address of the memory
-    uint32_t sizeTotal;     //!< size in bytes of the memory
+    uint32_t startAddress; //!< virtual start address of the memory
+    uint32_t endAddress;   //!< virtual end address of the memory
+    uint32_t sizeTotal;    //!< size in bytes of the memory
 
     /**
      * Changes the given absolute memory address to the real internal index
      *
      * @param address The absolute memory address
      */
-    void normalizeAddress(uint32_t* address) const {(*address -= startAddress);}
+    void normalizeAddress(uint32_t* address) const { (*address -= startAddress); }
 
 private:
-
-
 };
 
 
