@@ -137,8 +137,6 @@ protected:
     void scheduleRestart(RestartType type);
 
 private:
-    CallbackBcu* callback;
-
     RestartType restartType;
     bool restartSendDisconnect;
     Timeout restartTimeout;
