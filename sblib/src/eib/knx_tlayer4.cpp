@@ -63,7 +63,7 @@ dump2(
 uint16_t disconnectCount = 0; //!< number of disconnects since system reset
 uint16_t repeatedT_ACKcount = 0;
 
-void dumpTelegramBytes(bool /*tx*/, const unsigned char* /*telegram*/, const uint8_t /*length*/, const bool /*newLine*/ = true)
+void dumpTelegramBytes(bool tx, const unsigned char* telegram, const uint8_t length, const bool newLine = true)
 {
     dump2(
         serial.print(LOG_SEP);
@@ -92,7 +92,7 @@ void dumpTelegramBytes(bool /*tx*/, const unsigned char* /*telegram*/, const uin
     );
 }
 
-void dumpState(TLayer4::TL4State /*dumpState*/)
+void dumpState(TLayer4::TL4State dumpState)
 {
     dump2(
         switch (dumpState)
@@ -134,7 +134,7 @@ void dumpTicks()
     );
 }
 
-void dumpSequenceNumber(unsigned char* /*telegram*/, const uint8_t /*tpci*/)
+void dumpSequenceNumber(unsigned char* telegram, const uint8_t tpci)
 {
     dump2(
         serial.print("#");
@@ -150,8 +150,8 @@ void dumpSequenceNumber(unsigned char* /*telegram*/, const uint8_t /*tpci*/)
     );
 }
 
-void dumpTelegramInfo(unsigned char* /*telegram*/, const uint16_t /*address*/, uint8_t /*tpci*/, const bool /*isTX*/,
-    const TLayer4::TL4State /*state*/)
+void dumpTelegramInfo(unsigned char* telegram, const uint16_t address, uint8_t tpci, const bool isTX,
+    const TLayer4::TL4State state)
 {
     dump2(
         dumpTicks();
