@@ -52,11 +52,13 @@ public:
     };
 
 protected:
-    volatile int readHead, readTail;   //!< head and tail index for the read buffer
-    volatile int writeHead, writeTail; //!< head and tail index for the write buffer
+    volatile int readHead = 0;  //!< head index for the read buffer
+    volatile int readTail = 0;  //!< tail index for the read buffer
+    volatile int writeHead = 0; //!< head index for the write buffer
+    volatile int writeTail = 0; //!< tail index for the write buffer
 
-    byte readBuffer[BUFFER_SIZE];  //!< the read buffer
-    byte writeBuffer[BUFFER_SIZE]; //!< the write buffer
+    byte readBuffer[BUFFER_SIZE] = {0};  //!< the read buffer
+    byte writeBuffer[BUFFER_SIZE] = {0}; //!< the write buffer
 
     /**
      * Test if the read buffer is full.
