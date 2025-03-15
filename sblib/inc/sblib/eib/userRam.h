@@ -35,7 +35,6 @@ class UserRam : public Memory
 {
 public:
     UserRam() = delete;
-    ~UserRam() = default;
     UserRam(uint32_t start, uint32_t size, uint32_t shadowSize);
 
     /**

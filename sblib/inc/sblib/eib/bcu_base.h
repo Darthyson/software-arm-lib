@@ -71,7 +71,7 @@ public:
      * The BCU's main processing loop. This is like the application's loop() function,
      * and is called automatically by main() when the BCU is activated with bcu.begin().
      */
-    virtual void loop() override;
+    void loop() override;
 
     /**
      *
@@ -97,7 +97,7 @@ protected:
     /**
      * Special initialization for the BCU
      */
-    virtual void _begin() override;
+    void _begin() override;
 
     /**
      * @brief Set or unset the programming mode of the bcu
@@ -117,14 +117,14 @@ protected:
      * @param sendBuffer    Pointer to the buffer for a potential response telegram
      * @return True if a response telegram was prepared, otherwise false
      */
-    virtual bool processApci(ApciCommand apciCmd, unsigned char* telegram, uint8_t telLength, uint8_t* sendBuffer);
+    bool processApci(ApciCommand apciCmd, unsigned char* telegram, uint8_t telLength, uint8_t* sendBuffer) override;
 
     void sendApciIndividualAddressReadResponse();
 
     Debouncer progButtonDebouncer; //!< The debouncer for the programming mode button.
 
-    void discardReceivedTelegram();
-    void send(unsigned char* telegram, unsigned short length);
+    void discardReceivedTelegram() override;
+    void send(unsigned char* telegram, unsigned short length) override;
 
     enum class RestartType : uint8_t
     {

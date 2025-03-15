@@ -23,7 +23,7 @@ public:
      *
      * @return The read byte (0..255) or -1 if no byte was received.
      */
-    virtual int read();
+    int read() override;
 
     /**
      * Query the next byte to be read, without reading it.
@@ -31,12 +31,12 @@ public:
      * @return The next byte (0..255) or -1 if no byte is available
      *         for reading.
      */
-    virtual int peek();
+    int peek() override;
 
     /**
      * @return The number of bytes that are available for reading.
      */
-    virtual int available();
+    int available() override;
 
     /**
      * Clear the read and write buffers.

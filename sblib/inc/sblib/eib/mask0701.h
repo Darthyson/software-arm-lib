@@ -30,13 +30,12 @@ public:
     MASK0701();
     MASK0701(UserRamMASK0701* userRam, UserEepromMASK0701* userEeprom, ComObjectsBCU2* comObjects, AddrTablesMASK0701* addrTables,
              PropertiesMASK0701* properties);
-    ~MASK0701() = default;
 
-    virtual const char* getBcuType() const override { return "BIM112"; }
-    virtual uint16_t getMaskVersion() const override { return 0x701; }
+    const char* getBcuType() const override { return "BIM112"; }
+    uint16_t getMaskVersion() const override { return 0x701; }
 
-    virtual bool processApciMemoryReadPDU(int addressStart, byte* payLoad, int lengthPayLoad) override;
-    virtual bool processApciMemoryWritePDU(int addressStart, byte* payLoad, int lengthPayLoad) override;
+    bool processApciMemoryReadPDU(int addressStart, byte* payLoad, int lengthPayLoad) override;
+    bool processApciMemoryWritePDU(int addressStart, byte* payLoad, int lengthPayLoad) override;
 
     /** Start address of the user RAM when ETS talks with us. */
     const int userRamStartDefault = 0x5FC;

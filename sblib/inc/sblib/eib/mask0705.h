@@ -32,10 +32,9 @@ public:
     MASK0705();
     MASK0705(UserRamMASK0705* userRam, UserEepromMASK0705* userEeprom, ComObjectsMASK0705* comObjects, AddrTablesMASK0705* addrTables,
              PropertiesMASK0705* properties);
-    ~MASK0705() = default;
 
-    virtual const char* getBcuType() const override { return "BIM112_75"; }
-    virtual uint16_t getMaskVersion() const override { return 0x705; }
+    const char* getBcuType() const override { return "BIM112_75"; }
+    uint16_t getMaskVersion() const override { return 0x705; }
 
     /** Start address of the user RAM when ETS talks with us. */
     const int userRamStartDefault = 0x5FC;

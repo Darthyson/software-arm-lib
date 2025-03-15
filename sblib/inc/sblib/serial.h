@@ -129,7 +129,7 @@ public:
      *
      * @return The read byte (0..255) or -1 if no byte was received.
      */
-    virtual int read();
+    int read() override;
 
     // Pull in write(str) and write(buf, size) from Print
     using Print::write;
@@ -140,12 +140,12 @@ public:
      * @param ch - the byte to write.
      * @return 1 if the byte was written, 0 if not.
      */
-    virtual int write(byte ch);
+    int write(byte ch) override;
 
     /**
      * Wait until all bytes are written.
      */
-    virtual void flush(void);
+    void flush(void) override;
 
     /**
      * @brief Check if serial port enabled and available for transmission

@@ -49,13 +49,12 @@ public:
     explicit ComObjectsBCU1(BcuDefault* bcuInstance) : ComObjects((BcuBase*)bcuInstance) {}
 
     void printObjectConfigTable();
-    virtual const ComConfig& objectConfig(int objno) override;
-    virtual int objectSize(int objno) override;
-    virtual byte* objectValuePtr(int objno) override;
-    virtual void processGroupTelegram(uint16_t addr, int apci, byte* tel, int trg_objno) override;
-    virtual byte* objectConfigTable() override;
-    virtual byte* objectFlagsTable() override;
-
+    const ComConfig& objectConfig(int objno) override;
+    int objectSize(int objno) override;
+    byte* objectValuePtr(int objno) override;
+    void processGroupTelegram(uint16_t addr, int apci, byte* tel, int trg_objno) override;
+    byte* objectConfigTable() override;
+    byte* objectFlagsTable() override;
     const ComConfigBCU1* objectConfigBCU1(int objno); ///\todo make protected again after ramLocation fix, see setup.cpp fixRamLoc(.) of 4sense-bcu1
 };
 

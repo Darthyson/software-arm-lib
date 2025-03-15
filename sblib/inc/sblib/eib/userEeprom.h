@@ -30,7 +30,6 @@ class UserEeprom : public Memory
 public:
     UserEeprom() = delete;
     UserEeprom(unsigned int start, unsigned int size, unsigned int flashSize);
-    ~UserEeprom() = default;
 
     __attribute__ ((aligned (FLASH_RAM_BUFFER_ALIGNMENT))) byte* userEepromData; // must be word aligned, otherwise iapProgram will fail
 

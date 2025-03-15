@@ -51,7 +51,7 @@ public:
      * @param x - the X position, starting with 0
      * @param y - the Y position, starting with 0
      */
-    virtual void pos(int x, int y);
+    void pos(int x, int y) override;
 
     /**
      * Begin using the display.
@@ -77,7 +77,7 @@ public:
      *
      * @return 1 if the character was written, 0 if not.
      */
-    virtual int write(byte ch);
+    int write(byte ch) override;
 
     /**
      * Clear the display.
