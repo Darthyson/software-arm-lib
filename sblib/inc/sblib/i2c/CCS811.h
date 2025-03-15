@@ -22,11 +22,10 @@
    Adapted to lpcopen I2C functions by Oliver Stefan (2021)
  ****************************************************/
 
+#ifndef SB_LIB_CCS811_H
+#define SB_LIB_CCS811_H
 
 #include <cstdint>
-
-#ifndef CCS811_h
-#define CCS811_h
 
 #define nWAKE           4 // pin 4 is tied to CCS811 nWAKE pin in sensor node
 #define nINT            7 // pin 7 is tied to CCS811 nINT pin in sensor node
@@ -69,4 +68,4 @@ private:
     uint8_t _I2C_ADDR;
 };
 
-#endif
+#endif /* SB_LIB_CCS811_H */
