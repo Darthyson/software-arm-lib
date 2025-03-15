@@ -58,7 +58,6 @@ protected:
      */
     void idle();
 
-protected:
     const int dataPort, pinA0, pinCS1, pinCS2, pinRD, pinWR;
 };
 

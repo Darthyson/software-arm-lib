@@ -34,8 +34,6 @@ public:
             PropertiesSYSTEMB* properties);
 
     uint16_t getMaskVersion() const override { return 0x7B0; }
-
-protected:
 };
 
 #endif /*sblib_systemb_h*/

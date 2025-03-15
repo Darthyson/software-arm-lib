@@ -15,6 +15,6 @@
 /**
  * A communication object configuration.
  */
-struct ComConfigMASK0701 : public ComConfigBCU2 {};
+struct ComConfigMASK0701 : ComConfigBCU2 {};
 
 #endif /*sblib_eib_types_mask0701_h*/

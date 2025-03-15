@@ -218,7 +218,6 @@ private:
 
     constexpr size_t maxTelegramSize() const { return TelegramBufferSize; };
 
-private:
     AddrTables* addressTable;    //!< Address table to check, if a telegram should be processed or not.
     Timer& timer;                //!< The timer
     int rxPin, txPin;            //!< The pins for bus receiving and sending

@@ -21,8 +21,6 @@ public:
 
 protected:
     UserRamSYSTEMB(uint32_t start, uint32_t size, uint32_t shadowSize) : UserRamMASK0701(start, size, shadowSize) {}
-
-private:
 };
 
 #endif /* SBLIB_EIB_USERRAM_SYSTEMB_H_ */

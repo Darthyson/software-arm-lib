@@ -215,8 +215,6 @@ protected:
     bool sendGrpTelEnabled; //!< Sending of group telegrams is enabled. Usually set, but can be disabled.
     unsigned int groupTelWaitMillis;
     unsigned int groupTelSent;
-
-private:
 };
 
 #define  MAX_GROUP_TEL_PER_SECOND  28

@@ -15,6 +15,6 @@
 /**
  * A communication object configuration.
  */
-struct ComConfigMASK0705 : public ComConfigMASK0701 {};
+struct ComConfigMASK0705 : ComConfigMASK0701 {};
 
 #endif /*sblib_eib_types_mask0705_h*/
