@@ -84,7 +84,7 @@ protected:
      *
      * @return The computed CRC8 value.
      */
-    uint8_t crc8(const uint8_t* data, uint8_t len);
+    static uint8_t crc8(const uint8_t* data, uint8_t len);
 };
 
 #endif

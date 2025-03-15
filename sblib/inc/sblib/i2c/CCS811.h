@@ -58,7 +58,7 @@ public:
     void setMode(uint8_t modeNumber);
     bool getData(void);
     void compensate(float t, float rh);
-    void _digitalWrite(int WAKE_PIN, bool VAL);
+    static void _digitalWrite(int WAKE_PIN, bool VAL);
     void sleep();
     int TVOC, CO2;
 
