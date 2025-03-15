@@ -163,7 +163,7 @@ void OneWireDS2482::writeConfig(uint8_t config) {
 }
 
 // Generates a 1-Wire reset/presence-detect cycle (Figure 4) at the 1-Wire line. The state
-// of the 1-Wire line is sampled at tSI and tMSP and the result is reported to the host 
+// of the 1-Wire line is sampled at tSI and tMSP and the result is reported to the host
 // processor through the Status Register, bits PPD and SD.
 uint8_t OneWireDS2482::wireReset() {
     waitOnBusy();
@@ -227,7 +227,7 @@ uint8_t OneWireDS2482::wireReadByte() {
 }
 
 // Generates a single 1-Wire time slot with a bit value “V” as specified by the bit byte at the 1-Wire line
-// (see Table 2). A V value of 0b generates a write-zero time slot (Figure 5); a V value of 1b generates a 
+// (see Table 2). A V value of 0b generates a write-zero time slot (Figure 5); a V value of 1b generates a
 // write-one time slot, which also functions as a read-data time slot (Figure 6). In either case, the logic
 // level at the 1-Wire line is tested at tMSR and SBR is updated.
 void OneWireDS2482::wireWriteBit(uint8_t data, uint8_t power) {
@@ -373,7 +373,6 @@ uint8_t OneWireDS2482::crc8(const uint8_t *addr, uint8_t len) {
 uint8_t OneWire::crc8(const uint8_t *addr, uint8_t len)
 {
     uint8_t crc = 0;
-    
     while (len--) {
         uint8_t inbyte = *addr++;
         for (uint8_t i = 8; i; i--) {
@@ -418,7 +417,7 @@ void OneWireDS2482::skip(void) {
     wireSkip();
 }
 
-// Write a byte. 
+// Write a byte.
 // Ignore the power bit
 void OneWireDS2482::write(uint8_t v, uint8_t power) {
     wireWriteByte(v, power);
