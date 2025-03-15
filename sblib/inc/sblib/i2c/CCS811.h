@@ -59,7 +59,6 @@ public:
     bool getData(void);
     void compensate(float t, float rh);
     void _digitalWrite(int WAKE_PIN, bool VAL);
-    void reset(void);
     void sleep();
     int TVOC, CO2;
 

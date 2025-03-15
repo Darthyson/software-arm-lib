@@ -70,7 +70,7 @@ public:
     void clearStrongPullup();
     void setActivePullup();
     void clearActivePullup();
-    uint8_t setChannel(uint8_t ch);
+    //uint8_t setChannel(uint8_t ch);
     uint8_t wireReset();
     void wireWriteByte(uint8_t data, uint8_t power = 0);
     void wireWriteCmdAndData(uint8_t command, uint8_t data, uint8_t power = 0);
