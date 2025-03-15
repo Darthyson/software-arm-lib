@@ -43,7 +43,6 @@ public:
     bool applicationRunning() const override;
 
     //  BCU 1, mask version 1.2
-    const char* getBcuType() const override { return "BCU1"; }
     uint16_t getMaskVersion() const override { return 0x12; }
 };
 

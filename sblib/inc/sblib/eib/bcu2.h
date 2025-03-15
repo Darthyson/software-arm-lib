@@ -81,7 +81,6 @@ public:
     bool processBroadCastTelegram(ApciCommand apciCmd, unsigned char* telegram, uint8_t telLength) override;
 
     //  BCU 2, mask version 2.0
-    const char* getBcuType() const override { return "BCU2"; }
     unsigned short getMaskVersion() const override { return 0x20; }
 
     /**
