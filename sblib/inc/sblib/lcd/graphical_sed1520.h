@@ -50,7 +50,7 @@ public:
      * @param x - the X position, starting with 0
      * @param y - the Y position, starting with 0
      */
-    virtual void pos(int x, int y);
+    void pos(int x, int y) override;
 
 protected:
     /**

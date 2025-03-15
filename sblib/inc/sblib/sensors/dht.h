@@ -58,7 +58,6 @@ public:
 
     void DHTInit(int pin, int DHTtype);
     bool readData(bool bForceRead = false);
-    float ReadHumidity(void);
     float ConvertTemperature(eScale Scale);
     float CalcdewPointFast(float celsius, float humidity);
     //float CalcdewPoint(float celsius, float humidity);

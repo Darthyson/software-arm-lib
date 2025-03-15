@@ -266,9 +266,6 @@ public:
      * @return 1 if the byte was written, 0 if not.
      */
     virtual int write(byte ch) = 0;
-
-private:
-    int printNumber(unsigned int value, Base base);
 };
 
 

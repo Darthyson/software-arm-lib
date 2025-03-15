@@ -43,3 +43,6 @@ LcdGraphicalSED1520::LcdGraphicalSED1520(int dataPort, int pinA0, int pinCS1, in
 
 void LcdGraphicalSED1520::idle()
 {}
+
+void LcdGraphicalSED1520::pos(int x, int y)
+{}
