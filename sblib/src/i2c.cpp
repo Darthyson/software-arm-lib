@@ -334,6 +334,8 @@ int handleMasterXferState(LPC_I2C_T *pI2C, I2C_XFER_T  *xfer)
     case 0x00:
         xfer->status = I2C_STATUS_BUSERR;
         cclr &= ~I2C_CON_STO;
+        break;
+    default: ;
     }
 
     /* Set clear control flags */
@@ -361,6 +363,7 @@ I2C_SLAVE_ID getSlaveIndex(LPC_I2C_T *pI2C)
     case 0xA8:
     case 0xB0:
         return lookupSlaveIndex(pI2C, pI2C->DAT);
+    default: ;
     }
 
     /* If everything is fine code should never come here */
@@ -420,6 +423,7 @@ int handleSlaveXferState(LPC_I2C_T *pI2C, I2C_XFER_T *xfer)
             cclr &= ~I2C_CON_STA;
         }
         break;
+    default: ;
     }
 
     /* Set clear control flags */

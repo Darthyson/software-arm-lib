@@ -261,19 +261,22 @@ bool DS18x20::readResultAll()
  */
 const char* DS18x20::TypeStr(int deviceNum)
 {
-    if (deviceNum < this->m_foundDevices)
+    if (deviceNum >= this->m_foundDevices)
     {
-        switch (this->m_dsDev[deviceNum].addr[0])
-        {
-            case DS18S20:
-                return "DS18S20";
-            case DS18B20:
-                return "DS18B20";
-            case DS1822:
-                return "DS1822";
-        }
+        return "UNKNOWN";
     }
-    return "UNKNOWN";
+
+    switch (this->m_dsDev[deviceNum].addr[0])
+    {
+        case DS18S20:
+            return "DS18S20";
+        case DS18B20:
+            return "DS18B20";
+        case DS1822:
+            return "DS1822";
+        default:
+            return "UNKNOWN";
+    }
 }
 
 /*****************************************************************************
