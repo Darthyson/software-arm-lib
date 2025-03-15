@@ -15,8 +15,7 @@
 class UserEepromBCU1 : public UserEeprom
 {
 public:
-    UserEepromBCU1() : UserEeprom(0x100, 256, 256) {};
-    ~UserEepromBCU1() = default;
+    UserEepromBCU1() : UserEeprom(0x100, 256, 256) {}
 
     static const int optionRegOffset = 0x00;         //!< 0x0100: EEPROM option register
     static const int manuDataHOffset = 0x01;         //!< 0x0101: Manufacturing data high byte
@@ -45,30 +44,30 @@ public:
     static const int user230bytesStartOffset = 0x19; //!< 0x0119: User EEPROM: 230 bytes (BCU1)
     static const int checksumOffset = 0xff;          //!< 0x01ff: EEPROM checksum (BCU1 only)
 
-    virtual byte& optionReg() const override { return userEepromData[optionRegOffset]; }
-    virtual byte& manuDataH() const override { return userEepromData[manuDataHOffset]; }
-    virtual byte& manuDataL() const override { return userEepromData[manuDataLOffset]; }
-    virtual byte& manufacturerH() const override { return userEepromData[manufacturerHOffset]; }
-    virtual byte& manufacturerL() const override { return userEepromData[manufacturerLOffset]; }
-    virtual byte& deviceTypeH() const override { return userEepromData[deviceTypeHOffset]; }
-    virtual byte& deviceTypeL() const override { return userEepromData[deviceTypeLOffset]; }
-    virtual byte& version() const override { return userEepromData[versionOffset]; }
-    virtual byte& checkLimit() const override { return userEepromData[checkLimitOffset]; }
-    virtual byte& appPeiType() const override { return userEepromData[appPeiTypeOffset]; }
-    virtual byte& syncRate() const override { return userEepromData[syncRateOffset]; }
-    virtual byte& portCDDR() const override { return userEepromData[portCDDROffset]; }
-    virtual byte& portADDR() const override { return userEepromData[portADDROffset]; }
-    virtual byte& runError() const override { return userEepromData[runErrorOffset]; }
-    virtual byte& routeCnt() const override { return userEepromData[routeCntOffset]; }
-    virtual byte& maxRetransmit() const override { return userEepromData[maxRetransmitOffset]; }
-    virtual byte& confDesc() const override { return userEepromData[confDescOffset]; }
-    virtual byte& assocTabPtr() const override { return userEepromData[assocTabPtrOffset]; }
-    virtual byte& commsTabPtr() const override { return userEepromData[commsTabPtrOffset]; };
-    virtual byte& usrInitPtr() const override { return userEepromData[usrInitPtrOffset]; }
-    virtual byte& usrProgPtr() const override { return userEepromData[usrProgPtrOffset]; }
+    byte& optionReg() const override { return userEepromData[optionRegOffset]; }
+    byte& manuDataH() const override { return userEepromData[manuDataHOffset]; }
+    byte& manuDataL() const override { return userEepromData[manuDataLOffset]; }
+    byte& manufacturerH() const override { return userEepromData[manufacturerHOffset]; }
+    byte& manufacturerL() const override { return userEepromData[manufacturerLOffset]; }
+    byte& deviceTypeH() const override { return userEepromData[deviceTypeHOffset]; }
+    byte& deviceTypeL() const override { return userEepromData[deviceTypeLOffset]; }
+    byte& version() const override { return userEepromData[versionOffset]; }
+    byte& checkLimit() const override { return userEepromData[checkLimitOffset]; }
+    byte& appPeiType() const override { return userEepromData[appPeiTypeOffset]; }
+    byte& syncRate() const override { return userEepromData[syncRateOffset]; }
+    byte& portCDDR() const override { return userEepromData[portCDDROffset]; }
+    byte& portADDR() const override { return userEepromData[portADDROffset]; }
+    byte& runError() const override { return userEepromData[runErrorOffset]; }
+    byte& routeCnt() const override { return userEepromData[routeCntOffset]; }
+    byte& maxRetransmit() const override { return userEepromData[maxRetransmitOffset]; }
+    byte& confDesc() const override { return userEepromData[confDescOffset]; }
+    byte& assocTabPtr() const override { return userEepromData[assocTabPtrOffset]; }
+    byte& commsTabPtr() const override { return userEepromData[commsTabPtrOffset]; };
+    byte& usrInitPtr() const override { return userEepromData[usrInitPtrOffset]; }
+    byte& usrProgPtr() const override { return userEepromData[usrProgPtrOffset]; }
     virtual byte& usrSavePtr() const { return userEepromData[usrSavePtrOffset]; }
-    virtual byte& addrTabSize() const override { return userEepromData[addrTabSizeOffset]; }
-    virtual byte* addrTab() const override { return &userEepromData[addrTabOffset]; }
+    byte& addrTabSize() const override { return userEepromData[addrTabSizeOffset]; }
+    byte* addrTab() const override { return &userEepromData[addrTabOffset]; }
     virtual byte* user230bytesStart() const { return &userEepromData[user230bytesStartOffset]; }
     virtual byte& checksum() const { return userEepromData[checksumOffset]; }
 

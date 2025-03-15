@@ -44,9 +44,9 @@ public:
     explicit ComObjectsBCU2(BcuDefault* bcuInstance) : ComObjectsBCU1(bcuInstance) {}
 
 protected:
-    virtual byte* objectValuePtr(int objno) override;
-    virtual byte* objectConfigTable() override;
-    virtual byte* objectFlagsTable() override;
+    byte* objectValuePtr(int objno) override;
+    byte* objectConfigTable() override;
+    byte* objectFlagsTable() override;
     const ComConfig& objectConfig(int objno) override;
 
 private:

@@ -29,8 +29,8 @@ class PropertiesMASK0701 : public PropertiesBCU2
 public:
     explicit PropertiesMASK0701(MASK0701* bcuInstance) : PropertiesBCU2((BCU2*)bcuInstance), bcu(bcuInstance) {}
 
-    virtual LoadState handleAllocAbsDataSegment(const int objectIdx, const byte* payLoad, const int len);
-    virtual LoadState handleAllocAbsTaskSegment(const int objectIdx, const byte* payLoad, const int len);
+    LoadState handleAllocAbsDataSegment(const int objectIdx, const byte* payLoad, const int len) override;
+    LoadState handleAllocAbsTaskSegment(const int objectIdx, const byte* payLoad, const int len) override;
 
 private:
     MASK0701* bcu;

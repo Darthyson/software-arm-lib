@@ -31,7 +31,6 @@ class BCU2 : public BcuDefault
 public:
     BCU2();
     BCU2(UserRamBCU2* userRam, UserEepromBCU2* userEeprom, ComObjectsBCU2* comObjects, AddrTablesBCU2* addrTables, PropertiesBCU2* properties);
-    ~BCU2() = default;
 
     /**
      * Begin using the EIB bus coupling unit, and set the manufacturer-ID, device type,
@@ -64,9 +63,9 @@ public:
      * @param deviceType - the device type (16 bit)
      * @param version - the version of the application program (8 bit)
      */
-    virtual void begin(int manufacturer, int deviceType, int version) override;
+    void begin(int manufacturer, int deviceType, int version) override;
 
-    virtual bool applicationRunning() const;
+    bool applicationRunning() const override;
 
     /**
      * Set our own physical address. Normally the physical address is set by ETS when
@@ -82,8 +81,8 @@ public:
     bool processBroadCastTelegram(ApciCommand apciCmd, unsigned char* telegram, uint8_t telLength) override;
 
     //  BCU 2, mask version 2.0
-    virtual const char* getBcuType() const override { return "BCU2"; }
-    virtual unsigned short getMaskVersion() const override { return 0x20; }
+    const char* getBcuType() const override { return "BCU2"; }
+    unsigned short getMaskVersion() const override { return 0x20; }
 
     /**
      * Get the read-only CommObjectTable address, which can be set calling Begin(...)

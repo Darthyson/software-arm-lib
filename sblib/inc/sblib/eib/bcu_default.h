@@ -26,7 +26,6 @@ class BcuDefault : public BcuBase
 public:
     BcuDefault(UserRam* userRam, UserEeprom* userEeprom, ComObjects* comObjects, AddrTables* addrTables);
     BcuDefault() = delete;
-    ~BcuDefault() = default;
 
     /**
      * End using the EIB bus coupling unit.
@@ -53,7 +52,7 @@ public:
      * The BCU's main processing loop. This is like the application's loop() function,
      * and is called automatically by main() when the BCU is activated with bcu.begin().
      */
-    virtual void loop() override;
+    void loop() override;
 
     /**
      * Process a APCI_MEMORY_WRITE_PDU
@@ -119,7 +118,7 @@ public:
      * @param sendBuffer    Pointer to the buffer for a potential response telegram
      * @return True if a response telegram was prepared, otherwise false
      */
-    virtual bool processApci(ApciCommand apciCmd, unsigned char* telegram, uint8_t telLength, uint8_t* sendBuffer);
+    bool processApci(ApciCommand apciCmd, unsigned char* telegram, uint8_t telLength, uint8_t* sendBuffer) override;
 
     /**
       * @brief Performs a system reset by calling @ref NVIC_SystemReset
@@ -175,7 +174,7 @@ protected:
     /*
      * Special initialization for the BCU
      */
-    virtual void _begin() override;
+    void _begin() override;
     /**
      * Begin using the EIB bus coupling unit, and set the manufacturer-ID, device type, program version
      *
@@ -188,12 +187,12 @@ protected:
     /**
      * Process a group address (T_Data_Group) telegram.
      */
-    virtual bool processGroupAddressTelegram(ApciCommand apciCmd, uint16_t groupAddress, unsigned char* telegram, uint8_t telLength) override;
+    bool processGroupAddressTelegram(ApciCommand apciCmd, uint16_t groupAddress, unsigned char* telegram, uint8_t telLength) override;
 
     /**
      * Process a broadcast telegram.
      */
-    virtual bool processBroadCastTelegram(ApciCommand apciCmd, unsigned char* telegram, uint8_t telLength) override;
+    bool processBroadCastTelegram(ApciCommand apciCmd, unsigned char* telegram, uint8_t telLength) override;
 
     /**
      * Process a device-descriptor-read request.

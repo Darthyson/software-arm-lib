@@ -16,8 +16,7 @@ class UserEepromMASK0701 : public UserEepromBCU2
 {
 public:
     ///\todo make start at 0x4000, right now 0x4000-0x100= 0x3f00 is chosen to avoid address-offset calculations to a BCU1
-    UserEepromMASK0701() : UserEepromBCU2(0x3f00, 3072, 4096) {};
-    ~UserEepromMASK0701() = default;
+    UserEepromMASK0701() : UserEepromBCU2(0x3f00, 3072, 4096) {}
 
 protected:
     UserEepromMASK0701(unsigned int start, unsigned int size, unsigned int flashSize) : UserEepromBCU2(start, size, flashSize) {};

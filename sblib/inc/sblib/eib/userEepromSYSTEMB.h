@@ -10,8 +10,7 @@ class UserEepromSYSTEMB : public UserEepromMASK0701
 {
 public:
     ///\todo check start of 0x3300, maybe the same reason like for 0x0701 -> -0x100 is chosen to avoid address-offset calculations to a BCU1
-    UserEepromSYSTEMB() : UserEepromMASK0701(0x3300, 3072, 4096) {};
-    ~UserEepromSYSTEMB() = default;
+    UserEepromSYSTEMB() : UserEepromMASK0701(0x3300, 3072, 4096) {}
 
     static const int addrTabAddrOffset = 0x21;  //!< 0x3321-0x3322
     static const int assocTabAddrOffset = 0x23; //!< 0x3323-0x3324
@@ -24,8 +23,8 @@ public:
     static const int eibObjVerOffset = 0x75;    //!< 0x3375-0x3379 Application program 1 version
     static const int commsSeg0VerOffset = 0x7A; //!< 0x337A-0x337E Application program 2 version
 
-    virtual word& addrTabAddr() const override { return *(word*)&userEepromData[addrTabAddrOffset]; }
-    virtual word& assocTabAddr() const override { return *(word*)&userEepromData[assocTabAddrOffset]; }
+    word& addrTabAddr() const override { return *(word*)&userEepromData[addrTabAddrOffset]; }
+    word& assocTabAddr() const override { return *(word*)&userEepromData[assocTabAddrOffset]; }
     virtual byte* addrTabMcb() const { return &userEepromData[addrTabMcbOffset]; }
     virtual byte* assocTabMcb() const { return &userEepromData[assocTabMcbOffset]; }
     virtual byte* commsTabMcb() const { return &userEepromData[commsTabMcbOffset]; }

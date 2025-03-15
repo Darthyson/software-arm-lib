@@ -41,14 +41,14 @@ class ComObjectsSYSTEMB : public ComObjectsMASK0701
 public:
     explicit ComObjectsSYSTEMB(BcuDefault* bcuInstance) : ComObjectsMASK0701(bcuInstance) {}
 
-    virtual inline const ComConfig& objectConfig(int objno) override;
+    inline const ComConfig& objectConfig(int objno) override;
 
 protected:
-    virtual int objectSize(int objno) override;
-    virtual byte* objectValuePtr(int objno) override;
-    virtual void processGroupTelegram(uint16_t addr, int apci, byte* tel, int trg_objno) override;
-    virtual byte* objectConfigTable() override;
-    virtual byte* objectFlagsTable() override;
+    int objectSize(int objno) override;
+    byte* objectValuePtr(int objno) override;
+    void processGroupTelegram(uint16_t addr, int apci, byte* tel, int trg_objno) override;
+    byte* objectConfigTable() override;
+    byte* objectFlagsTable() override;
 };
 
 #endif /*sblib_com_objects_SYSTEMB_h*/
