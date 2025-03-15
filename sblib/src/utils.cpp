@@ -13,7 +13,7 @@
 #include <sblib/digital_pin.h>
 #include <sblib/platform.h>
 #include <sblib/io_pin_names.h>
-#include <string.h>
+#include <cstring>
 
 static int fatalErrorPin = PIN_PROG;
 static int eibTxPin = PIN_EIB_TX; ///\todo make it universal

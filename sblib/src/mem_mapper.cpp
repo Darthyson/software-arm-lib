@@ -14,7 +14,7 @@
 #include <sblib/internal/iap.h>
 #include <sblib/utils.h>
 #include <sblib/mem_mapper.h>
-#include <string.h>
+#include <cstring>
 #include <sys/param.h>
 
 

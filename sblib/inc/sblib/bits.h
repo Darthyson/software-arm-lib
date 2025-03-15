@@ -12,7 +12,7 @@
 
 #include <sblib/platform.h>
 #include <sblib/types.h>
-#include <stdint.h>
+#include <cstdint>
 
 
 /**

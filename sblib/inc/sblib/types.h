@@ -10,7 +10,7 @@
 #ifndef sblib_types_h
 #define sblib_types_h
 
-#include <stdint.h>
+#include <cstdint>
 
 /**
  * An unsigned 1 byte value.

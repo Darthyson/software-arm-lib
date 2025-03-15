@@ -20,7 +20,7 @@
 #ifndef SBLIB_HARDWARE_DESCRIPTOR_H_
 #define SBLIB_HARDWARE_DESCRIPTOR_H_
 
-#include <stdint.h>
+#include <cstdint>
 
 uint32_t hwGuid();
 uint8_t hwDescriptorSize();

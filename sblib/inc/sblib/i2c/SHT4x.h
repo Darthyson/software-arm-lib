@@ -36,7 +36,7 @@
 #ifndef SHT4X_H
 #define SHT4X_H
 
-#include <stdint.h>
+#include <cstdint>
 
 enum class Sht4xCommand : uint8_t
 {

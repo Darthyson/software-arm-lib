@@ -11,7 +11,7 @@
 #include <sblib/print.h>
 #include <sblib/math.h>
 
-#include <string.h>
+#include <cstring>
 
 // The size of the internal buffer in print()
 #define PRINTBUF_SIZE (8 * sizeof(int) + 1)

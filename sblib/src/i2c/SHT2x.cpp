@@ -26,7 +26,7 @@
  * Adapted to lpcopen I2C functions by Oliver Stefan (2021)
  */
 
-#include <stdint.h>
+#include <cstdint>
 #include <math.h>
 #include <sblib/i2c.h>
 #include <sblib/timer.h>

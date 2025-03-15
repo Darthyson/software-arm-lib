@@ -11,7 +11,7 @@
 #define sblib_stream_h
 
 #include <sblib/print.h>
-#include <string.h>
+#include <cstring>
 
 
 /**

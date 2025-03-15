@@ -10,7 +10,7 @@
 
 #include <sblib/interrupt.h>
 #include <sblib/platform.h>
-#include <string.h>
+#include <cstring>
 
 // The maximum memory that is tested when searching for the flash size, in bytes
 #define MAX_FLASH_SIZE 0x80000 // (524kB)

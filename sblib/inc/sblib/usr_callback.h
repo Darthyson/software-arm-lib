@@ -13,7 +13,7 @@
 #ifndef SBLIB_USR_CALLBACK_H_
 #define SBLIB_USR_CALLBACK_H_
 
-#include <stdint.h>
+#include <cstdint>
 
 enum class UsrCallbackType : uint8_t
 {
