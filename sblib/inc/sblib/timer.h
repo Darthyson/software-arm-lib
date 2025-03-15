@@ -158,7 +158,7 @@ public:
      *
      * @param aTimerNum - the number of the timer: TIMER16_0, TIMER32_1, ...
      */
-    Timer(byte aTimerNum);
+    explicit Timer(byte aTimerNum);
 
     /**
      * Begin using the timer.

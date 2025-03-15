@@ -52,7 +52,7 @@ class OneWireDS2482
 {
 public:
     OneWireDS2482();
-    OneWireDS2482(uint8_t address);
+    explicit OneWireDS2482(uint8_t address);
 
     uint8_t getAddress();
     uint8_t getError();

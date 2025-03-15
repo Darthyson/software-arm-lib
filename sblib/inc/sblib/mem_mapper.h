@@ -35,7 +35,7 @@ public:
      * @param flashSize - must be a page aligned size in bytes
      * @param autoAddPage - when set to true non existing pages are allocated automatically
      */
-    MemMapper(unsigned int flashBase = 0xf000, unsigned int flashSize = 0x1000,
+    explicit MemMapper(unsigned int flashBase = 0xf000, unsigned int flashSize = 0x1000,
               bool autoAddPage = false);
 
     /**

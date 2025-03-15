@@ -207,7 +207,7 @@ class BCU2;
 class PropertiesBCU2
 {
 public:
-    PropertiesBCU2(BCU2* bcuInstance) : bcu(bcuInstance) {};
+    explicit PropertiesBCU2(BCU2* bcuInstance) : bcu(bcuInstance) {}
     virtual ~PropertiesBCU2() = default;
 
     /**

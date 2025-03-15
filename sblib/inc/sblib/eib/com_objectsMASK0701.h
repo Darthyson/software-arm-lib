@@ -39,8 +39,7 @@ class BcuDefault;
 class ComObjectsMASK0701 : public ComObjectsBCU2
 {
 public:
-    ComObjectsMASK0701(BcuDefault* bcuInstance) : ComObjectsBCU2(bcuInstance) {};
-    ~ComObjectsMASK0701() = default;
+    explicit ComObjectsMASK0701(BcuDefault* bcuInstance) : ComObjectsBCU2(bcuInstance) {}
 };
 
 #endif /*sblib_com_objects_MASK0701_h*/

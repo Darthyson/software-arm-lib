@@ -16,8 +16,8 @@
 class AddrTablesBCU1 : public AddrTables
 {
 public:
-    AddrTablesBCU1(UserEeprom* aUserEeprom) : userEeprom(aUserEeprom) {};
-    ~AddrTablesBCU1() = default;
+    explicit AddrTablesBCU1(UserEeprom* aUserEeprom) : userEeprom(aUserEeprom) {}
+    ~AddrTablesBCU1() override = default;
 
     /**
      * Get the index of a group address in the address table.

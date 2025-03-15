@@ -17,8 +17,7 @@ class BCU2;
 class AddrTablesBCU2 : public AddrTables ///\todo derive from AddrTablesBCU1, to get rid of indexOfAddr(int addr)
 {
 public:
-    AddrTablesBCU2(BCU2* bcuInstance) : bcu(bcuInstance) {};
-    ~AddrTablesBCU2() = default;
+    explicit AddrTablesBCU2(BCU2* bcuInstance) : bcu(bcuInstance) {}
 
     /**
      * Get the index of a group address in the address table.

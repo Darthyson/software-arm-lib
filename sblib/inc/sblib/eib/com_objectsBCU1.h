@@ -46,8 +46,7 @@ class ComObjectsBCU1 : public ComObjects
 {
 public:
     ComObjectsBCU1() = delete;
-    ComObjectsBCU1(BcuDefault* bcuInstance) : ComObjects((BcuBase*)bcuInstance) {}
-    ~ComObjectsBCU1() = default;
+    explicit ComObjectsBCU1(BcuDefault* bcuInstance) : ComObjects((BcuBase*)bcuInstance) {}
 
     void printObjectConfigTable();
     virtual const ComConfig& objectConfig(int objno) override;

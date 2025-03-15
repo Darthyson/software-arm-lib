@@ -46,7 +46,7 @@ class ComObjects
 {
 public:
     ComObjects() = delete;
-    ComObjects(BcuBase* bcuInstance);
+    explicit ComObjects(BcuBase* bcuInstance);
     virtual ~ComObjects() = default;
 
     void objectEndian(int val);
