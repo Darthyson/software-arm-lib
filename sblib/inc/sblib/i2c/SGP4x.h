@@ -91,7 +91,7 @@ private:
      *
      * @return CRC result value
      */
-    uint8_t crc8(const uint8_t* data, int len);
+    static uint8_t crc8(const uint8_t* data, int len);
 
 public:
     SGP4xClass();

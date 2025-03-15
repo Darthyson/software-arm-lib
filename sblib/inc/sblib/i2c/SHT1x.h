@@ -161,8 +161,8 @@ private:
      * @return  True if successful, otherwise false
      * @warning Function is blocking and can take up to 340ms to return (@ref MAX_WAIT_MS)
      */
-    bool readTemperatureRaw(int16_t* temperatureRaw);
-    float convertRawTemperature(const float& temperature, eScale type);
+    bool readTemperatureRaw(int16_t *temperatureRaw);
+    static float convertRawTemperature(const float& temperature, eScale type);
     bool sendByteToSHT(uint8_t toSend, bool isCommand);
 
     /**

@@ -74,10 +74,10 @@ private:
      *
      * @return 0 on success, an error code otherwise
      */
-    bool measureHighPrecisionTicks(uint16_t& temperatureTicks, uint16_t& humidityTicks);
+    bool measureHighPrecisionTicks(uint16_t &temperatureTicks, uint16_t &humidityTicks);
 
-    float convertTicksToCelsius(uint16_t);
-    float convertTicksToPercentRH(uint16_t);
+    static float convertTicksToCelsius(uint16_t);
+    static float convertTicksToPercentRH(uint16_t);
 
     /**
      * Do a CRC validation of result
@@ -87,7 +87,7 @@ private:
      *
      * @return CRC result value
      */
-    uint8_t crc8(const uint8_t* data, int len);
+    static uint8_t crc8(const uint8_t* data, int len);
 
     static const uint8_t eSHT4xAddress = 0x44;
 

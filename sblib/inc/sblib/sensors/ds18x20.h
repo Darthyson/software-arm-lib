@@ -181,7 +181,7 @@ public:
      *                eScale: FARENHEIT | KELVIN | CELSIUS
      * Returned value: Converted value
      */
-    float ConvertTemperature(float fTemperature, eScale Scale);
+    static float ConvertTemperature(float fTemperature, eScale Scale);
 
 private:
     OneWire _OW_DS18x;

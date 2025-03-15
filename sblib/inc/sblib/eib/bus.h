@@ -216,7 +216,7 @@ private:
      */
     void handleTelegram(bool valid);
 
-    constexpr size_t maxTelegramSize() const { return TelegramBufferSize; };
+    static constexpr size_t maxTelegramSize() { return TelegramBufferSize; };
 
     AddrTables* addressTable;    //!< Address table to check, if a telegram should be processed or not.
     Timer& timer;                //!< The timer
