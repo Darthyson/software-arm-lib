@@ -110,8 +110,6 @@ protected:
      * @param address The absolute memory address
      */
     void normalizeAddress(uint32_t* address) const { (*address -= startAddress); }
-
-private:
 };
 
 
