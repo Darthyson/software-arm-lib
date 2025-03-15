@@ -63,8 +63,9 @@ public:
     float CalcdewPointFast(float celsius, float humidity);
     //float CalcdewPoint(float celsius, float humidity);
 private:
-    int _pin, _lastReadTime;
-    uint32_t _maxcycles;
+    int32_t _pin = 0;
+    int32_t _lastReadTime = -2000;
+    uint32_t _maxcycles = 0;
     uint32_t expectPulse(bool level);
 };
 

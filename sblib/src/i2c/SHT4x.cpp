@@ -58,6 +58,9 @@ bool SHT4xClass::init(void)
 
 bool SHT4xClass::measureHighPrecision()
 {
+    this->temperature = 0;
+    this->humidity = 0;
+
     uint16_t tTicks = 0;
     uint16_t hTicks = 0;
 

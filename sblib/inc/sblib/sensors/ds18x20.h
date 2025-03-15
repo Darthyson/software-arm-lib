@@ -60,9 +60,6 @@ struct sDS18x20
  */
 class DS18x20
 {
-private:
-    OneWire _OW_DS18x;
-
 public:
     // time it takes for a reading
     // TODO: These vary:
@@ -185,6 +182,9 @@ public:
      * Returned value: Converted value
      */
     float ConvertTemperature(float fTemperature, eScale Scale);
+
+private:
+    OneWire _OW_DS18x;
 };
 
 #endif /* ds18x20_h */

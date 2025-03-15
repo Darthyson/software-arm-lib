@@ -57,8 +57,8 @@ enum class Sht4xCommand : uint8_t
 class SHT4xClass
 {
 private:
-    float temperature;
-    float humidity;
+    float temperature = 0;
+    float humidity = 0;
 
     bool readSensor(Sht4xCommand command, uint8_t* buffer, uint8_t bufferLength);
     bool writeCommand(Sht4xCommand command);

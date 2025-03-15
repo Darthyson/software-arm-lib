@@ -32,16 +32,16 @@
 class OneWire
 {
 private:
-    int _pin;
+    int pin = 0;
 #if ONEWIRE_SEARCH                     // Global search state
-    byte ROM_NO[8]; // Device ROM. 64bit Lasered ROM-Code to detect the Family Code
-    uint8_t _LastDiscrepancy;
-    uint8_t _LastFamilyDiscrepancy;
-    bool _bLastDeviceFlag;
+    byte ROM_NO[8] = {0}; // Device ROM. 64bit Lasered ROM-Code to detect the Family Code
+    uint8_t lastDiscrepancy = 0;
+    uint8_t lastFamilyDiscrepancy = 0;
+    bool _bLastDeviceFlag = false;
 #endif
 
 public:
-    bool m_bParasitePowerMode; // Parasite power mode state
+    bool m_bParasitePowerMode = false; // Parasite power mode state
 
     /*
      * Function name:  OneWireInit
