@@ -31,7 +31,7 @@ public:
     /**
      * End using the EIB bus coupling unit.
      */
-    void end();
+    void end() override;
 
     /**
      * Set our own physical address. Normally the physical address is set by ETS when

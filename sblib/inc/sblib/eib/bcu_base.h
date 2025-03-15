@@ -27,7 +27,6 @@ class BcuBase : public TLayer4
 public:
     BcuBase(UserRam* userRam, AddrTables* addrTables);
     BcuBase() = delete;
-    ~BcuBase() = default;
 
     Bus* bus;
 
@@ -42,14 +41,14 @@ public:
 
     /**
      * Set ProgPin of board, must be called before begin method
-     * @param progPin Pin definition
+     * @param prgPin Pin definition
      */
     void setProgPin(int prgPin);
 
     /**
      * End using the EIB bus coupling unit.
      */
-    void end();
+    virtual void end();
 
     /**
      * Test if the programming mode is active. This is also indicated
