@@ -19,14 +19,14 @@
 
 
 LcdGraphicalSED1520::LcdGraphicalSED1520(int dataPort, int pinA0, int pinCS1, int pinCS2,
-    int pinRD, int pinWR, const Font& fnt)
-:LcdGraphical(fnt, DISPLAY_WIDTH, DISPLAY_HEIGHT)
-,dataPort(dataPort)
-,pinA0(pinA0)
-,pinCS1(pinCS1)
-,pinCS2(pinCS2)
-,pinRD(pinRD)
-,pinWR(pinWR)
+                                         int pinRD, int pinWR, const Font& fnt)
+    : LcdGraphical(fnt, DISPLAY_WIDTH, DISPLAY_HEIGHT)
+      , dataPort(dataPort)
+      , pinA0(pinA0)
+      , pinCS1(pinCS1)
+      , pinCS2(pinCS2)
+      , pinRD(pinRD)
+      , pinWR(pinWR)
 {
     portMode(dataPort, DATA_PORT_PINMASK, INPUT);
     pinMode(pinA0, OUTPUT);
@@ -42,6 +42,4 @@ LcdGraphicalSED1520::LcdGraphicalSED1520(int dataPort, int pinA0, int pinCS1, in
 }
 
 void LcdGraphicalSED1520::idle()
-{
-
-}
+{}

@@ -120,7 +120,7 @@ int Serial::write(byte ch)
         return 0;
     }
 
-#if  defined(SERIAL_WRITE_DIRECT) && !defined(IAP_EMULATION)
+#if defined(SERIAL_WRITE_DIRECT) && !defined(IAP_EMULATION)
     // wait until the transmitter hold register is free
     while (!(LPC_UART->LSR & LSR_THRE))
         ;

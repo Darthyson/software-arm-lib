@@ -24,16 +24,16 @@
  */
 enum IAP_Command
 {
-    CMD_PREPARE = 50,           //!< Prepare sector(s) for write
-    CMD_COPY_RAM2FLASH = 51,    //!< Copy RAM to Flash
-    CMD_ERASE = 52,             //!< Erase sector(s)
-    CMD_BLANK_CHECK = 53,       //!< Blank check sector(s)
-    CMD_READ_PART_ID = 54,      //!< Read chip part ID
-    CMD_READ_BOOT_VER = 55,     //!< Read chip boot code version
-    CMD_COMPARE = 56,           //!< Compare memory areas
-    CMD_REINVOKE_ISP = 57,      //!< Reinvoke ISP
-    CMD_READ_UID = 58,          //!< Read unique ID
-    CMD_ERASE_PAGE = 59         //!< Erase page(s)
+    CMD_PREPARE = 50,        //!< Prepare sector(s) for write
+    CMD_COPY_RAM2FLASH = 51, //!< Copy RAM to Flash
+    CMD_ERASE = 52,          //!< Erase sector(s)
+    CMD_BLANK_CHECK = 53,    //!< Blank check sector(s)
+    CMD_READ_PART_ID = 54,   //!< Read chip part ID
+    CMD_READ_BOOT_VER = 55,  //!< Read chip boot code version
+    CMD_COMPARE = 56,        //!< Compare memory areas
+    CMD_REINVOKE_ISP = 57,   //!< Reinvoke ISP
+    CMD_READ_UID = 58,       //!< Read unique ID
+    CMD_ERASE_PAGE = 59      //!< Erase page(s)
 };
 
 /**
@@ -41,10 +41,10 @@ enum IAP_Command
  */
 struct IAP_Parameter
 {
-    uintptr_t cmd;         //!< Command
-    uintptr_t par[4];      //!< Parameters
-    uintptr_t stat;        //!< Status
-    uintptr_t res[4];      //!< Result
+    uintptr_t cmd;    //!< Command
+    uintptr_t par[4]; //!< Parameters
+    uintptr_t stat;   //!< Status
+    uintptr_t res[4]; //!< Result
 };
 
 // The size of the flash in bytes. Use iapFlashSize() to get the flash size.
@@ -55,7 +55,7 @@ unsigned int iapFlashBytes = 0;
  * IAP call function (DO NOT USE UNLESS YOU KNOW WHAT YOU ARE DOING!)
  * use instead: IAP_Call_InterruptSafe()
  */
-typedef void (*IAP_Func)(uintptr_t * cmd, uintptr_t * stat);
+typedef void (*IAP_Func)(uintptr_t* cmd, uintptr_t* stat);
 
 #ifndef IAP_EMULATION
 #  if defined(__LPC11XX__) || defined(__LPC11UXX__) || defined(__LPC13XX__) || defined(__LPC17XX__)
@@ -81,7 +81,7 @@ typedef void (*IAP_Func)(uintptr_t * cmd, uintptr_t * stat);
  *         Vector Table is located in the Flash this will fail and raise a
  *         non-handled HardFault condition.
  */
-inline void IAP_Call_InterruptSafe(uintptr_t * cmd, uintptr_t * stat, const bool getLock = true)
+inline void IAP_Call_InterruptSafe(uintptr_t* cmd, uintptr_t* stat, const bool getLock = true)
 {
     if (getLock)
     {
@@ -146,7 +146,7 @@ IAP_Status iapErasePage(const unsigned int pageNumber)
 IAP_Status iapErasePageRange(const unsigned int startPageNumber, const unsigned int endPageNumber)
 {
     unsigned int startSector = startPageNumber / (FLASH_SECTOR_SIZE / FLASH_PAGE_SIZE); // each sector has 16 pages
-    unsigned int endSector = endPageNumber / (FLASH_SECTOR_SIZE / FLASH_PAGE_SIZE); // each sector has 16 pages
+    unsigned int endSector = endPageNumber / (FLASH_SECTOR_SIZE / FLASH_PAGE_SIZE);     // each sector has 16 pages
     IAP_Parameter p;
 
     p.stat = _prepareSectorRange(startSector, endSector); // even not mentioned in manual, this prepare is needed
@@ -162,7 +162,7 @@ IAP_Status iapErasePageRange(const unsigned int startPageNumber, const unsigned 
     return (IAP_Status) p.stat;
 }
 
-IAP_Status iapProgram(uint8_t * rom, const uint8_t * ram, unsigned int size)
+IAP_Status iapProgram(uint8_t* rom, const uint8_t* ram, unsigned int size)
 {
     // IMPORTANT: Address of ram must be word aligned. Otherwise you'll run into a IAP_SRC_ADDR_ERROR
     // Use '__attribute__ ((aligned (FLASH_PAGE_ALIGNMENT)))' to force correct alignment even with compiler optimization -Ox
@@ -228,22 +228,22 @@ IAP_Status iapReadPartID(unsigned int* partId)
     return (IAP_Status) p.stat;
 }
 
-unsigned int iapSectorOfAddress(const uint8_t * address)
+unsigned int iapSectorOfAddress(const uint8_t* address)
 {
     return (unsigned int)((address - FLASH_BASE_ADDRESS) / FLASH_SECTOR_SIZE);
 }
 
-unsigned int iapPageOfAddress(const uint8_t * address)
+unsigned int iapPageOfAddress(const uint8_t* address)
 {
     return (unsigned int)((address - FLASH_BASE_ADDRESS) / FLASH_PAGE_SIZE);
 }
 
-uint8_t * iapAddressOfPage(const unsigned int page)
+uint8_t* iapAddressOfPage(const unsigned int page)
 {
     return (page * FLASH_PAGE_SIZE) + FLASH_BASE_ADDRESS;
 }
 
-uint8_t * iapAddressOfSector(const unsigned int sector)
+uint8_t* iapAddressOfSector(const unsigned int sector)
 {
     return (sector * FLASH_SECTOR_SIZE) + FLASH_BASE_ADDRESS;
 }

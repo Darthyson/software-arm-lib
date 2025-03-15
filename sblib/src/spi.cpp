@@ -56,14 +56,14 @@
 
 
 // The SPI port registers
-static LPC_SSP_TypeDef* const ports[2] = { LPC_SSP0, LPC_SSP1 };
+static LPC_SSP_TypeDef* const ports[2] = {LPC_SSP0, LPC_SSP1};
 
 SPI::SPI(int spiPort, int mode)
-:port(*ports[spiPort])
-,clockDiv(100)
+    : port(*ports[spiPort])
+      , clockDiv(100)
 {
     // Enable AHB clock to the GPIO domain.
-    LPC_SYSCON->SYSAHBCLKCTRL |= (1<<6);
+    LPC_SYSCON->SYSAHBCLKCTRL |= (1 << 6);
 
     // Disable reset of the SSP peripheral
     LPC_SYSCON->PRESETCTRL |= (1 << (spiPort * 2));
@@ -125,7 +125,7 @@ int SPI::transfer(int val, SpiTransferMode transferMode)
 {
     // Clear all remaining data in the receive FIFO
     while (port.SR & SSP_SR_RNE)
-        port.DR;  // reading is supported without assignment to a temporary variable
+        port.DR; // reading is supported without assignment to a temporary variable
 
     // Clear the interrupt status
     port.ICR = SSP_ICR_BITMASK;
@@ -141,33 +141,33 @@ int SPI::transfer(int val, SpiTransferMode transferMode)
     return port.DR;
 }
 
-static SPI * instances[2];
+static SPI* instances[2];
 
-void SPI::transferBlock(uint16_t * sndData, int bytes, uint16_t * recData, bool asynchron)
+void SPI::transferBlock(uint16_t* sndData, int bytes, uint16_t* recData, bool asynchron)
 {
     // Clear all remaining data in the receive FIFO
     while (port.SR & SSP_SR_RNE)
-        port.DR;  // reading is supported without assignment to a temporary variable
+        port.DR; // reading is supported without assignment to a temporary variable
 
     this->sndData = sndData;
     this->recData = recData;
     this->sndCount = this->recCount = bytes;
-    this->errors   = 0;
+    this->errors = 0;
     this->finished = false;
     // Clear the interrupt status
     port.ICR = SSP_ICR_BITMASK;
 
     continueBlockTransfer();
-    if (! asynchron)
+    if (!asynchron)
     {
         finalizeBlockTransfer();
     }
     else
     {
-        int no = & port == LPC_SSP0 ? 0 : 1;
+        int no = &port == LPC_SSP0 ? 0 : 1;
         instances[no] = this;
-        port.IMSC    |= (1 << 3); // XXX
-        if (! no)
+        port.IMSC |= (1 << 3); // XXX
+        if (!no)
         {
             NVIC_EnableIRQ(SSP0_IRQn);
         }
@@ -190,22 +190,24 @@ void SPI::continueBlockTransfer(void)
         {
             recCount--;
             tmpVal = port.DR;
-            if (recData) *recData++ = tmpVal;
+            if (recData)
+                *recData++ = tmpVal;
         }
         LPC_SSP0->DR = *sndData++;
         errors |= port.RIS;
-       }
+    }
     while (recCount && (port.SR & SSP_SR_RNE))
     {
         recCount--;
         tmpVal = port.DR;
-        if (recData) *recData++ = tmpVal;
+        if (recData)
+            *recData++ = tmpVal;
         errors |= port.RIS;
     }
     if (!sndCount)
     {
-        int no        = & port == LPC_SSP0 ? 0 : 1;
-        if (! no)
+        int no = &port == LPC_SSP0 ? 0 : 1;
+        if (!no)
         {
             NVIC_DisableIRQ(SSP0_IRQn);
         }
@@ -214,8 +216,8 @@ void SPI::continueBlockTransfer(void)
             NVIC_DisableIRQ(SSP1_IRQn);
         }
         instances[no] = 0;
-        port.IMSC    &= ~(1 << 3); // XXX
-        finished      = true;
+        port.IMSC &= ~(1 << 3); // XXX
+        finished = true;
     }
 }
 
@@ -228,14 +230,14 @@ void SPI::finalizeBlockTransfer(void)
 extern "C" {
 volatile uint32_t int_ssp_0 = 0;
 
-void SSP0_IRQHandler (void)
+void SSP0_IRQHandler(void)
 {
     int_ssp_0++;
     instances[0]->continueBlockTransfer();
 }
-void SSP1_IRQHandler (void)
+
+void SSP1_IRQHandler(void)
 {
     instances[1]->continueBlockTransfer();
 }
-
 }

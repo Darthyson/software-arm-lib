@@ -11,9 +11,8 @@
 #include <sblib/lcd/font.h>
 
 Font::Font(int firstChar, int numChars, int charWidth, const char* data)
-:firstChar(firstChar)
-,numChars(numChars)
-,charWidth(charWidth)
-,data(data)
-{
-}
+    : firstChar(firstChar)
+      , numChars(numChars)
+      , charWidth(charWidth)
+      , data(data)
+{}

@@ -16,10 +16,10 @@ MASK0701::MASK0701() : MASK0701(new UserRamMASK0701(), new UserEepromMASK0701(),
 {}
 
 MASK0701::MASK0701(UserRamMASK0701* userRam, UserEepromMASK0701* userEeprom, ComObjectsBCU2* comObjects, AddrTablesMASK0701* addrTables, PropertiesMASK0701* properties) :
-        BCU2(userRam, userEeprom, comObjects, addrTables, properties)
+    BCU2(userRam, userEeprom, comObjects, addrTables, properties)
 {}
 
-bool MASK0701::processApciMemoryReadPDU(int addressStart, byte *payLoad, int lengthPayLoad)
+bool MASK0701::processApciMemoryReadPDU(int addressStart, byte* payLoad, int lengthPayLoad)
 {
     // special handling of DMP_LoadStateMachineRead_RCo_Mem (APCI_MEMORY_READ_PDU)
     // See KNX Spec. 3/5/2 3.30.2 p.121  (deprecated)
@@ -36,7 +36,7 @@ bool MASK0701::processApciMemoryReadPDU(int addressStart, byte *payLoad, int len
     return result;
 }
 
-bool MASK0701::processApciMemoryWritePDU(int addressStart, byte *payLoad, int lengthPayLoad)
+bool MASK0701::processApciMemoryWritePDU(int addressStart, byte* payLoad, int lengthPayLoad)
 {
     // special handling of DMP_LoadStateMachineWrite_RCo_Mem (APCI_MEMORY_WRITE_PDU)
     // See KNX Spec. 3/5/2 3.28.2 p.109 (deprecated)

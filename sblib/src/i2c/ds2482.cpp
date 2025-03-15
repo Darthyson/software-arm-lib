@@ -69,7 +69,7 @@ uint8_t OneWireDS2482::checkPresence() {
 void OneWireDS2482::deviceReset() {
     //begin();
     write(DS2482_COMMAND_RESET);
-    if(activePullUpEnabled){
+    if (activePullUpEnabled) {
         setActivePullup();
     }
     //end();
@@ -260,7 +260,6 @@ void OneWireDS2482::wireResetSearch() {
     for (int i = 0; i < 8; i++) {
         searchAddress[i] = 0;
     }
-
 }
 
 // Set the channel on the DS2482-800
@@ -323,7 +322,6 @@ uint8_t OneWireDS2482::wireSearch(uint8_t *address) {
             searchAddress[searchByte] |= searchBit;
         else
             searchAddress[searchByte] &= ~searchBit;
-
     }
 
     searchLastDiscrepancy = last_zero;

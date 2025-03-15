@@ -14,7 +14,7 @@
 #include <sblib/utils.h>
 
 // The location value for the IO configuration of the RXD pin
-static const int rxPinLocation[] = { PIO1_6, PIO2_7, PIO3_1, PIO3_4 };
+static const int rxPinLocation[] = {PIO1_6, PIO2_7, PIO3_1, PIO3_4};
 
 
 // Find a pin in a pin location array. Fail if not found
@@ -38,7 +38,8 @@ void pinMode(int pin, int mode)
     unsigned int iocon = mode & 0xfff;
 
     short func = (mode >> 18) & 31;
-    if (!func) func = PF_PIO;
+    if (!func)
+        func = PF_PIO;
 
     if (type == OUTPUT || type == OUTPUT_MATCH)
     {
@@ -121,8 +122,10 @@ void pinMode(int pin, int mode)
     if (func)
     {
         int funcNum = getPinFunctionNumber(pin, func);
-        if (funcNum >= 0) iocon |= funcNum;
-        else fatalError(); // the pin does not have the desired function
+        if (funcNum >= 0)
+            iocon |= funcNum;
+        else
+            fatalError(); // the pin does not have the desired function
     }
 
     *(ioconPointer(pin)) = iocon;
@@ -135,7 +138,8 @@ void pinDirection(int pin, int dir)
 
     if (dir == OUTPUT)
         port->DIR |= mask;
-    else port->DIR &= ~mask;
+    else
+        port->DIR &= ~mask;
 }
 
 void pinInterruptMode(int pin, int mode)
@@ -147,18 +151,26 @@ void pinInterruptMode(int pin, int mode)
     pinMode(pin, INPUT);
 
     /* Set the level/edge configuration */
-    if (mode & 0x0100) port->IS  |=  mask;
-    else              port->IS  &= ~mask;
+    if (mode & 0x0100)
+        port->IS |= mask;
+    else
+        port->IS &= ~mask;
 
     /* Set the both edge configuration */
-    if (mode & 0x0010) port->IBE |=  mask;
-    else              port->IBE &= ~mask;
+    if (mode & 0x0010)
+        port->IBE |= mask;
+    else
+        port->IBE &= ~mask;
 
     /* Set the edge/level type configuration */
-    if (mode & 0x0001) port->IEV |=  mask;
-    else              port->IEV &= ~mask;
+    if (mode & 0x0001)
+        port->IEV |= mask;
+    else
+        port->IEV &= ~mask;
 
     /* Enable the interrupt for this pin */
-    if (mode & 0x1000) port->IE  |=  mask;
-    else               port->IE  &= ~mask;
+    if (mode & 0x1000)
+        port->IE |= mask;
+    else
+        port->IE &= ~mask;
 }

@@ -36,124 +36,130 @@
 #define WATER_VAPOR 17.62f
 #define BAROMETRIC_PRESSURE 243.5f
 
-typedef enum {
-  eSHT2xAddress = 0x40,
+typedef enum
+{
+    eSHT2xAddress = 0x40,
 } HUM_SENSOR_T;
 
-typedef enum {
-  eTempHoldCmd        = 0xE3,
-  eRHumidityHoldCmd   = 0xE5,
-  eTempNoHoldCmd      = 0xF3,
-  eRHumidityNoHoldCmd = 0xF5,
-  eWriteUserReg       = 0xE6,
-  eReadUserReg        = 0xE7,
+typedef enum
+{
+    eTempHoldCmd        = 0xE3,
+    eRHumidityHoldCmd   = 0xE5,
+    eTempNoHoldCmd      = 0xF3,
+    eRHumidityNoHoldCmd = 0xF5,
+    eWriteUserReg       = 0xE6,
+    eReadUserReg        = 0xE7,
 } HUM_MEASUREMENT_CMD_T;
 
 void SHT2xClass::Init(void)
 {
-  i2c_lpcopen_init();
+    i2c_lpcopen_init();
 
-  byte result;
-  if (Chip_I2C_MasterCmdRead(I2C0, eSHT2xAddress, eReadUserReg, &result, 1) == 1)
-  {
-      const uint8_t data[] = { (uint8_t)eWriteUserReg, (uint8_t)(result & 0x7E) };
-      Chip_I2C_MasterSend(I2C0, eSHT2xAddress, data, sizeof(data));
-      initialized = true;
-  }
+    byte result;
+    if (Chip_I2C_MasterCmdRead(I2C0, eSHT2xAddress, eReadUserReg, &result, 1) == 1)
+    {
+        const uint8_t data[] = {(uint8_t)eWriteUserReg, (uint8_t)(result & 0x7E)};
+        Chip_I2C_MasterSend(I2C0, eSHT2xAddress, data, sizeof(data));
+        initialized = true;
+    }
 }
 
 int SHT2xClass::GetHumidity(void)
 {
-  unsigned int value = readSensor(eRHumidityHoldCmd);
-  if (value == 0 || !(value & 0x2)) {
-    return 0; // Some unrealistic value
-  }
+    unsigned int value = readSensor(eRHumidityHoldCmd);
+    if (value == 0 || !(value & 0x2))
+    {
+        return 0; // Some unrealistic value
+    }
 
-  value = value & 0xFFFC; //remove last two status Bits
-  value = 12500 * value;
-  value = value / 65536;
-  value = value -600;
-  return value; //-600 + 12500 / 65536 * value;  //changed to int and factor 100
+    value = value & 0xFFFC; //remove last two status Bits
+    value = 12500 * value;
+    value = value / 65536;
+    value = value - 600;
+    return value; //-600 + 12500 / 65536 * value;  //changed to int and factor 100
 }
 
 int SHT2xClass::GetTemperature(void)
 {
-  int value = readSensor(eTempHoldCmd);
-  if (value == 0 || (value & 0x2)) {
-    return -27300;                    // Roughly Zero Kelvin indicates an error
-  }
+    int value = readSensor(eTempHoldCmd);
+    if (value == 0 || (value & 0x2))
+    {
+        return -27300; // Roughly Zero Kelvin indicates an error
+    }
 
-  value = value & 0xFFFC; //remove last two status Bits
-  value = 17572 * value;
-  value = value / 65536;
-  value = value - 4685;
-  return value; //-4685 + 17572 / 65536 * value;    //changed to int and factor 100
+    value = value & 0xFFFC; //remove last two status Bits
+    value = 17572 * value;
+    value = value / 65536;
+    value = value - 4685;
+    return value; //-4685 + 17572 / 65536 * value;    //changed to int and factor 100
 }
 
 float SHT2xClass::GetDewPoint(void)
 {
-  float humidity = GetHumidity();
-  float temperature = GetTemperature();
+    float humidity = GetHumidity();
+    float temperature = GetTemperature();
 
-  // Calculate the intermediate value 'gamma'
-  float gamma = logf(humidity / 100) + WATER_VAPOR * temperature / (BAROMETRIC_PRESSURE + temperature);
-  // Calculate dew point in Celsius
-  float dewPoint = BAROMETRIC_PRESSURE * gamma / (WATER_VAPOR - gamma);
+    // Calculate the intermediate value 'gamma'
+    float gamma = logf(humidity / 100) + WATER_VAPOR * temperature / (BAROMETRIC_PRESSURE + temperature);
+    // Calculate dew point in Celsius
+    float dewPoint = BAROMETRIC_PRESSURE * gamma / (WATER_VAPOR - gamma);
 
-  return dewPoint;
+    return dewPoint;
 }
 
 uint16_t SHT2xClass::readSensor(uint8_t command)
 {
-  uint8_t result[3];
+    uint8_t result[3];
 
-  uint32_t timeout = millis() + 300; // 300ms timeout for I2C communication
+    uint32_t timeout = millis() + 300; // 300ms timeout for I2C communication
 
-  if (!initialized)
-  {
-    Init();
-  }
-
-  if (initialized)
-  {
-    // loop to receive measurement result within the timeout period
-    while (Chip_I2C_MasterCmdRead(I2C0, eSHT2xAddress, command, result, 3) < 3){
-      if ((millis() - timeout) > 0) {
-        i2c_lpcopen_init();
-        return 0;
-      }
-    }
-
-    // CRC check
-    if (crc8(result, 2) != result[2])
+    if (!initialized)
     {
-      return 0;
+        Init();
     }
 
-    // Concatenate result Bytes
-    return ((result[0] << 8) | (result[1] << 0));
-  }
-  else
-  {
-    return 0;
-  }
+    if (initialized)
+    {
+        // loop to receive measurement result within the timeout period
+        while (Chip_I2C_MasterCmdRead(I2C0, eSHT2xAddress, command, result, 3) < 3)
+        {
+            if ((millis() - timeout) > 0)
+            {
+                i2c_lpcopen_init();
+                return 0;
+            }
+        }
+
+        // CRC check
+        if (crc8(result, 2) != result[2])
+        {
+            return 0;
+        }
+
+        // Concatenate result Bytes
+        return ((result[0] << 8) | (result[1] << 0));
+    }
+    else
+    {
+        return 0;
+    }
 }
 
-uint8_t SHT2xClass::crc8(const uint8_t *data, uint8_t len)
+uint8_t SHT2xClass::crc8(const uint8_t* data, uint8_t len)
 {
-  // CRC-8 formula from page 14 of SHT spec pdf
-  // Sensirion_Humidity_Sensors_SHT2x_CRC_Calculation.pdf
-  const uint8_t POLY = 0x31;
-  uint8_t crc = 0x00;
+    // CRC-8 formula from page 14 of SHT spec pdf
+    // Sensirion_Humidity_Sensors_SHT2x_CRC_Calculation.pdf
+    const uint8_t POLY = 0x31;
+    uint8_t crc = 0x00;
 
-  for (uint8_t j = len; j; --j)
-  {
-    crc ^= *data++;
-
-    for (uint8_t i = 8; i; --i)
+    for (uint8_t j = len; j; --j)
     {
-      crc = (crc & 0x80) ? (crc << 1) ^ POLY : (crc << 1);
+        crc ^= *data++;
+
+        for (uint8_t i = 8; i; --i)
+        {
+            crc = (crc & 0x80) ? (crc << 1) ^ POLY : (crc << 1);
+        }
     }
-  }
-  return crc;
+    return crc;
 }

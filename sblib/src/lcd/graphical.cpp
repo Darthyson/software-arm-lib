@@ -13,8 +13,7 @@
 
 
 LcdGraphical::LcdGraphical(const Font& fnt, int width, int height)
-:fnt(&fnt)
-,width(width)
-,height(height)
-{
-}
+    : fnt(&fnt)
+      , width(width)
+      , height(height)
+{}

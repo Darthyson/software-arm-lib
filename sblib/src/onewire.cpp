@@ -1,4 +1,3 @@
-
 /*
  *  onewire.cpp - Device communications bus system  (by Dallas Semiconductor Corp.)
  *
@@ -26,11 +25,11 @@
 *****************************************************************************/
 void OneWire::OneWireInit(int pin, bool bParasitePowerMode /* false */)
 {
-  this->_pin = pin;
-  this->m_bParasitePowerMode= bParasitePowerMode;
-  pinMode(this->_pin, INPUT |PULL_UP);
+    this->_pin = pin;
+    this->m_bParasitePowerMode = bParasitePowerMode;
+    pinMode(this->_pin, INPUT | PULL_UP);
 #if ONEWIRE_SEARCH
-  this->OneWireResetSearch();
+    this->OneWireResetSearch();
 #endif
 }
 
@@ -50,34 +49,39 @@ void OneWire::OneWireInit(int pin, bool bParasitePowerMode /* false */)
 *****************************************************************************/
 bool OneWire::OneWireReset()
 {
-  bool bRet= false;
-  uint8_t retries= 125;
+    bool bRet = false;
+    uint8_t retries = 125;
 
-  pinDisableInterrupt(this->_pin);
+    pinDisableInterrupt(this->_pin);
     // note if the bus was low to start with
     bool bHigh = digitalRead(this->_pin);
-    pinMode(this->_pin, INPUT |PULL_UP);
+    pinMode(this->_pin, INPUT | PULL_UP);
 #if ONEWIRE_INTERNAL_PULLUP
-    digitalWrite(this->_pin, 1);       // enable pull-up resistor
+    digitalWrite(this->_pin, 1); // enable pull-up resistor
 #endif
-    do {                               // wait until the wire is high... just in case
-      if (--retries == 0) return 0;
-      delayMicroseconds(2);
-    } while ( !digitalRead(this->_pin));
+    do
+    {
+        // wait until the wire is high... just in case
+        if (--retries == 0)
+            return 0;
+        delayMicroseconds(2);
+    }
+    while (!digitalRead(this->_pin));
     // stay high long enough for the chip to get it in case bus was low
-    if (!bHigh) delayMicroseconds(60);
-    pinMode(this->_pin,OUTPUT);         // drive output low
+    if (!bHigh)
+        delayMicroseconds(60);
+    pinMode(this->_pin, OUTPUT); // drive output low
     digitalWrite(this->_pin, 0);
     delayMicroseconds(480);
-    pinMode(this->_pin, INPUT |PULL_UP);// allow it to float
+    pinMode(this->_pin, INPUT | PULL_UP); // allow it to float
 #if ONEWIRE_INTERNAL_PULLUP
-    digitalWrite(this->_pin, 1);       // enable pull-up resistor
+    digitalWrite(this->_pin, 1); // enable pull-up resistor
 #endif
     delayMicroseconds(70);
-    bRet= !digitalRead(this->_pin);
+    bRet = !digitalRead(this->_pin);
     delayMicroseconds(410);
-  pinEnableInterrupt(this->_pin);
-  return bRet;
+    pinEnableInterrupt(this->_pin);
+    return bRet;
 }
 
 /*****************************************************************************
@@ -94,21 +98,24 @@ bool OneWire::OneWireReset()
 *****************************************************************************/
 void OneWire::OneWireWriteBit(uint8_t uValue)
 {
-  pinDisableInterrupt(this->_pin);
-  if(uValue & 1) {
-    pinMode(this->_pin, OUTPUT);       // drive output low
-    digitalWrite(this->_pin, 0);
-    delayMicroseconds(10);
-    digitalWrite(this->_pin, 1);       // drive output high
-    delayMicroseconds(55);
-  } else {
-    pinMode(this->_pin, OUTPUT);       // drive output low
-    digitalWrite(this->_pin, 0);
-    delayMicroseconds(65);
-    digitalWrite(this->_pin, 1);       // drive output high
-    delayMicroseconds(5);
-  }
-  pinEnableInterrupt(this->_pin);
+    pinDisableInterrupt(this->_pin);
+    if (uValue & 1)
+    {
+        pinMode(this->_pin, OUTPUT); // drive output low
+        digitalWrite(this->_pin, 0);
+        delayMicroseconds(10);
+        digitalWrite(this->_pin, 1); // drive output high
+        delayMicroseconds(55);
+    }
+    else
+    {
+        pinMode(this->_pin, OUTPUT); // drive output low
+        digitalWrite(this->_pin, 0);
+        delayMicroseconds(65);
+        digitalWrite(this->_pin, 1); // drive output high
+        delayMicroseconds(5);
+    }
+    pinEnableInterrupt(this->_pin);
 }
 
 /*****************************************************************************
@@ -124,21 +131,21 @@ void OneWire::OneWireWriteBit(uint8_t uValue)
 *****************************************************************************/
 uint8_t OneWire::OneWireReadBit()
 {
-  uint8_t uRet;
+    uint8_t uRet;
 
-  pinDisableInterrupt(this->_pin);
+    pinDisableInterrupt(this->_pin);
     pinMode(this->_pin, OUTPUT);
     digitalWrite(this->_pin, 0);
     delayMicroseconds(3);
-    pinMode(this->_pin, INPUT |PULL_UP);// let pin float, pull up will raise
+    pinMode(this->_pin, INPUT | PULL_UP); // let pin float, pull up will raise
 #if ONEWIRE_INTERNAL_PULLUP
-    digitalWrite(this->_pin, 1);        // enable pull-up resistor
+    digitalWrite(this->_pin, 1); // enable pull-up resistor
 #endif
     delayMicroseconds(10);
     uRet = digitalRead(this->_pin);
     delayMicroseconds(53);
-  pinEnableInterrupt(this->_pin);
-  return uRet;
+    pinEnableInterrupt(this->_pin);
+    return uRet;
 }
 
 /*****************************************************************************
@@ -161,21 +168,21 @@ uint8_t OneWire::OneWireReadBit()
 *****************************************************************************/
 void OneWire::OneWireWrite(uint8_t v)
 {
-  uint8_t bitMask;
-  for( bitMask = 0x01; bitMask; bitMask <<= 1)
-  {
-      this->OneWireWriteBit( (bitMask & v)?1:0);
-  }
+    uint8_t bitMask;
+    for (bitMask = 0x01; bitMask; bitMask <<= 1)
+    {
+        this->OneWireWriteBit((bitMask & v) ? 1 : 0);
+    }
 
-  if(!this->m_bParasitePowerMode)
-  {
-    pinDisableInterrupt(this->_pin);
-      pinMode(this->_pin, INPUT);
+    if (!this->m_bParasitePowerMode)
+    {
+        pinDisableInterrupt(this->_pin);
+        pinMode(this->_pin, INPUT);
 #if !(ONEWIRE_INTERNAL_PULLUP)
       digitalWrite(this->_pin, 0);     // otherwise it's left high
 #endif
-   pinEnableInterrupt(this->_pin);
-  }
+        pinEnableInterrupt(this->_pin);
+    }
 }
 
 /*****************************************************************************
@@ -192,18 +199,19 @@ void OneWire::OneWireWrite(uint8_t v)
 ** Returned value: none
 **
 *****************************************************************************/
-void OneWire::OneWireWriteBytes(const uint8_t *buf, uint16_t count)
+void OneWire::OneWireWriteBytes(const uint8_t* buf, uint16_t count)
 {
-  for(uint16_t i = 0 ; i < count ; i++) this->OneWireWrite(buf[i]);
-  if(!this->m_bParasitePowerMode)
-  {
-    pinDisableInterrupt(this->_pin);
-      pinMode(this->_pin, INPUT);
+    for (uint16_t i = 0; i < count; i++)
+        this->OneWireWrite(buf[i]);
+    if (!this->m_bParasitePowerMode)
+    {
+        pinDisableInterrupt(this->_pin);
+        pinMode(this->_pin, INPUT);
 #if !ONEWIRE_INTERNAL_PULLUP
       digitalWrite(_pin, 0);
 #endif
-    pinEnableInterrupt(this->_pin);
-  }
+        pinEnableInterrupt(this->_pin);
+    }
 }
 
 /*****************************************************************************
@@ -218,13 +226,14 @@ void OneWire::OneWireWriteBytes(const uint8_t *buf, uint16_t count)
 *****************************************************************************/
 uint8_t OneWire::OneWireRead()
 {
-  uint8_t bitMask;
-  uint8_t rRet = 0;
-  for(bitMask = 0x01; bitMask; bitMask <<= 1)
-  {
-    if( this->OneWireReadBit()) rRet |= bitMask;
-  }
-  return rRet;
+    uint8_t bitMask;
+    uint8_t rRet = 0;
+    for (bitMask = 0x01; bitMask; bitMask <<= 1)
+    {
+        if (this->OneWireReadBit())
+            rRet |= bitMask;
+    }
+    return rRet;
 }
 
 /*****************************************************************************
@@ -237,12 +246,12 @@ uint8_t OneWire::OneWireRead()
 ** Returned value: bytes buffer
 **
 *****************************************************************************/
-void OneWire::OneWireReadBytes(uint8_t *buf, uint16_t count)
+void OneWire::OneWireReadBytes(uint8_t* buf, uint16_t count)
 {
-  for (uint16_t i = 0 ; i < count ; i++)
-  {
-    buf[i] = this->OneWireRead();
-  }
+    for (uint16_t i = 0; i < count; i++)
+    {
+        buf[i] = this->OneWireRead();
+    }
 }
 
 /*****************************************************************************
@@ -258,11 +267,11 @@ void OneWire::OneWireReadBytes(uint8_t *buf, uint16_t count)
 *****************************************************************************/
 void OneWire::OneWireSelect(const uint8_t rom[8])
 {
-  this->OneWireWrite(0x55);            // Choose ROM
-  for( uint8_t i = 0; i < 8; i++)
-  {
-    this->OneWireWrite(rom[i]);
-  }
+    this->OneWireWrite(0x55); // Choose ROM
+    for (uint8_t i = 0; i < 8; i++)
+    {
+        this->OneWireWrite(rom[i]);
+    }
 }
 
 /*****************************************************************************
@@ -278,7 +287,7 @@ void OneWire::OneWireSelect(const uint8_t rom[8])
 *****************************************************************************/
 void OneWire::OneWireSkip()
 {
-  this->OneWireWrite(0xCC);            // Skip ROM
+    this->OneWireWrite(0xCC); // Skip ROM
 }
 
 /*****************************************************************************
@@ -297,10 +306,10 @@ void OneWire::OneWireSkip()
 *****************************************************************************/
 void OneWire::OneWireDePower()
 {
-  pinDisableInterrupt(this->_pin);
+    pinDisableInterrupt(this->_pin);
     pinMode(this->_pin, INPUT);
-    digitalWrite(this->_pin, 0);       // disable pull-up too
-  pinEnableInterrupt(this->_pin);
+    digitalWrite(this->_pin, 0); // disable pull-up too
+    pinEnableInterrupt(this->_pin);
 }
 
 #if ONEWIRE_SEARCH
@@ -320,14 +329,15 @@ void OneWire::OneWireDePower()
 *****************************************************************************/
 void OneWire::OneWireResetSearch()
 {
-  this->_LastDiscrepancy= 0;           // reset the search state
-  this->_bLastDeviceFlag= false;
-  this->_LastFamilyDiscrepancy= 0;
-  for(uint8_t i = 7; ; i--)
-  {
-    this->ROM_NO[i] = 0;
-    if(i == 0) break;
-  }
+    this->_LastDiscrepancy = 0; // reset the search state
+    this->_bLastDeviceFlag = false;
+    this->_LastFamilyDiscrepancy = 0;
+    for (uint8_t i = 7; ; i--)
+    {
+        this->ROM_NO[i] = 0;
+        if (i == 0)
+            break;
+    }
 }
 
 /*****************************************************************************
@@ -343,14 +353,14 @@ void OneWire::OneWireResetSearch()
 *****************************************************************************/
 void OneWire::OneWireTargetSearch(uint8_t family_code)
 {
-  this->ROM_NO[0]= family_code;        // set the search state to find SearchFamily type devices
-  for(uint8_t i = 1; i < 8; i++)
-  {
-    this->ROM_NO[i]= 0;
-  }
-  this->_LastDiscrepancy= 64;
-  this->_LastFamilyDiscrepancy= 0;
-  this->_bLastDeviceFlag= false;
+    this->ROM_NO[0] = family_code; // set the search state to find SearchFamily type devices
+    for (uint8_t i = 1; i < 8; i++)
+    {
+        this->ROM_NO[i] = 0;
+    }
+    this->_LastDiscrepancy = 64;
+    this->_LastFamilyDiscrepancy = 0;
+    this->_bLastDeviceFlag = false;
 }
 
 /*****************************************************************************
@@ -379,82 +389,98 @@ void OneWire::OneWireTargetSearch(uint8_t family_code)
 **                 false --> device not found, end of search
 **
 *****************************************************************************/
-bool OneWire::OneWireSearch(uint8_t *newAddr)
+bool OneWire::OneWireSearch(uint8_t* newAddr)
 {
-  bool bRet= false;
-  // if the last call was not the last one
-  if(this->_bLastDeviceFlag) return bRet;
+    bool bRet = false;
+    // if the last call was not the last one
+    if (this->_bLastDeviceFlag)
+        return bRet;
 
-  if(!this->OneWireReset())                              // 1-Wire reset
-  {
-    this->_LastDiscrepancy= 0;                           // reset the search
-    this->_bLastDeviceFlag= false;
-    this->_LastFamilyDiscrepancy= 0;
-    return bRet;
-  }
+    if (!this->OneWireReset()) // 1-Wire reset
+    {
+        this->_LastDiscrepancy = 0; // reset the search
+        this->_bLastDeviceFlag = false;
+        this->_LastFamilyDiscrepancy = 0;
+        return bRet;
+    }
 
-  // initialize for search
-  uint8_t id_bit_number= 1, rom_byte_mask=1, last_zero=0, rom_byte_number=0;
-  uint8_t search_direction, id_bit, cmp_id_bit;
+    // initialize for search
+    uint8_t id_bit_number = 1, rom_byte_mask = 1, last_zero = 0, rom_byte_number = 0;
+    uint8_t search_direction, id_bit, cmp_id_bit;
 
-  this->OneWireWrite(0xF0);                            // issue the search command
+    this->OneWireWrite(0xF0); // issue the search command
 
-  do {                                                 // loop to do the search
-    id_bit= this->OneWireReadBit();                    // read a bit and its complement
-    cmp_id_bit= this->OneWireReadBit();
-    if((id_bit == 1) && (cmp_id_bit == 1)) break;      // check for no devices on 1-wire
+    do
+    {
+        // loop to do the search
+        id_bit = this->OneWireReadBit(); // read a bit and its complement
+        cmp_id_bit = this->OneWireReadBit();
+        if ((id_bit == 1) && (cmp_id_bit == 1))
+            break; // check for no devices on 1-wire
+        else
+        {
+            if (id_bit != cmp_id_bit) // all devices coupled have 0 or 1
+            {
+                search_direction = id_bit; // bit write value for search
+            }
+            else
+            {
+                // if this discrepancy if before the Last Discrepancy
+                if (id_bit_number < this->_LastDiscrepancy)
+                {
+                    // on a previous next then pick the same as last time
+                    search_direction = ((this->ROM_NO[rom_byte_number] & rom_byte_mask) > 0);
+                }
+                else
+                    search_direction = (id_bit_number == this->_LastDiscrepancy); // if equal to last pick 1, if not then pick 0
+
+                if (search_direction == 0) // if 0 was picked then record its position in LastZero
+                {
+                    last_zero = id_bit_number;
+                    if (last_zero < 9)
+                        this->_LastFamilyDiscrepancy = last_zero; // check for Last discrepancy in family
+                }
+            }
+            if (search_direction == 1)
+                this->ROM_NO[rom_byte_number] |= rom_byte_mask;
+            else
+                this->ROM_NO[rom_byte_number] &= ~rom_byte_mask; // set or clear the bit in the ROM byte rom_byte_number with mask rom_byte_mask
+
+            this->OneWireWriteBit(search_direction); // serial number search direction write bit
+
+            id_bit_number++; // increment the byte counter id_bit_number and shift the mask rom_byte_mask
+            rom_byte_mask <<= 1;
+
+            if (rom_byte_mask == 0) // if the mask is 0 then go to new SerialNum byte rom_byte_number and reset mask
+            {
+                rom_byte_number++;
+                rom_byte_mask = 1;
+            }
+        }
+    }
+    while (rom_byte_number < 8); // loop until through all ROM bytes 0-7
+
+    if (!(id_bit_number < 65)) // if the search was successful then
+    {
+        this->_LastDiscrepancy = last_zero; // search successful so set _LastDiscrepancy,_bLastDeviceFlag,search_result
+        if (this->_LastDiscrepancy == 0)
+            this->_bLastDeviceFlag = true; // check for last device
+        bRet = true;
+    }
+
+    if (!bRet || !this->ROM_NO[0]) // if no device found then reset counters so next 'search' will be like a first
+    {
+        this->_LastDiscrepancy = 0;
+        this->_bLastDeviceFlag = false;
+        this->_LastFamilyDiscrepancy = 0;
+    }
     else
     {
-      if(id_bit != cmp_id_bit)                         // all devices coupled have 0 or 1
-      {
-        search_direction= id_bit;                      // bit write value for search
-      }
-      else
-      {                                                // if this discrepancy if before the Last Discrepancy
-        if(id_bit_number < this->_LastDiscrepancy) {   // on a previous next then pick the same as last time
-          search_direction= ((this->ROM_NO[rom_byte_number] & rom_byte_mask) > 0);
-        } else search_direction= (id_bit_number == this->_LastDiscrepancy); // if equal to last pick 1, if not then pick 0
-
-        if (search_direction == 0)                     // if 0 was picked then record its position in LastZero
-        {
-          last_zero= id_bit_number;
-          if (last_zero < 9) this->_LastFamilyDiscrepancy= last_zero; // check for Last discrepancy in family
-        }
-      }
-      if(search_direction == 1) this->ROM_NO[rom_byte_number] |= rom_byte_mask;
-      else this->ROM_NO[rom_byte_number] &= ~rom_byte_mask;  // set or clear the bit in the ROM byte rom_byte_number with mask rom_byte_mask
-
-      this->OneWireWriteBit(search_direction);         // serial number search direction write bit
-
-      id_bit_number++;                                 // increment the byte counter id_bit_number and shift the mask rom_byte_mask
-      rom_byte_mask <<= 1;
-
-      if(rom_byte_mask == 0)                           // if the mask is 0 then go to new SerialNum byte rom_byte_number and reset mask
-      {
-        rom_byte_number++;
-        rom_byte_mask = 1;
-      }
+        for (uint8_t i = 0; i < 8; i++)
+            newAddr[i] = this->ROM_NO[i];
     }
-  } while(rom_byte_number < 8);                        // loop until through all ROM bytes 0-7
 
-  if(!(id_bit_number < 65))                            // if the search was successful then
-  {
-    this->_LastDiscrepancy= last_zero;                 // search successful so set _LastDiscrepancy,_bLastDeviceFlag,search_result
-    if(this->_LastDiscrepancy == 0) this->_bLastDeviceFlag= true; // check for last device
-    bRet= true;
-  }
-
-  if(!bRet || !this->ROM_NO[0])                          // if no device found then reset counters so next 'search' will be like a first
-  {
-    this->_LastDiscrepancy= 0;
-    this->_bLastDeviceFlag= false;
-    this->_LastFamilyDiscrepancy= 0;
-  } else
-  {
-    for (uint8_t i = 0; i < 8; i++) newAddr[i] = this->ROM_NO[i];
-  }
-
-  return bRet;
+    return bRet;
 }
 #endif // #if ONEWIRE_SEARCH
 
@@ -470,22 +496,23 @@ bool OneWire::OneWireSearch(uint8_t *newAddr)
 ** Returned value: CRC 8
 **
 *****************************************************************************/
-uint8_t OneWire::OneWireCRC8(const uint8_t *addr, uint8_t len)
+uint8_t OneWire::OneWireCRC8(const uint8_t* addr, uint8_t len)
 {
-  uint8_t crc = 0;
+    uint8_t crc = 0;
 
-  while(len--)
-  {
-    uint8_t inbyte = *addr++;
-    for(uint8_t i = 8; i; i--)
+    while (len--)
     {
-      uint8_t mix = (crc ^ inbyte) & 0x01;
-      crc >>= 1;
-      if (mix) crc ^= 0x8C;
-      inbyte >>= 1;
+        uint8_t inbyte = *addr++;
+        for (uint8_t i = 8; i; i--)
+        {
+            uint8_t mix = (crc ^ inbyte) & 0x01;
+            crc >>= 1;
+            if (mix)
+                crc ^= 0x8C;
+            inbyte >>= 1;
+        }
     }
-  }
-  return crc;
+    return crc;
 }
 
 #if ONEWIRE_CRC16
@@ -506,8 +533,8 @@ uint8_t OneWire::OneWireCRC8(const uint8_t *addr, uint8_t len)
 *****************************************************************************/
 bool OneWire::OneWireCheckCRC16(const uint8_t* input, uint16_t len, const uint8_t* inverted_crc, uint16_t crc)
 {
-  crc= ~OneWireCRC16(input, len, crc);
-  return (crc & 0xFF) == inverted_crc[0] && (crc >> 8) == inverted_crc[1];
+    crc = ~OneWireCRC16(input, len, crc);
+    return (crc & 0xFF) == inverted_crc[0] && (crc >> 8) == inverted_crc[1];
 }
 
 /*****************************************************************************
@@ -532,24 +559,24 @@ bool OneWire::OneWireCheckCRC16(const uint8_t* input, uint16_t len, const uint8_
 *****************************************************************************/
 uint16_t OneWire::OneWireCRC16(const uint8_t* input, uint16_t len, uint16_t crc)
 {
-  static const uint8_t oddparity[16] = { 0, 1, 1, 0, 1, 0, 0, 1, 1, 0, 0, 1, 0, 1, 1, 0 };
-  for(uint16_t i = 0 ; i < len ; i++)
-  {
-    uint16_t cdata = input[i];         // Even though we're just copying a byte from the input,
-    cdata = (cdata ^ crc) & 0xff;      // we'll be doing 16-bit computation with it.
-    crc >>= 8;
-
-    if(oddparity[cdata & 0x0F] ^ oddparity[cdata >> 4])
+    static const uint8_t oddparity[16] = {0, 1, 1, 0, 1, 0, 0, 1, 1, 0, 0, 1, 0, 1, 1, 0};
+    for (uint16_t i = 0; i < len; i++)
     {
-      crc ^= 0xC001;
-    }
+        uint16_t cdata = input[i];    // Even though we're just copying a byte from the input,
+        cdata = (cdata ^ crc) & 0xff; // we'll be doing 16-bit computation with it.
+        crc >>= 8;
 
-    cdata <<= 6;
-    crc ^= cdata;
-    cdata <<= 1;
-    crc ^= cdata;
-  }
-  return crc;
+        if (oddparity[cdata & 0x0F] ^ oddparity[cdata >> 4])
+        {
+            crc ^= 0xC001;
+        }
+
+        cdata <<= 6;
+        crc ^= cdata;
+        cdata <<= 1;
+        crc ^= cdata;
+    }
+    return crc;
 }
 #endif // #if ONEWIRE_CRC16
 #endif // #if ONEWIRE_CRC

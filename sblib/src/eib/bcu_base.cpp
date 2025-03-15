@@ -23,16 +23,16 @@ BUS_TIMER_INTERRUPT_HANDLER(TIMER16_1_IRQHandler, (*timerBusObj))
 #endif
 
 BcuBase::BcuBase(UserRam* userRam, AddrTables* addrTables) :
-        TLayer4(TelegramBufferSize),
-        bus(new Bus(addrTables, timer16_1, PIN_EIB_RX, PIN_EIB_TX, CAP0, MAT0, new CallbackBcu(this))),
-        progPin(PIN_PROG),
-        userRam(userRam),
-        addrTables(addrTables),
-        comObjects(nullptr),
-        progButtonDebouncer(),
-        restartType(RestartType::None),
-        restartSendDisconnect(false),
-        restartTimeout(Timeout())
+    TLayer4(TelegramBufferSize),
+    bus(new Bus(addrTables, timer16_1, PIN_EIB_RX, PIN_EIB_TX, CAP0, MAT0, new CallbackBcu(this))),
+    progPin(PIN_PROG),
+    userRam(userRam),
+    addrTables(addrTables),
+    comObjects(nullptr),
+    progButtonDebouncer(),
+    restartType(RestartType::None),
+    restartSendDisconnect(false),
+    restartTimeout(Timeout())
 {
     timerBusObj = bus;
     setFatalErrorPin(progPin);
@@ -69,11 +69,11 @@ void BcuBase::loop()
     if (progPin)
     {
         // Detect the falling edge of pressing the prog button
-        pinMode(progPin, INPUT|PULL_UP);
+        pinMode(progPin, INPUT | PULL_UP);
         int oldValue = progButtonDebouncer.value();
         if (!progButtonDebouncer.debounce(digitalRead(progPin), 50) && oldValue)
         {
-            layerStatus() ^= BCU_STATUS_PARITY | BCU_STATUS_PROGRAMMING_MODE;  // toggle programming mode and parity bit
+            layerStatus() ^= BCU_STATUS_PARITY | BCU_STATUS_PROGRAMMING_MODE; // toggle programming mode and parity bit
         }
         pinMode(progPin, OUTPUT);
         digitalWrite(progPin, !programmingMode());
@@ -123,14 +123,14 @@ bool BcuBase::setProgrammingMode(bool newMode)
 
     if (newMode != programmingMode())
     {
-        layerStatus() ^= BCU_STATUS_PARITY | BCU_STATUS_PROGRAMMING_MODE;  // toggle programming mode and parity bit
+        layerStatus() ^= BCU_STATUS_PARITY | BCU_STATUS_PROGRAMMING_MODE; // toggle programming mode and parity bit
     }
     pinMode(progPin, OUTPUT);
     digitalWrite(progPin, !programmingMode());
     return true;
 }
 
-bool BcuBase::processApci(ApciCommand apciCmd, unsigned char * telegram, uint8_t telLength, uint8_t * sendBuffer)
+bool BcuBase::processApci(ApciCommand apciCmd, unsigned char* telegram, uint8_t telLength, uint8_t* sendBuffer)
 {
     switch (apciCmd)
     {
@@ -149,7 +149,7 @@ void BcuBase::sendApciIndividualAddressReadResponse()
     initLpdu(sendBuffer, PRIORITY_SYSTEM, false, FRAME_STANDARD);
     // 1+2 contain the sender address, which is set by bus.sendTelegram()
     setDestinationAddress(sendBuffer, 0x0000); // Zero target address, it's a broadcast
-    sendBuffer[5] = 0xe0 + 1; // address type & routing count in high nibble + response length in low nibble
+    sendBuffer[5] = 0xe0 + 1;                  // address type & routing count in high nibble + response length in low nibble
     setApciCommand(sendBuffer, APCI_INDIVIDUAL_ADDRESS_RESPONSE_PDU, 0);
     sendPreparedTelegram();
 }
@@ -192,7 +192,7 @@ void BcuBase::softSystemReset()
     {
         noInterrupts();
 #ifndef IAP_EMULATION
-        unsigned int * magicWord = BOOTLOADER_MAGIC_ADDRESS;
+        unsigned int* magicWord = BOOTLOADER_MAGIC_ADDRESS;
         *magicWord = BOOTLOADER_MAGIC_WORD;
 #endif
     }
@@ -200,8 +200,9 @@ void BcuBase::softSystemReset()
     NVIC_SystemReset();
 }
 
-void BcuBase::setProgPin(int prgPin) {
-    progPin=prgPin;
+void BcuBase::setProgPin(int prgPin)
+{
+    progPin = prgPin;
     setFatalErrorPin(progPin);
 }
 

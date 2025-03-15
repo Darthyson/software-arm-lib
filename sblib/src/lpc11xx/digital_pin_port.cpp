@@ -21,7 +21,8 @@ void portMode(int portNum, int pinMask, int mode)
     unsigned int iocon = mode & 0xfff;
 
     short func = (mode >> 18) & 31;
-    if (!func) func = PF_PIO;
+    if (!func)
+        func = PF_PIO;
 
     if (type == OUTPUT || type == OUTPUT_MATCH)
     {
@@ -45,5 +46,6 @@ void portDirection(int portNum, int pinMask, int dir)
 
     if (dir == OUTPUT)
         port->DIR |= pinMask;
-    else port->DIR &= ~pinMask;
+    else
+        port->DIR &= ~pinMask;
 }

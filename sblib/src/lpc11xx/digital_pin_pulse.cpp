@@ -26,16 +26,19 @@ unsigned int pulseIn(int pin, int state, unsigned int timeout)
 
     // Wait for any previous pulse to end
     while (port->MASKED_ACCESS[bitMask] == stateMask)
-        if (numloops++ == maxloops) return 0;
+        if (numloops++ == maxloops)
+            return 0;
 
     // Wait for the pulse to start
     while (port->MASKED_ACCESS[bitMask] != stateMask)
-        if (numloops++ == maxloops) return 0;
+        if (numloops++ == maxloops)
+            return 0;
 
     // Wait for the pulse to stop
     while (port->MASKED_ACCESS[bitMask] == stateMask)
     {
-        if (numloops++ == maxloops) return 0;
+        if (numloops++ == maxloops)
+            return 0;
         width++;
     }
 
