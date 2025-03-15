@@ -24,7 +24,7 @@ public:
     /**
      * Clear the screen.
      */
-    void clear();
+    virtual void clear() = 0;
 
     /**
      * Position the cursor. 0/0 is the top/left position

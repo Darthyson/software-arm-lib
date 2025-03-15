@@ -82,7 +82,7 @@ public:
     /**
      * Clear the display.
      */
-    virtual void clear();
+    void clear() override;
 
 protected:
     SPI spi;
