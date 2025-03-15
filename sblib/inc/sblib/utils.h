@@ -101,7 +101,7 @@ int hashUID(byte* uid, const int len_uid, byte* hash, const int len_hash);
  *
  * @param code - the C++ code to include
  *
- * @brief Example:  IF_DUMP_PROPERTIES(fatalError())
+ * @brief Example:  DB_PROPERTIES(fatalError())
  */
 #if defined(DUMP_PROPERTIES)
 #   define DB_PROPERTIES(code) IF_DEBUG(code)
@@ -141,13 +141,6 @@ int hashUID(byte* uid, const int len_uid, byte* hash, const int len_hash);
 #   define DB_BUS(x)
 #endif
 
-/*
-#ifdef DUMP_PROPERTIES
-#  define IF_DUMP_PROPERTIES(code) code
-#else
-#  define IF_DUMP_PROPERTIES(code)
-#endif
-*/
 /**
  * Concatenate two strings.
  * C preprocessor macros are not expanded.
