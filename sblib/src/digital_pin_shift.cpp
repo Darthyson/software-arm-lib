@@ -12,9 +12,7 @@
 byte shiftIn(int dataPin, int clockPin, BitOrder bitOrder)
 {
     int value = 0;
-    int i;
-
-    for (i = 0; i < 8; ++i)
+    for (int i = 0; i < 8; ++i)
     {
         digitalWrite(clockPin, 1);
 
@@ -30,9 +28,8 @@ byte shiftIn(int dataPin, int clockPin, BitOrder bitOrder)
 
 void shiftOut(int dataPin, int clockPin, BitOrder bitOrder, byte val)
 {
-    int i, value = val;
-
-    for (i = 0; i < 8; i++)
+    int value = val;
+    for (int i = 0; i < 8; i++)
     {
         if (bitOrder == LSBFIRST)
             digitalWrite(dataPin, value & (1 << i));

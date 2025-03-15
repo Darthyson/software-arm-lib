@@ -160,13 +160,10 @@ SGP4xResult SGP4xClass::measureRawSignal(float relativeHumidity, float temperatu
     uint8_t cmdBuffer[8] = {0x00, 0x00, 0x80, 0x00, 0xA2, 0x66, 0x66, 0x93};
     uint8_t commandBufferSize = sizeof(cmdBuffer) / sizeof(*cmdBuffer);
 
-    uint16_t relativeHumidityTicks;
-    uint16_t temperatureTicks;
-
     if (useCompensation)
     {
-        relativeHumidityTicks = relativeHumidity * 65535 / 100;
-        temperatureTicks = (temperature + 45.f) * 65535 / 175;
+        const uint16_t relativeHumidityTicks = relativeHumidity * 65535 / 100;
+        const uint16_t temperatureTicks = (temperature + 45.f) * 65535 / 175;
         // set provided relative humidity and temperature in command parameters
         // 2 bytes of data with most significant bit first!
         // 1 byte crc8 checksum
@@ -299,7 +296,6 @@ uint8_t SGP4xClass::crc8(const uint8_t* data, int len)
      * Final XOR 0x00
      */
 
-    const uint8_t POLYNOMIAL(0x31);
     uint8_t crc(0xFF);
 
     for (int j = len; j; --j)
@@ -308,6 +304,7 @@ uint8_t SGP4xClass::crc8(const uint8_t* data, int len)
 
         for (int i = 8; i; --i)
         {
+            constexpr uint8_t POLYNOMIAL(0x31);
             crc = (crc & 0x80) ? (crc << 1) ^ POLYNOMIAL : (crc << 1);
         }
     }

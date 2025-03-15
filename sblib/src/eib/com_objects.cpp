@@ -398,9 +398,6 @@ bool ComObjects::sendNextGroupTelegram()
         return (false);
     }
 
-    uint16_t addr;
-    uint8_t flags;
-    uint16_t config;
     uint16_t numObjs = objectCount();
     if (numObjs == 0)
     {
@@ -454,8 +451,8 @@ bool ComObjects::sendNextGroupTelegram()
                 Type Octet  // high mem
         */
         const ComConfig& configTab = objectConfig(objno);
-        config = configTab.config;
-        addr = firstObjectAddr(objno);
+        uint16_t config = configTab.config;
+        uint16_t addr = firstObjectAddr(objno);
 
         // check if <transmit enable> and <communication enable> is set in the config for the resp. object.
         if ((addr == 0) || !(config & COMCONF_COMM) || !(config & COMCONF_TRANS))
@@ -464,7 +461,7 @@ bool ComObjects::sendNextGroupTelegram()
         }
 
         // check ram-flags for read or write request
-        flags = flagsTab[objno >> 1];
+        uint8_t flags = flagsTab[objno >> 1];
         if (objno & 1)
         {
             flags >>= 4;
@@ -505,7 +502,6 @@ int ComObjects::nextUpdatedObject()
         return (INVALID_OBJECT_NUMBER);
     }
 
-    uint8_t flags;
     uint16_t numObjs = objectCount();
 
     if (numObjs == 0)
@@ -517,7 +513,7 @@ int ComObjects::nextUpdatedObject()
 
     for (uint16_t objno = nextUpdatedObjIndex; objno < numObjs; ++objno)
     {
-        flags = flagsTab[objno >> 1]; // gets the same byte twice
+        uint8_t flags = flagsTab[objno >> 1]; // gets the same byte twice
 
         if (objno & 1)
             flags &= COMFLAG_UPDATE_HIGH; // check high or low nibble

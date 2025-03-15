@@ -46,10 +46,9 @@ inline void BCU2::begin(int manufacturer, int deviceType, int version, word read
     }
 
     unsigned int partID;
-    bool useOldSerialStyle;
     byte uniqueID[IAP_UID_LENGTH];
 
-    useOldSerialStyle = true;
+    bool useOldSerialStyle = true;
     if (iapReadUID(&uniqueID[0]) == IAP_SUCCESS)
     {
         // https://community.nxp.com/t5/LPC-Microcontrollers/IAP-C-code-example-query/m-p/596139/highlight/true#M22963

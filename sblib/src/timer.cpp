@@ -66,8 +66,6 @@ void delay(unsigned int msec)
 void delayMicroseconds(unsigned int usec)
 {
     uint16_t lastSystemTickValue = SysTick->VAL; // get our start SysTickcount
-    uint16_t sysTickValue;                       // use word access for SysTick register
-    int elapsed;
     int ticksToWait = 1; // as fast as we can go
 
     if (usec > MIN_DELAY_MICROSECONDS)
@@ -84,8 +82,8 @@ void delayMicroseconds(unsigned int usec)
     {
         // don't use SysTick->CTRL COUNTFLAG, by reading and processing it
         // an undetected overflow can happen
-        sysTickValue = SysTick->VAL;
-        elapsed = lastSystemTickValue - sysTickValue;
+        uint16_t sysTickValue = SysTick->VAL; // use word access for SysTick register
+        int elapsed = lastSystemTickValue - sysTickValue;
         if (elapsed < 0)
         {
             elapsed += SysTick->LOAD;
@@ -139,11 +137,8 @@ void Timer::begin()
 
 void Timer::matchMode(int channel, int mode)
 {
-    int offset;
-
     // Configure the match control channel
-
-    offset = channel * 3;
+    const int offset = channel * 3;
     timer->MCR = (timer->MCR
                & ~(7 << offset))
                | ((mode & 7) << offset);
@@ -154,15 +149,11 @@ void Timer::matchMode(int channel, int mode)
 
 int Timer::matchMode(int channel) const
 {
-    int mode, offset;
-
     // Query the match control channel
-
-    offset = channel * 3;
-    mode = (timer->MCR >> offset) & 7;
+    int offset = channel * 3;
+    int mode = (timer->MCR >> offset) & 7;
 
     // Query the external match channel
-
     offset = channel << 1;
     mode |= (timer->EMR >> offset) & 0x30;
 

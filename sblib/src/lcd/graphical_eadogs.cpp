@@ -171,14 +171,12 @@ int LcdGraphicalEADOGS::write(byte ch)
 
 void LcdGraphicalEADOGS::clear()
 {
-    int x, y;
-
-    for (y = 0; y < DISPLAY_HEIGHT; ++y)
+    for (int y = 0; y < DISPLAY_HEIGHT; ++y)
     {
         pos(0, y);
 
         digitalWrite(pinCD, 1);
-        for (x = 0; x < DISPLAY_WIDTH; ++x)
+        for (int x = 0; x < DISPLAY_WIDTH; ++x)
             spi.transfer(0);
     }
 
