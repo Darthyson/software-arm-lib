@@ -208,13 +208,12 @@ void CCS811Class::compensate(float t, float rh) // compensate for temperature an
     _digitalWrite(_WAKE_PIN, false);
     delayMicroseconds(50); // recommended 50us delay after asserting WAKE pin
     int _temp = 0;
-    int _rh;
     if (t > 0)
         _temp = (int)t + 0.5f; // this will round off the floating point to the nearest integer value
     else if (t < 0)            // account for negative temperatures
         _temp = (int)t - 0.5f;
     _temp = _temp + 25;   // temperature high byte is stored as T+25°C in the sensor's memory so the value of byte is positive
-    _rh = (int)rh + 0.5f; // this will round off the floating point to the nearest integer value
+    int _rh = (int)rh + 0.5f; // this will round off the floating point to the nearest integer value
 
     uint8_t _ENV_DATA[5];
 

@@ -296,8 +296,6 @@ bool BcuDefault::processApciMemoryOperation(unsigned int addressStart, byte* pay
     }
 
     bool startNotFound = false; // we need this as a exit condition, in case memory range is no where found
-    bool startFound;
-    bool endFound;
 
     while ((!startNotFound) && (addressStart <= addressEnd))
     {
@@ -305,8 +303,8 @@ bool BcuDefault::processApciMemoryOperation(unsigned int addressStart, byte* pay
         // check if we have a memMapper and if payLoad is handled by it
         if (memMapper != nullptr)
         {
-            startFound = memMapper->isMapped(addressStart);
-            endFound = memMapper->isMapped(addressEnd);
+            bool startFound = memMapper->isMapped(addressStart);
+            bool endFound = memMapper->isMapped(addressEnd);
             if (startFound && endFound)
             {
                 // start & end fit into memMapper

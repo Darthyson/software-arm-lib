@@ -168,8 +168,7 @@ uint8_t OneWire::OneWireReadBit()
 *****************************************************************************/
 void OneWire::OneWireWrite(uint8_t v)
 {
-    uint8_t bitMask;
-    for (bitMask = 0x01; bitMask; bitMask <<= 1)
+    for (uint8_t bitMask = 0x01; bitMask; bitMask <<= 1)
     {
         this->OneWireWriteBit((bitMask & v) ? 1 : 0);
     }
@@ -226,9 +225,8 @@ void OneWire::OneWireWriteBytes(const uint8_t* buf, uint16_t count)
 *****************************************************************************/
 uint8_t OneWire::OneWireRead()
 {
-    uint8_t bitMask;
     uint8_t rRet = 0;
-    for (bitMask = 0x01; bitMask; bitMask <<= 1)
+    for (uint8_t bitMask = 0x01; bitMask; bitMask <<= 1)
     {
         if (this->OneWireReadBit())
             rRet |= bitMask;
@@ -406,15 +404,15 @@ bool OneWire::OneWireSearch(uint8_t* newAddr)
 
     // initialize for search
     uint8_t id_bit_number = 1, rom_byte_mask = 1, last_zero = 0, rom_byte_number = 0;
-    uint8_t search_direction, id_bit, cmp_id_bit;
+    uint8_t search_direction;
 
     this->OneWireWrite(0xF0); // issue the search command
 
     do
     {
         // loop to do the search
-        id_bit = this->OneWireReadBit(); // read a bit and its complement
-        cmp_id_bit = this->OneWireReadBit();
+        uint8_t id_bit = this->OneWireReadBit(); // read a bit and its complement
+        uint8_t cmp_id_bit = this->OneWireReadBit();
         if ((id_bit == 1) && (cmp_id_bit == 1))
             break; // check for no devices on 1-wire
         else

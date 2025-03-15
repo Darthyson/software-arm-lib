@@ -649,12 +649,11 @@ bool PropertiesBCU2::propertyValueWriteTelegram(int objectIdx, PropertyID proper
     byte* valuePtr = def->valuePointer(bcu);
 
     const byte* data = bcu->bus->telegram + 12;
-    int state, len;
-
+    int len;
     if (type == PDT_CONTROL)
     {
         len = bcu->bus->telegramLen - 13;
-        state = loadProperty(objectIdx, data, len);
+        int state = loadProperty(objectIdx, data, len);
         bcu->userEeprom->loadState()[objectIdx] = state;
         sendBuffer[12] = state;
         len = 1;

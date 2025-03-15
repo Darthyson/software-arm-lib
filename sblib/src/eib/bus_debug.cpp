@@ -382,8 +382,8 @@ void debugBus()
     // ee: state of state machine at trace point
 
     static unsigned int t,l, l1, lt,lt1, s, cv,tv, tmv;
-    bool cf;
-    l=0; l1=0;
+    l = 0;
+    l1 = 0;
     while (tb_in != tb_out && l1 < 5)
     {
     //while (tb_in != tb_out) {
@@ -393,7 +393,7 @@ void debugBus()
         tv= td_b[tb_out].ttv;
         cv= td_b[tb_out].tcv;
         tmv= td_b[tb_out].ttmv;
-        cf= td_b[tb_out].tc;
+        bool cf = td_b[tb_out].tc;
         if ((s>=8000 && s<=8999) )
         {
             serial.println();

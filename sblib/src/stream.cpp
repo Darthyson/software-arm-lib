@@ -43,11 +43,10 @@ int Stream::parseInt(char skipChar)
 
 int Stream::_readBytesUntil(int terminator, char* buffer, int length)
 {
-    int ch, count;
-
+    int count;
     for (count = 0; count < length; ++count)
     {
-        ch = timedRead();
+        int ch = timedRead();
         if (ch < 0 || ch == terminator)
             break;
 

@@ -59,7 +59,6 @@ void ComObjectsSYSTEMB::processGroupTelegram(uint16_t addr, int apci, byte* tel,
     const ComConfig* configTab = &objectConfig(0);
     const byte* assocTab = bcu->addrTables->assocTable();
     const int endAssoc = 2 + makeWord(assocTab[0], assocTab[1]) * 4; // length field has 2 octets and each entry has 4 octets on SYSTEM B
-    int objno, objConf;
 
     // Convert the group address into the index into the group address table
     const int gapos = bcu->addrTables->indexOfAddr(addr);
@@ -74,11 +73,12 @@ void ComObjectsSYSTEMB::processGroupTelegram(uint16_t addr, int apci, byte* tel,
         int gadest = makeWord(assocTab[idx], assocTab[idx + 1]); // get destination group address index
         if (gapos == gadest) // We found an association for our addr
         {
-            objno = makeWord(assocTab[idx + 2], assocTab[idx + 3]); // Get the com-object number from the assoc table
+            // Get the com-object number from the assoc table
+            const int objno = makeWord(assocTab[idx + 2], assocTab[idx + 3]);
             if (objno == trg_objno)
                 continue; // no update of the object triggered by the app
 
-            objConf = configTab[objno].config;
+            const int objConf = configTab[objno].config;
 
             if (apci == APCI_GROUP_VALUE_WRITE_PDU || apci == APCI_GROUP_VALUE_RESPONSE_PDU)
             {

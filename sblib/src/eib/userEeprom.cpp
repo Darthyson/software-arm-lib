@@ -93,8 +93,6 @@ void UserEeprom::writeUserEeprom()
 
     userEepromData[size() - 1] = 0; // mark the page as in use
 
-    IAP_Status rc;
-
     for (unsigned int i = 0; i < size(); i += 1024)
     {
         int chunk = size() - i;
@@ -102,7 +100,7 @@ void UserEeprom::writeUserEeprom()
         {
             chunk = 1024;
         }
-        rc = iapProgram(page + i, userEepromData + i, chunk);
+        IAP_Status rc = iapProgram(page + i, userEepromData + i, chunk);
         if (rc != IAP_SUCCESS)
         {
             fatalError(); // flashing failed

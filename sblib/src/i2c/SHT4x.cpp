@@ -132,14 +132,12 @@ float SHT4xClass::getDewPoint(void)
 uint32_t SHT4xClass::getSerialnumber(void)
 {
     uint8_t result[6] = {};
-    uint32_t serialnumber;
-
     if (!readSensor(Sht4xCommand::getSerial, result, sizeof(result) / sizeof(*result)))
     {
         return 0;
     }
 
-    serialnumber = static_cast<uint32_t>(result[0]) << 24;
+    uint32_t serialnumber = static_cast<uint32_t>(result[0]) << 24;
     serialnumber |= static_cast<uint32_t>(result[1]) << 16;
     serialnumber |= static_cast<uint32_t>(result[3]) << 8;
     serialnumber |= static_cast<uint32_t>(result[4]);
@@ -205,7 +203,6 @@ uint8_t SHT4xClass::crc8(const uint8_t* data, int len)
      * Final XOR 0x00
      */
 
-    const uint8_t POLYNOMIAL(0x31);
     uint8_t crc(0xFF);
 
     for (int j = len; j; --j)
@@ -214,6 +211,7 @@ uint8_t SHT4xClass::crc8(const uint8_t* data, int len)
 
         for (int i = 8; i; --i)
         {
+            constexpr uint8_t POLYNOMIAL(0x31);
             crc = (crc & 0x80) ? (crc << 1) ^ POLYNOMIAL : (crc << 1);
         }
     }

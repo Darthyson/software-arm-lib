@@ -193,13 +193,12 @@ uint16_t PropertiesSYSTEMB::crc16(uint8_t* ptr, int len)
 {
     //int len = 9;
     //uint8_t data[] = {0x31, 0x32, 0x33, 0x34, 0x35, 0x36, 0x37, 0x38,  0x39};
-    //uint8_t* ptr = &data[0];
-    char i;
+    // uint8_t* ptr = &data[0];
     uint16_t crc = 0x1D0F;
     while (--len >= 0)
     {
         crc = crc ^ (uint16_t)*ptr++ << 8;
-        i = 8;
+        char i = 8;
         do
         {
             if (crc & 0x8000)
@@ -360,12 +359,12 @@ bool PropertiesSYSTEMB::propertyValueWriteTelegram(int objectIdx, PropertyID pro
     byte* valuePtr = def->valuePointer(bcu);
 
     const byte* data = bcu->bus->telegram + 12;
-    int state, len;
+    int len;
 
     if (type == PDT_CONTROL)
     {
         len = bcu->bus->telegramLen - 13;
-        state = loadProperty(objectIdx, data, len);
+        int state = loadProperty(objectIdx, data, len);
         bcu->userEeprom->loadState()[objectIdx] = state;
         sendBuffer[12] = state;
         len = 1;

@@ -219,8 +219,7 @@ int MemMapper::writeMemPtr(int virtAddress, byte* data, int length)
 {
     for (int i = 0; i < length; i++)
     {
-        int result;
-        result = writeMem(virtAddress + i, data[i]);
+        int result = writeMem(virtAddress + i, data[i]);
         if (result != MEM_MAPPER_SUCCESS)
         {
             return result;
@@ -263,8 +262,7 @@ int MemMapper::readMemPtr(int virtAddress, byte* data, int length,
 {
     for (int i = 0; i < length; i++)
     {
-        int result;
-        result = readMem(virtAddress + i, data[i], forceFlash);
+        int result = readMem(virtAddress + i, data[i], forceFlash);
         if (result != MEM_MAPPER_SUCCESS)
         {
             return result;

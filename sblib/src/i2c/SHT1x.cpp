@@ -108,8 +108,6 @@ bool SHT1x::readTemperatureF(float* newTemperature)
 bool SHT1x::readHumidity(float* humidity)
 {
     lastHumidity = INVALID_HUMIDITY;
-    int _val;             // Raw humidity value returned from sensor
-    float linearHumidity; // Humidity with linear correction applied
     float temperatureC;
 
     // Conversion coefficients from SHT15 datasheet (I don't see this Cx values in the datasheet
@@ -140,11 +138,11 @@ bool SHT1x::readHumidity(float* humidity)
     {
         return (false);
     }
-    _val = getData16SHT();
+    const int _val = getData16SHT(); // Raw humidity value returned from sensor
     skipCrcSHT();
 
     // Apply linear conversion to raw value
-    linearHumidity = C1 + C2 * _val + C3 * _val * _val;
+    const float linearHumidity = C1 + C2 * _val + C3 * _val * _val; // Humidity with linear correction applied
 
     // Correct humidity value for current temperature
     *humidity = (temperatureC - 25.0f) * (T1 + T2 * _val) + linearHumidity;
@@ -247,11 +245,9 @@ bool SHT1x::waitForResultSHT()
 
 uint16_t SHT1x::getData16SHT()
 {
-    uint16_t val;
-
     // Get the most significant bits
     releaseDataPin();
-    val = shiftIn(dataPin, clockPin, MSBFIRST) << 8;
+    uint16_t val = shiftIn(dataPin, clockPin, MSBFIRST) << 8;
 
     // Send the required ack
     activateDataPin();

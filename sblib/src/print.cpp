@@ -40,7 +40,6 @@ int Print::print(const char* str, int value, Base base, int digits)
 int Print::print(uintptr_t value, Base base, int digits)
 {
     byte buf[PRINTBUF_SIZE]; // need the maximum size for binary printing
-    byte ch;
 
     short b = (short) base;
     if (b < 2)
@@ -49,7 +48,7 @@ int Print::print(uintptr_t value, Base base, int digits)
     byte* pos = buf + PRINTBUF_SIZE;
     do
     {
-        ch = value % b;
+        byte ch = value % b;
         *--pos = (ch < 10 ? '0' : 'A' - 10) + ch;
 
         value /= b;
