@@ -24,7 +24,8 @@ BUS_TIMER_INTERRUPT_HANDLER(TIMER16_1_IRQHandler, (*timerBusObj))
 
 BcuBase::BcuBase(UserRam* userRam, AddrTables* addrTables) :
     TLayer4(TelegramBufferSize),
-    bus(new Bus(addrTables, timer16_1, PIN_EIB_RX, PIN_EIB_TX, CAP0, MAT0, new CallbackBcu(this))),
+    bus(new Bus(addrTables, timer16_1, PIN_EIB_RX, PIN_EIB_TX, CAP0, MAT0,
+        new CallbackBcu(this))),
     progPin(PIN_PROG),
     userRam(userRam),
     addrTables(addrTables),
