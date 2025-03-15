@@ -38,7 +38,7 @@ byte* UserEeprom::findValidPage()
 
     while (page >= firstPage)
     {
-        if (page[size() - 1] != 0xff)  ///\todo check more then  only one byte for 0xff (empty flash)
+        if (page[size() - 1] != 0xff) ///\todo check more then  only one byte for 0xff (empty flash)
             return page;
 
         page -= userEepromFlashSize;
@@ -75,7 +75,8 @@ void UserEeprom::writeUserEeprom()
     }
     else if (page)
         page += userEepromFlashSize;
-    else{
+    else
+    {
         page = flashSectorAddress();
     }
 
@@ -113,9 +114,9 @@ void UserEeprom::writeUserEeprom()
 }
 
 UserEeprom::UserEeprom(unsigned int start, unsigned int size, unsigned int flashSize) :
-        Memory(start, size),
-        userEepromData(new byte[size]()),
-        userEepromFlashSize(flashSize)
+    Memory(start, size),
+    userEepromData(new byte[size]()),
+    userEepromFlashSize(flashSize)
 {
     readUserEeprom();
 }

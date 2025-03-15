@@ -71,7 +71,7 @@ bool SHT4xClass::measureHighPrecision()
     return true;
 }
 
-bool SHT4xClass::measureHighPrecisionTicks(uint16_t &temperatureTicks, uint16_t &humidityTicks)
+bool SHT4xClass::measureHighPrecisionTicks(uint16_t& temperatureTicks, uint16_t& humidityTicks)
 {
     uint8_t buffer[6] = {};
 
@@ -112,17 +112,17 @@ float SHT4xClass::getTemperature(void)
 
 float SHT4xClass::getDewPoint(void)
 {
-/*
-  float humidity = getHumidity();
-  float temperature = getTemperature();
+  /*
+    float humidity = getHumidity();
+    float temperature = getTemperature();
 
-  // Calculate the intermediate value 'gamma'
-  float gamma = log(humidity / 100.0f) + WATER_VAPOR * temperature / (BAROMETRIC_PRESSURE + temperature);
-  // Calculate dew point in Celsius
-  float dewPoint = BAROMETRIC_PRESSURE * gamma / (WATER_VAPOR - gamma);
+    // Calculate the intermediate value 'gamma'
+    float gamma = log(humidity / 100.0f) + WATER_VAPOR * temperature / (BAROMETRIC_PRESSURE + temperature);
+    // Calculate dew point in Celsius
+    float dewPoint = BAROMETRIC_PRESSURE * gamma / (WATER_VAPOR - gamma);
 
-  return (dewPoint);
-*/
+    return (dewPoint);
+  */
     return (-1.0f); // function not implemented
 }
 
@@ -179,41 +179,40 @@ bool SHT4xClass::readSensor(Sht4xCommand command, uint8_t* buffer, uint8_t buffe
             return false;
         }
         delay(1);
-        resultLength = Chip_I2C_MasterRead(I2C0,eSHT4xAddress,buffer, 6);
+        resultLength = Chip_I2C_MasterRead(I2C0, eSHT4xAddress, buffer, 6);
     }
     while (resultLength == 0);
 
     // check if CRC of measure result is valid
     return resultLength == 6 &&
-             buffer[2] == crc8(buffer, 2) &&
-             buffer[5] == crc8(buffer + 3, 2);
+           buffer[2] == crc8(buffer, 2) &&
+           buffer[5] == crc8(buffer + 3, 2);
 }
 
-uint8_t SHT4xClass::crc8(const uint8_t *data, int len) {
-  /*
-   *
-   * CRC-8 formula from page 14 of SHT spec pdf
-   *
-   * Test data 0xBE, 0xEF should yield 0x92
-   *
-   * Initialization data 0xFF
-   * Polynomial 0x31 (x8 + x5 +x4 +1)
-   * Final XOR 0x00
-   */
+uint8_t SHT4xClass::crc8(const uint8_t* data, int len)
+{
+    /*
+     *
+     * CRC-8 formula from page 14 of SHT spec pdf
+     *
+     * Test data 0xBE, 0xEF should yield 0x92
+     *
+     * Initialization data 0xFF
+     * Polynomial 0x31 (x8 + x5 +x4 +1)
+     * Final XOR 0x00
+     */
 
-  const uint8_t POLYNOMIAL(0x31);
-  uint8_t crc(0xFF);
+    const uint8_t POLYNOMIAL(0x31);
+    uint8_t crc(0xFF);
 
-  for (int j = len; j; --j)
-  {
-    crc ^= *data++;
-
-    for (int i = 8; i; --i)
+    for (int j = len; j; --j)
     {
-      crc = (crc & 0x80) ? (crc << 1) ^ POLYNOMIAL : (crc << 1);
+        crc ^= *data++;
+
+        for (int i = 8; i; --i)
+        {
+            crc = (crc & 0x80) ? (crc << 1) ^ POLYNOMIAL : (crc << 1);
+        }
     }
-  }
-  return crc;
+    return crc;
 }
-
-

@@ -55,7 +55,7 @@
  *
  *  The RAM Flags are used to link the asynchronous processes of the user application with the kxn stack (BCU lib).
  *
- *//*
+ */ /*
  * Group Object value transfer functionality (see 3.4.1) of the Application Interface Layer:
  *
  *    The application process triggers Group Object value transfers by "setting" or "clearing" the relevant
@@ -209,24 +209,23 @@ ComObjects::ComObjects(BcuBase* bcuInstance) :
     transmitting_object_no(INVALID_OBJECT_NUMBER),
     sendNextObjIndex(0),
     nextUpdatedObjIndex(0)
-{
-}
+{}
 
 ComObjects::~ComObjects()
-{
-}
+{}
 
 int ComObjects::telegramObjectSize(int objno)
 {
     int type = objectType(objno);
-    if (type < BIT_7) return 0;
+    if (type < BIT_7)
+        return 0;
     return objectSize(objno);
 }
 
 void ComObjects::addObjectFlags(int objno, int flags)
 {
     byte* flagsTab = objectFlagsTable();
-    if(flagsTab == 0)
+    if (flagsTab == 0)
         return;
 
 
@@ -234,11 +233,11 @@ void ComObjects::addObjectFlags(int objno, int flags)
         flags <<= 4;
 
     d(serial.print(" addObjFlags in (obj, flags): ");)
-      d(serial.print(objno, DEC, 2);)
+    d(serial.print(objno, DEC, 2);)
     d(serial.print(", ");)
-      d(serial.print(flags, HEX, 2);)
-      d(serial.print(", is: ");)
-      d(serial.print(flagsTab[objno >> 1], HEX, 2);)
+    d(serial.print(flags, HEX, 2);)
+    d(serial.print(", is: ");)
+    d(serial.print(flagsTab[objno >> 1], HEX, 2);)
 
     flagsTab[objno >> 1] |= flags;
 
@@ -257,9 +256,9 @@ void ComObjects::setObjectFlags(int objno, int flags)
     flagsPtr += objno >> 1; // "select" high or low nibble according to objno odd or even
 
     d(
-      serial.print(" setObjFlags obj: ", objno, DEC, 2);
-      serial.print(" is: ", *flagsPtr, HEX, 2);
-      serial.print(" to: ", flags, HEX, 2);
+        serial.print(" setObjFlags obj: ", objno, DEC, 2);
+        serial.print(" is: ", *flagsPtr, HEX, 2);
+        serial.print(" to: ", flags, HEX, 2);
     )
 
     if (objno & 1)
@@ -397,7 +396,7 @@ void ComObjects::sendGroupWriteTelegram(int objno, int addr, bool isResponse)
 bool ComObjects::sendNextGroupTelegram()
 {
     byte* flagsTab = objectFlagsTable();
-    if(flagsTab == nullptr)
+    if (flagsTab == nullptr)
     {
         return (false);
     }
@@ -413,58 +412,58 @@ bool ComObjects::sendNextGroupTelegram()
     sendNextObjIndex %= numObjs;
 
     //const ComConfig* configTab = &objectConfig(0);
-///\todo BUG This commented out section can lead to LL_BUSY responses of the Bus and it wont recover from that state
-/*
-    // pending transmission status check, switch off interrupts to avoid reading/storing changing data
-    noInterrupts();
-    if ( !(transmitting_object_no == INVALID_OBJECT_NUMBER) && bcu->bus->getBusTXStateValid() )
-    {
-        //check if state ok and update RAM Flag of object
-        if ( !bcu->bus->sendTelegramState())
+    ///\todo BUG This commented out section can lead to LL_BUSY responses of the Bus and it wont recover from that state
+    /*
+        // pending transmission status check, switch off interrupts to avoid reading/storing changing data
+        noInterrupts();
+        if ( !(transmitting_object_no == INVALID_OBJECT_NUMBER) && bcu->bus->getBusTXStateValid() )
         {
-            // set RAM Status flag to ok : clear COMFLAG_TRANS_MASK    and possible DATAREQ
-             unsigned int mask = (COMFLAG_TRANS_MASK |COMFLAG_DATAREQ )  << (transmitting_object_no & 1 ? 4 :  0);
-            flagsTab[transmitting_object_no >> 1] &= ~mask;
+            //check if state ok and update RAM Flag of object
+            if ( !bcu->bus->sendTelegramState())
+            {
+                // set RAM Status flag to ok : clear COMFLAG_TRANS_MASK    and possible DATAREQ
+                 unsigned int mask = (COMFLAG_TRANS_MASK |COMFLAG_DATAREQ )  << (transmitting_object_no & 1 ? 4 :  0);
+                flagsTab[transmitting_object_no >> 1] &= ~mask;
+            }
+            else
+            {
+                //set status to error, clear COMFLAG_TRANS_MASK and set COMFLAG_ERROR
+                unsigned int mask = (COMFLAG_TRANS_MASK |COMFLAG_DATAREQ)  << (transmitting_object_no & 1 ? 4 :  0);
+                flagsTab[transmitting_object_no >> 1] &= ~mask;
+                mask = (COMFLAG_ERROR) << (transmitting_object_no & 1 ? 4 :  0);
+                flagsTab[transmitting_object_no >> 1] |= mask;
+            }
+    
+            // clear pending status check
+            transmitting_object_no = INVALID_OBJECT_NUMBER;
+            bcu->bus->setBusTXStateValid(false);
         }
-        else
-        {
-            //set status to error, clear COMFLAG_TRANS_MASK and set COMFLAG_ERROR
-            unsigned int mask = (COMFLAG_TRANS_MASK |COMFLAG_DATAREQ)  << (transmitting_object_no & 1 ? 4 :  0);
-            flagsTab[transmitting_object_no >> 1] &= ~mask;
-            mask = (COMFLAG_ERROR) << (transmitting_object_no & 1 ? 4 :  0);
-            flagsTab[transmitting_object_no >> 1] |= mask;
-        }
-
-        // clear pending status check
-        transmitting_object_no = INVALID_OBJECT_NUMBER;
-        bcu->bus->setBusTXStateValid(false);
-    }
-    interrupts();
-*/
-///\todo BUG END
+        interrupts();
+    */
+    ///\todo BUG END
     // scan all objects, read config and group address of object
     for (uint16_t objno = sendNextObjIndex; objno < numObjs; ++objno)
     {
-/*        uint8_t* h = (objectConfigTable() + 3); // 1 tablesize 2 RAM-Flags-Table Pointer
-        h = h + objno * 4;
-        serial.print("obj ", objno, DEC); serial.print(" ");serial.print(((ComConfigBCU2*)h)->DataPtrType[0]));
-        d(
-
-        );
-        return (const ComConfigBCU2*) (objectConfigTable() + 1 + sizeof(ComConfigBCU2::DataPtrType) + objno * sizeof(ComConfigBCU2) );
-
-        Data Pointer // low mem
-        Config Octet
-        Type Octet  // high mem
-*/
+        /*        uint8_t* h = (objectConfigTable() + 3); // 1 tablesize 2 RAM-Flags-Table Pointer
+                h = h + objno * 4;
+                serial.print("obj ", objno, DEC); serial.print(" ");serial.print(((ComConfigBCU2*)h)->DataPtrType[0]));
+                d(
+        
+                );
+                return (const ComConfigBCU2*) (objectConfigTable() + 1 + sizeof(ComConfigBCU2::DataPtrType) + objno * sizeof(ComConfigBCU2) );
+        
+                Data Pointer // low mem
+                Config Octet
+                Type Octet  // high mem
+        */
         const ComConfig& configTab = objectConfig(objno);
         config = configTab.config;
         addr = firstObjectAddr(objno);
 
         // check if <transmit enable> and <communication enable> is set in the config for the resp. object.
-        if ((addr == 0) || !(config & COMCONF_COMM)|| !(config & COMCONF_TRANS))
+        if ((addr == 0) || !(config & COMCONF_COMM) || !(config & COMCONF_TRANS))
         {
-             continue;  // no communication allowed or no grp-adr associated, next obj.
+            continue; // no communication allowed or no grp-adr associated, next obj.
         }
 
         // check ram-flags for read or write request
@@ -486,9 +485,9 @@ bool ComObjects::sendNextGroupTelegram()
                 sendGroupWriteTelegram(objno, addr, false);
 
             // we set the status to TRANSMITING (0x02), clear DATAREQ flag
-              unsigned int mask = (COMFLAG_TRANS_MASK | COMFLAG_DATAREQ)  << (objno & 1 ? 4 :  0);
+            unsigned int mask = (COMFLAG_TRANS_MASK | COMFLAG_DATAREQ) << (objno & 1 ? 4 : 0);
             flagsTab[objno >> 1] &= ~mask;
-            mask = (COMFLAG_ERROR) << (objno & 1 ? 4 :  0);
+            mask = (COMFLAG_ERROR) << (objno & 1 ? 4 : 0);
             flagsTab[objno >> 1] |= mask;
 
 
@@ -504,7 +503,7 @@ bool ComObjects::sendNextGroupTelegram()
 int ComObjects::nextUpdatedObject()
 {
     byte* flagsTab = objectFlagsTable();
-    if(flagsTab == nullptr)
+    if (flagsTab == nullptr)
     {
         return (INVALID_OBJECT_NUMBER);
     }
@@ -523,8 +522,10 @@ int ComObjects::nextUpdatedObject()
     {
         flags = flagsTab[objno >> 1]; // gets the same byte twice
 
-        if (objno & 1) flags &= COMFLAG_UPDATE_HIGH; // check high or low nibble
-        else flags &= COMFLAG_UPDATE;
+        if (objno & 1)
+            flags &= COMFLAG_UPDATE_HIGH; // check high or low nibble
+        else
+            flags &= COMFLAG_UPDATE;
 
         // d(serial.print(" obj: ", objno, DEC); serial.println(", fi: ", flags, HEX, 2);)
 
@@ -556,9 +557,10 @@ void ComObjects::processGroupWriteTelegram(int objno, byte* tel)
 
     int count = telegramObjectSize(objno);
 
-    if (count > 0) reverseCopy(valuePtr, tel + 8, count);
-    else *valuePtr = tel[7] & 0x3f;
+    if (count > 0)
+        reverseCopy(valuePtr, tel + 8, count);
+    else
+        *valuePtr = tel[7] & 0x3f;
 
     addObjectFlags(objno, COMFLAG_UPDATE);
 }
-

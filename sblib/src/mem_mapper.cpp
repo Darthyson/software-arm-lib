@@ -19,7 +19,7 @@
 
 
 MemMapper::MemMapper(unsigned int flashBase, unsigned int flashSize, bool autoAddPage) :
-        flashBase(FLASH_BASE_ADDRESS + flashBase), flashSize(flashSize), autoAddPage(autoAddPage)
+    flashBase(FLASH_BASE_ADDRESS + flashBase), flashSize(flashSize), autoAddPage(autoAddPage)
 {
     flashSizePages = flashSize / FLASH_PAGE_SIZE;
     flashBasePage = iapPageOfAddress(this->flashBase);
@@ -37,7 +37,7 @@ MemMapper::MemMapper(unsigned int flashBase, unsigned int flashSize, bool autoAd
     // form of corruption.)
     bool zeroEntryFound = false;
     bool errorFound = false;
-    for (int i=0; i<FLASH_PAGE_SIZE; i++)
+    for (int i = 0; i < FLASH_PAGE_SIZE; i++)
     {
         if (allocTable[i] == 0)
         {
@@ -56,7 +56,7 @@ MemMapper::MemMapper(unsigned int flashBase, unsigned int flashSize, bool autoAd
     if (errorFound)
     {
         allocTableModified = true;
-           memset(allocTable, 0xff, FLASH_PAGE_SIZE);
+        memset(allocTable, 0xff, FLASH_PAGE_SIZE);
     }
 }
 
@@ -83,7 +83,7 @@ int MemMapper::doFlash(void) const
             fatalError();
         }
         if (iapProgram(iapAddressOfPage(writePage), writeBuf, FLASH_PAGE_SIZE)
-                != IAP_SUCCESS)
+            != IAP_SUCCESS)
         {
             fatalError();
         }
@@ -96,7 +96,8 @@ int MemMapper::doFlash(void) const
 int MemMapper::allocatePage(int virtPage)
 {
     if (lastAllocated == 0)
-    { // not yet found the highest used entry
+    {
+        // not yet found the highest used entry
         for (int i = 0; i < FLASH_PAGE_SIZE; i++)
         {
             unsigned int entry = allocTable[i] ^ 0xff;
@@ -111,9 +112,11 @@ int MemMapper::allocatePage(int virtPage)
         return MEM_MAPPER_OUT_OF_MEMORY; // we are out of memory
     }
     if (lastAllocated == 0)
-    {  // no pages allocated yet.
+    {
+        // no pages allocated yet.
         writePage = flashBasePage + 1;
-    } else
+    }
+    else
     {
         lastAllocated++;
         writePage = lastAllocated;
@@ -145,7 +148,8 @@ int MemMapper::addRange(int virtAddress, int length)
     {
         byte flashPageNum = allocTable[page] ^ 0xff;
         if (flashPageNum == 0)
-        { // not yet allocated in flash memory
+        {
+            // not yet allocated in flash memory
             int result = allocatePage(page);
             if (result != MEM_MAPPER_SUCCESS)
             {
@@ -186,13 +190,15 @@ int MemMapper::writeMem(int virtAddress, byte data)
         doFlash();
         writePage = flashPageNum;
         if (writePage != 0)
-        { // swap flash page into write buffer
+        {
+            // swap flash page into write buffer
             memcpy(writeBuf, iapAddressOfPage(writePage), FLASH_PAGE_SIZE);
         }
     }
 
     if (flashPageNum == 0)
-    { // not yet allocated in flash memory
+    {
+        // not yet allocated in flash memory
         if (autoAddPage)
         {
             int result = allocatePage(virtAddress >> 8);
@@ -209,7 +215,7 @@ int MemMapper::writeMem(int virtAddress, byte data)
     return MEM_MAPPER_SUCCESS;
 }
 
-int MemMapper::writeMemPtr(int virtAddress, byte *data, int length)
+int MemMapper::writeMemPtr(int virtAddress, byte* data, int length)
 {
     for (int i = 0; i < length; i++)
     {
@@ -223,7 +229,7 @@ int MemMapper::writeMemPtr(int virtAddress, byte *data, int length)
     return MEM_MAPPER_SUCCESS;
 }
 
-int MemMapper::readMem(int virtAddress, byte &data, bool forceFlash)
+int MemMapper::readMem(int virtAddress, byte& data, bool forceFlash)
 {
     int flashPageNum = getFlashPageNum(virtAddress);
 
@@ -240,18 +246,20 @@ int MemMapper::readMem(int virtAddress, byte &data, bool forceFlash)
     {
         data = 0x00;
         return MEM_MAPPER_NOT_MAPPED;
-    } else if ((flashPageNum == writePage) && !forceFlash)
+    }
+    else if ((flashPageNum == writePage) && !forceFlash)
     {
         data = writeBuf[virtAddress & 0xff];
-    } else
+    }
+    else
     {
         data = iapAddressOfPage(flashPageNum)[virtAddress & 0xff];
     }
     return MEM_MAPPER_SUCCESS;
 }
 
-int MemMapper::readMemPtr(int virtAddress, byte *data, int length,
-        bool forceFlash)
+int MemMapper::readMemPtr(int virtAddress, byte* data, int length,
+                          bool forceFlash)
 {
     for (int i = 0; i < length; i++)
     {
@@ -295,21 +303,22 @@ byte* MemMapper::memoryPtr(int virtAddress, bool forceFlash) const
     if (flashPageNum == 0)
     {
         return NULL;
-    } else if ((flashPageNum == writePage) && !forceFlash)
+    }
+    else if ((flashPageNum == writePage) && !forceFlash)
     {
         return writeBuf + (virtAddress & 0xff);
     }
     return (iapAddressOfPage(flashPageNum) + (virtAddress & 0xff));
 }
 
- unsigned char MemMapper::getUInt8(int virtAddress)
+unsigned char MemMapper::getUInt8(int virtAddress)
 {
     byte ret;
     readMem(virtAddress, ret);
     return ret;
 }
 
-unsigned char& MemMapper::operator[] (const int nIndex) const
+unsigned char& MemMapper::operator[](const int nIndex) const
 {
     return memoryPtr(nIndex)[0];
 }
@@ -319,14 +328,14 @@ unsigned int MemMapper::getUIntX(int virtAddress, int length)
     unsigned int ret = 0;
     int address;
 
-    for(int i = 0; i < length; i++)
+    for (int i = 0; i < length; i++)
     {
         byte b;
-        if(endianess == BIG_ENDIAN)
+        if (endianess == BIG_ENDIAN)
             address = virtAddress + i;
         else
             address = virtAddress + length - i - 1;
-        readMem( address , b);
+        readMem(address, b);
         ret <<= 8;
         ret |= (unsigned int)b;
     }
@@ -352,9 +361,9 @@ int MemMapper::setUIntX(int virtAddress, int length, int val)
 {
     unsigned int ret = 0;
     int address;
-    for(int i = 0; i < length; i++)
+    for (int i = 0; i < length; i++)
     {
-        if(endianess == BIG_ENDIAN)
+        if (endianess == BIG_ENDIAN)
             address = virtAddress + length - i - 1;
         else
             address = virtAddress + i;
@@ -373,4 +382,3 @@ int MemMapper::setUInt32(int virtAddress, unsigned int data)
 {
     return setUIntX(virtAddress, 4, data);
 }
-

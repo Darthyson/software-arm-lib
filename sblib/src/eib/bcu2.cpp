@@ -18,9 +18,9 @@ void BCU2::setOwnAddress(uint16_t addr)
     BcuDefault::setOwnAddress(addr);
     if (userEeprom->loadState()[OT_ADDR_TABLE] == LS_LOADING)
     {
-        byte * addrTab = addrTables->addrTable() + 1;
-        * (addrTab + 0)  = HIGH_BYTE(ownAddress());
-        * (addrTab + 1)  = lowByte(ownAddress());
+        byte* addrTab = addrTables->addrTable() + 1;
+        *(addrTab + 0) = HIGH_BYTE(ownAddress());
+        *(addrTab + 1) = lowByte(ownAddress());
         userEeprom->modified(true);
     }
 }
@@ -29,17 +29,17 @@ inline void BCU2::begin(int manufacturer, int deviceType, int version, word read
 {
     BcuDefault::begin(manufacturer, deviceType, version);
 
-    userRam->peiType() = 0;     // PEI type: 0=no adapter connected to PEI.
-    userEeprom->appType() = 0;  // Set to BCU2 application. ETS reads this when programming.
+    userRam->peiType() = 0;    // PEI type: 0=no adapter connected to PEI.
+    userEeprom->appType() = 0; // Set to BCU2 application. ETS reads this when programming.
 
     if (userEeprom->loadState()[OT_ADDR_TABLE] == LS_LOADING)
     {
-        byte * addrTab = addrTables->addrTable() + 1;
-        setOwnAddress(makeWord(*(addrTab) , *(addrTab + 1)));
+        byte* addrTab = addrTables->addrTable() + 1;
+        setOwnAddress(makeWord(*(addrTab), *(addrTab + 1)));
     }
 
     commObjectTableAddressStatic = readOnlyCommObjectTableAddress;
-    if ((commObjectTableAddressStatic != 0) && ( userEeprom->commsTabAddr() != commObjectTableAddressStatic))
+    if ((commObjectTableAddressStatic != 0) && (userEeprom->commsTabAddr() != commObjectTableAddressStatic))
     {
         userEeprom->commsTabAddr() = commObjectTableAddressStatic;
         userEeprom->modified(true);
@@ -64,7 +64,7 @@ inline void BCU2::begin(int manufacturer, int deviceType, int version, word read
     if (useOldSerialStyle)
     {
         iapReadPartID(&partID);
-        memcpy (userEeprom->serial(), &partID, 4);
+        memcpy(userEeprom->serial(), &partID, 4);
         userEeprom->serial()[4] = HIGH_BYTE(SBLIB_VERSION);
         userEeprom->serial()[5] = lowByte(SBLIB_VERSION);
     }
@@ -95,13 +95,13 @@ BCU2::BCU2() : BCU2(new UserRamBCU2(), new UserEepromBCU2(), new ComObjectsBCU2(
 {}
 
 BCU2::BCU2(UserRamBCU2* userRam, UserEepromBCU2* userEeprom, ComObjectsBCU2* comObjects, AddrTablesBCU2* addrTables, PropertiesBCU2* properties) :
-        BcuDefault(userRam, userEeprom, comObjects, addrTables),
-        userRam(userRam),
-        userEeprom(userEeprom),
-        properties(properties)
+    BcuDefault(userRam, userEeprom, comObjects, addrTables),
+    userRam(userRam),
+    userEeprom(userEeprom),
+    properties(properties)
 {}
 
-bool BCU2::processApci(ApciCommand apciCmd, unsigned char * telegram, uint8_t telLength, uint8_t * sendBuffer)
+bool BCU2::processApci(ApciCommand apciCmd, unsigned char* telegram, uint8_t telLength, uint8_t* sendBuffer)
 {
     uint8_t count;
     uint16_t address;
@@ -111,42 +111,43 @@ bool BCU2::processApci(ApciCommand apciCmd, unsigned char * telegram, uint8_t te
 
     switch (apciCmd)
     {
-    case APCI_PROPERTY_VALUE_READ_PDU:
-    case APCI_PROPERTY_VALUE_WRITE_PDU:
-        index = telegram[8];
-        id = telegram[9];
-        count = telegram[10] >> 4;
-        address = ((telegram[10] & 0x0f) << 4);
-        address = (uint16_t)(address | (telegram[11]));
+        case APCI_PROPERTY_VALUE_READ_PDU:
+        case APCI_PROPERTY_VALUE_WRITE_PDU:
+            index = telegram[8];
+            id = telegram[9];
+            count = telegram[10] >> 4;
+            address = ((telegram[10] & 0x0f) << 4);
+            address = (uint16_t)(address | (telegram[11]));
 
-        sendBuffer[5] = 0x60 + 5; // routing count in high nibble + response length in low nibble
-        setApciCommand(sendBuffer, APCI_PROPERTY_VALUE_RESPONSE_PDU, 0);
-        sendBuffer[8] = index;
-        sendBuffer[9] = id;
-        sendBuffer[10] = telegram[10];
-        sendBuffer[11] = telegram[11];
+            sendBuffer[5] = 0x60 + 5; // routing count in high nibble + response length in low nibble
+            setApciCommand(sendBuffer, APCI_PROPERTY_VALUE_RESPONSE_PDU, 0);
+            sendBuffer[8] = index;
+            sendBuffer[9] = id;
+            sendBuffer[10] = telegram[10];
+            sendBuffer[11] = telegram[11];
 
-        if (apciCmd == APCI_PROPERTY_VALUE_READ_PDU)
-            found = properties->propertyValueReadTelegram(index, (PropertyID) id, count, address, sendBuffer);
-        else
-            found = properties->propertyValueWriteTelegram(index, (PropertyID) id, count, address, sendBuffer);
-        if (!found) sendBuffer[10] = 0;
-        return (true);
+            if (apciCmd == APCI_PROPERTY_VALUE_READ_PDU)
+                found = properties->propertyValueReadTelegram(index, (PropertyID)id, count, address, sendBuffer);
+            else
+                found = properties->propertyValueWriteTelegram(index, (PropertyID)id, count, address, sendBuffer);
+            if (!found)
+                sendBuffer[10] = 0;
+            return (true);
 
-    case APCI_PROPERTY_DESCRIPTION_READ_PDU:
-        index = telegram[8];
-        id = telegram[9];
-        address = telegram[10];
-        sendBuffer[5] = 0x60 + 8; // routing count in high nibble + response length in low nibble
-        setApciCommand(sendBuffer, APCI_PROPERTY_DESCRIPTION_RESPONSE_PDU, 0);
-        sendBuffer[8] = index;
-        sendBuffer[9] = id;
-        sendBuffer[10] = (uint8_t)address;
-        properties->propertyDescReadTelegram(index, (PropertyID) id, address, sendBuffer);
-        return (true);
+        case APCI_PROPERTY_DESCRIPTION_READ_PDU:
+            index = telegram[8];
+            id = telegram[9];
+            address = telegram[10];
+            sendBuffer[5] = 0x60 + 8; // routing count in high nibble + response length in low nibble
+            setApciCommand(sendBuffer, APCI_PROPERTY_DESCRIPTION_RESPONSE_PDU, 0);
+            sendBuffer[8] = index;
+            sendBuffer[9] = id;
+            sendBuffer[10] = (uint8_t)address;
+            properties->propertyDescReadTelegram(index, (PropertyID)id, address, sendBuffer);
+            return (true);
 
-    default:
-        return BcuDefault::processApci(apciCmd, telegram, telLength, sendBuffer);
+        default:
+            return BcuDefault::processApci(apciCmd, telegram, telLength, sendBuffer);
     }
 }
 
@@ -164,7 +165,7 @@ void BCU2::setHardwareType(const byte* hardwareType, uint8_t size)
     memcpy(userEeprom->order(), hardwareType, size);
 }
 
-bool BCU2::processBroadCastTelegram(ApciCommand apciCmd, unsigned char *telegram, uint8_t telLength)
+bool BCU2::processBroadCastTelegram(ApciCommand apciCmd, unsigned char* telegram, uint8_t telLength)
 {
     switch (apciCmd)
     {
@@ -193,7 +194,7 @@ bool BCU2::processBroadCastTelegram(ApciCommand apciCmd, unsigned char *telegram
             sendApciIndividualAddressSerialNumberReadResponse();
             break;
 
-        default :
+        default:
             // let base class handle the broadcast
             return (BcuDefault::processBroadCastTelegram(apciCmd, telegram, telLength));
     }
@@ -206,12 +207,12 @@ void BCU2::sendApciIndividualAddressSerialNumberReadResponse()
     initLpdu(sendBuffer, PRIORITY_SYSTEM, false, FRAME_STANDARD);
     // 1+2 contain the sender address, which is set by bus.sendTelegram()
     setDestinationAddress(sendBuffer, 0x0000); // Zero target address, it's a broadcast
-    sendBuffer[5] = 0xe0 + 11; // address type & routing count in high nibble + response length (11) in low nibble
+    sendBuffer[5] = 0xe0 + 11;                 // address type & routing count in high nibble + response length (11) in low nibble
     setApciCommand(sendBuffer, APCI_INDIVIDUALADDRESS_SERIALNUMBER_RESPONSE_PDU, 0);
     // sendBuffer[8-13] contains serial number
     for (uint8_t i = 0; i < userEeprom->serialSize(); i++)
     {
-        sendBuffer[8+i] = userEeprom->serial()[i];
+        sendBuffer[8 + i] = userEeprom->serial()[i];
     }
 
     // sendBuffer[14-15] contains domain address

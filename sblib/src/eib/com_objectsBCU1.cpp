@@ -17,7 +17,7 @@
 int ComObjectsBCU1::objectSize(int objno)
 {
     // The size of the object types BIT_7...VARDATA in bytes
-    const byte objectTypeSizes[10] = { 1, 1, 2, 3, 4, 6, 8, 10, 14, 14 };
+    const byte objectTypeSizes[10] = {1, 1, 2, 3, 4, 6, 8, 10, 14, 14};
 
     int type = objectType(objno);
     if (type < BIT_7)
@@ -67,19 +67,19 @@ byte* ComObjectsBCU1::objectValuePtr(int objno)
  */
 void ComObjectsBCU1::processGroupTelegram(uint16_t addr, int apci, byte* tel, int trg_objno)
 {
-/**
- * Spec: Resources 4.11.2 Group Object Association Table - Realization Type 1
- */
+    /**
+     * Spec: Resources 4.11.2 Group Object Association Table - Realization Type 1
+     */
     const byte* assocTab = bcu->addrTables->assocTable();
     const int endAssoc = 1 + (*assocTab) * 2;
     int objno, objConf;
 
     DB_COM_OBJ(
-            serial.print("grpAddr ", mainGroup(addr));
-            serial.print("/", middleGroup(addr));
-            serial.print("/", lowGroup(addr));
-            serial.print(": gapos ");
-            );
+        serial.print("grpAddr ", mainGroup(addr));
+        serial.print("/", middleGroup(addr));
+        serial.print("/", lowGroup(addr));
+        serial.print(": gapos ");
+    );
     // Convert the group address into the index of the group address table
     const int gapos = bcu->addrTables->indexOfAddr(addr);
     if (gapos < 0)
@@ -102,7 +102,7 @@ void ComObjectsBCU1::processGroupTelegram(uint16_t addr, int apci, byte* tel, in
             continue;
         }
         // We found an association for our addr
-        objno = assocTab[idx + 1];  // Get the com-object number from the assoc table
+        objno = assocTab[idx + 1]; // Get the com-object number from the assoc table
         DB_COM_OBJ(serial.println("objno  : ", objno););
 
         if (objno == trg_objno)
@@ -114,7 +114,6 @@ void ComObjectsBCU1::processGroupTelegram(uint16_t addr, int apci, byte* tel, in
         //DB_COM_OBJ(serial.println("commsTabAddr: 0x", ((UserEepromBCU1*)((BcuDefault*)bcu)->userEeprom)->commsTabAddr(), HEX););
         objConf = objectConfig(objno).config;
         DB_COM_OBJ(serial.println("objConf: 0x", objno, HEX, 2););
-
 
 
         if (apci == APCI_GROUP_VALUE_WRITE_PDU || apci == APCI_GROUP_VALUE_RESPONSE_PDU)
@@ -160,10 +159,10 @@ inline const ComConfig& ComObjectsBCU1::objectConfig(int objno) { return objectC
 
 inline const ComConfigBCU1* ComObjectsBCU1::objectConfigBCU1(int objno)
 {
-    byte *objConfigTable = objectConfigTable();
+    byte* objConfigTable = objectConfigTable();
     if (objConfigTable == nullptr)
     {
         return (nullptr);
     }
-    return (const ComConfigBCU1*) (objConfigTable + 1 + sizeof(ComConfigBCU1::DataPtrType) + objno * sizeof(ComConfigBCU1) );
+    return (const ComConfigBCU1*) (objConfigTable + 1 + sizeof(ComConfigBCU1::DataPtrType) + objno * sizeof(ComConfigBCU1));
 }

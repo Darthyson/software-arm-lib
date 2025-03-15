@@ -16,7 +16,7 @@ BCU1::BCU1() : BcuDefault(new UserRamBCU1(), new UserEepromBCU1(), new ComObject
 }
 
 BCU1::BCU1(UserRamBCU1* userRam, UserEepromBCU1* userEeprom, ComObjectsBCU1* comObjects, AddrTablesBCU1* addrTables) :
-        BcuDefault(userRam, userEeprom, comObjects, addrTables)
+    BcuDefault(userRam, userEeprom, comObjects, addrTables)
 {}
 
 inline void BCU1::begin(int manufacturer, int deviceType, int version)
@@ -34,8 +34,8 @@ bool BCU1::applicationRunning() const
     uint8_t runState = userRam->runState();
     uint8_t runError = userEeprom->runError();
     return (
-            ((status & (BCU_STATUS_PROGRAMMING_MODE | BCU_STATUS_APPLICATION_LAYER)) == BCU_STATUS_APPLICATION_LAYER) &&
-             (runState == 1) &&
-             (runError == 0xff)  // ETS sets the run error to 0 while programming
-           );
+        ((status & (BCU_STATUS_PROGRAMMING_MODE | BCU_STATUS_APPLICATION_LAYER)) == BCU_STATUS_APPLICATION_LAYER) &&
+        (runState == 1) &&
+        (runError == 0xff) // ETS sets the run error to 0 while programming
+    );
 }

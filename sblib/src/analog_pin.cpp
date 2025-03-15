@@ -28,10 +28,10 @@
 void analogBegin()
 {
     // Disable power down bit to the ADC block.
-    LPC_SYSCON->PDRUNCFG &= ~(1<<4);
+    LPC_SYSCON->PDRUNCFG &= ~(1 << 4);
 
     // Enable AHB clock to the ADC.
-    LPC_SYSCON->SYSAHBCLKCTRL |= (1<<13);
+    LPC_SYSCON->SYSAHBCLKCTRL |= (1 << 13);
 #ifndef IAP_EMULATION
     LPC_ADC->CR = ((SystemCoreClock / LPC_SYSCON->SYSAHBCLKDIV) / ADC_CLOCK - 1) << 8;
 #endif
@@ -40,10 +40,10 @@ void analogBegin()
 void analogEnd()
 {
     // Enable power down bit to the ADC block.
-    LPC_SYSCON->PDRUNCFG |= 1<<4;
+    LPC_SYSCON->PDRUNCFG |= 1 << 4;
 
     // Disable AHB clock to the ADC.
-    LPC_SYSCON->SYSAHBCLKCTRL &= ~(1<<13);
+    LPC_SYSCON->SYSAHBCLKCTRL &= ~(1 << 13);
 }
 
 static unsigned int analogPoll(int channel)
@@ -63,7 +63,7 @@ static unsigned int analogPoll(int channel)
     }
     while (!(regVal & ADC_DONE));
 
-    LPC_ADC->CR &= 0xf8ffffff;  // Stop ADC
+    LPC_ADC->CR &= 0xf8ffffff; // Stop ADC
     return regVal;
 }
 

@@ -43,7 +43,8 @@ int Print::print(uintptr_t value, Base base, int digits)
     byte ch;
 
     short b = (short) base;
-    if (b < 2) b = 2;
+    if (b < 2)
+        b = 2;
 
     byte* pos = buf + PRINTBUF_SIZE;
     do

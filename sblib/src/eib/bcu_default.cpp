@@ -18,13 +18,13 @@
 #endif
 
 BcuDefault::BcuDefault(UserRam* userRam, UserEeprom* userEeprom, ComObjects* comObjects, AddrTables* addrTables) :
-        BcuBase(userRam, addrTables),
-        userEeprom(userEeprom),
-        memMapper(nullptr),
-        usrCallback(nullptr),
-        sendGrpTelEnabled(false),
-        groupTelWaitMillis(DEFAULT_GROUP_TEL_WAIT_MILLIS),
-        groupTelSent(millis())
+    BcuBase(userRam, addrTables),
+    userEeprom(userEeprom),
+    memMapper(nullptr),
+    usrCallback(nullptr),
+    sendGrpTelEnabled(false),
+    groupTelWaitMillis(DEFAULT_GROUP_TEL_WAIT_MILLIS),
+    groupTelSent(millis())
 {
     this->comObjects = comObjects;
 }
@@ -79,7 +79,7 @@ void BcuDefault::_begin()
     groupTelSent = millis();
 
     // set limit to max of 28 telegrams per second (wait 35ms) -  to avoid risk of thermal destruction of the sending circuit
-    groupTelWaitMillis = DEFAULT_GROUP_TEL_WAIT_MILLIS ;
+    groupTelWaitMillis = DEFAULT_GROUP_TEL_WAIT_MILLIS;
 }
 
 void BcuDefault::begin(int manufacturer, int deviceType, int version)
@@ -136,9 +136,8 @@ void BcuDefault::loop()
         if (elapsed(groupTelSent) >= groupTelWaitMillis)
         {
             // check for possible next comobject to be send
-         if (comObjects->sendNextGroupTelegram())
-             groupTelSent = millis();
-
+            if (comObjects->sendNextGroupTelegram())
+                groupTelSent = millis();
         }
         // To prevent overflows if no telegrams are sent for a long time
         ///\todo better reload with millis() - groupTelWaitMillis
@@ -173,7 +172,7 @@ byte* BcuDefault::userMemoryPtr(unsigned int addr)
     return nullptr;
 }
 
-void BcuDefault::setMemMapper(MemMapper *mapper)
+void BcuDefault::setMemMapper(MemMapper* mapper)
 {
     memMapper = mapper;
 }
@@ -183,7 +182,7 @@ MemMapper* BcuDefault::getMemMapper()
     return memMapper;
 }
 
-void BcuDefault::setUsrCallback(UsrCallback *callback)
+void BcuDefault::setUsrCallback(UsrCallback* callback)
 {
     usrCallback = callback;
 }
@@ -195,16 +194,16 @@ void BcuDefault::enableGroupTelSend(bool enable)
 
 void BcuDefault::setGroupTelRateLimit(unsigned int limit)
 {
- if ((limit > 0) && (limit <= MAX_GROUP_TEL_PER_SECOND))
-     groupTelWaitMillis = 1000/limit;
- else
-     groupTelWaitMillis = DEFAULT_GROUP_TEL_WAIT_MILLIS ;
+    if ((limit > 0) && (limit <= MAX_GROUP_TEL_PER_SECOND))
+        groupTelWaitMillis = 1000 / limit;
+    else
+        groupTelWaitMillis = DEFAULT_GROUP_TEL_WAIT_MILLIS;
 }
 
 /**
  * todo check for RX status and inform upper layer if needed
  */
-bool BcuDefault::processGroupAddressTelegram(ApciCommand apciCmd, uint16_t groupAddress, unsigned char *telegram, uint8_t telLength)
+bool BcuDefault::processGroupAddressTelegram(ApciCommand apciCmd, uint16_t groupAddress, unsigned char* telegram, uint8_t telLength)
 {
     DB_COM_OBJ(
         serial.println();
@@ -215,7 +214,7 @@ bool BcuDefault::processGroupAddressTelegram(ApciCommand apciCmd, uint16_t group
     return (true);
 }
 
-bool BcuDefault::processBroadCastTelegram(ApciCommand apciCmd, unsigned char *telegram, uint8_t telLength)
+bool BcuDefault::processBroadCastTelegram(ApciCommand apciCmd, unsigned char* telegram, uint8_t telLength)
 {
     if (!programmingMode())
     {
@@ -233,51 +232,51 @@ bool BcuDefault::processBroadCastTelegram(ApciCommand apciCmd, unsigned char *te
             sendApciIndividualAddressReadResponse();
             break;
 
-        default :
+        default:
             return (false);
     }
     return (true);
 }
 
-bool BcuDefault::processApciMemoryWritePDU(int addressStart, byte *payLoad, int lengthPayLoad)
+bool BcuDefault::processApciMemoryWritePDU(int addressStart, byte* payLoad, int lengthPayLoad)
 {
     DB_MEM_OPS(
-       serial.print("ApciMemoryWritePDU: 0x", addressStart, HEX, 4);
-       serial.print(" Data:");
-       for(int i=0; i<lengthPayLoad ; i++)
-       {
-           serial.print(" ", payLoad[i], HEX, 2);
-       }
-       serial.print(" count: ", lengthPayLoad, DEC);
+        serial.print("ApciMemoryWritePDU: 0x", addressStart, HEX, 4);
+        serial.print(" Data:");
+        for(int i=0; i<lengthPayLoad ; i++)
+        {
+            serial.print(" ", payLoad[i], HEX, 2);
+        }
+        serial.print(" count: ", lengthPayLoad, DEC);
     );
     return processApciMemoryOperation(addressStart, payLoad, lengthPayLoad, false);
 }
 
-bool BcuDefault::processApciMemoryReadPDU(int addressStart, byte *payLoad, int lengthPayLoad)
+bool BcuDefault::processApciMemoryReadPDU(int addressStart, byte* payLoad, int lengthPayLoad)
 {
     DB_MEM_OPS(
-       serial.print("ApciMemoryReadPDU : 0x", addressStart, HEX, 4);
-       serial.print(" count: ", lengthPayLoad, DEC);
+        serial.print("ApciMemoryReadPDU : 0x", addressStart, HEX, 4);
+        serial.print(" count: ", lengthPayLoad, DEC);
     );
 
     bool result = processApciMemoryOperation(addressStart, payLoad, lengthPayLoad, true);
 
     DB_MEM_OPS(
-       if (result)
-       {
-           serial.print("           result :", addressStart, HEX, 4);
-           serial.print(" Data:");
-           for(int i=0; i<lengthPayLoad ; i++)
-           {
-               serial.print(" ", payLoad[i], HEX, 2);
-           }
-           serial.println(" count: ", lengthPayLoad, DEC);
-       }
+        if (result)
+        {
+            serial.print("           result :", addressStart, HEX, 4);
+            serial.print(" Data:");
+            for(int i=0; i<lengthPayLoad ; i++)
+            {
+                serial.print(" ", payLoad[i], HEX, 2);
+            }
+            serial.println(" count: ", lengthPayLoad, DEC);
+        }
     );
     return result;
 }
 
-bool BcuDefault::processApciMemoryOperation(unsigned int addressStart, byte *payLoad, unsigned int lengthPayLoad, const bool &readMem)
+bool BcuDefault::processApciMemoryOperation(unsigned int addressStart, byte* payLoad, unsigned int lengthPayLoad, const bool& readMem)
 {
     if (lengthPayLoad == 0)
     {
@@ -290,10 +289,10 @@ bool BcuDefault::processApciMemoryOperation(unsigned int addressStart, byte *pay
     if (addressEnd < addressStart)
     {
         DB_MEM_OPS(
-                serial.print("   --> address overflow start 0x", addressStart, HEX);
-                serial.print(" end 0x", addressEnd, HEX);
-                serial.println(" lengthPayLoad ", lengthPayLoad, DEC);
-                );
+            serial.print("   --> address overflow start 0x", addressStart, HEX);
+            serial.print(" end 0x", addressEnd, HEX);
+            serial.println(" lengthPayLoad ", lengthPayLoad, DEC);
+        );
         return (false);
     }
 
@@ -436,22 +435,22 @@ bool BcuDefault::processApciMemoryOperation(unsigned int addressStart, byte *pay
     }
 
     DB_MEM_OPS(
-       if (lengthPayLoad != 0)
-       {
-           serial.print(" not found start: 0x", addressStart, HEX, 4);
-           serial.print(" end: 0x", addressEnd, HEX, 4);
-           serial.println(" lengthPayLoad:", lengthPayLoad);
-       }
-       else
-       {
-           serial.println();
-       }
+        if (lengthPayLoad != 0)
+        {
+            serial.print(" not found start: 0x", addressStart, HEX, 4);
+            serial.print(" end: 0x", addressEnd, HEX, 4);
+            serial.println(" lengthPayLoad:", lengthPayLoad);
+        }
+        else
+        {
+            serial.println();
+        }
     );
 
     return (lengthPayLoad == 0);
 }
 
-bool BcuDefault::processApci(ApciCommand apciCmd, unsigned char * telegram, uint8_t telLength, uint8_t * sendBuffer)
+bool BcuDefault::processApci(ApciCommand apciCmd, unsigned char* telegram, uint8_t telLength, uint8_t* sendBuffer)
 {
     uint8_t count;
     uint16_t address;
@@ -459,73 +458,72 @@ bool BcuDefault::processApci(ApciCommand apciCmd, unsigned char * telegram, uint
 
     switch (apciCmd)
     {
-    case APCI_ADC_READ_PDU: ///\todo implement ADC service for bus voltage and PEI,
+        case APCI_ADC_READ_PDU:         ///\todo implement ADC service for bus voltage and PEI,
                             //!> Estimation of the current bus via the AD-converter channel 1 and the AdcRead-service.
                             //!  The value read can be converted to a voltage value by using the following formula: Voltage = ADC_Value * 0,15V
-        index = telegram[7] & 0x3f;  // ADC channel
-        count = telegram[8];         // number of samples
-        sendBuffer[5] = 0x60 + 4;  // routing count in high nibble + response length in low nibble
-        setApciCommand(sendBuffer, APCI_ADC_RESPONSE_PDU, index);
-        sendBuffer[8] = count;     // read count
-        sendBuffer[9] = 0;         // ADC value high byte
-        sendBuffer[10] = 0;        // ADC value low byte
-        return (true);
+            index = telegram[7] & 0x3f; // ADC channel
+            count = telegram[8];        // number of samples
+            sendBuffer[5] = 0x60 + 4;   // routing count in high nibble + response length in low nibble
+            setApciCommand(sendBuffer, APCI_ADC_RESPONSE_PDU, index);
+            sendBuffer[8] = count; // read count
+            sendBuffer[9] = 0;     // ADC value high byte
+            sendBuffer[10] = 0;    // ADC value low byte
+            return (true);
 
-    case APCI_MEMORY_READ_PDU:
-    case APCI_MEMORY_WRITE_PDU:
-        count = telegram[7] & 0x0f; // number of data bytes
-        address = makeWord(telegram[8], telegram[9]); // address of the data block
+        case APCI_MEMORY_READ_PDU:
+        case APCI_MEMORY_WRITE_PDU:
+            count = telegram[7] & 0x0f;                   // number of data bytes
+            address = makeWord(telegram[8], telegram[9]); // address of the data block
 
-        if (apciCmd == APCI_MEMORY_WRITE_PDU)
-        {
-            if (processApciMemoryWritePDU(address, &telegram[10], count))
+            if (apciCmd == APCI_MEMORY_WRITE_PDU)
             {
-                ///\todo dirty workaround, should be done in subclasses BCU1, MASKVERSION701, MASKVERSION705...
-                if ((getMaskVersion() > 0x1F) && (userRam->deviceControl() & DEVCTRL_MEM_AUTO_RESPONSE))
+                if (processApciMemoryWritePDU(address, &telegram[10], count))
                 {
-                    // autorespond only on successful write
-                    apciCmd = APCI_MEMORY_READ_PDU;
+                    ///\todo dirty workaround, should be done in subclasses BCU1, MASKVERSION701, MASKVERSION705...
+                    if ((getMaskVersion() > 0x1F) && (userRam->deviceControl() & DEVCTRL_MEM_AUTO_RESPONSE))
+                    {
+                        // autorespond only on successful write
+                        apciCmd = APCI_MEMORY_READ_PDU;
+                    }
                 }
             }
-        }
 
-        if (apciCmd == APCI_MEMORY_READ_PDU)
-        {
-            if (!processApciMemoryReadPDU(address, &sendBuffer[10], count))
+            if (apciCmd == APCI_MEMORY_READ_PDU)
             {
-                // address space unreachable, need to respond with count 0
-                count = 0;
+                if (!processApciMemoryReadPDU(address, &sendBuffer[10], count))
+                {
+                    // address space unreachable, need to respond with count 0
+                    count = 0;
+                }
+
+                // send a APCI_MEMORY_RESPONSE_PDU response
+                sendBuffer[5] = 0x60 + count + 3; // routing count in high nibble + response length in low nibble
+                setApciCommand(sendBuffer, APCI_MEMORY_RESPONSE_PDU, count);
+                sendBuffer[8] = HIGH_BYTE(address);
+                sendBuffer[9] = lowByte(address);
+                return (true);
             }
+            break;
 
-            // send a APCI_MEMORY_RESPONSE_PDU response
-            sendBuffer[5] = 0x60 + count + 3; // routing count in high nibble + response length in low nibble
-            setApciCommand(sendBuffer, APCI_MEMORY_RESPONSE_PDU, count);
-            sendBuffer[8] = HIGH_BYTE(address);
-            sendBuffer[9] = lowByte(address);
+        case APCI_DEVICEDESCRIPTOR_READ_PDU:
+            return (processDeviceDescriptorReadTelegram(sendBuffer, telegram[7] & 0x3f));
+
+        case APCI_MASTER_RESET_PDU:
+            return (processApciMasterResetPDU(sendBuffer, telegram[8], telegram[9]));
+
+        case APCI_AUTHORIZE_REQUEST_PDU:
+            sendBuffer[5] = 0x60 + 2; // routing count in high nibble + response length in low nibble
+            setApciCommand(sendBuffer, APCI_AUTHORIZE_RESPONSE_PDU, 0);
+            sendBuffer[8] = 0x00;
             return (true);
-        }
-        break;
 
-    case APCI_DEVICEDESCRIPTOR_READ_PDU:
-        return (processDeviceDescriptorReadTelegram(sendBuffer, telegram[7] & 0x3f));
-
-    case APCI_MASTER_RESET_PDU:
-        return (processApciMasterResetPDU(sendBuffer, telegram[8], telegram[9]));
-
-    case APCI_AUTHORIZE_REQUEST_PDU:
-        sendBuffer[5] = 0x60 + 2; // routing count in high nibble + response length in low nibble
-        setApciCommand(sendBuffer, APCI_AUTHORIZE_RESPONSE_PDU, 0);
-        sendBuffer[8] = 0x00;
-        return (true);
-
-    default:
-        return (BcuBase::processApci(apciCmd, telegram, telLength, sendBuffer));
-
+        default:
+            return (BcuBase::processApci(apciCmd, telegram, telLength, sendBuffer));
     }
     return (false);
 }
 
-bool BcuDefault::processDeviceDescriptorReadTelegram(uint8_t * sendBuffer, int id)
+bool BcuDefault::processDeviceDescriptorReadTelegram(uint8_t* sendBuffer, int id)
 {
     if (id != 0)
     {
@@ -539,7 +537,7 @@ bool BcuDefault::processDeviceDescriptorReadTelegram(uint8_t * sendBuffer, int i
     return (true);
 }
 
-bool BcuDefault::processApciMasterResetPDU(uint8_t * sendBuffer, uint8_t eraseCode, uint8_t channelNumber)
+bool BcuDefault::processApciMasterResetPDU(uint8_t* sendBuffer, uint8_t eraseCode, uint8_t channelNumber)
 {
     RestartPDUErrorcode errorCode;
     RestartType restartType;
@@ -568,7 +566,7 @@ bool BcuDefault::processApciMasterResetPDU(uint8_t * sendBuffer, uint8_t eraseCo
     auto seconds = (errorCode == T_RESTART_NO_ERROR) ? 1 : 0; // 1 second or error
 
     // create the APCI_MASTER_RESET_RESPONSE_PDU
-    sendBuffer[5] = 0x60 + 4;  // routing count in high nibble + response length in low nibble
+    sendBuffer[5] = 0x60 + 4; // routing count in high nibble + response length in low nibble
     setApciCommand(sendBuffer, APCI_MASTER_RESET_RESPONSE_PDU, 0);
     sendBuffer[8] = errorCode;
     sendBuffer[9] = 0; // restart process time 2 byte unsigned integer value expressed in seconds, DPT_TimePeriodSec / DPT7.005

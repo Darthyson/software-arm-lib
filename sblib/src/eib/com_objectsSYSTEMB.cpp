@@ -15,7 +15,7 @@ int ComObjectsSYSTEMB::objectSize(int objno)
 {
     // KNX spec v2.1 3/5/1 p. 178 (section 4.12.5.2.4.1.4)
     // The size of the object types 6...20 in bytes
-    const byte objectTypeSizes[15] = { 1, 1, 2, 3, 4, 6, 8, 10, 14, 5, 7, 9, 11, 12, 13 };
+    const byte objectTypeSizes[15] = {1, 1, 2, 3, 4, 6, 8, 10, 14, 5, 7, 9, 11, 12, 13};
 
     int type = objectType(objno);
     if (type < BIT_7)
@@ -23,7 +23,7 @@ int ComObjectsSYSTEMB::objectSize(int objno)
     if (type < 21)
         return objectTypeSizes[type - BIT_7];
     if (type < 255)
-        return (type -6);
+        return (type - 6);
     return 252;
 }
 
@@ -58,24 +58,25 @@ void ComObjectsSYSTEMB::processGroupTelegram(uint16_t addr, int apci, byte* tel,
     //
     const ComConfig* configTab = &objectConfig(0);
     const byte* assocTab = bcu->addrTables->assocTable();
-    const int endAssoc = 2 +  makeWord(assocTab[0], assocTab[1]) * 4;   // length field has 2 octets and each entry has 4 octets on SYSTEM B
+    const int endAssoc = 2 + makeWord(assocTab[0], assocTab[1]) * 4; // length field has 2 octets and each entry has 4 octets on SYSTEM B
     int objno, objConf;
 
     // Convert the group address into the index into the group address table
     const int gapos = bcu->addrTables->indexOfAddr(addr);
-    if (gapos < 0) return;
+    if (gapos < 0)
+        return;
 
     // Loop over all entries in the association table, as one group address
     // could be assigned to multiple com-objects.
     for (int idx = 2; idx < endAssoc; idx += 4)
     {
         // Check if grp-address index in assoc table matches the dest grp address index
-        int gadest = makeWord(assocTab[idx], assocTab[idx +1]); // get destination group address index
+        int gadest = makeWord(assocTab[idx], assocTab[idx + 1]); // get destination group address index
         if (gapos == gadest) // We found an association for our addr
         {
-            objno = makeWord(assocTab[idx +2], assocTab[idx +3]);  // Get the com-object number from the assoc table
+            objno = makeWord(assocTab[idx + 2], assocTab[idx + 3]); // Get the com-object number from the assoc table
             if (objno == trg_objno)
-                 continue; // no update of the object triggered by the app
+                continue; // no update of the object triggered by the app
 
             objConf = configTab[objno].config;
 
@@ -89,7 +90,7 @@ void ComObjectsSYSTEMB::processGroupTelegram(uint16_t addr, int apci, byte* tel,
             {
                 // Check if communication and read are enabled
                 if ((objConf & COMCONF_READ_COMM) == COMCONF_READ_COMM)
-                       // we received read-request from bus - so send response back and search for more associations
+                    // we received read-request from bus - so send response back and search for more associations
                     sendGroupWriteTelegram(objno, addr, true);
             }
         }
@@ -98,14 +99,14 @@ void ComObjectsSYSTEMB::processGroupTelegram(uint16_t addr, int apci, byte* tel,
 
 byte* ComObjectsSYSTEMB::objectConfigTable()
 {
-    byte * addr = (byte* ) & ((SYSTEMB*)bcu)->userEeprom->commsTabAddr();
-    return ((BcuDefault*)bcu)->userMemoryPtr (makeWord (*(addr + 1), * addr));
+    byte* addr = (byte*) &((SYSTEMB*)bcu)->userEeprom->commsTabAddr();
+    return ((BcuDefault*)bcu)->userMemoryPtr(makeWord(*(addr + 1), *addr));
 }
 
 byte* ComObjectsSYSTEMB::objectFlagsTable()
 {
     const byte* configTable = objectConfigTable();
-    if(le_ptr == LITTLE_ENDIAN)
+    if (le_ptr == LITTLE_ENDIAN)
         return ((BcuDefault*)bcu)->userMemoryPtr(makeWord(configTable[2], configTable[1]));
 
     return ((BcuDefault*)bcu)->userMemoryPtr(makeWord(configTable[1], configTable[2]));
@@ -113,5 +114,5 @@ byte* ComObjectsSYSTEMB::objectFlagsTable()
 
 inline const ComConfig& ComObjectsSYSTEMB::objectConfig(int objno)
 {
-    return (*(const ComConfigSYSTEMB*) (objectConfigTable() + 2 + (objno -1) * sizeof(ComConfigSYSTEMB) )).baseConfig;
+    return (*(const ComConfigSYSTEMB*) (objectConfigTable() + 2 + (objno - 1) * sizeof(ComConfigSYSTEMB))).baseConfig;
 }

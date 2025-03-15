@@ -36,7 +36,8 @@ int Stream::parseInt(char skipChar)
         ch = timedPeek();
     }
 
-    if (negative) return -value;
+    if (negative)
+        return -value;
     return value;
 }
 
@@ -69,7 +70,8 @@ bool Stream::findUntil(const char* target, int targetLen, const char* terminator
             if (++targetIdx >= targetLen)
                 return true;
         }
-        else targetIdx = 0;
+        else
+            targetIdx = 0;
 
         if (termLen > 0)
         {
@@ -78,7 +80,8 @@ bool Stream::findUntil(const char* target, int targetLen, const char* terminator
                 if (++termIdx >= termLen)
                     return false;
             }
-            else termIdx = 0;
+            else
+                termIdx = 0;
         }
     }
 
@@ -117,10 +120,13 @@ int Stream::peekNextDigit()
     while (true)
     {
         ch = timedPeek();
-        if (ch < 0) break; // timeout
+        if (ch < 0)
+            break; // timeout
 
-        if (ch == '-') break;
-        if (ch >= '0' && ch <= '9') break;
+        if (ch == '-')
+            break;
+        if (ch >= '0' && ch <= '9')
+            break;
 
         read(); // discard non-numeric characters
     }

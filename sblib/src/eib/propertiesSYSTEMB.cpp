@@ -32,19 +32,19 @@
  */
 LoadState PropertiesSYSTEMB::handleAllocAbsDataSegment(const int objectIdx, const byte* payLoad, const int len)
 {
-/*
- *  from KNX Spec. 06 Profiles 4.2.9 RAM cleared
- *  RAM to be cleared by the Management Client during download of an application program:
- *
- *  0x00CE-0x00DF   BCU1, RAM
- *
- *  0x00BD-0x00DF   BCU2, Zero-Page-RAM
- *  0x0972-0x0989   BCU2, High RAM
- *
- *  0x0700-0x????   BIM112, RAM
- *
- *  //XXX sblib ignores this
- */
+    /*
+     *  from KNX Spec. 06 Profiles 4.2.9 RAM cleared
+     *  RAM to be cleared by the Management Client during download of an application program:
+     *
+     *  0x00CE-0x00DF   BCU1, RAM
+     *
+     *  0x00BD-0x00DF   BCU2, Zero-Page-RAM
+     *  0x0972-0x0989   BCU2, High RAM
+     *
+     *  0x0700-0x????   BIM112, RAM
+     *
+     *  //XXX sblib ignores this
+     */
 
     // payLoad[0..1] : start address        (SSSS)
     // payLoad[2..3] : length (LLLL)        (EEEE-SSSS+1) --> EEEE = SSSS+LLLL-1 // KNX Spec not really clear about that
@@ -59,18 +59,18 @@ LoadState PropertiesSYSTEMB::handleAllocAbsDataSegment(const int objectIdx, cons
     MemoryType memType = MemoryType(payLoad[5] & 0x07); // take only bits 0..2
 
     DB_PROPERTIES(
-            serial.print("handleAllocAbsDataSegment only partly implemented! ");
-            printObjectIdx(objectIdx);
-            serial.print(" ");
-            printData(payLoad, len);
-            serial.println();
-            serial.print("  --> start: 0x", absDataSegmentStartAddress, HEX, 4);
-            serial.print(" length: 0x", absDataSegmentLength, HEX, 4);
-            serial.print(" end: 0x", absDataSegmentEndAddress, HEX, 4);
-            serial.print(" access: 0x", payLoad[4], HEX, 2);
-            serial.print(" memtype: 0x", payLoad[5], HEX, 2);
-            serial.print(" checksum: ", ((payLoad[6] & 0x80) >> 7), DEC, 1);
-            serial.println(" attrib: 0x", (payLoad[6]), HEX, 2);
+        serial.print("handleAllocAbsDataSegment only partly implemented! ");
+        printObjectIdx(objectIdx);
+        serial.print(" ");
+        printData(payLoad, len);
+        serial.println();
+        serial.print("  --> start: 0x", absDataSegmentStartAddress, HEX, 4);
+        serial.print(" length: 0x", absDataSegmentLength, HEX, 4);
+        serial.print(" end: 0x", absDataSegmentEndAddress, HEX, 4);
+        serial.print(" access: 0x", payLoad[4], HEX, 2);
+        serial.print(" memtype: 0x", payLoad[5], HEX, 2);
+        serial.print(" checksum: ", ((payLoad[6] & 0x80) >> 7), DEC, 1);
+        serial.println(" attrib: 0x", (payLoad[6]), HEX, 2);
     );
 
     bool memStartValid = false;
@@ -93,8 +93,8 @@ LoadState PropertiesSYSTEMB::handleAllocAbsDataSegment(const int objectIdx, cons
             memEndValid |= bcu->userEeprom->inRange(absDataSegmentEndAddress);
             // check against MemMapper
             MemMapper* bcuMemMapper = bcu->getMemMapper();
-            memStartValid |=  (bcuMemMapper != nullptr) && (bcuMemMapper->isMapped(absDataSegmentStartAddress));
-            memEndValid |=  (bcuMemMapper != nullptr) && (bcuMemMapper->isMapped(absDataSegmentEndAddress));
+            memStartValid |= (bcuMemMapper != nullptr) && (bcuMemMapper->isMapped(absDataSegmentStartAddress));
+            memEndValid |= (bcuMemMapper != nullptr) && (bcuMemMapper->isMapped(absDataSegmentEndAddress));
 
             newLoadState = LS_LOADING;
             break;
@@ -108,12 +108,12 @@ LoadState PropertiesSYSTEMB::handleAllocAbsDataSegment(const int objectIdx, cons
 
     if (!memStartValid)
     {
-        DB_PROPERTIES(serial.println("  ------> invalid start: 0x", absDataSegmentStartAddress, HEX, 4);serial.println(););
+        DB_PROPERTIES(serial.println("  ------> invalid start: 0x", absDataSegmentStartAddress, HEX, 4); serial.println(););
         newLoadState = LS_ERROR;
     }
-    if ( !memEndValid)
+    if (!memEndValid)
     {
-        DB_PROPERTIES(serial.println("  ------> invalid end: 0x", absDataSegmentEndAddress, HEX, 4);serial.println(););
+        DB_PROPERTIES(serial.println("  ------> invalid end: 0x", absDataSegmentEndAddress, HEX, 4); serial.println(););
         newLoadState = LS_ERROR;
     }
     DB_PROPERTIES(serial.println(););
@@ -140,34 +140,38 @@ LoadState PropertiesSYSTEMB::handleDataRelativeAllocation(const int objectIdx, c
     // payLoad[5]    : fill (0x00)
     // payLoad[6..7] : reserved
     DB_PROPERTIES(
-            serial.print("handleDataRelativeAllocation PARTIALLY IMPLEMENTED for System_B! ");
-            printObjectIdx(objectIdx);
-            serial.print(" ");
-            printData(payLoad, len);
-            serial.println();
-            serial.print("  --> requested memory size: 0x", ((payLoad[0] << 24) | (payLoad[1] << 16) | (payLoad[2] << 8) | payLoad[3]), HEX, 8);
-            serial.print(" mode: 0x", payLoad[4], HEX, 2);
-            serial.println(" fill: 0x", payLoad[5], HEX, 2);
-            serial.println();
+        serial.print("handleDataRelativeAllocation PARTIALLY IMPLEMENTED for System_B! ");
+        printObjectIdx(objectIdx);
+        serial.print(" ");
+        printData(payLoad, len);
+        serial.println();
+        serial.print("  --> requested memory size: 0x", ((payLoad[0] << 24) | (payLoad[1] << 16) | (payLoad[2] << 8) | payLoad[3]), HEX, 8);
+        serial.print(" mode: 0x", payLoad[4], HEX, 2);
+        serial.println(" fill: 0x", payLoad[5], HEX, 2);
+        serial.println();
     );
 
     unsigned int reqMemSize = ((payLoad[0] << 24) | (payLoad[1] << 16) | (payLoad[2] << 8) | payLoad[3]);
-    word*    tableAddress[] = {&bcu->userEeprom->addrTabAddr(), &bcu->userEeprom->assocTabAddr(), &bcu->userEeprom->commsTabAddr(),
-                           &bcu->userEeprom->eibObjAddr(), &bcu->userEeprom->commsSeg0Addr()};
+    word* tableAddress[] = {
+        &bcu->userEeprom->addrTabAddr(), &bcu->userEeprom->assocTabAddr(), &bcu->userEeprom->commsTabAddr(),
+        &bcu->userEeprom->eibObjAddr(), &bcu->userEeprom->commsSeg0Addr()
+    };
 
-    UserEepromSYSTEMB* userEeprom = (UserEepromSYSTEMB*) bcu->userEeprom;
+    UserEepromSYSTEMB* userEeprom = (UserEepromSYSTEMB*)bcu->userEeprom;
 
-    byte* tableSize[] = {&userEeprom->addrTabMcb()[0], &userEeprom->assocTabMcb()[0], &userEeprom->commsTabMcb()[0],
-                         &userEeprom->eibObjMcb()[0], &userEeprom->commsSeg0Mcb()[0]};
+    byte* tableSize[] = {
+        &userEeprom->addrTabMcb()[0], &userEeprom->assocTabMcb()[0], &userEeprom->commsTabMcb()[0],
+        &userEeprom->eibObjMcb()[0], &userEeprom->commsSeg0Mcb()[0]
+    };
 
     word virtMemAddr = 0x3A9E; ///\todo get rid of magic number USER_EEPROM_START + USER_EEPROM_SIZE
     for (int i = 0; i < 5; i++)
     {
         if ((*tableAddress[i] != 0) && (*tableAddress[i] < virtMemAddr))
-        virtMemAddr = *tableAddress[i];
+            virtMemAddr = *tableAddress[i];
     }
-    *tableAddress[objectIdx -1] = virtMemAddr - reqMemSize;
-    byte* tabSiz = tableSize[objectIdx -1];
+    *tableAddress[objectIdx - 1] = virtMemAddr - reqMemSize;
+    byte* tabSiz = tableSize[objectIdx - 1];
     tabSiz[0] = payLoad[0];
     tabSiz[1] = payLoad[1];
     tabSiz[2] = payLoad[2];
@@ -187,24 +191,25 @@ LoadState PropertiesSYSTEMB::handleDataRelativeAllocation(const int objectIdx, c
 
 uint16_t PropertiesSYSTEMB::crc16(uint8_t* ptr, int len)
 {
-  //int len = 9;
-  //uint8_t data[] = {0x31, 0x32, 0x33, 0x34, 0x35, 0x36, 0x37, 0x38,  0x39};
-  //uint8_t* ptr = &data[0];
+    //int len = 9;
+    //uint8_t data[] = {0x31, 0x32, 0x33, 0x34, 0x35, 0x36, 0x37, 0x38,  0x39};
+    //uint8_t* ptr = &data[0];
     char i;
     uint16_t crc = 0x1D0F;
     while (--len >= 0)
     {
-       crc = crc ^ (uint16_t) *ptr++ << 8;
-       i = 8;
-       do
-       {
-          if (crc & 0x8000)
-             crc = crc << 1 ^ 0x1021;
-          else
-             crc = crc << 1;
-       } while(--i);
+        crc = crc ^ (uint16_t)*ptr++ << 8;
+        i = 8;
+        do
+        {
+            if (crc & 0x8000)
+                crc = crc << 1 ^ 0x1021;
+            else
+                crc = crc << 1;
+        }
+        while (--i);
     }
-  return crc;
+    return crc;
 }
 
 int PropertiesSYSTEMB::loadProperty(int objectIdx, const byte* data, int len)
@@ -217,7 +222,7 @@ int PropertiesSYSTEMB::loadProperty(int objectIdx, const byte* data, int len)
     // DMP_LoadStateMachineWrite_RCo_Mem length of data must be 11 (APCI_MEMORY_WRITE_PDU) See KNX Spec. 3/5/2 3.28.2 p.109  (deprecated)
     if ((len > DMP_LOADSTATE_MACHINE_WRITE_RCO_MEM_LENGTH) || (len < DMP_LOADSTATE_MACHINE_WRITE_RCO_IO_LENGTH))
     {
-        DB_PROPERTIES(serial.print("loadProperty: "); printObjectIdx(objectIdx); serial.print(" invalid ");printData(data, len););
+        DB_PROPERTIES(serial.print("loadProperty: "); printObjectIdx(objectIdx); serial.print(" invalid "); printData(data, len););
         return LS_ERROR;
     }
 
@@ -272,21 +277,21 @@ int PropertiesSYSTEMB::loadProperty(int objectIdx, const byte* data, int len)
         payloadOffset = DMP_LOADSTATE_MACHINE_WRITE_RCO_MEM_PAYLOAD_OFFSET; // offset for RCo_Mem mode, where the real data for Additional Load Controls starts
 
 
-    const byte *payload  = data + payloadOffset; // "move" to start of payload data
-    len -= payloadOffset; // reduce len by payloadOffset
+    const byte* payload = data + payloadOffset; // "move" to start of payload data
+    len -= payloadOffset;                       // reduce len by payloadOffset
 
     switch (segmentType)
     {
-        case ST_ALLOC_ABS_DATA_SEG:  // Allocate absolute code/data segment (LdCtrlAbsSegment)
+        case ST_ALLOC_ABS_DATA_SEG: // Allocate absolute code/data segment (LdCtrlAbsSegment)
             return handleAllocAbsDataSegment(objectIdx, payload, len);
 
-        case ST_ALLOC_ABS_STACK_SEG:  // ignored, Allocate absolute stack segment
+        case ST_ALLOC_ABS_STACK_SEG: // ignored, Allocate absolute stack segment
             return handleAllocAbsStackSeg(objectIdx, payload, len);
 
-        case ST_ALLOC_ABS_TASK_SEG:  // Segment control record (LdCtrlTaskSegment)
+        case ST_ALLOC_ABS_TASK_SEG: // Segment control record (LdCtrlTaskSegment)
             return handleAllocAbsTaskSegment(objectIdx, payload, len);
 
-        case ST_TASK_PTR:  // Task pointer (ignored)
+        case ST_TASK_PTR: // Task pointer (ignored)
             return handleTaskPtr(objectIdx, payload, len);
 
         case ST_RELATIVE_ALLOCATION: // relative allocation
@@ -303,19 +308,21 @@ int PropertiesSYSTEMB::loadProperty(int objectIdx, const byte* data, int len)
     return LS_LOADING;
 }
 
-bool PropertiesSYSTEMB::propertyValueReadTelegram(int objectIdx, PropertyID propertyId, int count, int start, uint8_t * sendBuffer)
+bool PropertiesSYSTEMB::propertyValueReadTelegram(int objectIdx, PropertyID propertyId, int count, int start, uint8_t* sendBuffer)
 {
     // IF_DUMP_PROPERTIES(serial.print("propertyValueReadTelegram: "); printObjectIdx(objectIdx); serial.print(" "); printPropertyID(propertyId);serial.println(););
     const PropertyDef* def = propertyDef(objectIdx, propertyId);
-    if (!def) return false; // not found
+    if (!def)
+        return false; // not found
 
-    PropertyDataType type = (PropertyDataType) (def->control & PC_TYPE_MASK);
+    PropertyDataType type = (PropertyDataType)(def->control & PC_TYPE_MASK);
     byte* valuePtr = def->valuePointer(bcu);
 
     --start;
     int size = def->size();
     int len = count * size;
-    if(len > 12) return false; // length error
+    if (len > 12)
+        return false; // length error
 
     if (type < PDT_CHAR_BLOCK)
     {
@@ -329,14 +336,15 @@ bool PropertiesSYSTEMB::propertyValueReadTelegram(int objectIdx, PropertyID prop
         else
             reverseCopy(sendBuffer + 12, valuePtr + start * size, len);
     }
-    else memcpy(sendBuffer + 12, valuePtr + start * size, len);
+    else
+        memcpy(sendBuffer + 12, valuePtr + start * size, len);
 
     sendBuffer[5] += len;
 
     return true;
 }
 
-bool PropertiesSYSTEMB::propertyValueWriteTelegram(int objectIdx, PropertyID propertyId, int count, int start, uint8_t * sendBuffer)
+bool PropertiesSYSTEMB::propertyValueWriteTelegram(int objectIdx, PropertyID propertyId, int count, int start, uint8_t* sendBuffer)
 {
     const PropertyDef* def = propertyDef(objectIdx, propertyId);
     if (!def)
@@ -367,7 +375,7 @@ bool PropertiesSYSTEMB::propertyValueWriteTelegram(int objectIdx, PropertyID pro
         --start;
         int size = def->size();
         len = count * size;
-        DB_PROPERTIES(serial.print("propertyValueWriteTelegram: "); printObjectIdx(objectIdx); serial.print(" "); printPropertyID(propertyId);serial.println(););
+        DB_PROPERTIES(serial.print("propertyValueWriteTelegram: "); printObjectIdx(objectIdx); serial.print(" "); printPropertyID(propertyId); serial.println(););
         if (propertyId == PID_MCB_TABLE)
         {
             memcpy(valuePtr + start * size, data, len);

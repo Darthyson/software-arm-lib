@@ -47,13 +47,13 @@ bool IAQcoreClass::Init(void)
 **
 ** Descriptions:   Get all values from the IAQ core sensor
 **
-** parameters:         CO2eq:         Prediction (CO2 eq. ppm)
+** parameters:         CO2eq:      Prediction (CO2 eq. ppm)
 **                     status:     0x00: OK    (data valid)
-**                                0x10: RUNIN (module in warm up phase)
-**                                0x01: BUSY (re-read multi byte data!)
-**                                0x80: ERROR (if constant: replace sensor)
+**                                 0x10: RUNIN (module in warm up phase)
+**                                 0x01: BUSY (re-read multi byte data!)
+**                                 0x80: ERROR (if constant: replace sensor)
 **                     resistance: Sensor resistance [Ohm]
-**                     Tvoc:        Prediction (TVOC eq. ppb)
+**                     Tvoc:       Prediction (TVOC eq. ppb)
 **
 ** Returned value: true on success, false on failure
 **

@@ -14,5 +14,5 @@ SYSTEMB::SYSTEMB() : SYSTEMB(new UserRamSYSTEMB(), new UserEepromSYSTEMB(), new 
 {}
 
 SYSTEMB::SYSTEMB(UserRamSYSTEMB* userRam, UserEepromSYSTEMB* userEeprom, ComObjectsSYSTEMB* comObjects, AddrTablesSYSTEMB* addrTables, PropertiesSYSTEMB* properties) :
-         MASK0701(userRam, userEeprom, comObjects, addrTables, properties)
+    MASK0701(userRam, userEeprom, comObjects, addrTables, properties)
 {}

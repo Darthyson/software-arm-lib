@@ -34,7 +34,8 @@ int BufferedStream::peek()
 int BufferedStream::available()
 {
     int num = readTail - readHead;
-    if (num < 0) num += BufferedStream::BUFFER_SIZE;
+    if (num < 0)
+        num += BufferedStream::BUFFER_SIZE;
 
     return num;
 }

@@ -87,20 +87,19 @@
 #define CMD_ADV_CONTROL       0xfa
 
 
-
 LcdGraphicalEADOGS::LcdGraphicalEADOGS(int spiPort, int pinData, int pinClock, int pinCD, int pinCS,
-    const Font& fnt)
-:LcdGraphical(fnt, DISPLAY_WIDTH, DISPLAY_HEIGHT)
-,spi(spiPort)
-,pinCD(pinCD)
-,pinCS(pinCS)
+                                       const Font& fnt)
+    : LcdGraphical(fnt, DISPLAY_WIDTH, DISPLAY_HEIGHT)
+      , spi(spiPort)
+      , pinCD(pinCD)
+      , pinCS(pinCS)
 {
-    pinMode(pinData,  OUTPUT | SPI_MOSI);
+    pinMode(pinData, OUTPUT | SPI_MOSI);
     pinMode(pinClock, OUTPUT | SPI_CLOCK);
     pinMode(pinCD, OUTPUT);
 
     if (pinCS)
-        pinMode(pinCS,  OUTPUT | SPI_SSEL);
+        pinMode(pinCS, OUTPUT | SPI_SSEL);
 }
 
 void LcdGraphicalEADOGS::begin()
@@ -121,7 +120,7 @@ void LcdGraphicalEADOGS::begin()
     spi.transfer(CMD_CONTRAST);
     spi.transfer(0x10); // the contrast value
     spi.transfer(CMD_ADV_CONTROL);
-    spi.transfer(0x90);  // temperature compensation -0.11% / °C
+    spi.transfer(0x90); // temperature compensation -0.11% / °C
     spi.transfer(CMD_ENABLE);
 
     // --- BEGIN TEST CODE
