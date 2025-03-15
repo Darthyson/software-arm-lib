@@ -164,7 +164,7 @@ public:
      * to low. After the transfer, the slave select pin is deactivated (pulled high).
      * This is the same as calling transfer with the transfer mode SPI_LAST.
      *
-     * @param val - the byte to transfer.
+     * @param value - the byte to transfer.
      *
      * @return The received byte
      */

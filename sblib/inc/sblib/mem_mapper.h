@@ -167,7 +167,7 @@ public:
     /**
      * Access the user EEPROM as a pointer
      *
-     * @param virtAddresss - the virtual address of the data block.
+     * @param virtAddress - the virtual address of the data block.
      * @param forceFlash - force pending data to be flashed before operation
      * @return a pointer to the desired data
      */
@@ -176,7 +176,7 @@ public:
     /**
      * Query about mapping
      *
-     * @param virtAddresss - the virtual address of the data block.
+     * @param virtAddress - the virtual address of the data block.
      * @return true if virtual address is mapped
      */
     virtual bool isMapped(int virtAddress);

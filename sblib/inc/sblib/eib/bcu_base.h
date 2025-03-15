@@ -102,7 +102,7 @@ protected:
     /**
      * @brief Set or unset the programming mode of the bcu
      *
-     * @param  new programming button state
+     * @param  newMode programming button state
      * @return true if successful, otherwise false
      */
     bool setProgrammingMode(bool newMode);

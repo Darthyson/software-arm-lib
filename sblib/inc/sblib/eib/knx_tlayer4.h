@@ -186,12 +186,15 @@ private:
     bool setTL4State(TLayer4::TL4State newState);
 
     /**
-     * Process a unicast connection control telegram with our physical address as
+     * Process an unicast connection control telegram with our physical address as
      * destination address. The telegram is stored in sbRecvTelegram[].
      *
      * When this function is called, the sender address is != 0 (not a broadcast).
      *
-     * @param tpci - the transport control field
+     * @param senderAddr The address of the sender that sent the telegram.
+     * @param tpci       The transport control field.
+     * @param telegram   Pointer to the telegram data.
+     * @param telLength  The length of the telegram in bytes.
      */
     void processConControlTelegram(const uint16_t& senderAddr, const TPDU& tpci, unsigned char* telegram, const uint8_t& telLength);
 
@@ -217,19 +220,23 @@ private:
      * @brief Process a TP Layer 4 @ref T_ACK_PDU and @ref T_NACK_PDU
      * @details T_ACK-PDU & T_NAK-PDU see KNX Spec. 2.1 3/3/4 page 6
      *
-     * @param senderAddr physical KNX address of the sender
-     * @param tpci the TPCI to process
+     * @param senderAddr Physical KNX address of the sender.
+     * @param tpci       The TPCI to process.
+     * @param telegram   Pointer to the telegram data.
+     * @param telLength  The length of the telegram in bytes.
      * @return true if successful, otherwise false
      */
     bool processConControlAcknowledgmentPDU(uint16_t senderAddr, const TPDU& tpci, unsigned char* telegram, uint8_t telLength);
 
     /**
-     * Process a unicast telegram with our physical address as destination address.
+     * Process an unicast telegram with our physical address as destination address.
      * The telegram is stored in sbRecvTelegram[].
      *
      * When this function is called, the sender address is != 0 (not a broadcast).
      *
-     * @param apciCmd - The application control field command (APCI)
+     * @param apciCmd    The application control field command (APCI).
+     * @param telegram   Pointer to the telegram data.
+     * @param telLength  The length of the telegram in bytes.
      */
     void processDirectTelegram(ApciCommand apciCmd, unsigned char* telegram, uint8_t telLength);
 
@@ -245,7 +252,7 @@ private:
 
     /**
      * Performs action A3 as described in the KNX Spec. 2.1 3/3/4 5.3 p.19
-     * @param seqNo Sequence number the T_ACK should be send with
+     * @param seqNo Sequence number the T_ACK should be sent with
      */
     void actionA03sendAckPduAgain(const int8_t seqNo);
 
