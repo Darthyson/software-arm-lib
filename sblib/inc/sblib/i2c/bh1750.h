@@ -13,11 +13,13 @@
   Ported to selfbus by Mario Theodoridis on May 26 2021
 
 */
+
+#ifndef SB_LIB_BH1750_H
+#define SB_LIB_BH1750_H
+
 #include <sblib/core.h>
 #include <sblib/i2c.h>
 
-#ifndef BH1750_h
-#define BH1750_h
 // FIXME: Logging should really be somewhere else higher up
 #ifdef LOGGING
 #include "log/logger.h"
@@ -83,4 +85,4 @@ private:
     unsigned long lastReadTimestamp;
 };
 
-#endif
+#endif /* SB_LIB_BH1750_H */
