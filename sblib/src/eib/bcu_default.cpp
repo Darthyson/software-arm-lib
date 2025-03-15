@@ -44,9 +44,7 @@ void BcuDefault::_begin()
 #endif
 
 #if defined(INCLUDE_SERIAL)
-    IF_DEBUG(serial.print("BCU Name: "););
-    IF_DEBUG(serial.print(getBcuType()); serial.print(" "););
-    IF_DEBUG(serial.println(" MaskVersion: 0x", getMaskVersion(), HEX, 4));
+    IF_DEBUG(serial.println("BCU MaskVersion: 0x", getMaskVersion(), HEX, 4));
 #   ifdef LOAD_CONTROL_ADDR
         IF_DEBUG(serial.println("LOAD_CONTROL_ADDR: 0x", LOAD_CONTROL_ADDR, HEX, 4));
 #   endif

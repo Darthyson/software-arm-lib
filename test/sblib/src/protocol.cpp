@@ -309,7 +309,7 @@ void executeTestOnBcu(BcuDefault* currentBcu, Test_Case * tc)
 {
     bcuUnderTest = currentBcu;
     char msg[1025];
-    snprintf(msg, sizeof(msg)-1, "Running test on %s mask 0x%04x", currentBcu->getBcuType(), currentBcu->getMaskVersion());
+    snprintf(msg, sizeof(msg)-1, "Running test on BCU mask 0x%04x", currentBcu->getMaskVersion());
     INFO(msg);
 
     Telegram * tel;

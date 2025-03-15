@@ -33,7 +33,6 @@ public:
     SYSTEMB(UserRamSYSTEMB* userRam, UserEepromSYSTEMB* userEeprom, ComObjectsSYSTEMB* comObjects, AddrTablesSYSTEMB* addrTables,
             PropertiesSYSTEMB* properties);
 
-    const char* getBcuType() const override { return "SYSTEM_B"; }
     uint16_t getMaskVersion() const override { return 0x7B0; }
 
 protected:

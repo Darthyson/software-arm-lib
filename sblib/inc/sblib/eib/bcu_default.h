@@ -46,8 +46,6 @@ public:
      */
     virtual uint16_t getMaskVersion() const = 0;
 
-    virtual const char* getBcuType() const = 0;
-
     /**
      * The BCU's main processing loop. This is like the application's loop() function,
      * and is called automatically by main() when the BCU is activated with bcu.begin().
