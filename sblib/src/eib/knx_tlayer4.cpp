@@ -589,7 +589,8 @@ uint8_t* TLayer4::acquireSendBuffer()
 {
     // Someone wants to write into the shared @ref sendTelegram buffer. Wait until the current
     // telegram in it is sent.
-    while (sendTelegramBufferState != TELEGRAM_FREE);
+    while (sendTelegramBufferState != TELEGRAM_FREE)
+        ;
 
     // Then allocate it for the caller.
     sendTelegramBufferState = TELEGRAM_ACQUIRED;

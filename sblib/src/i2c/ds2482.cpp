@@ -136,7 +136,7 @@ void OneWireDS2482::clearActivePullup() {
 
 // Churn until the busy bit in the status register is clear
 uint8_t OneWireDS2482::waitOnBusy() {
-    uint8_t status;
+    uint8_t status = DS2482_ERROR_TIMEOUT;
 
     for (int i = 1000; i > 0; i--) {
         status = readStatus();

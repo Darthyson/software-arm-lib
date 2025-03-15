@@ -173,9 +173,8 @@ ALWAYS_INLINE bool getInterruptEnabled(IRQn_Type interruptType)
     {
         return ((NVIC->ICER[0] >> (interruptType & 0x1f)) == 1);
     }
-    else
-    {
-        fatalError();
-    }
+
+    fatalError();
+    return false; // Just here to make the linter happy
 }
 #endif /*sblib_interrupt_h*/
