@@ -228,7 +228,7 @@ public:
     /**
      * Find a property definition in a properties table.
      *
-     * @param id - the ID of the property to find.
+     * @param propertyId - the ID of the property to find.
      * @param table - the properties table. The last table element must be PROPERTY_DEF_TABLE_END
      *
      * @return Pointer to the property definition, 0 if not found.

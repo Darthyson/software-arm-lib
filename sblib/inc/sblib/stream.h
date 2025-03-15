@@ -205,7 +205,7 @@ public:
      *
      * @param target - the target string to find.
      * @param targetLen - the length of the target string.
-     * @param terminator - the terminator string.
+     * @param terminate - the terminator string.
      * @param termLen - the length of the terminator string.
      *
      * @return true if target string is found, false if the terminator string was

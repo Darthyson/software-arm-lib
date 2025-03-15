@@ -62,7 +62,7 @@ public:
 
     /**
      * Read temperature in degree Celsius
-     * @param temperature - pointer to buffer for the new temperature
+     * @param newTemperature - pointer to buffer for the new temperature
      * @return True if successful, otherwise false
      * @warning Function is blocking and can take up to @ref MAX_WAIT_MS to return
      */
@@ -70,7 +70,7 @@ public:
 
     /**
      * Read temperature in degree Fahrenheit
-     * @param temperature - pointer to buffer for the new temperature
+     * @param newTemperature - pointer to buffer for the new temperature
      * @return True if successful, otherwise false
      * @warning Function is blocking and can take up to @ref MAX_WAIT_MS to return
      */

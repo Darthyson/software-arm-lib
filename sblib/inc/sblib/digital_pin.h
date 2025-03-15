@@ -63,7 +63,7 @@ void pinDisableInterrupt(int pin);
  * The following PinMode values are supported: INPUT, OUTPUT, PULL_UP, PULL_DOWN,
  * REPEATER_MODE, HYSTERESIS, OPEN_DRAIN.
  *
- * @param port - the port to configure: PIO0, PIO1, PIO2, PIO3  (see sblib/ioports.h)
+ * @param portNum - the port to configure: PIO0, PIO1, PIO2, PIO3  (see sblib/ioports.h)
  * @param pinMask - the bit mask for the port pins that shall be configured.
  * @param mode - the I/O mode to set. Use a combination of the PinMode values.
  *
@@ -78,7 +78,7 @@ void portMode(int portNum, int pinMask, int mode);
  * Configure the direction of an I/O pin. This does not change the other configuration
  * settings of the port pins.
  *
- * @param port - the port to configure: PIO0, PIO1, PIO2, PIO3  (see sblib/ioports.h)
+ * @param portNum - the port to configure: PIO0, PIO1, PIO2, PIO3  (see sblib/ioports.h)
  * @param pinMask - the bit mask for the port pins that shall be configured.
  * @param dir - the direction: INPUT or OUTPUT
  */

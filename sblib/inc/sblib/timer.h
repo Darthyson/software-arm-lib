@@ -276,7 +276,7 @@ public:
     /**
      * Reset interrupt flag of a capture channel.
      *
-     * @param cap - the capture channel: CAP0, CAP1.
+     * @param capture - the capture channel: CAP0, CAP1.
      */
     void resetFlag(TimerCapture capture);
 
