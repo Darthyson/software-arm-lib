@@ -76,7 +76,8 @@ void Bus::begin(uint16_t physicalAddress)
     // wait until output is driven low before enabling output pin.
     // Using digitalWrite(txPin, 0) does not work with MAT channels.
     timer.value(0xffff); // trigger the next event immediately
-    while (timer.getMatchChannelLevel(pwmChannel) == true);
+    while (timer.getMatchChannelLevel(pwmChannel) == true)
+        ;
     pinMode(txPin, OUTPUT_MATCH);               // Configure bus output
     pinMode(rxPin, INPUT_CAPTURE | HYSTERESIS); // Configure bus input
 
@@ -212,7 +213,8 @@ void Bus::sendTelegram(unsigned char* telegram, unsigned short length)
     prepareTelegram(telegram, length);
 
     // Wait until there is space in the sending queue
-    while (sendCurTelegram != nullptr);
+    while (sendCurTelegram != nullptr)
+        ;
 
     sendCurTelegram = telegram;
 
@@ -411,7 +413,8 @@ void Bus::handleTelegram(bool valid)
                 {
                     // same header -> compare remaining bytes, excluding the checksum byte
                     int i;
-                    for (i = 1; (i < nextByteIndex - 1) && (rx_telegram[i] == telegram[i]); i++);
+                    for (i = 1; (i < nextByteIndex - 1) && (rx_telegram[i] == telegram[i]); i++)
+                        ;
                     if (i == nextByteIndex - 1)
                     {
                         already_received = true;
