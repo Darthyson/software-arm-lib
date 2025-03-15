@@ -66,7 +66,7 @@ public:
      * @return True if successful, otherwise false
      * @warning Function is blocking and can take up to @ref MAX_WAIT_MS to return
      */
-    bool readTemperatureC(float* temperature);
+    bool readTemperatureC(float* newTemperature);
 
     /**
      * Read temperature in degree Fahrenheit

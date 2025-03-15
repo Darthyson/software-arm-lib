@@ -179,20 +179,20 @@ static struct i2c_slave_interface i2c_slave[I2C_NUM_INTERFACE][I2C_SLAVE_NUM_INT
  * Private functions
  ****************************************************************************/
 
-static inline void enableClk(I2C_ID_T id)
+static inline void enableClk(I2C_ID_T /*id*/)
 {
     //Chip_Clock_EnablePeriphClock(i2c[id].clk);
     LPC_SYSCON->SYSAHBCLKCTRL |= (1<<5); // Enables clock for I2C.
 }
 
-static inline void disableClk(I2C_ID_T id)
+static inline void disableClk(I2C_ID_T /*id*/)
 {
     //Chip_Clock_DisablePeriphClock(i2c[id].clk);
     LPC_SYSCON->SYSAHBCLKCTRL &= ~(1<<5); // Disables clock for I2C.
 }
 
 /* Get the ADC Clock Rate */
-static inline uint32_t getClkRate(I2C_ID_T id)
+static inline uint32_t getClkRate(I2C_ID_T /*id*/)
 {
     //return Chip_Clock_GetMainClockRate();
     SystemCoreClockUpdate();

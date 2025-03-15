@@ -88,8 +88,8 @@
 
 
 LcdGraphicalEADOGS::LcdGraphicalEADOGS(int spiPort, int pinData, int pinClock, int pinCD, int pinCS,
-                                       const Font& fnt)
-    : LcdGraphical(fnt, DISPLAY_WIDTH, DISPLAY_HEIGHT)
+                                       const Font& font)
+    : LcdGraphical(font, DISPLAY_WIDTH, DISPLAY_HEIGHT)
       , spi(spiPort)
       , pinCD(pinCD)
       , pinCS(pinCS)

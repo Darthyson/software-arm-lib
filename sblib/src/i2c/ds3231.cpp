@@ -202,7 +202,7 @@ bool Ds3231::GetCalendar(ds3231_calendar_t* calendar)
 **
 ** Descriptions:   Set either Alarm1 or Alarm2 of DS3231
 **
-** parameters:     [in] alarm - struct cotaining alarm data
+** parameters:     [in] alarm - struct containing alarm data
 **                 [in] one_r_two - TRUE for Alarm1 and FALSE for Alarm2
 **
 ** Returned value: TRUE on success, FALSE on failure

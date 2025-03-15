@@ -156,9 +156,9 @@ public:
     /**
      * Create a timer object for the specified timer.
      *
-     * @param timerNum - the number of the timer: TIMER16_0, TIMER32_1, ...
+     * @param aTimerNum - the number of the timer: TIMER16_0, TIMER32_1, ...
      */
-    Timer(byte timerNum);
+    Timer(byte aTimerNum);
 
     /**
      * Begin using the timer.
@@ -291,10 +291,10 @@ public:
     /**
      * Test if the timer flag of a capture channel is set.
      *
-     * @param cap - the capture channel: CAP0, CAP1.
+     * @param capture - the capture channel: CAP0, CAP1.
      * @return True if the flag is set, false if it is not set.
      */
-    bool flag(TimerCapture cap) const;
+    bool flag(TimerCapture capture) const;
 
     /**
      * Get the timer flag mask for flags() for a match channel.
@@ -307,10 +307,10 @@ public:
     /**
      * Get the timer flag mask for flags() for a capture channel.
      *
-     * @param cap - the capture channel: CAP0, CAP1.
+     * @param capture - the capture channel: CAP0, CAP1.
      * @return The timer flag mask.
      */
-    static int flagMask(TimerCapture cap);
+    static int flagMask(TimerCapture capture);
 
     /**
      * Configure a match channel.

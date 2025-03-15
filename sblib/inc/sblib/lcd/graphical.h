@@ -57,9 +57,9 @@ protected:
 };
 
 
-inline void LcdGraphical::font(const Font& fnt)
+inline void LcdGraphical::font(const Font& font)
 {
-    this->fnt = &fnt;
+    this->fnt = &font;
 }
 
 #endif /*sblib_lcd_graphical_h*/

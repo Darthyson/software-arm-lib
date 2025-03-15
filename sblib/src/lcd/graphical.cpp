@@ -12,8 +12,8 @@
 #include <sblib/lcd/font.h>
 
 
-LcdGraphical::LcdGraphical(const Font& fnt, int width, int height)
-    : fnt(&fnt)
+LcdGraphical::LcdGraphical(const Font& font, int width, int height)
+    : fnt(&font)
       , width(width)
       , height(height)
 {}

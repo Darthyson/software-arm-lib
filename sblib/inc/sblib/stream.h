@@ -25,9 +25,9 @@ public:
      * Set the maximum number of milliseconds that are waited for a
      * character to arrive. Default is 1000 msec.
      *
-     * @param timeout - the number of milliseconds to wait.
+     * @param newTimeout - the number of milliseconds to wait.
      */
-    void setTimeout(unsigned int timeout);
+    void setTimeout(unsigned int newTimeout);
 
     /**
      * Read a single byte.
@@ -269,9 +269,9 @@ inline Stream::Stream()
     timeout = 1000;
 }
 
-inline void Stream::setTimeout(unsigned int tmout)
+inline void Stream::setTimeout(unsigned int newTimeout)
 {
-    timeout = tmout;
+    timeout = newTimeout;
 }
 
 inline int Stream::parseInt()

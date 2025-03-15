@@ -71,7 +71,7 @@ public:
      * parameters:     Value to write
      * Returned value: none
      */
-    void OneWireWriteBit(uint8_t v);
+    void OneWireWriteBit(uint8_t uValue);
 
     /*
      * Function name:  OneWireReadBit
