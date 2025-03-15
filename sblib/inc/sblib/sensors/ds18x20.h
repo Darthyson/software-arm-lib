@@ -138,7 +138,7 @@ public:
      *                 lastReadOK       - will be set to true if read was successful
      *
      */
-    bool readResult(int devieIdx);
+    bool readResult(int deviceIdx);
 
     /*
      * Function name:  startConversionAll

@@ -16,7 +16,7 @@ class BcuBase;
 class CallbackBcu : public CallbackBus
 {
 public:
-    CallbackBcu(BcuBase* bcu);
+    CallbackBcu(BcuBase* aBcu);
     CallbackBcu() = delete;
 
     void finishedSendingTelegram(bool successful) override;

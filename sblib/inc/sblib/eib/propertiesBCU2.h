@@ -233,7 +233,7 @@ public:
      *
      * @return Pointer to the property definition, 0 if not found.
      */
-    virtual const PropertyDef* findProperty(PropertyID id, const PropertyDef* table);
+    virtual const PropertyDef* findProperty(PropertyID propertyId, const PropertyDef* table);
 
     virtual const PropertyDef* propertyDef(int objectIdx, PropertyID propertyId);
 

@@ -72,7 +72,7 @@ void pinDisableInterrupt(int pin);
  *
  * @see PinMode in digital_pin.h for the pin modes
  */
-void portMode(int port, int pinMask, int mode);
+void portMode(int portNum, int pinMask, int mode);
 
 /**
  * Configure the direction of an I/O pin. This does not change the other configuration
@@ -82,7 +82,7 @@ void portMode(int port, int pinMask, int mode);
  * @param pinMask - the bit mask for the port pins that shall be configured.
  * @param dir - the direction: INPUT or OUTPUT
  */
-void portDirection(int port, int pinMask, int dir);
+void portDirection(int portNum, int pinMask, int dir);
 
 /**
  * Set the value of a digital output pin.

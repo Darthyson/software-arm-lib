@@ -194,14 +194,14 @@ public:
     bool GetTime(ds3231_time_t* time);
     bool SetCalendar(ds3231_calendar_t calendar);
     bool GetCalendar(ds3231_calendar_t* calendar);
-    bool SetAlarm(ds3231_alrm_t alarm, bool one_r_two);
-    bool GetAlarm(ds3231_alrm_t* alarm, bool one_r_two);
+    bool SetAlarm(ds3231_alrm_t alarm, bool bAlarmNumber);
+    bool GetAlarm(ds3231_alrm_t* alarm, bool bAlarmNumber);
     time_t GetEpoch();
     bool SetCtrlStatReg(ds3231_cntl_stat_t data, bool bSetControl = true, bool bSetStatus = true);
     bool GetCtrlStatReg(ds3231_cntl_stat_t* data);
-    bool CheckAlarm(bool one_r_two);
-    bool ResetAlarm(bool one_r_two);
-    bool TurnOnAlarm(bool one_r_two);
+    bool CheckAlarm(bool bAlarmNumber);
+    bool ResetAlarm(bool bAlarmNumber);
+    bool TurnOnAlarm(bool bAlarmNumber);
     bool EnableOscillator(bool TF, bool bBattery, uint8_t RS_bit_SQW);
     float GetTemperature();
 

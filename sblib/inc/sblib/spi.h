@@ -168,7 +168,7 @@ public:
      *
      * @return The received byte
      */
-    int transfer(int val);
+    int transfer(int value);
 
     /**
      * Transfer a value over the SPI bus and receive a value from the bus. The number
