@@ -30,7 +30,7 @@
 #ifndef SHT2X_H
 #define SHT2X_H
 
-#include <stdint.h>
+#include <cstdint>
 
 class SHT2xClass
 {

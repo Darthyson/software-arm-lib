@@ -17,7 +17,7 @@
  it under the terms of the GNU General Public License version 3 as
  published by the Free Software Foundation.
  ---------------------------------------------------------------------------*/
-#include <stdint.h>
+#include <cstdint>
 #include <sblib/eib/userRam.h>
 #include <sblib/bits.h>
 #include <cstring>

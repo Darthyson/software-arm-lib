@@ -10,7 +10,7 @@
  published by the Free Software Foundation.
  ---------------------------------------------------------------------------*/
 
-#include <stdint.h>
+#include <cstdint>
 #include <sblib/i2c/SGP4x.h>
 #include <sblib/i2c.h>
 #include <sblib/timer.h>

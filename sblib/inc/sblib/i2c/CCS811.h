@@ -23,7 +23,7 @@
  ****************************************************/
 
 
-#include <stdint.h>
+#include <cstdint>
 
 #ifndef CCS811_h
 #define CCS811_h

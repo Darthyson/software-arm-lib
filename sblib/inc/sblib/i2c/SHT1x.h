@@ -26,7 +26,7 @@
 #ifndef sblib_SHT1x_h
 #define sblib_SHT1x_h
 
-#include <stdint.h>
+#include <cstdint>
 #include <sblib/timeout.h>
 #include <sblib/sensors/units.h>
 

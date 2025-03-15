@@ -22,7 +22,7 @@
 #ifndef SBLIB_KNX_LPDU_H_
 #define SBLIB_KNX_LPDU_H_
 
-#include <stdint.h>
+#include <cstdint>
 #include <sblib/types.h>
 #include <sblib/bits.h>
 #include <sblib/utils.h>

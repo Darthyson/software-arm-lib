@@ -8,7 +8,7 @@
 #ifndef SBLIB_EIB_USERRAM_H_
 #define SBLIB_EIB_USERRAM_H_
 
-#include <stdint.h>
+#include <cstdint>
 #include <sblib/eib/memory.h>
 
 /**

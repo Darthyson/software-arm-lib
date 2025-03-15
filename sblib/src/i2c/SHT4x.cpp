@@ -38,7 +38,7 @@
  * Sensirion code adapted to Selfbus Library by Doumanix (2023)
  */
 
-#include <stdint.h>
+#include <cstdint>
 #include <sblib/math.h>
 #include <sblib/i2c.h>
 #include <sblib/timer.h>

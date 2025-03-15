@@ -11,7 +11,7 @@
 #include <sblib/core.h>
 #include <sblib/eib/bcu1.h>
 
-#include <string.h> // for memcpy in propertyValueReadTelegram()
+#include <cstring> // for memcpy in propertyValueReadTelegram()
 
 #include <sblib/eib/propertiesSYSTEMB.h>
 #include <sblib/eib/systemb.h>

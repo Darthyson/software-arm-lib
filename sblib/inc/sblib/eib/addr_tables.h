@@ -10,7 +10,7 @@
 #ifndef sblib_addr_tables_h
 #define sblib_addr_tables_h
 
-#include <stdint.h>
+#include <cstdint>
 #include <sblib/types.h>
 
 class AddrTables

@@ -10,7 +10,7 @@
 
 #include <sblib/eib/knx_lpdu.h>
 #include <sblib/eib/bcu_default.h>
-#include <string.h>
+#include <cstring>
 #include <sblib/eib/bus.h>
 
 #if defined(INCLUDE_SERIAL)

@@ -32,7 +32,7 @@
 #ifndef GASINDEXALGORITHM_H_
 #define GASINDEXALGORITHM_H_
 
-#include <stdint.h>
+#include <cstdint>
 
 #ifndef __cplusplus
 

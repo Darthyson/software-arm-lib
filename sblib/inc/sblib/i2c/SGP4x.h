@@ -14,7 +14,7 @@
 #ifndef SGP4X_H
 #define SGP4X_H
 
-#include <stdint.h>
+#include <cstdint>
 #include <sblib/i2c/sensirion_gas_index_algorithm.h>
 
 enum class SGP4xResult : int8_t
