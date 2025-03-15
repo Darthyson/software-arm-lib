@@ -208,7 +208,7 @@ class PropertiesBCU2
 {
 public:
     PropertiesBCU2(BCU2* bcuInstance) : bcu(bcuInstance) {};
-    ~PropertiesBCU2() = default;
+    virtual ~PropertiesBCU2() = default;
 
     /**
      * Load / configure a property of a interface object. Called when a "load control" property-write telegram is received.

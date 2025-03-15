@@ -18,7 +18,6 @@ class CallbackBcu : public CallbackBus
 public:
     CallbackBcu(BcuBase* bcu);
     CallbackBcu() = delete;
-    ~CallbackBcu() = delete;
 
     void finishedSendingTelegram(bool successful) override;
     const virtual uint8_t getLayerStatus() const override;

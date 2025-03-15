@@ -30,6 +30,7 @@ enum class UsrCallbackType : uint8_t
 class UsrCallback
 {
 public:
+    virtual ~UsrCallback() = default;
     virtual void Notify(UsrCallbackType type) =0;
 };
 
