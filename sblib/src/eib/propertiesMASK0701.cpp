@@ -184,10 +184,16 @@ LoadState PropertiesMASK0701::handleAllocAbsTaskSegment(const int objectIdx, con
 
             bcu->userEeprom->commsTabAddr() = newAddress;
 
-            if (bcu->userEeprom->commsTabAddr() != addr)
-                DB_PROPERTIES(serial.println();serial.println("  ----> userEeprom->commsTabAddr MARKED AS READ-ONLY, WON'T CHANGE TO 0x", addr, HEX, 4); serial.println(););
+            DB_PROPERTIES(
+                if (bcu->userEeprom->commsTabAddr() != addr)
+                {
+                    serial.println();
+                    serial.println("  ----> userEeprom->commsTabAddr MARKED AS READ-ONLY, WON'T CHANGE TO 0x", addr, HEX, 4);
+                    serial.println();
+                }
+                serial.println("  ----> userEeprom->commsTabAddr = 0x", bcu->userEeprom->commsTabAddr(), HEX, 4);
+            );
 
-            DB_PROPERTIES(serial.println("  ----> userEeprom->commsTabAddr = 0x", bcu->userEeprom->commsTabAddr(), HEX, 4););
             bcu->userEeprom->appPeiType() = payLoad[2];
             bcu->userEeprom->manufacturerH() = payLoad[3];
             bcu->userEeprom->manufacturerL() = payLoad[4];
