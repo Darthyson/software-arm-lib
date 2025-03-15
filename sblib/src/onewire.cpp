@@ -460,7 +460,7 @@ bool OneWire::OneWireSearch(uint8_t* newAddr)
     }
     while (rom_byte_number < 8); // loop until through all ROM bytes 0-7
 
-    if (!(id_bit_number < 65)) // if the search was successful then
+    if (id_bit_number >= 65) // if the search was successful then
     {
         this->lastDiscrepancy = last_zero; // search successful so set _LastDiscrepancy,_bLastDeviceFlag,search_result
         if (this->lastDiscrepancy == 0)
