@@ -26,6 +26,7 @@
 class MemMapper
 {
 public:
+    virtual ~MemMapper() = default;
     /**
      * Creates a MemMapper instance with flash base address and size
      *

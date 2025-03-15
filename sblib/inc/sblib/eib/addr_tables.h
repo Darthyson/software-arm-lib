@@ -16,6 +16,7 @@
 class AddrTables
 {
 public:
+    virtual ~AddrTables() = default;
     /**
      * Get the index of a group address in the address table.
      *

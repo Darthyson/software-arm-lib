@@ -211,9 +211,6 @@ ComObjects::ComObjects(BcuBase* bcuInstance) :
     nextUpdatedObjIndex(0)
 {}
 
-ComObjects::~ComObjects()
-{}
-
 int ComObjects::telegramObjectSize(int objno)
 {
     int type = objectType(objno);

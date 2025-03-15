@@ -31,7 +31,7 @@ class Memory
 {
 public:
     Memory() = delete;
-    ~Memory() = default;
+    virtual ~Memory() = default;
     Memory(uint32_t start, uint32_t size);
 
     /**

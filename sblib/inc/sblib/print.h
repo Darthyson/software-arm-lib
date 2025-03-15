@@ -36,6 +36,7 @@ enum Base
 class Print
 {
 public:
+    virtual ~Print() = default;
     /**
      * Print a character.
      *
