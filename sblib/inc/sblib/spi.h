@@ -126,7 +126,7 @@ public:
      * @param mode - the SPI port mode. This is a combination of the values of enum SpiMode (see above).
      *               The default mode is SPI_FORMAT_SPI | SPI_CPOL_LOW | SPI_CPHASE_RAISE.
      */
-    SPI(int spiPort, int mode = SPI_DEFAULT_MODE);
+    explicit SPI(int spiPort, int mode = SPI_DEFAULT_MODE);
 
     /**
      * Power on the SPI port. Call this method before starting to use the SPI

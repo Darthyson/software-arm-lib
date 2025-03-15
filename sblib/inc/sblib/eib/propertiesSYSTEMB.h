@@ -18,8 +18,7 @@ class SYSTEMB;
 class PropertiesSYSTEMB : public PropertiesMASK0701
 {
 public:
-    PropertiesSYSTEMB(SYSTEMB* bcuInstance) : PropertiesMASK0701((MASK0701*)bcuInstance), bcu(bcuInstance) {};
-    ~PropertiesSYSTEMB() = default;
+    explicit PropertiesSYSTEMB(SYSTEMB* bcuInstance) : PropertiesMASK0701((MASK0701*)bcuInstance), bcu(bcuInstance) {}
 
     virtual LoadState handleAllocAbsDataSegment(const int objectIdx, const byte* payLoad, const int len);
     virtual LoadState handleDataRelativeAllocation(const int objectIdx, const byte* payLoad, const int len);

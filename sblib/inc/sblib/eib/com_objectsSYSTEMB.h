@@ -39,8 +39,7 @@ class BcuDefault;
 class ComObjectsSYSTEMB : public ComObjectsMASK0701
 {
 public:
-    ComObjectsSYSTEMB(BcuDefault* bcuInstance) : ComObjectsMASK0701(bcuInstance) {}
-    ~ComObjectsSYSTEMB() = default;
+    explicit ComObjectsSYSTEMB(BcuDefault* bcuInstance) : ComObjectsMASK0701(bcuInstance) {}
 
     virtual inline const ComConfig& objectConfig(int objno) override;
 

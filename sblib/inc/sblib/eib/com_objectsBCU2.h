@@ -41,8 +41,7 @@ class ComObjectsBCU2 : public ComObjectsBCU1
 {
 public:
     ComObjectsBCU2() = delete;
-    ComObjectsBCU2(BcuDefault* bcuInstance) : ComObjectsBCU1(bcuInstance) {}
-    ~ComObjectsBCU2() = default;
+    explicit ComObjectsBCU2(BcuDefault* bcuInstance) : ComObjectsBCU1(bcuInstance) {}
 
 protected:
     virtual byte* objectValuePtr(int objno) override;

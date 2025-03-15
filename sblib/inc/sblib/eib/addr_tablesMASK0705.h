@@ -18,8 +18,7 @@ class MASK0701;
 class AddrTablesMASK0705 : public AddrTablesMASK0701
 {
 public:
-    AddrTablesMASK0705(MASK0705* bcu) : AddrTablesMASK0701((MASK0701*)bcu) {};
-    ~AddrTablesMASK0705() = default;
+    explicit AddrTablesMASK0705(MASK0705* bcu) : AddrTablesMASK0701((MASK0701*)bcu) {}
 };
 
 #endif /*sblib_addr_tables_MASK0705_h*/

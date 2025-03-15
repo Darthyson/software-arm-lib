@@ -17,8 +17,7 @@ class SYSTEMB;
 class AddrTablesSYSTEMB : public AddrTablesMASK0701
 {
 public:
-    AddrTablesSYSTEMB(SYSTEMB* bcuInstance) : AddrTablesMASK0701((MASK0701*)bcuInstance), bcu(bcuInstance) {};
-    ~AddrTablesSYSTEMB() = default;
+    explicit AddrTablesSYSTEMB(SYSTEMB* bcuInstance) : AddrTablesMASK0701((MASK0701*)bcuInstance), bcu(bcuInstance) {}
 
     /**
      * Get the index of a group address in the address table.

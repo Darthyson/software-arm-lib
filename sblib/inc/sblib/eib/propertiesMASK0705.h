@@ -18,7 +18,6 @@ class MASK0705;
 class PropertiesMASK0705 : public PropertiesMASK0701
 {
 public:
-    PropertiesMASK0705(MASK0705* bcu) : PropertiesMASK0701((MASK0701*)bcu) {};
-    ~PropertiesMASK0705() = default;
+    explicit PropertiesMASK0705(MASK0705* bcu) : PropertiesMASK0701((MASK0701*)bcu) {}
 };
 #endif /*sblib_properties_mask0705_h*/

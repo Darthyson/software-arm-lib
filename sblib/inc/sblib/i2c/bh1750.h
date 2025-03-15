@@ -67,7 +67,7 @@ public:
         ONE_TIME_LOW_RES_MODE = 0x23
     };
 
-    BH1750(byte addr = BH1750_DEFAULT_I2CADDR);
+    explicit BH1750(byte addr = BH1750_DEFAULT_I2CADDR);
     bool begin(Mode mode = CONTINUOUS_HIGH_RES_MODE, byte addr = BH1750_DEFAULT_I2CADDR);
     bool configure(Mode mode);
     bool setMTreg(byte MTreg);
