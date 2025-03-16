@@ -23,6 +23,7 @@
 #define TLAYER4_H_
 
 #include <cstdint>
+#include <sblib/eib/knx_lpdu.h>
 #include <sblib/eib/knx_tpdu.h>
 #include <sblib/eib/apci.h>
 
@@ -303,7 +304,7 @@ private:
     uint32_t connectedTime = 0;                //!< System time of the last connection oriented telegram
     uint32_t sentTelegramTime = 0;             //!< System time of the last sent telegram
 
-    volatile uint16_t ownAddr; //!< Our own physical address on the bus
+    uint16_t ownAddr = PHY_ADDR_DEFAULT; //!< Our own physical address on the bus
 
     /**
      * A buffer for the telegram to send.
@@ -324,9 +325,9 @@ private:
         TELEGRAM_SENDING
     };
 
-    volatile SendTelegramBufferState sendTelegramBufferState;
-    volatile SendTelegramBufferState sendConnectedTelegramBufferState;
-    volatile SendTelegramBufferState sendConnectedTelegramBuffer2State;
+    volatile SendTelegramBufferState sendTelegramBufferState = TELEGRAM_FREE;
+    volatile SendTelegramBufferState sendConnectedTelegramBufferState = TELEGRAM_FREE;
+    volatile SendTelegramBufferState sendConnectedTelegramBuffer2State = TELEGRAM_FREE;
 };
 
 inline bool TLayer4::directConnection()

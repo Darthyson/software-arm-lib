@@ -119,6 +119,8 @@ enum SpiMode
 class SPI
 {
 public:
+    SPI() = delete;
+
     /**
      * Create a SPI access object.
      *
@@ -215,16 +217,16 @@ public:
 
 protected:
     LPC_SSP_TypeDef& port;
-    int clockDiv;
+    // int clockDiv = 100; ///\todo Save to delete? It was never used
 
-    uint16_t* sndData;
-    uint16_t* recData;
-    int sndCount;
-    int recCount;
-    int errors;
+    uint16_t* sndData = nullptr;
+    uint16_t* recData = nullptr;
+    int sndCount = 0;
+    int recCount = 0;
+    int errors = 0;
 
 public:
-    bool finished;
+    bool finished = false;
 };
 
 

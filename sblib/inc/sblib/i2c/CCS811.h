@@ -46,7 +46,7 @@ const uint8_t SW_RESET = 0xFF;
 class CCS811Class
 {
 public:
-    CCS811Class(); // constructor
+    CCS811Class() = default;
     bool begin(uint8_t I2C_ADDR, int WAKE_PIN);
     char readStatus(void);
     char readHW_ID(void);
@@ -60,11 +60,12 @@ public:
     void compensate(float t, float rh);
     static void _digitalWrite(int WAKE_PIN, bool VAL);
     void sleep();
-    int TVOC, CO2;
+    int TVOC = 0; //!< Total VOC level in ppb
+    int CO2 = 0; //!< eCO2 level in ppm
 
 private:
-    int _WAKE_PIN;
-    uint8_t _I2C_ADDR;
+    int _WAKE_PIN = 0;
+    uint8_t _I2C_ADDR = 0x5a; //!< Low pegel on CCS811 pin ADDR => address = 0x5a, if high => address = 0x5B.
 };
 
 #endif /* SB_LIB_CCS811_H */
