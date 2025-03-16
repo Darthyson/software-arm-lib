@@ -573,7 +573,7 @@ void Bus::encounteredCollision()
 __attribute__((optimize("Os"))) void Bus::timerInterruptHandler()
 {
     bool timeout;
-    int time;
+    uint32_t time;
     unsigned int dt, tv, cv;
     auto isCaptureEvent = timer.flag(captureChannel);
 
