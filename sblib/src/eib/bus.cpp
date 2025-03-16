@@ -17,7 +17,6 @@
 #include <sblib/digital_pin.h>
 #include <sblib/eib/knx_lpdu.h>
 #include <sblib/eib/knx_npdu.h>
-#include <sblib/eib/bus_const.h>
 #include <sblib/eib/bus_debug.h>
 #include <sblib/eib/bcu_const.h>
 
@@ -25,21 +24,16 @@
 Bus::Bus(AddrTables* addrTable, Timer& aTimer, const int& aRxPin, const int& aTxPin,
          const TimerCapture& aCaptureChannel, const TimerMatch& aPwmChannel, CallbackBus* aCallback)
     :
-    addressTable(addrTable)
-    , timer(aTimer)
-    , rxPin(aRxPin)
-    , txPin(aTxPin)
-    , captureChannel(aCaptureChannel)
-    , pwmChannel(aPwmChannel)
-    , callBack(aCallback)
+    addressTable(addrTable),
+    timer(aTimer),
+    rxPin(aRxPin),
+    txPin(aTxPin),
+    captureChannel(aCaptureChannel),
+    pwmChannel(aPwmChannel),
+    timeChannel((TimerMatch)((pwmChannel + 2) & 3)), // +2 to be compatible to old code during refactoring
+    callBack(aCallback)
 {
-    timeChannel = (TimerMatch)((pwmChannel + 2) & 3); // +2 to be compatible to old code during refactoring
-    state = Bus::INIT;
-    sendRetriesMax = NACK_RETRY_DEFAULT;
-    sendBusyRetriesMax = BUSY_RETRY_DEFAULT;
     setKNX_TX_Pin(txPin);
-    telegram = new byte[maxTelegramSize()]();
-    rx_telegram = new byte[maxTelegramSize()]();
 }
 
 /**
@@ -60,7 +54,6 @@ void Bus::begin(uint16_t physicalAddress)
     setOwnAddress(physicalAddress);
     telegramLen = 0;
     rx_error = RX_OK;
-
     tx_error = TX_OK;
     sendCurTelegram = nullptr;
     prepareForSending();
@@ -104,8 +97,8 @@ void Bus::begin(uint16_t physicalAddress)
         serial.print("Bus begin - Timer prescaler: ", (unsigned int)TIMER_PRESCALER, DEC, 6);
         serial.print(" ttimer prescaler: ", ttimer.prescaler(), DEC, 6);
         serial.println(" ttimer value: ", ttimer.value(), DEC, 6);
-        serial.print("nak retries: ", sendRetriesMax, DEC, 6);
-        serial.print(" busy retries: ", sendBusyRetriesMax, DEC, 6);
+        serial.print("nak retries: ", sendRetriesMax, DEC, 2);
+        serial.print(" busy retries: ", sendBusyRetriesMax, DEC, 2);
         serial.print(" phy addr: ", PHY_ADDR_AREA(ownAddress), DEC);
         serial.print(".", PHY_ADDR_LINE(ownAddress), DEC);
         serial.print(".", PHY_ADDR_DEVICE(ownAddress), DEC);
@@ -300,7 +293,6 @@ void Bus::startSendingImmediately()
 void Bus::prepareForSending()
 {
     tx_error = TX_OK;
-
     collisions = 0;
     sendRetries = 0;
     sendBusyRetries = 0;
@@ -380,7 +372,7 @@ void Bus::handleTelegram(bool valid)
     // Received a valid telegram with correct checksum and valid control byte (normal data frame with preamble bits)?
     //todo extended tel, check tel len, give upper layer error info
     if (nextByteIndex >= 8 && valid && ((rx_telegram[0] & VALID_DATA_FRAME_TYPE_MASK) == VALID_DATA_FRAME_TYPE_VALUE)
-        && nextByteIndex <= maxTelegramSize())
+        && nextByteIndex <= TelegramBufferSize)
     {
         int destAddr = (rx_telegram[3] << 8) | rx_telegram[4];
         bool processTel = false;
@@ -683,7 +675,7 @@ STATE_SWITCH:
             rx_error = RX_OK;
             checksum = 0xff;
             sendAck = 0;
-            valid = 1;
+            valid = true;
 
         //todo if timer was  disabled for power saving and enable in this state
         // no break here as we have received a capture event - falling edge of the start bit
@@ -739,12 +731,12 @@ STATE_SWITCH:
             timer.value(dt + 2); // restart timer and pre-load with processing time of 2us
             timer.match(timeChannel, BYTE_TIME_INCL_STOP - 1);
             timer.captureMode(captureChannel, FALLING_EDGE | INTERRUPT); // next state interrupt at first low bit  - falling edge, no reset
-        //timer.counterMode(DISABLE,  DISABLE); // disabled the timer reset by the falling edge of cap event
+            //timer.counterMode(DISABLE,  DISABLE); // disabled the timer reset by the falling edge of cap event
             state = Bus::RECV_BITS_OF_BYTE;
             currentByte = 0;
             bitTime = 0;
             bitMask = 1;
-            parity = 1;
+            parity = true;
 
             DB_TELEGRAM(telRXTelByteStartTime = ttimer.value() - dt); // correct the timer start value by the process time (about 13us) we had since the capture event
             break;
@@ -764,15 +756,15 @@ STATE_SWITCH:
                 time = timer.capture(captureChannel); // we received an capt. event: new low bit
             }
 
-        // find the bit position after last low bit and add high bits accordingly, window for the reception of falling edge of a bit is:
-        //min: n*104us-7us, typ: n*104us, max: n*104us+33us. bitTime holds the start time of the last bit, so the new received
-        //cap event should be between bitTime + BIT_TIME -7us and bitTime + BIT_TIME+33us
-        //bittime hold the time of the n-th bit (0..9) time=n*104, timer is counting from startbit edge- should be 104us in advance
+            // find the bit position after last low bit and add high bits accordingly, window for the reception of falling edge of a bit is:
+            // min: n*104us-7us, typ: n*104us, max: n*104us+33us. bitTime holds the start time of the last bit, so the new received
+            // cap event should be between bitTime + BIT_TIME -7us and bitTime + BIT_TIME+33us
+            // bit time hold the time of the n-th bit (0..9) time=n*104, timer is counting from startbit edge- should be 104us in advance
 
             if (time >= bitTime + BIT_TIME - 35) // check window should be at least  n*104-7us  *** we use -35us to be more tolerant
             {
-                // bit is not to early- check for to late - we might have some high bits received since last low bit
-                bitTime += BIT_TIME;                                        //set bittime to next expected bit edge
+                // bit is not too early, check for to late - we might have some high bits received since last low bit
+                bitTime += BIT_TIME;                                        //set bit time to next expected bit edge
                 while (time >= bitTime + BIT_WAIT_TIME && bitMask <= 0x100) // high bit found or bit 9 (stop bit) found - move check to next bit position
                 {
                     currentByte |= bitMask; // add high bit until we found current position
@@ -807,7 +799,7 @@ STATE_SWITCH:
                 if ((!nextByteIndex) && (currentByte & PREAMBLE_MASK))
                     rx_error |= RX_PREAMBLE_ERROR; // preamble error, continue to read bytes - possibility to discard the telegram at higher layer
 
-                if (nextByteIndex < maxTelegramSize())
+                if (nextByteIndex < TelegramBufferSize)
                 {
                     rx_telegram[nextByteIndex++] = currentByte;
                     checksum ^= currentByte;
@@ -861,7 +853,7 @@ STATE_SWITCH:
                 telTXStartTime = ttimer.value() + PRE_SEND_TIME; // set start time of sending telegram
             );
 
-        //set timer for TX process: init PWM pulse generation, interrupt at pulse end and cap event (pulse start)
+            //set timer for TX process: init PWM pulse generation, interrupt at pulse end and cap event (pulse start)
             timer.match(pwmChannel, PRE_SEND_TIME);                       // waiting time till start of first bit- falling edge 104us + n*104us ( n=0 or3)
             timer.match(timeChannel, PRE_SEND_TIME + BIT_PULSE_TIME - 1); // end of bit pulse 35us later
             timer.matchMode(timeChannel, RESET | INTERRUPT);              //reset timer after bit pulse end
@@ -1067,7 +1059,7 @@ STATE_SWITCH:
                 currentByte = sendCurTelegram[nextByteIndex++];
             }
 
-        // Calculate the parity bit
+            // Calculate the parity bit
             for (bitMask = 1; bitMask < 0x100; bitMask <<= 1)
             {
                 if (currentByte & bitMask) // current bit high
@@ -1132,8 +1124,8 @@ STATE_SWITCH:
                     encounteredCollision();
                     rx_error = RX_OK;
                     checksum = 0xff;
-                    valid = 1;
-                    parity = 1;
+                    valid = true;
+                    parity = true;
 
                     if (sendAck)
                     {
@@ -1390,12 +1382,12 @@ void Bus::loop()
 #endif
 }
 
-void Bus::maxSendRetries(int retries)
+void Bus::maxSendRetries(const uint8_t retries)
 {
     sendRetriesMax = retries;
 }
 
-void Bus::maxSendBusyRetries(int retries)
+void Bus::maxSendBusyRetries(const uint8_t retries)
 {
     sendBusyRetriesMax = retries;
 }

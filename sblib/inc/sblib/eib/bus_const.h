@@ -14,6 +14,8 @@
 #ifndef SBLIB_KNX_BUS_CONST_H_
 #define SBLIB_KNX_BUS_CONST_H_
 
+#include <cstdint>
+
 /**
  * Data link layer short acknowledgment frames
  */
@@ -28,7 +30,7 @@ enum ShortAcknowledgeFrame
 /**
  * Rx error code values
  */
-enum RxErrorCode
+enum RxErrorCode : uint16_t
 {
     RX_OK = 0,                       //!< No Rx error
     RX_STOPBIT_ERROR = 1,            //!< we received a cap event during stop bit
@@ -45,7 +47,7 @@ enum RxErrorCode
 /**
  * Tx error code values
  */
-enum TxErrorCode
+enum TxErrorCode : uint16_t
 {
     TX_OK = 0,                  //!< No Tx error
     TX_STARTBIT_BUSY_ERROR = 1, //!< bus is busy few us before we intended to send a start bit
