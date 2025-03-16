@@ -15,6 +15,7 @@
 
 #include <sblib/types.h>
 #include <sblib/platform.h>
+#include <sys/param.h>
 
 #define MEM_MAPPER_SUCCESS         0
 #define MEM_MAPPER_INVALID_ADDRESS -1
@@ -26,6 +27,7 @@
 class MemMapper
 {
 public:
+    MemMapper() = delete;
     virtual ~MemMapper() = default;
     /**
      * Creates a MemMapper instance with flash base address and size
@@ -196,23 +198,23 @@ private:
     unsigned int getUIntX(int virtAddress, int length);
     int setUIntX(int virtAddress, int length, int val);
 
+    // These members are initialized in the constructor
     uint8_t* flashBase; //memory layout: flashBase + 0 = allocTable, flashBase + 1 = usableMemory
     unsigned int flashBasePage;
-
     unsigned int flashSize;
     unsigned int flashSizePages;
-
-    byte allocTable[FLASH_PAGE_SIZE];
-
-    mutable byte writeBuf[FLASH_PAGE_SIZE];
-    mutable int writePage;
-
-    unsigned int lastAllocated;
-    int endianess;
-
     bool autoAddPage;
-    mutable bool flashMemModified;
-    mutable bool allocTableModified;
+    // End of members initialized in the constructor
+
+    static constexpr uint8_t InvalidAllocTableByte = 0xff;
+    byte allocTable[FLASH_PAGE_SIZE]{InvalidAllocTableByte};
+    mutable byte writeBuf[FLASH_PAGE_SIZE]{};
+    mutable int writePage = 0;
+    unsigned int lastAllocated = 0;
+    int endianess = LITTLE_ENDIAN;
+
+    mutable bool flashMemModified = false;
+    mutable bool allocTableModified = false;
 };
 
 #endif /* SBLIB_MEM_MAPPER_H_ */

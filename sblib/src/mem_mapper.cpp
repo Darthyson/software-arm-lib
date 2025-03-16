@@ -10,23 +10,19 @@
  *
  */
 
-#include <sblib/platform.h>
 #include <sblib/internal/iap.h>
 #include <sblib/utils.h>
 #include <sblib/mem_mapper.h>
 #include <cstring>
-#include <sys/param.h>
 
 
 MemMapper::MemMapper(unsigned int flashBase, unsigned int flashSize, bool autoAddPage) :
-    flashBase(FLASH_BASE_ADDRESS + flashBase), flashSize(flashSize), autoAddPage(autoAddPage)
+    flashBase(FLASH_BASE_ADDRESS + flashBase),
+    flashBasePage(iapPageOfAddress(this->flashBase)),
+    flashSize(flashSize),
+    flashSizePages(flashSize / FLASH_PAGE_SIZE),
+    autoAddPage(autoAddPage)
 {
-    flashSizePages = flashSize / FLASH_PAGE_SIZE;
-    flashBasePage = iapPageOfAddress(this->flashBase);
-    lastAllocated = 0; // means: nothing allocated in this run
-    writePage = 0;
-    allocTableModified = false;
-    flashMemModified = false;
     memcpy(allocTable, this->flashBase, FLASH_PAGE_SIZE);
     // Quick check if there is more than one zero on the allocTable, a certain
     // sign of table corruption. In this case, clear the table (set all 0xff).
@@ -56,7 +52,7 @@ MemMapper::MemMapper(unsigned int flashBase, unsigned int flashSize, bool autoAd
     if (errorFound)
     {
         allocTableModified = true;
-        memset(allocTable, 0xff, FLASH_PAGE_SIZE);
+        memset(allocTable, InvalidAllocTableByte, FLASH_PAGE_SIZE);
     }
 }
 
