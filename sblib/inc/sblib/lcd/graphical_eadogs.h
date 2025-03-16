@@ -79,6 +79,8 @@ public:
      */
     int write(byte ch) override;
 
+    using Print::write; // Pull in write(const char* str) and write(const byte* data, int count) from Print
+
     /**
      * Clear the display.
      */
@@ -86,7 +88,8 @@ public:
 
 protected:
     SPI spi;
-    const int pinCD, pinCS;
+    const int pinCD;
+    const int pinCS;
 };
 
 
