@@ -66,7 +66,7 @@ uint8_t DS18x20::Search(uint8_t uMaxDeviceSearch)
     uint8_t bRet = 4;
     this->m_foundDevices = 0;
     this->_OW_DS18x.OneWireResetSearch(); // do a reset to start the search
-    sDS18x20 sDevTmp;
+    sDS18x20 sDevTmp{};
     for (uint8_t j = 0; this->_OW_DS18x.OneWireSearch(sDevTmp.addr) > 0 && j < uMaxDeviceSearch; j++)
     {
         sDevTmp.crcOK = (OneWire::OneWireCRC8(sDevTmp.addr, 7) == sDevTmp.addr[7]);
