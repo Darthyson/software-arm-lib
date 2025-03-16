@@ -82,7 +82,7 @@ private:
     // for more information.
     const float BH1750_CONV_FACTOR = 1.2f;
     Mode BH1750_MODE = UNCONFIGURED;
-    unsigned long lastReadTimestamp;
+    unsigned long lastReadTimestamp = 0;
 };
 
 #endif /* SB_LIB_BH1750_H */

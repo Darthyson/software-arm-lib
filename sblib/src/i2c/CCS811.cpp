@@ -28,10 +28,6 @@
 #include <sblib/digital_pin.h>
 
 
-CCS811Class::CCS811Class() {
-    // empty constructor, just because.
-}
-
 bool CCS811Class::begin(uint8_t I2C_ADDR, int WAKE_PIN) {
     delay(70); // from datasheet - up to 70ms on the first Reset after new application download; up to 20ms delay after power on
     _I2C_ADDR = I2C_ADDR;

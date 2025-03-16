@@ -59,8 +59,8 @@
 static LPC_SSP_TypeDef* const ports[2] = {LPC_SSP0, LPC_SSP1};
 
 SPI::SPI(int spiPort, int mode)
-    : port(*ports[spiPort])
-      , clockDiv(100)
+    :
+    port(*ports[spiPort])
 {
     // Enable AHB clock to the GPIO domain.
     LPC_SYSCON->SYSAHBCLKCTRL |= (1 << 6);

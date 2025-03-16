@@ -12,11 +12,6 @@
 
 // Constructor with no parameters for compatability with OneWire lib
 OneWireDS2482::OneWireDS2482() {
-    // Address is determined by two pins on the DS2482 AD1/AD0
-    // Pass 0b00, 0b01, 0b10 or 0b11
-    mAddress = 0x18;
-    mError = 0;
-
     i2c_lpcopen_init();
 }
 
@@ -24,8 +19,6 @@ OneWireDS2482::OneWireDS2482(uint8_t address) {
     // Address is determined by two pins on the DS2482 AD1/AD0
     // Pass 0b00, 0b01, 0b10 or 0b11
     mAddress = 0x18 | address;
-    mError = 0;
-
     i2c_lpcopen_init();
 }
 
@@ -370,7 +363,7 @@ uint8_t OneWireDS2482::crc8(const uint8_t *addr, uint8_t len) {
 // Compute a Dallas Semiconductor 8 bit CRC directly.
 // this is much slower, but much smaller, than the lookup table.
 //
-uint8_t OneWire::crc8(const uint8_t *addr, uint8_t len)
+uint8_t OneWireDS2482::crc8(const uint8_t *addr, uint8_t len)
 {
     uint8_t crc = 0;
     while (len--) {

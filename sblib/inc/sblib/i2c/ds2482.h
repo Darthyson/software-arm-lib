@@ -11,8 +11,11 @@
 #include <sblib/core.h>
 #include <sblib/i2c.h>
 
-// Chose between a table based CRC (flash expensive, fast)
-// or a computed CRC (smaller, slow)
+/**
+ * Chose between a table based CRC (flash expensive, fast),
+ * or a computed CRC (smaller, slow)
+ * @warning crc8 lookup table size is 256 bytes!
+ */
 #define ONEWIRE_CRC8_TABLE          1
 
 #define DS2482_COMMAND_RESET        0xF0    // Device reset
@@ -100,13 +103,13 @@ private:
     void writeByte(uint8_t);
     void writeBytes(uint8_t* data, uint8_t data_length);
 
-    bool activePullUpEnabled;
-    uint8_t mAddress;
-    uint8_t mError;
+    bool activePullUpEnabled = false;
+    uint8_t mAddress = 0x18; //!< Address is determined by two pins on the DS2482 AD1/AD0
+    uint8_t mError = 0;
 
-    uint8_t searchAddress[8];
-    uint8_t searchLastDiscrepancy;
-    uint8_t searchLastDeviceFlag;
+    uint8_t searchAddress[8]{};
+    uint8_t searchLastDiscrepancy = 0;
+    uint8_t searchLastDeviceFlag = 0;
 };
 
 #endif

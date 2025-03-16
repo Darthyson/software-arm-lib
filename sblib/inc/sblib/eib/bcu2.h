@@ -137,7 +137,7 @@ protected:
 
     void sendApciIndividualAddressSerialNumberReadResponse();
 
-    word commObjectTableAddressStatic; //!> The read-only CommObjectTable address which can't be changed by KNX telegrams
+    word commObjectTableAddressStatic = 0; //!> The read-only CommObjectTable address which can't be changed by KNX telegrams
 };
 
 #endif /*sblib_bcu2_h*/
