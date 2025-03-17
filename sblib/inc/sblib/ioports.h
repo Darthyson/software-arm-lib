@@ -10,10 +10,12 @@
 #ifndef sblib_ioports_h
 #define sblib_ioports_h
 
+#include <cstdint>
+
 /**
  * Digital ports.
  */
-enum Port
+enum Port : uint8_t
 {
     // Port 1
     PIO0 = 0,
@@ -32,7 +34,7 @@ enum Port
 /**
  * Constants for port pin functions
  */
-enum PinFunc
+enum PinFunc : uint8_t
 {
     PF_NONE = 0, PF_PIO, PF_AD, PF_RESET, PF_SWDIO, PF_SWCLK, PF_MAT, PF_CAP,
     PF_CLKOUT, PF_SDA, PF_SCL, PF_SSEL, PF_MISO, PF_MOSI, PF_SCK, PF_RXD,
@@ -54,7 +56,7 @@ enum PinFunc
 
 
 // Constants for port pin function manipulation
-enum
+enum PortFunctionManipulator : uint32_t
 {
     PFL_ADMODE = 0x100,
 
@@ -87,7 +89,7 @@ enum
  *                        SPI (ssel, miso, mosi, sck), SERIAL (rxd, txd)
  * Bit 25-29: function 3: timer match, timer capture, SERIAL (rxd, txd)
  */
-enum PortPin
+enum PortPin : uint32_t
 {
     // Port 0 pin 0
     PIO0_0 = 0x00 | FUNC0(PF_RESET) | FUNC1(PF_PIO),
@@ -222,7 +224,7 @@ enum PortPin
 /**
  * Analog channels.
  */
-enum AnalogChannel
+enum AnalogChannel : uint8_t
 {
     AD0 = 0, //!< Analog channel 0 (this is pin PIO0_11)
     AD1 = 1, //!< Analog channel 1 (this is pin PIO1_0)
@@ -237,7 +239,7 @@ enum AnalogChannel
 /**
  * Array for masked port pin access.
  */
-extern const int portMask[12];
+extern const uint16_t portMask[12];
 
 #undef FUNC0
 #undef FUNC1
@@ -251,7 +253,6 @@ extern const int portMask[12];
  * @param func - the port function to find, e.g. PF_PIO
  * @return the function number, or -1 if not found
  */
-short getPinFunctionNumber(int pin, short func);
-
+int8_t getPinFunctionNumber(uint32_t pin, uint16_t func);
 
 #endif /*sblib_ioports_h*/
