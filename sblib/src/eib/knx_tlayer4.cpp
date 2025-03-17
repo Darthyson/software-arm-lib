@@ -229,6 +229,7 @@ void dumpLogHeader()
 }
 
 TLayer4::TLayer4(uint8_t maxTelegramLength):
+    ownAddr(PHY_ADDR_DEFAULT),
     sendTelegram(new byte[maxTelegramLength]()),
     sendConnectedTelegram(new byte[maxTelegramLength]()),
     sendConnectedTelegram2(new byte[maxTelegramLength]()) {}

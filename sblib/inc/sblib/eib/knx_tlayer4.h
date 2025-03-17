@@ -23,7 +23,6 @@
 #define TLAYER4_H_
 
 #include <cstdint>
-#include <sblib/eib/knx_lpdu.h>
 #include <sblib/eib/knx_tpdu.h>
 #include <sblib/eib/apci.h>
 
@@ -304,7 +303,7 @@ private:
     uint32_t connectedTime = 0;                //!< System time of the last connection oriented telegram
     uint32_t sentTelegramTime = 0;             //!< System time of the last sent telegram
 
-    uint16_t ownAddr = PHY_ADDR_DEFAULT; //!< Our own physical address on the bus
+    uint16_t ownAddr; //!< Our own physical address on the bus
 
     /**
      * A buffer for the telegram to send.

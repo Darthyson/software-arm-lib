@@ -15,7 +15,6 @@
 #include <sblib/eib/bcu_const.h>
 #include <sblib/eib/bus_const.h>
 #include <sblib/eib/callback_bus.h>
-#include <sblib/eib/knx_lpdu.h>
 
 /**
  * Low level class for EIB bus access.
@@ -227,6 +226,7 @@ private:
     TimerMatch pwmChannel;       //!< The timer channel for PWM for sending
     TimerMatch timeChannel;      //!< The timer channel for timeouts
     CallbackBus* callBack;       //!< Callback instance to inform bcu of events, e.g. telegram sending finished
+    uint16_t ownAddress;         //!< The physical KNX address to use for bus communication
     // End of members initialized in the constructor
 
     /** The states of the telegram sending/receiving state machine */
@@ -270,7 +270,6 @@ private:
     bool busy_wait_from_remote = false;     //!< remote side is busy, re-send telegram after 150bit time wait
     bool repeatTelegram = false;            //!< need to repeat last telegram sent
     uint8_t collisions = 0;                 //!< Number of collisions when sending @ref sendCurTelegram
-    uint16_t ownAddress = PHY_ADDR_DEFAULT; //!< The physical KNX address to use for bus communication
 };
 
 
