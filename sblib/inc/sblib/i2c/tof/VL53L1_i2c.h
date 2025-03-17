@@ -5,11 +5,11 @@
  *  it under the terms of the GNU General Public License version 3 as
  *  published by the Free Software Foundation.
  */
- 
-#ifndef _SB_LIB_VL53L1X_I2C_H_
-#define _SB_LIB_VL53L1X_I2C_H_
 
-#include <stdint.h>
+#ifndef SB_LIB_VL53L1X_I2C_H_
+#define SB_LIB_VL53L1X_I2C_H_
+
+#include <cstdint>
 
 /**
  * @param count Number of bytes to read (max. 255)
@@ -31,4 +31,4 @@ int8_t VL53L1_RdWord(uint16_t dev, uint16_t index, uint16_t *pdata);
 int8_t VL53L1_RdDWord(uint16_t dev, uint16_t index, uint32_t *pdata);
 int8_t VL53L1_WaitMs(uint16_t dev, int32_t wait_ms);
 
-#endif /* _SB_LIB_VL53L1X_I2C_H_ */
+#endif /* SB_LIB_VL53L1X_I2C_H_ */

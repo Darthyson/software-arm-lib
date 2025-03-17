@@ -6,10 +6,10 @@
  *  published by the Free Software Foundation.
  */
 
-#ifndef _SB_LIB_VL53LX_I2C_H_
-#define _SB_LIB_VL53LX_I2C_H_
+#ifndef SB_LIB_VL53LX_I2C_H_
+#define SB_LIB_VL53LX_I2C_H_
 
-#include <stdint.h>
+#include <cstdint>
 
 /**
  * Indicates no error in the i2c operation.
@@ -138,4 +138,4 @@ uint8_t VL53Lx_WrDWord(Dev_t i2cAddress, uint16_t registerAddress, uint32_t valu
   */
 uint8_t VL53Lx_WaitMs(Dev_t i2cAddress, uint32_t timeMs);
 
-#endif // _SB_LIB_VL53LX_I2C_H_
+#endif // SB_LIB_VL53LX_I2C_H_
