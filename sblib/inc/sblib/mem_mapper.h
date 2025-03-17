@@ -207,7 +207,7 @@ private:
     // End of members initialized in the constructor
 
     static constexpr uint8_t InvalidAllocTableByte = 0xff;
-    byte allocTable[FLASH_PAGE_SIZE]{InvalidAllocTableByte};
+    byte allocTable[FLASH_PAGE_SIZE]{};
     mutable byte writeBuf[FLASH_PAGE_SIZE]{};
     mutable int writePage = 0;
     unsigned int lastAllocated = 0;
