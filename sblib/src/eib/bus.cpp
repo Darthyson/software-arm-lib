@@ -31,7 +31,8 @@ Bus::Bus(AddrTables* addrTable, Timer& aTimer, const int& aRxPin, const int& aTx
     captureChannel(aCaptureChannel),
     pwmChannel(aPwmChannel),
     timeChannel((TimerMatch)((pwmChannel + 2) & 3)), // +2 to be compatible to old code during refactoring
-    callBack(aCallback)
+    callBack(aCallback),
+    ownAddress(PHY_ADDR_DEFAULT)
 {
     setKNX_TX_Pin(txPin);
 }
