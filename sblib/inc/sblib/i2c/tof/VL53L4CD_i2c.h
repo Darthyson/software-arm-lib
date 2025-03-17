@@ -6,10 +6,10 @@
  *  published by the Free Software Foundation.
  */
 
-#ifndef _SB_LIB_VL53L4CD_I2C_H_
-#define _SB_LIB_VL53L4CD_I2C_H_
+#ifndef SB_LIB_VL53L4CD_I2C_H_
+#define SB_LIB_VL53L4CD_I2C_H_
 
-#include <stdint.h>
+#include <cstdint>
 #include <sblib/i2c/tof/VL53Lx_i2c.h>
 
 /**
@@ -29,4 +29,4 @@ uint8_t VL53L4CD_WrWord(Dev_t i2cAddress, uint16_t registerAddress, uint16_t val
 uint8_t VL53L4CD_WrDWord(Dev_t i2cAddress, uint16_t registerAddress, uint32_t value);
 uint8_t VL53L4CD_WaitMs(Dev_t i2cAddress, uint32_t timeMs);
 
-#endif /* _SB_LIB_VL53L4CD_I2C_H_ */
+#endif /* SB_LIB_VL53L4CD_I2C_H_ */
