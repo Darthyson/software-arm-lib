@@ -221,6 +221,11 @@ enum PortPin : uint32_t
     PIO3_5 = 0x65 | FUNC0(PF_PIO) | FUNC1(PF_CAP) | FUNC2(PF_TXD)
 };
 
+#undef FUNC0
+#undef FUNC1
+#undef FUNC2
+#undef FUNC3
+
 /**
  * Analog channels.
  */
@@ -235,16 +240,6 @@ enum AnalogChannel : uint8_t
     AD6 = 6, //!< Analog channel 6 (this is pin PIO1_10)
     AD7 = 7, //!< Analog channel 7 (this is pin PIO1_11)
 };
-
-/**
- * Array for masked port pin access.
- */
-extern const uint16_t portMask[12];
-
-#undef FUNC0
-#undef FUNC1
-#undef FUNC2
-#undef FUNC3
 
 /**
  * Find the function number for the function of a pin.
