@@ -10,20 +10,19 @@
 #include <sblib/ioports.h>
 
 
-const int portMask[12] =
+const uint16_t portMask[12] =
 {
     1, 2, 4, 8, 16, 32, 64, 128, 256, 512, 1024, 2048
 };
 
-
-short getPinFunctionNumber(int pin, short func)
+int8_t getPinFunctionNumber(uint32_t pin, const uint16_t func)
 {
     pin >>= PF0_SHIFT;
 
-    for (int funcNumber = 0; funcNumber < 4; ++funcNumber)
+    for (uint8_t funcNumber = 0; funcNumber < 4; ++funcNumber)
     {
         if ((pin & PFF_MASK) == func)
-            return funcNumber;
+            return static_cast<int8_t>(funcNumber);
 
         pin >>= PFF_SHIFT_OFFSET;
     }
