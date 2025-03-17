@@ -404,10 +404,7 @@ void Bus::handleTelegram(bool valid)
                 if ((rx_telegram[0] & ~SB_TEL_REPEAT_FLAG) == (telegram[0] & ~SB_TEL_REPEAT_FLAG))
                 {
                     // same header -> compare remaining bytes, excluding the checksum byte
-                    int i;
-                    for (i = 1; (i < nextByteIndex - 1) && (rx_telegram[i] == telegram[i]); i++)
-                        ;
-                    if (i == nextByteIndex - 1)
+                    if (memcmp(&rx_telegram[1], &telegram[1], nextByteIndex - 2) == 0)
                     {
                         already_received = true;
                     }
