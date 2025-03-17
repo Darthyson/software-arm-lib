@@ -207,8 +207,8 @@ private:
     // End of members initialized in the constructor
 
     static constexpr uint8_t InvalidAllocTableByte = 0xff;
-    byte allocTable[FLASH_PAGE_SIZE]{};
-    mutable byte writeBuf[FLASH_PAGE_SIZE]{};
+    alignas(FLASH_RAM_BUFFER_ALIGNMENT) byte allocTable[FLASH_PAGE_SIZE]{};
+    alignas(FLASH_RAM_BUFFER_ALIGNMENT) mutable byte writeBuf[FLASH_PAGE_SIZE]{};
     mutable int writePage = 0;
     unsigned int lastAllocated = 0;
     int endianess = LITTLE_ENDIAN;
