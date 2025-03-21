@@ -69,15 +69,15 @@ set(SBLIB_KNX_SRC
         inc/sblib/eib/addr_tablesSYSTEMB.h
         inc/sblib/eib/apci.h
         inc/sblib/eib/bcu_base.h
-#        inc/sblib/eib/bcu_const.h
+        inc/sblib/eib/bcu_const.h
         inc/sblib/eib/bcu_default.h
         inc/sblib/eib/bcu1.h
         inc/sblib/eib/bcu2.h
         inc/sblib/eib/bus.h
         inc/sblib/eib/bus_const.h
         inc/sblib/eib/bus_debug.h
-#        inc/sblib/eib/callback_bcu.h
-#        inc/sblib/eib/callback_bus.h
+        inc/sblib/eib/callback_bcu.h
+        inc/sblib/eib/callback_bus.h
         inc/sblib/eib/com_objects.h
         inc/sblib/eib/com_objectsBCU1.h
         inc/sblib/eib/com_objectsBCU2.h
@@ -132,7 +132,7 @@ set(SBLIB_KNX_SRC
         src/eib/bcu2.cpp
         src/eib/bus.cpp
         src/eib/bus_debug.cpp
-#        src/eib/callback_bcu.cpp
+        src/eib/callback_bcu.cpp
         src/eib/com_objects.cpp
         src/eib/com_objectsBCU1.cpp
         src/eib/com_objectsBCU2.cpp
