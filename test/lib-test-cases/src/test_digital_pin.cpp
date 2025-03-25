@@ -141,12 +141,12 @@ void readIOConRegisters(IOConRegister* reg)
     reg->RXD_LOC = LPC_IOCON->RXD_LOC;
 }
 
-void requireReservedRegistersUnchanged(IOConRegister* reg)
+void requireReservedRegistersUnchanged(const IOConRegister* reg)
 {
     REQUIRE(reg->RESERVED0[0] == LPC_IOCON->RESERVED0[0]);
 }
 
-void requireSerialRegistersUnchanged(IOConRegister* reg)
+void requireSerialRegistersUnchanged(const IOConRegister* reg)
 {
     REQUIRE(reg->DSR_LOC == LPC_IOCON->DSR_LOC);
     REQUIRE(reg->DCD_LOC == LPC_IOCON->DCD_LOC);
@@ -171,7 +171,7 @@ TEST_CASE("pinMode(pin, OUTPUT) / pinMode(pin, OUTPUT_MATCH)", "[digital_pin]")
 {
     for (const PortPinInfo& pin : allPins)
     {
-        IOConRegister savedRegister;
+        IOConRegister savedRegister{};
         readIOConRegisters(&savedRegister);
 
         const LPC_GPIO_TypeDef* port = gpioPorts[digitalPinToPort(pin.pin)];
@@ -212,7 +212,7 @@ TEST_CASE("pinMode(pin, INPUT)", "[digital_pin]")
 {
     for (const PortPinInfo& pin : allPins)
     {
-        IOConRegister savedRegister;
+        IOConRegister savedRegister{};
         readIOConRegisters(&savedRegister);
 
         const LPC_GPIO_TypeDef* port = gpioPorts[digitalPinToPort(pin.pin)];
@@ -248,7 +248,7 @@ TEST_CASE("pinMode(pin, INPUT_CAPTURE)", "[digital_pin]")
                 continue; // pin doesn´t support INPUT_CAPTURE, so continue
             }
 
-            IOConRegister savedRegister;
+            IOConRegister savedRegister{};
             readIOConRegisters(&savedRegister);
 
             const LPC_GPIO_TypeDef* port = gpioPorts[digitalPinToPort(pin.pin)];
@@ -311,7 +311,7 @@ TEST_CASE("pinMode(pin, INPUT_ANALOG)", "[digital_pin]")
             ///\todo it would be better, if pinMode had a return error value with [[nounused]]
             continue; // pin doesn´t support INPUT_ANALOG, so continue
         }
-        IOConRegister savedRegister;
+        IOConRegister savedRegister{};
         readIOConRegisters(&savedRegister);
 
         const LPC_GPIO_TypeDef* port = gpioPorts[digitalPinToPort(pin.pin)];
@@ -338,7 +338,7 @@ TEST_CASE("pinMode(pin, SERIAL_RXD)", "[digital_pin]")
             continue; // pin doesn´t support PF_RXD, so continue
         }
 
-        IOConRegister savedRegister;
+        IOConRegister savedRegister{};
         readIOConRegisters(&savedRegister);
 
         const LPC_GPIO_TypeDef* port = gpioPorts[digitalPinToPort(pin.pin)];
@@ -393,7 +393,7 @@ TEST_CASE("pinMode(pin, SPI_MISO)", "[digital_pin]")
                 continue; // pin doesn´t support PF_MISO, so continue
             }
 
-            IOConRegister savedRegister;
+            IOConRegister savedRegister{};
             readIOConRegisters(&savedRegister);
 
             const LPC_GPIO_TypeDef* port = gpioPorts[digitalPinToPort(pin.pin)];
@@ -444,7 +444,7 @@ TEST_CASE("pinMode(pin, SPI_MOSI)", "[digital_pin]")
                 continue; // pin doesn´t support PF_MISO, so continue
             }
 
-            IOConRegister savedRegister;
+            IOConRegister savedRegister{};
             readIOConRegisters(&savedRegister);
 
             const LPC_GPIO_TypeDef* port = gpioPorts[digitalPinToPort(pin.pin)];
@@ -491,7 +491,7 @@ TEST_CASE("pinMode(pin, SPI_CLOCK)", "[digital_pin]")
             continue; // pin doesn´t support PF_SCK, so continue
         }
 
-        IOConRegister savedRegister;
+        IOConRegister savedRegister{};
         readIOConRegisters(&savedRegister);
 
         const LPC_GPIO_TypeDef* port = gpioPorts[digitalPinToPort(pin.pin)];
@@ -546,7 +546,7 @@ TEST_CASE("pinMode(pin, SPI_SSEL)", "[digital_pin]")
             continue; // pin doesn´t support PF_SSEL, so continue
         }
 
-        IOConRegister savedRegister;
+        IOConRegister savedRegister{};
         readIOConRegisters(&savedRegister);
 
         const LPC_GPIO_TypeDef* port = gpioPorts[digitalPinToPort(pin.pin)];
