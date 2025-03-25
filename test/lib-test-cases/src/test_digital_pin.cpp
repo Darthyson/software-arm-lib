@@ -182,7 +182,7 @@ TEST_CASE("pinMode(pin, OUTPUT) / pinMode(pin, OUTPUT_MATCH)", "[digital_pin]")
 
         // Set pin mode to output
         pinMode(pin.pin, OUTPUT);
-        REQUIRE((port->DIR & bitOutMask) == bitOutMask); // port direction bit for pin number set
+        REQUIRE((port->DIR & bitOutMask) == bitOutMask); // port direction bit for pin set
 
         REQUIRE(*iocon == pinPIOfunctionNumber); // IOCON_PIO_x_y set to correct pin function
         requireAllIOConRegistersUnchanged(&savedRegister);
@@ -194,12 +194,12 @@ TEST_CASE("pinMode(pin, OUTPUT) / pinMode(pin, OUTPUT_MATCH)", "[digital_pin]")
         if (getPinFunctionNumber(pin.pin, PF_MAT) < 0)
         {
             ///\todo it would be better, if pinMode had a return error value with [[nounused]]
-            continue; // pin doesn´t support output match, so continue
+            continue; // pin does not support output match, so continue
         }
 
         // Set pin mode to output match
         pinMode(pin.pin, OUTPUT_MATCH);
-        REQUIRE((port->DIR & bitOutMask) == bitOutMask); // port direction bit for pin number set
+        REQUIRE((port->DIR & bitOutMask) == bitOutMask); // port direction bit for pin set
 
         pinPIOfunctionNumber = getDigitalPinFunctionNumber(pin.pin, PF_MAT);
 
@@ -222,7 +222,7 @@ TEST_CASE("pinMode(pin, INPUT)", "[digital_pin]")
         uint32_t pinPIOfunctionNumber = getDigitalPinFunctionNumber(pin.pin, PF_PIO);
 
         pinMode(pin.pin, INPUT); // Set pin mode to input
-        REQUIRE((port->DIR & bitOutMask) == 0); // port direction bit for pin number NOT set
+        REQUIRE((port->DIR & bitOutMask) == 0); // port direction bit for pin NOT set
 
         REQUIRE(*iocon == pinPIOfunctionNumber); // IOCON_PIO_x_y set to correct pin function
         requireAllIOConRegistersUnchanged(&savedRegister);
@@ -245,7 +245,7 @@ TEST_CASE("pinMode(pin, INPUT_CAPTURE)", "[digital_pin]")
             if (getPinFunctionNumber(pin.pin, PF_CAP) < 0)
             {
                 ///\todo it would be better, if pinMode had a return error value with [[nounused]]
-                continue; // pin doesn´t support INPUT_CAPTURE, so continue
+                continue; // pin does not support INPUT_CAPTURE, so continue
             }
 
             IOConRegister savedRegister{};
@@ -258,7 +258,7 @@ TEST_CASE("pinMode(pin, INPUT_CAPTURE)", "[digital_pin]")
             uint32_t pinPIOfunctionNumber = getDigitalPinFunctionNumber(pin.pin, PF_CAP);
 
             pinMode(pin.pin, INPUT_CAPTURE); // Set pin mode to input capture
-            REQUIRE((port->DIR & bitOutMask) == 0); // port direction bit for pin number NOT set
+            REQUIRE((port->DIR & bitOutMask) == 0); // port direction bit for pin NOT set
 
             REQUIRE(*iocon == pinPIOfunctionNumber); // IOCON_PIO_x_y set to correct pin function
 
@@ -304,7 +304,7 @@ TEST_CASE("pinMode(pin, INPUT_ANALOG)", "[digital_pin]")
         if (getPinFunctionNumber(pin.pin, PF_AD) < 0)
         {
             ///\todo it would be better, if pinMode had a return error value with [[nounused]]
-            continue; // pin doesn´t support INPUT_ANALOG, so continue
+            continue; // pin does not support INPUT_ANALOG, so continue
         }
         IOConRegister savedRegister{};
         readIOConRegisters(&savedRegister);
@@ -316,7 +316,7 @@ TEST_CASE("pinMode(pin, INPUT_ANALOG)", "[digital_pin]")
         uint32_t pinPIOfunctionNumber = getPinFunctionNumber(pin.pin, PF_AD);
 
         pinMode(pin.pin, INPUT_ANALOG);         // Set pin mode to input
-        REQUIRE((port->DIR & bitOutMask) == 0); // port direction bit for pin number NOT set
+        REQUIRE((port->DIR & bitOutMask) == 0); // port direction bit for pin NOT set
 
         REQUIRE(*iocon == pinPIOfunctionNumber); // IOCON_PIO_x_y set to correct pin function
         requireAllIOConRegistersUnchanged(&savedRegister);
@@ -330,7 +330,7 @@ TEST_CASE("pinMode(pin, SERIAL_RXD)", "[digital_pin]")
         if (getPinFunctionNumber(pin.pin, PF_RXD) < 0)
         {
             ///\todo it would be better, if pinMode had a return error value with [[nounused]]
-            continue; // pin doesn´t support PF_RXD, so continue
+            continue; // pin does not support PF_RXD, so continue
         }
 
         IOConRegister savedRegister{};
@@ -343,7 +343,7 @@ TEST_CASE("pinMode(pin, SERIAL_RXD)", "[digital_pin]")
         uint32_t pinPIOfunctionNumber = getDigitalPinFunctionNumber(pin.pin, PF_RXD);
 
         pinMode(pin.pin, SERIAL_RXD); // Set pin mode to input capture
-        REQUIRE((port->DIR & bitOutMask) == 0); // port direction bit for pin number NOT set
+        REQUIRE((port->DIR & bitOutMask) == 0); // port direction bit for pin NOT set
 
         REQUIRE(*iocon == pinPIOfunctionNumber); // IOCON_PIO_x_y set to correct pin function
 
@@ -385,7 +385,7 @@ TEST_CASE("pinMode(pin, SPI_MISO)", "[digital_pin]")
             if (getPinFunctionNumber(pin.pin, PF_MISO) < 0)
             {
                 ///\todo it would be better, if pinMode had a return error value with [[nounused]]
-                continue; // pin doesn´t support PF_MISO, so continue
+                continue; // pin does not support PF_MISO, so continue
             }
 
             IOConRegister savedRegister{};
@@ -398,7 +398,7 @@ TEST_CASE("pinMode(pin, SPI_MISO)", "[digital_pin]")
             uint32_t pinPIOfunctionNumber = getDigitalPinFunctionNumber(pin.pin, PF_MISO);
 
             pinMode(pin.pin, SPI_MISO); // Set pin mode to input capture
-            REQUIRE((port->DIR & bitOutMask) == 0); // port direction bit for pin number NOT set
+            REQUIRE((port->DIR & bitOutMask) == 0); // port direction bit for pin NOT set
 
             REQUIRE(*iocon == pinPIOfunctionNumber); // IOCON_PIO_x_y set to correct pin function
 
@@ -436,7 +436,7 @@ TEST_CASE("pinMode(pin, SPI_MOSI)", "[digital_pin]")
             if (getPinFunctionNumber(pin.pin, PF_MOSI) < 0)
             {
                 ///\todo it would be better, if pinMode had a return error value with [[nounused]]
-                continue; // pin doesn´t support PF_MISO, so continue
+                continue; // pin does not support PF_MISO, so continue
             }
 
             IOConRegister savedRegister{};
@@ -449,7 +449,7 @@ TEST_CASE("pinMode(pin, SPI_MOSI)", "[digital_pin]")
             uint32_t pinPIOfunctionNumber = getDigitalPinFunctionNumber(pin.pin, PF_MOSI);
 
             pinMode(pin.pin, SPI_MOSI); // Set pin mode to input capture
-            REQUIRE((port->DIR & bitOutMask) == 0); // port direction bit for pin number NOT set
+            REQUIRE((port->DIR & bitOutMask) == 0); // port direction bit for pin NOT set
 
             REQUIRE(*iocon == pinPIOfunctionNumber); // IOCON_PIO_x_y set to correct pin function
 
@@ -483,7 +483,7 @@ TEST_CASE("pinMode(pin, SPI_CLOCK)", "[digital_pin]")
         if (getPinFunctionNumber(pin.pin, PF_SCK) < 0)
         {
             ///\todo it would be better, if pinMode had a return error value with [[nounused]]
-            continue; // pin doesn´t support PF_SCK, so continue
+            continue; // pin does not support PF_SCK, so continue
         }
 
         IOConRegister savedRegister{};
@@ -496,7 +496,7 @@ TEST_CASE("pinMode(pin, SPI_CLOCK)", "[digital_pin]")
         uint32_t pinPIOfunctionNumber = getDigitalPinFunctionNumber(pin.pin, PF_SCK);
 
         pinMode(pin.pin, SPI_CLOCK); // Set pin mode to input capture
-        REQUIRE((port->DIR & bitOutMask) == 0); // port direction bit for pin number NOT set
+        REQUIRE((port->DIR & bitOutMask) == 0); // port direction bit for pin NOT set
 
         REQUIRE(*iocon == pinPIOfunctionNumber); // IOCON_PIO_x_y set to correct pin function
 
@@ -538,7 +538,7 @@ TEST_CASE("pinMode(pin, SPI_SSEL)", "[digital_pin]")
         if (getPinFunctionNumber(pin.pin, PF_SSEL) < 0)
         {
             ///\todo it would be better, if pinMode had a return error value with [[nounused]]
-            continue; // pin doesn´t support PF_SSEL, so continue
+            continue; // pin does not support PF_SSEL, so continue
         }
 
         IOConRegister savedRegister{};
@@ -551,7 +551,7 @@ TEST_CASE("pinMode(pin, SPI_SSEL)", "[digital_pin]")
         uint32_t pinPIOfunctionNumber = getDigitalPinFunctionNumber(pin.pin, PF_SSEL);
 
         pinMode(pin.pin, SPI_SSEL); // Set pin mode to input capture
-        REQUIRE((port->DIR & bitOutMask) == 0); // port direction bit for pin number NOT set
+        REQUIRE((port->DIR & bitOutMask) == 0); // port direction bit for pin NOT set
 
         REQUIRE(*iocon == pinPIOfunctionNumber); // IOCON_PIO_x_y set to correct pin function
 
