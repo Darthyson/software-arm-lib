@@ -313,12 +313,12 @@ TEST_CASE("pinMode(pin, INPUT_ANALOG)", "[digital_pin]")
         const uint32_t* iocon = ioconPointer(pin.pin);
         const uint32_t bitOutMask = 1 << digitalPinToPinNum(pin.pin);
 
-        uint32_t pinPIOfunctionNumber = getPinFunctionNumber(pin.pin, PF_AD);
+        int8_t pinPIOfunctionNumber = getPinFunctionNumber(pin.pin, PF_AD);
 
         pinMode(pin.pin, INPUT_ANALOG);         // Set pin mode to input
         REQUIRE((port->DIR & bitOutMask) == 0); // port direction bit for pin NOT set
 
-        REQUIRE(*iocon == pinPIOfunctionNumber); // IOCON_PIO_x_y set to correct pin function
+        REQUIRE(*iocon == static_cast<uint32_t>(pinPIOfunctionNumber)); // IOCON_PIO_x_y set to correct pin function
         requireAllIOConRegistersUnchanged(&savedRegister);
     }
 }
@@ -578,6 +578,40 @@ TEST_CASE("pinMode(pin, SPI_SSEL)", "[digital_pin]")
 
 TEST_CASE("pinMode(pin, INPUT | ...)", "[digital_pin]")
 {
-    ///\todo OPEN_DRAIN, HYSTERESIS, PULL_DOWN, PULL_UP
+    // Bits 3:4 mode select
+    //      0x00 no pull-down/pull-up
+    //      0x01 pull-down
+    //      0x10 pull-up
+    //      0x11 repeater mode
+    // Bit 5: hysteresis
+    //      0x0 Disabled hysteresis
+    //      0x1 Enabled hysteresis
+    struct ModeTestCase
+    {
+        uint32_t mode;
+        uint32_t expectedResult;
+    };
+    const std::vector<ModeTestCase> modeTestCases = {
+        {(INPUT | OPEN_DRAIN), 0b000},
+        {(INPUT | OPEN_DRAIN | HYSTERESIS), 0b100},
+        {(INPUT | PULL_DOWN), 0b001},
+        {(INPUT | PULL_DOWN | HYSTERESIS), 0b101},
+        {(INPUT | PULL_UP), 0b010},
+        {(INPUT | PULL_UP | HYSTERESIS), 0b110},
+        {(INPUT | REPEATER_MODE), 0b011},
+        {(INPUT | REPEATER_MODE | HYSTERESIS), 0b111},
+    };
+
+    for (const PortPinInfo& pin : allPins)
+    {
+        for (const auto& [mode, expectedResult] : modeTestCases)
+        {
+            constexpr uint32_t bitMask = 0b111;
+            const uint32_t* iocon = ioconPointer(pin.pin);
+            pinMode(pin.pin, mode);
+            // ignore function bits 0:2
+            REQUIRE(((*iocon >> 3) & bitMask) == expectedResult);
+        }
+    }
 }
 
