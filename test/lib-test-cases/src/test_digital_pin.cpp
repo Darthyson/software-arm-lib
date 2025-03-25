@@ -268,29 +268,24 @@ TEST_CASE("pinMode(pin, INPUT_CAPTURE)", "[digital_pin]")
                     REQUIRE(LPC_IOCON->CT16B0_CAP0_LOC == 0);
                     savedRegister.CT16B0_CAP0_LOC = 0;
                     break;
-                case PIO1_0: // CT32B1_CAP0, has no location register
-                    break;
                 case PIO1_5:
                     REQUIRE(LPC_IOCON->CT32B0_CAP0_LOC == 0);
                     savedRegister.CT32B0_CAP0_LOC = 0;
-                    break;
-                case PIO1_8: // CT16B1_CAP0, has no location register
-                    break;
-                case PIO1_11: // CT32B1_CAP1, has no location register
                     break;
                 case PIO2_9:
                     REQUIRE(LPC_IOCON->CT32B0_CAP0_LOC == 1);
                     savedRegister.CT32B0_CAP0_LOC = 1;
                     break;
-                case PIO2_11: // CT32B0_CAP1, has no location register
-                    break;
                 case PIO3_3:
                     REQUIRE(LPC_IOCON->CT16B0_CAP0_LOC == 1);
                     savedRegister.CT16B0_CAP0_LOC = 1;
                     break;
-                case PIO3_4: // CT16B0_CAP1, has no location register
-                    break;
-                case PIO3_5: // CT16B1_CAP1, has no location register
+                case PIO1_0:  // CT32B1_CAP0, has no location register
+                case PIO1_8:  // CT16B1_CAP0, has no location register
+                case PIO1_11: // CT32B1_CAP1, has no location register
+                case PIO2_11: // CT32B0_CAP1, has no location register
+                case PIO3_4:  // CT16B0_CAP1, has no location register
+                case PIO3_5:  // CT16B1_CAP1, has no location register
                     break;
                 default:
                     FAIL("Unknown pin for INPUT_CAPTURE.");
