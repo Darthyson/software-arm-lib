@@ -122,48 +122,6 @@ int hashUID(byte* uid, const int len_uid, byte* hash, const int len_hash);
 #endif
 
 /**
- * Concatenate two strings.
- * C preprocessor macros are not expanded.
- *
- * @param str1 - the first string
- * @param str2 - the second string
- *
- * @brief Example:  CPP_CONCAT(example_,BCU_NAME) results in example_BCU_NAME
- */
-#define CPP_CONCAT(str1,str2)  str1 ## str2
-
-/**
- * Concatenate two strings.
- * C preprocessor macros are expanded before concatenation.
- *
- * @param str1 - the first string
- * @param str2 - the second string
- *
- * @brief Example:  CPP_QUOTE_EXPAND(example_,BCU_NAME) results in example_BCU2  (if BCU_NAME is defined as BCU2)
- */
-#define CPP_CONCAT_EXPAND(str1,str2) CPP_CONCAT(str1,str2)
-
-/**
- * Quote a string.
- * C preprocessor macros are not expanded.
- *
- * @param str - the string to quote
- *
- * @brief Example:  CPP_QUOTE(BCU_TYPE) results in "BCU_TYPE"
- */
-#define CPP_QUOTE(str) #str
-
-/**
- * Quote a string.
- * C preprocessor macros are expanded before quoting.
- *
- * @param str - the string to quote
- *
- * @brief Example:  CPP_QUOTE_EXPAND(BCU_NAME) results in "BCU2"  (if BCU_NAME is defined as BCU2)
- */
-#define CPP_QUOTE_EXPAND(str) CPP_QUOTE(str)
-
-/**
  * Interrupt service routine to override the default HardFault exception handler in cr_startup_lpc11xx.cpp
  * This function will never return and the program/fatalError LED
  * will blink rapidly to indicate the error.
