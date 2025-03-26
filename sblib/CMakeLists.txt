@@ -33,8 +33,8 @@ option(DEBUG_BUS "Enable dumping of state machine interrupt data e.g timer value
 option(DEBUG_BUS_BITLEVEL "Extension used with DEBUG_BUS to dump interrupt of each bit -
         use with care due to easy overflow of the trace buffer" OFF)
 
-set(DEBUG_DEFINES_ARM
-#        DEBUG
+set(DEBUG_DEFINES_CORE
+        INCLUDE_SERIAL
         SERIAL_SPEED=1500000
         DEBUG_BUS
         DEBUG_BUS_BITLEVEL
@@ -46,27 +46,30 @@ set(DEBUG_DEFINES_ARM
         DUMP_TL4
 #        SERIAL_RX_PIN=PIO2_7
 #        SERIAL_TX_PIN=PIO2_8
-#        INCLUDE_SERIAL
 #        ROUTER
 #        BUSMONITOR
 )
+
+set(DEBUG_DEFINES_ARM
+        ${DEBUG_DEFINES_CORE}
+)
+
 set(DEBUG_DEFINES_X86_X64
+        ${DEBUG_DEFINES_CORE}
         DEBUG
-        INCLUDE_SERIAL
-        SERIAL_SPEED=1500000
-        DEBUG_BUS
-        DEBUG_BUS_BITLEVEL
-        DUMP_TELEGRAMS
-        PIO_FOR_TEL_END_IND=PIO1_4
-        DUMP_COM_OBJ
-        DUMP_MEM_OPS
-        DUMP_PROPERTIES
-        DUMP_TL4
         __LPC11XX__
         IAP_EMULATION
 )
 
-set(RELEASE_DEFINES
+set(RELEASE_DEFINES_CORE
+)
+
+set(RELEASE_DEFINES_ARM
+        ${RELEASE_DEFINES_CORE}
+)
+
+set(RELEASE_DEFINES_X86_X64
+        ${RELEASE_DEFINES_CORE}
         NDEBUG
         __LPC11XX__
         IAP_EMULATION
@@ -142,7 +145,7 @@ if(CMAKE_CROSSCOMPILING)
     target_include_directories(${TARGET_ARM} PUBLIC ${SBLPC_DIR}/inc)
     target_compile_definitions(${TARGET_ARM} PRIVATE
             $<$<CONFIG:Debug>:${DEBUG_DEFINES_ARM}>
-            $<$<CONFIG:Release>:${RELEASE_DEFINES}>
+            $<$<CONFIG:Release>:${RELEASE_DEFINES_ARM}>
     )
     target_compile_options(${TARGET_ARM} PRIVATE
             $<$<CONFIG:Debug>:${DEBUG_FLAGS_ARM}>
@@ -157,7 +160,7 @@ else()
         target_include_directories(${TARGET_X86} PUBLIC ${CMAKE_CURRENT_SOURCE_DIR}/../test/sblib/cpu-emu)
         target_compile_definitions(${TARGET_X86} PRIVATE
                 $<$<CONFIG:Debug>:${DEBUG_DEFINES_X86_X64}>
-                $<$<CONFIG:Release>:${RELEASE_DEFINES}>
+                $<$<CONFIG:Release>:${RELEASE_DEFINES_X86_X64}>
         )
         target_compile_options(${TARGET_X86} PRIVATE
                 $<$<CONFIG:Debug>:${DEBUG_X86_FLAGS}>
@@ -176,7 +179,7 @@ else()
         target_include_directories(${TARGET_X64} PUBLIC ${CMAKE_CURRENT_SOURCE_DIR}/../test/sblib/cpu-emu)
         target_compile_definitions(${TARGET_X64} PRIVATE
                 $<$<CONFIG:Debug>:${DEBUG_DEFINES_X86_X64}>
-                $<$<CONFIG:Release>:${RELEASE_DEFINES}>
+                $<$<CONFIG:Release>:${RELEASE_DEFINES_X86_X64}>
         )
         target_compile_options(${TARGET_X64} PRIVATE
                 $<$<CONFIG:Debug>:${DEBUG_X64_FLAGS}>
