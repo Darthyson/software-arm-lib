@@ -2,7 +2,7 @@ cmake_minimum_required(VERSION 3.30)
 
 project(sblib-test CXX)
 
-set(CMAKE_VERBOSE_MAKEFILE ON CACHE BOOL "Enable verbose output from the build system" FORCE)
+set(CMAKE_VERBOSE_MAKEFILE ON CACHE BOOL "Enable verbose output from the build system")
 set(CMAKE_C_STANDARD 17)
 set(CMAKE_C_STANDARD_REQUIRED ON)
 

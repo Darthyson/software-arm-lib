@@ -2,7 +2,7 @@ cmake_minimum_required(VERSION 3.30)
 
 project(lib-test-cases LANGUAGES CXX)
 
-set(CMAKE_VERBOSE_MAKEFILE ON CACHE BOOL "Enable verbose output from the build system" FORCE)
+set(CMAKE_VERBOSE_MAKEFILE ON CACHE BOOL "Enable verbose output from the build system")
 set(CMAKE_CXX_STANDARD 17)
 set(CMAKE_CXX_STANDARD_REQUIRED ON)
 
