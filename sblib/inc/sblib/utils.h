@@ -11,7 +11,7 @@
 #define SBLIB_UTILS_H
 
 #include <sblib/types.h>
-#include <sblib/libconfig.h>
+#include <sblib/libconfig.h> // Do not delete this line! We need it for the below debug macros, e.g. DUMP_MEM_OPS
 
 #define HIGH_BYTE(x) ((uint8_t)(x >> 8))  ///\todo create new macro "secondByte" in bits.h
 
@@ -60,7 +60,7 @@ int hashUID(byte* uid, const int len_uid, byte* hash, const int len_hash);
  *
  * @param code - the C++ code to include
  *
- * @brief Example:  IF_DEBUG(fatalError())
+ * @note Example:  IF_DEBUG(fatalError())
  */
 #ifdef DEBUG
 #  define IF_DEBUG(code) { code; }
@@ -81,7 +81,7 @@ int hashUID(byte* uid, const int len_uid, byte* hash, const int len_hash);
  *
  * @param code - the C++ code to include
  *
- * @brief Example:  DB_PROPERTIES(fatalError())
+ * @note Example:  DB_PROPERTIES(fatalError())
  */
 #if defined(DUMP_PROPERTIES)
 #   define DB_PROPERTIES(code) IF_DEBUG(code)
