@@ -15,6 +15,7 @@ set(SBLIB_LIB_TEST_CASES_SRC
         src/test_ioports.cpp
         src/test_ioports_get_pin_function_number.cpp
         src/test_knx_lpdu.cpp
+        src/test_platform.cpp
         src/test_prot_apci.cpp
         src/test_prot_app_program.cpp
         src/test_prot_tlayer4.cpp
