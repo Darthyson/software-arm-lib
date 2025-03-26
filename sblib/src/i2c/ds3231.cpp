@@ -35,7 +35,7 @@ void Ds3231::Ds3231Init()
 ** Descriptions:   Sets the time on DS3231 Struct data is in integrer format,
 **                 not BCD. Fx will convert
 **
-** parameters:     time - struct cotaining time data;
+** parameters:     time - struct containing time data;
 **
 ** Returned value: TRUE on success, FALSE on failure
 **
@@ -128,7 +128,7 @@ bool Ds3231::GetTime(ds3231_time_t* time)
 **
 ** Descriptions:   Sets the calendar on DS3231
 **
-** parameters:     [in] calendar - struct cotaining calendar data
+** parameters:     [in] calendar - struct containing calendar data
 **
 ** Returned value: TRUE on success, FALSE on failure
 **
@@ -610,7 +610,7 @@ bool Ds3231::ResetAlarm(bool bAlarmNumber)
 /*****************************************************************************
 ** Function name:  TurnOnAlarm
 **
-** Descriptions:   Turns on alarm number "ALARM_1 or "ALARM_2".
+** Descriptions:   Turns on alarm number "ALARM_1" or "ALARM_2".
 **
 ** parameters:     ALARM_1 or ALARM_2
 **
@@ -718,13 +718,13 @@ float Ds3231::GetTemperature()
 /*****************************************************************************
 ** Function name:  uchar_2_bcd
 **
-** Descriptions:   Private mmber fx, converts unsigned char to BCD
+** Descriptions:   Private member fx, converts unsigned char to BCD
 **
 ** parameters:     [in] data - 0-255
 **
 ** Returned value: bcd_result = BCD representation of data
 **
-** Example: noene
+** Example: none
 **
 *****************************************************************************/
 uint16_t Ds3231::uchar_2_bcd(uint8_t data)
@@ -748,13 +748,13 @@ uint16_t Ds3231::uchar_2_bcd(uint8_t data)
 /*****************************************************************************
 ** Function name:  bcd_2_uchar
 **
-** Descriptions:   Private mmber fx, converts BCD to a uint8_t
+** Descriptions:   Private member fx, converts BCD to an uint8_t
 **
 ** parameters:     [in] bcd - 0-99
 **
 ** Returned value: rtn_val = integer rep. of BCD
 **
-** Example: noene
+** Example: none
 **
 *****************************************************************************/
 uint8_t Ds3231::bcd_2_uchar(uint8_t bcd)
