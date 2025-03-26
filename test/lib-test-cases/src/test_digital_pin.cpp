@@ -93,13 +93,13 @@ TEST_CASE("digitalPinToBitMask", "[digital_pin]")
     REQUIRE(digitalPinToBitMask(PIO3_5) == 0x00000020);
 }
 
-void resetRegisters(PortPin pin)
+void resetRegisters(const PortPin pin)
 {
     LPC_GPIO_TypeDef* port = gpioPorts[digitalPinToPort(pin)];
     port->DIR = 0;
 }
 
-uint32_t getDigitalPinFunctionNumber(PortPin pin, PinFunc pinFunction)
+uint32_t getDigitalPinFunctionNumber(const PortPin pin, const PinFunc pinFunction)
 {
     if ((pin & PFL_ADMODE) == PFL_ADMODE) // If pin has ADC support we need to set ADMODE = Digital functional mode bit 7
     {
@@ -615,3 +615,261 @@ TEST_CASE("pinMode(pin, INPUT | ...)", "[digital_pin]")
     }
 }
 
+TEST_CASE("pinDirection(pin, INPUT / OUTPUT)", "[digital_pin]")
+{
+    for (const PortPinInfo& pin : allPins)
+    {
+        LPC_GPIO_TypeDef* port = gpioPorts[digitalPinToPort(pin.pin)];
+        const uint8_t pinNumber = digitalPinToPinNum(pin.pin);
+        const uint32_t bitTestMaskIsOutput = 1 << pinNumber;
+
+        // Test pinMode set to output
+        port->DIR = 0; // set all pins to input in port direction register
+        pinMode(pin.pin, OUTPUT);
+        REQUIRE(port->DIR == bitTestMaskIsOutput);
+
+        // Test only pin.pin changes to INPUT
+        constexpr uint32_t allPinsAsOutput = 0xffffffff; // 12 pins on a port, but also check bits 31:12 are unchanged
+        port->DIR = allPinsAsOutput; // set all pins to output in port direction register
+        pinDirection(pin.pin, INPUT);
+        REQUIRE(port->DIR == (allPinsAsOutput & ~bitTestMaskIsOutput));
+
+        // Test only pin.pin changes to OUTPUT
+        port->DIR = 0; // set all pins to input in port direction register
+        pinDirection(pin.pin, OUTPUT);
+        REQUIRE(port->DIR == bitTestMaskIsOutput);
+
+        // Test again only pin.pin changes to INPUT
+        port->DIR = allPinsAsOutput; // set all pins to output in port direction register
+        pinDirection(pin.pin, INPUT);
+        REQUIRE(port->DIR == (allPinsAsOutput & ~bitTestMaskIsOutput));
+    }
+}
+
+TEST_CASE("pinInterruptMode(pin, INTERRUPT_* | ...)", "[digital_pin]")
+{
+    struct InterruptModeTestCase
+    {
+        uint16_t interruptMode;
+        bool isISset;  // Interrupt sense register (UM10398 12.3.3) 0 = edge sensitive, 1 = level sensitive
+        bool isIBEset; // Interrupt both edges sense register (UM10398 12.3.4) 0 = controlled with IEV, 1 = both edges
+        bool isIEVset; // Interrupt event register (UM10398 12.3.5) 0 = falling edge or low, 1 = rising edge or high
+        bool isIEset;  // Interrupt mask register (UM10398 12.3.6) 0 = interrupt disabled, 1 = interrupt enabled
+    };
+    const std::vector<InterruptModeTestCase> modeTestCases = {
+        // Nothing configured
+        {0, false, false, false, false},
+
+        // Level sensitive test cases
+        {INTERRUPT_LEVEL_LOW, true, false, false, false},
+        {INTERRUPT_LEVEL_HIGH, true, false, true, false},
+        {(INTERRUPT_LEVEL_LOW | INTERRUPT_ENABLED), true, false, false, true},
+        {(INTERRUPT_LEVEL_HIGH | INTERRUPT_ENABLED), true, false, true, true},
+
+        // Edge sensitive test cases
+        {INTERRUPT_EDGE_FALLING, false, false, false, false},
+        {INTERRUPT_EDGE_RISING, false, false, true, false},
+        {INTERRUPT_EDGE_BOTH, false, true, false, false},
+        {(INTERRUPT_EDGE_FALLING | INTERRUPT_ENABLED), false, false, false, true},
+        {(INTERRUPT_EDGE_RISING | INTERRUPT_ENABLED), false, false, true, true},
+        {(INTERRUPT_EDGE_BOTH  | INTERRUPT_ENABLED), false, true, false, true},
+    };
+
+    for (const PortPinInfo& pin : allPins)
+    {
+        for (const InterruptModeTestCase testCase : modeTestCases)
+        {
+            // Reset port interrupt registers
+            LPC_GPIO_TypeDef* port = gpioPorts[digitalPinToPort(pin.pin)];
+            port->IS = 0;
+            port->IBE = 0;
+            port->IEV = 0;
+            port->IE = 0;
+            const uint8_t pinNumber = digitalPinToPinNum(pin.pin);
+
+            // Simple test if nothing is configured
+            pinInterruptMode(pin.pin, testCase.interruptMode);
+            REQUIRE(port->IS == (static_cast<uint32_t>(testCase.isISset) << pinNumber));
+            REQUIRE(port->IBE == (static_cast<uint32_t>(testCase.isIBEset) << pinNumber));
+            REQUIRE(port->IEV == (static_cast<uint32_t>(testCase.isIEVset) << pinNumber));
+            REQUIRE(port->IE == (static_cast<uint32_t>(testCase.isIEset) << pinNumber));
+
+            const uint32_t testMask = 1 << pinNumber;
+            constexpr uint32_t allPinsSet = 0xffffffff; // 12 pins on a port, but also check bits 31:12 are unchanged
+            port->IS = allPinsSet;
+            port->IBE = allPinsSet;
+            port->IEV = allPinsSet;
+            port->IE = allPinsSet;
+
+            // Test correct configuration of pin.pin, if all other pins are already set
+            pinInterruptMode(pin.pin, testCase.interruptMode);
+            REQUIRE((port->IS & testMask) == (static_cast<uint32_t>(testCase.isISset) << pinNumber));
+            REQUIRE((port->IBE & testMask) == (static_cast<uint32_t>(testCase.isIBEset) << pinNumber));
+            REQUIRE((port->IEV & testMask) == (static_cast<uint32_t>(testCase.isIEVset) << pinNumber));
+            REQUIRE((port->IE & testMask) == (static_cast<uint32_t>(testCase.isIEset) << pinNumber));
+
+            // Ensure other pins are unchanged
+            const uint32_t pinsUnchangedMask = allPinsSet & ~testMask;
+            REQUIRE((port->IS & ~testMask) == pinsUnchangedMask);
+            REQUIRE((port->IBE & ~testMask) == pinsUnchangedMask);
+            REQUIRE((port->IEV & ~testMask) == pinsUnchangedMask);
+            REQUIRE((port->IE & ~testMask) == pinsUnchangedMask);
+        }
+    }
+}
+
+TEST_CASE("pinEnableInterrupt(pin)", "[digital_pin]")
+{
+    for (const PortPinInfo& pin : allPins)
+    {
+        // Reset port interrupt registers
+        LPC_GPIO_TypeDef* port = gpioPorts[digitalPinToPort(pin.pin)];
+        port->IE = 0;
+        const uint8_t pinNumber = digitalPinToPinNum(pin.pin);
+        const uint32_t testMask = 1 << pinNumber;
+
+        pinEnableInterrupt(pin.pin);
+        REQUIRE(port->IE == testMask);
+
+        constexpr uint32_t allPinsSet = 0xffffffff; // 12 pins on a port, but also check bits 31:12 are unchanged
+        port->IE = allPinsSet;
+
+        // Test correct configuration of pin.pin, if all other pins are already set
+        pinEnableInterrupt(pin.pin);
+        REQUIRE((port->IE & testMask) == testMask);
+
+        // Ensure other pins are unchanged
+        REQUIRE((port->IE & ~testMask) == (allPinsSet & ~testMask));
+    }
+}
+
+TEST_CASE("pinDisableInterrupt(pin)", "[digital_pin]")
+{
+    for (const PortPinInfo& pin : allPins)
+    {
+        // Reset port interrupt registers
+        LPC_GPIO_TypeDef* port = gpioPorts[digitalPinToPort(pin.pin)];
+        port->IE = 0;
+        const uint8_t pinNumber = digitalPinToPinNum(pin.pin);
+
+        pinEnableInterrupt(pin.pin);
+        pinDisableInterrupt(pin.pin);
+        REQUIRE(port->IE == 0);
+
+        pinDisableInterrupt(pin.pin); // ensure it stays disabled
+        REQUIRE(port->IE == 0);
+
+        // Test correct configuration of pin.pin, if all other pins are already set
+        constexpr uint32_t allPinsSet = 0xffffffff; // 12 pins on a port, but also check bits 31:12 are unchanged
+        port->IE = allPinsSet;
+
+        const uint32_t testMask = 1 << pinNumber;
+        pinDisableInterrupt(pin.pin);
+        REQUIRE((port->IE & testMask) == 0);
+
+        // Ensure other pins are unchanged
+        REQUIRE((port->IE & ~testMask) == (allPinsSet & ~testMask));
+    }
+}
+
+bool checkIOConfigRegister(const Port portNum, uint32_t pinMask, const uint16_t mode)
+{
+    // This is a stupid test,
+    // because it executes the same logic as the actual function `portMode`
+    const uint32_t toTestIOConfigRegister = mode & 0xfff;
+    for (uint16_t pinNum = 0; pinMask != 0; ++pinNum, pinMask >>= 1)
+    {
+        if (pinMask & 1)
+        {
+            if (*(ioconPointer(portNum, pinNum)) != toTestIOConfigRegister)
+            {
+                return false;
+            }
+        }
+    }
+    return true;
+}
+
+TEST_CASE("portMode(...)", "[digital_pin]")
+{
+    for (const PortInfo& testPort : allPorts)
+    {
+        LPC_GPIO_TypeDef* port = gpioPorts[testPort.port];
+        port->DIR = 0;
+        for (uint32_t i = 0; i < 0x10000; i++)
+        {
+            uint32_t lastPortDIR = port->DIR;
+            portMode(testPort.port, i, OUTPUT);
+            REQUIRE(port->DIR == (lastPortDIR | i));
+            REQUIRE(checkIOConfigRegister(testPort.port, i, OUTPUT) == true);
+
+            lastPortDIR = port->DIR;
+            portMode(testPort.port, i, INPUT);
+            REQUIRE(port->DIR == (lastPortDIR & ~i));
+            REQUIRE(checkIOConfigRegister(testPort.port, i, INPUT) == true);
+
+            lastPortDIR = port->DIR;
+            portMode(testPort.port, i, OUTPUT_MATCH);
+            REQUIRE(port->DIR == (lastPortDIR | i));
+            REQUIRE(checkIOConfigRegister(testPort.port, i, OUTPUT_MATCH) == true);
+        }
+    }
+}
+
+TEST_CASE("portDirection(...)", "[digital_pin]")
+{
+    for (const PortInfo& testPort : allPorts)
+    {
+        LPC_GPIO_TypeDef* port = gpioPorts[testPort.port];
+        port->DIR = 0;
+        for (uint32_t i = 0; i < 0x10000; i++)
+        {
+            uint32_t lastPortDIR = port->DIR;
+            portDirection(testPort.port, i, OUTPUT);
+            REQUIRE(port->DIR == (lastPortDIR | i));
+
+            lastPortDIR = port->DIR;
+            portDirection(testPort.port, i, INPUT);
+            REQUIRE(port->DIR == (lastPortDIR & ~i));
+        }
+    }
+}
+
+TEST_CASE("digitalWrite(...)", "[digital_pin]")
+{
+    for (const PortPinInfo& pin : allPins)
+    {
+        // This is a stupid test,
+        // because it executes mostly the same logic as the actual function `digitalWrite`
+        const LPC_GPIO_TypeDef* port = gpioPorts[digitalPinToPort(pin.pin)];
+        const uint32_t mask = digitalPinToBitMask(pin.pin);
+
+        pinMode(pin.pin, OUTPUT);
+
+        digitalWrite(pin.pin, false);
+        REQUIRE(port->MASKED_ACCESS[mask] == false);
+        digitalWrite(pin.pin, true);
+        REQUIRE(port->MASKED_ACCESS[mask] == mask);
+        digitalWrite(pin.pin, false);
+        REQUIRE(port->MASKED_ACCESS[mask] == false);
+    }
+}
+
+TEST_CASE("digitalRead(...)", "[digital_pin]")
+{
+    for (const PortPinInfo& pin : allPins)
+    {
+        pinMode(pin.pin, INPUT);
+
+        digitalWrite(pin.pin, false);
+        REQUIRE(digitalRead(pin.pin) == false);
+
+        digitalWrite(pin.pin, true);
+        REQUIRE(digitalRead(pin.pin) == true);
+
+        digitalWrite(pin.pin, false);
+        REQUIRE(digitalRead(pin.pin) == false);
+    }
+}
+
+///\todo Find a way to implement tests for functions shiftOut(..), shiftIn(..) and pulseIn(..) of digital_pin.h

@@ -43,4 +43,22 @@ static const std::vector<PinModeInfo> allPinModes = {
     {SPI_SSEL, "SPI_SSEL"}
 };
 
+/**
+ * Pairs a @ref Port with its printable name.
+ */
+struct PortInfo {
+    Port port;
+    char name[20];
+};
+
+/**
+ * Contains all available @ref Port and their printable names.
+ */
+static const std::vector<PortInfo> allPorts = {
+    {PIO0, "PIO0"},
+    {PIO1, "PIO1"},
+    {PIO2, "PIO2"},
+    {PIO3, "PIO3"},
+};
+
 #endif /* TEST_SBLIB_DIGITAL_PIN_H_ */
