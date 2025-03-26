@@ -7,9 +7,10 @@
  *  it under the terms of the GNU General Public License version 3 as
  *  published by the Free Software Foundation.
  */
-#ifndef sblib_digital_pin_h
-#define sblib_digital_pin_h
+#ifndef SBLIB_DIGITAL_PIN_H
+#define SBLIB_DIGITAL_PIN_H
 
+#include <cstdint>
 #include <sblib/ioports.h>
 #include <sblib/platform.h>
 #include <sblib/types.h>
@@ -27,7 +28,7 @@
  * @see PinMode in digital_pin.h for the pin modes
  * @see PinFunc in ioports.h for the pin functions for PINMODE_FUNC()
  */
-void pinMode(int pin, int mode);
+void pinMode(uint32_t pin, uint32_t mode);
 
 /**
  * Configure the direction of an I/O pin. This does not change the other configuration
@@ -36,7 +37,7 @@ void pinMode(int pin, int mode);
  * @param pin   The pin to configure: PIO0_0, PIO0_1, ... @ref PortPin
  * @param dir   The direction: INPUT or OUTPUT
  */
-void pinDirection(int pin, int dir);
+void pinDirection(uint32_t pin, uint32_t dir);
 
 /**
  * Configure the interrupt for the I/O port
@@ -44,17 +45,17 @@ void pinDirection(int pin, int dir);
  * @param pin   The pin to configure: PIO0_0, PIO0_1, ... @ref PortPin
  * @param mode  The interrupt mode. Use a combination of @ref PinInterruptMode values
  */
-void pinInterruptMode(int pin, int mode);
+void pinInterruptMode(uint32_t pin,  uint16_t mode);
 
 /**
  * Enable the interrupt for this I/O pin
  */
-void pinEnableInterrupt(int pin);
+void pinEnableInterrupt(uint32_t pin);
 
 /**
  * Disable the interrupt for this I/O pin
  */
-void pinDisableInterrupt(int pin);
+void pinDisableInterrupt(uint32_t pin);
 
 /**
  * Configure the mode of the pins of an I/O port.
@@ -72,7 +73,7 @@ void pinDisableInterrupt(int pin);
  *
  * @see PinMode in digital_pin.h for the pin modes
  */
-void portMode(int portNum, int pinMask, int mode);
+void portMode(uint8_t portNum, uint32_t pinMask, uint32_t mode);
 
 /**
  * Configure the direction of an I/O pin. This does not change the other configuration
@@ -82,7 +83,7 @@ void portMode(int portNum, int pinMask, int mode);
  * @param pinMask   The bit mask for the port pins that shall be configured.
  * @param dir       The direction: INPUT or OUTPUT
  */
-void portDirection(int portNum, int pinMask, int dir);
+void portDirection(uint8_t portNum, uint32_t pinMask, uint32_t dir);
 
 /**
  * Set the value of a digital output pin.
@@ -90,7 +91,7 @@ void portDirection(int portNum, int pinMask, int dir);
  * @param pin   The pin to set: PIO0_0, PIO0_1, ... @ref PortPin
  * @param value The value to set: true or false.
  */
-void digitalWrite(int pin, bool value);
+void digitalWrite(uint32_t pin, bool value);
 
 /**
  * Read the value of a digital input pin.
@@ -98,7 +99,7 @@ void digitalWrite(int pin, bool value);
  * @param pin   The pin to read: PIO0_0, PIO0_1, ... @ref PortPin
  * @return The value of the pin: true (1) or false (0).
  */
-bool digitalRead(int pin);
+bool digitalRead(uint32_t pin);
 
 /**
  * Output a byte on a digital pin. The output is done bit by bit. The clock pin
@@ -110,7 +111,7 @@ bool digitalRead(int pin);
  * @param bitOrder  The bit order: LSBFIRST or MSBFIRST.
  * @param val       The value to output.
  */
-void shiftOut(int dataPin, int clockPin, BitOrder bitOrder, byte val);
+void shiftOut(uint32_t dataPin, uint32_t clockPin, BitOrder bitOrder, uint8_t val);
 
 /**
  * Read a byte from a digital pin. The byte is read bit by bit. The clock pin
@@ -124,7 +125,7 @@ void shiftOut(int dataPin, int clockPin, BitOrder bitOrder, byte val);
  *
  * @return The read byte.
  */
-byte shiftIn(int dataPin, int clockPin, BitOrder bitOrder);
+uint8_t shiftIn(uint32_t dataPin, uint32_t clockPin, BitOrder bitOrder);
 
 /**
  * Measures the length (in microseconds) of a pulse on the pin; state is HIGH
@@ -138,8 +139,7 @@ byte shiftIn(int dataPin, int clockPin, BitOrder bitOrder);
  *
  * @return The length of the pulse in microseconds.
  */
-unsigned int pulseIn(int pin, int state, unsigned int timeout);
-
+uint32_t pulseIn(uint32_t pin, bool state, uint32_t timeout);
 
 /**
  * Get the port number of the pin.
@@ -147,7 +147,7 @@ unsigned int pulseIn(int pin, int state, unsigned int timeout);
  * @param pin   The pin to process, e.g. PIO1_9
  * @return The port number of the pin, e.g. 1
  */
-#define digitalPinToPort(pin) ((pin >> 5) & 3)
+constexpr uint8_t digitalPinToPort(const uint32_t pin) {return (pin >> 5) & 3;} // 3 = 0b0000 0011
 
 /**
  * Get the number of the pin.
@@ -155,7 +155,7 @@ unsigned int pulseIn(int pin, int state, unsigned int timeout);
  * @param pin   The pin to process, e.g. PIO1_9
  * @return The number of the pin, e.g. 9
  */
-#define digitalPinToPinNum(pin) (pin & 31)
+constexpr uint8_t digitalPinToPinNum(const uint32_t pin) {return (pin & 31);} // 31 = 0b0001 1111
 
 /**
  * Get the bit mask for the pin.
@@ -163,13 +163,12 @@ unsigned int pulseIn(int pin, int state, unsigned int timeout);
  * @param pin   The pin to process, e.g. PIO1_9
  * @return The bit mask for the pin, e.g. 0x200
  */
-#define digitalPinToBitMask(pin) (1 << (pin & 31))
-
+constexpr uint32_t digitalPinToBitMask(const uint32_t pin) {return (1 << digitalPinToPinNum(pin));}
 
 /**
  * Modes for I/O pin configuration with pinMode().
  */
-enum PinMode
+enum PinMode : uint32_t
 {
     /**
      * Configure the pin as standard digital input.
@@ -266,39 +265,39 @@ enum PinMode
     /**
      * Configure the pin as serial data input (RxD).
      */
-    SERIAL_RXD = INPUT | PINMODE_FUNC(PF_RXD),
+    SERIAL_RXD = INPUT | PinModeFunc(PF_RXD),
 
     /**
      * Configure the pin as serial data output (TxD).
      */
-    SERIAL_TXD = OUTPUT | PINMODE_FUNC(PF_TXD),
+    SERIAL_TXD = OUTPUT | PinModeFunc(PF_TXD),
 
     /**
      * Configure the pin as output for SPI clock (SCK) in SPI master mode or input
      * for SPI clock (SCK) in SPI slave mode. Shall be combined with OUTPUT or INPUT.
      */
-    SPI_CLOCK = PINMODE_FUNC(PF_SCK),
+    SPI_CLOCK = PinModeFunc(PF_SCK),
 
     /**
      * Configure the pin for SPI master-in-slave-out (MISO). Combine with INPUT for
      * SPI master mode or OUTPUT for SPI slave mode.
      */
-    SPI_MISO = PINMODE_FUNC(PF_MISO),
+    SPI_MISO = PinModeFunc(PF_MISO),
 
     /**
      * Configure the pin for SPI master-out-slave-in (MOSI). Combine with OUTPUT for
      * SPI master mode or INPUT for SPI slave mode.
      */
-    SPI_MOSI = PINMODE_FUNC(PF_MOSI),
+    SPI_MOSI = PinModeFunc(PF_MOSI),
 
     /**
      * Configure the pin for SPI slave select (SSEL). Combine with OUTPUT for
      * SPI master mode or INPUT for SPI slave mode.
      */
-    SPI_SSEL = PINMODE_FUNC(PF_SSEL)
+    SPI_SSEL = PinModeFunc(PF_SSEL)
 };
 
-enum PinInterruptMode
+enum PinInterruptMode : uint16_t
 {
     /**
      * Configure the interrupt to be level triggered activated by a LOW level.
@@ -335,31 +334,31 @@ enum PinInterruptMode
 //  Inline functions
 //
 
-ALWAYS_INLINE void digitalWrite(int pin, bool value)
+ALWAYS_INLINE void digitalWrite(const uint32_t pin, const bool value)
 {
-    int mask = digitalPinToBitMask(pin);
+    const uint32_t mask = digitalPinToBitMask(pin);
     gpioPorts[digitalPinToPort(pin)]->MASKED_ACCESS[mask] = value ? mask : 0;
 }
 
-ALWAYS_INLINE bool digitalRead(int pin)
+ALWAYS_INLINE bool digitalRead(const uint32_t pin)
 {
     return gpioPorts[digitalPinToPort(pin)]->MASKED_ACCESS[digitalPinToBitMask(pin)] != 0;
 }
 
-ALWAYS_INLINE void pinEnableInterrupt(int pin)
+ALWAYS_INLINE void pinEnableInterrupt(const uint32_t pin)
 {
     LPC_GPIO_TypeDef* port = gpioPorts[digitalPinToPort(pin)];
-    unsigned short mask = digitalPinToBitMask(pin);
+    const uint32_t mask = digitalPinToBitMask(pin);
 
     port->IE |= mask;
 }
 
-ALWAYS_INLINE void pinDisableInterrupt(int pin)
+ALWAYS_INLINE void pinDisableInterrupt(const uint32_t pin)
 {
     LPC_GPIO_TypeDef* port = gpioPorts[digitalPinToPort(pin)];
-    unsigned short mask = digitalPinToBitMask(pin);
+    const uint32_t mask = digitalPinToBitMask(pin);
 
     port->IE &= ~mask;
 }
 
-#endif /*sblib_digital_pin_h*/
+#endif /* SBLIB_DIGITAL_PIN_H */

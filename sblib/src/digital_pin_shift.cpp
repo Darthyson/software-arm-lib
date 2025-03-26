@@ -9,35 +9,36 @@
  */
 #include <sblib/digital_pin.h>
 
-byte shiftIn(int dataPin, int clockPin, BitOrder bitOrder)
+constexpr static uint8_t BitsPerByte = 8;
+
+uint8_t shiftIn(const uint32_t dataPin, const uint32_t clockPin, const BitOrder bitOrder)
 {
-    int value = 0;
-    for (int i = 0; i < 8; ++i)
+    uint8_t value = 0;
+    for (uint8_t i = 0; i < BitsPerByte; i++)
     {
-        digitalWrite(clockPin, 1);
+        digitalWrite(clockPin, true);
 
         if (bitOrder == LSBFIRST)
-            value |= digitalRead(dataPin) << i;
+            value |= static_cast<uint8_t>(digitalRead(dataPin)) << i;
         else
-            value |= digitalRead(dataPin) << (7 - i);
+            value |= static_cast<uint8_t>(digitalRead(dataPin)) << (BitsPerByte - i - 1);
 
-        digitalWrite(clockPin, 0);
+        digitalWrite(clockPin, false);
     }
     return value;
 }
 
-void shiftOut(int dataPin, int clockPin, BitOrder bitOrder, byte val)
+void shiftOut(const uint32_t dataPin, const uint32_t clockPin, const BitOrder bitOrder, const uint8_t val)
 {
-    int value = val;
-    for (int i = 0; i < 8; i++)
+    for (uint8_t i = 0; i < BitsPerByte; i++)
     {
         if (bitOrder == LSBFIRST)
-            digitalWrite(dataPin, value & (1 << i));
+            digitalWrite(dataPin, val & (1 << i));
         else
-            digitalWrite(dataPin, value & (1 << (7 - i)));
+            digitalWrite(dataPin, val & (1 << (BitsPerByte - i - 1)));
         __NOP();
-        digitalWrite(clockPin, 1);
+        digitalWrite(clockPin, true);
         __NOP();
-        digitalWrite(clockPin, 0);
+        digitalWrite(clockPin, false);
     }
 }

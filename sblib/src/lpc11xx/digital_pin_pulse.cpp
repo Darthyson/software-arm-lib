@@ -9,20 +9,20 @@
  *  License as published by the Free Software Foundation; either
  *  version 3 of the License, or (at your option) any later version.
  */
+
 #include <sblib/digital_pin.h>
-
 #include <sblib/timer.h>
-#include <sblib/utils.h>
 
 
-unsigned int pulseIn(int pin, int state, unsigned int timeout)
+uint32_t pulseIn(const uint32_t pin, const bool state, const uint32_t timeout)
 {
     const LPC_GPIO_TypeDef* port = gpioPorts[digitalPinToPort(pin)];
-    const unsigned int bitMask = digitalPinToBitMask(pin);
-    const unsigned int stateMask = state ? bitMask : 0;
+    const uint32_t bitMask = digitalPinToBitMask(pin);
+    const uint32_t stateMask = state ? bitMask : 0;
 
-    unsigned long width = 0, numloops = 0;
-    const unsigned int maxloops = microsecondsToClockCycles(timeout);
+    uint32_t width = 0;
+    uint32_t numloops = 0;
+    const uint32_t maxloops = microsecondsToClockCycles(timeout);
 
     // Wait for any previous pulse to end
     while (port->MASKED_ACCESS[bitMask] == stateMask)

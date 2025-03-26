@@ -49,10 +49,10 @@ enum PinFunc : uint8_t
  * Select a specific port pin function when setting the pin mode.
  * This is intended to be used in combination with @ref pinMode.
  *
- * Example: pinMode(PIO1_6, INPUT | PINMODE_FUNC(PF_RXD));
+ * Example: pinMode(PIO1_6, INPUT | PinModeFunc(PF_RXD));
  * This enables the UART RXD function on pin PIO1_6.
  */
-#define PINMODE_FUNC(f) ((f) << 18)
+constexpr uint32_t PinModeFunc(const PinFunc f) {return (f << 18);}
 
 
 // Constants for port pin function manipulation

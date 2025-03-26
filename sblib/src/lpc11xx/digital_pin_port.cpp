@@ -14,15 +14,11 @@
 #include <sblib/utils.h>
 
 
-void portMode(int portNum, int pinMask, int mode)
+void portMode(const uint8_t portNum, uint32_t pinMask, const uint32_t mode)
 {
     LPC_GPIO_TypeDef* port = gpioPorts[portNum];
-    const unsigned short type = mode & 0xf000;
-    unsigned int iocon = mode & 0xfff;
-
-    short func = (mode >> 18) & 31;
-    if (!func)
-        func = PF_PIO;
+    const uint16_t type = mode & 0xf000;
+    const uint32_t iocon = mode & 0xfff;
 
     if (type == OUTPUT || type == OUTPUT_MATCH)
     {
@@ -33,17 +29,16 @@ void portMode(int portNum, int pinMask, int mode)
         port->DIR &= ~pinMask;
     }
 
-    for (int pinNum = 0; pinMask; ++pinNum, pinMask >>= 1)
+    for (int pinNum = 0; pinMask != 0; ++pinNum, pinMask >>= 1)
     {
         if (pinMask & 1)
             *(ioconPointer(portNum, pinNum)) = iocon;
     }
 }
 
-void portDirection(int portNum, int pinMask, int dir)
+void portDirection(const uint8_t portNum, const uint32_t pinMask, const uint32_t dir)
 {
     LPC_GPIO_TypeDef* port = gpioPorts[portNum];
-
     if (dir == OUTPUT)
         port->DIR |= pinMask;
     else

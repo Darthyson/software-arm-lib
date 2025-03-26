@@ -8,19 +8,16 @@
  *  published by the Free Software Foundation.
  */
 #include <sblib/digital_pin.h>
-
-#include <sblib/arrays.h>
 #include <sblib/platform.h>
 #include <sblib/utils.h>
 
 // The location value for the IO configuration of the RXD pin
-static const int rxPinLocation[] = {PIO1_6, PIO2_7, PIO3_1, PIO3_4};
-
+static constexpr uint32_t rxPinLocation[] = {PIO1_6, PIO2_7, PIO3_1, PIO3_4};
 
 // Find a pin in a pin location array. Fail if not found
-short pinLocation(int pin, const int* arr, short count)
+static uint8_t pinLocation(const uint32_t pin, const uint32_t* arr, const uint8_t count)
 {
-    for (short idx = 0; idx < count; ++idx)
+    for (uint8_t idx = 0; idx < count; ++idx)
     {
         if (arr[idx] == pin)
             return idx;
@@ -30,15 +27,15 @@ short pinLocation(int pin, const int* arr, short count)
     return -1;
 }
 
-void pinMode(int pin, int mode)
+void pinMode(const uint32_t pin, const uint32_t mode)
 {
     LPC_GPIO_TypeDef* port = gpioPorts[digitalPinToPort(pin)];
-    unsigned short mask = digitalPinToBitMask(pin);
-    const unsigned short type = mode & 0xf000;
-    unsigned int iocon = mode & 0xfff;
+    const uint32_t mask = digitalPinToBitMask(pin);
+    const uint16_t type = mode & 0xf000;
+    uint32_t iocon = mode & 0xfff;
 
-    short func = (mode >> 18) & 31;
-    if (!func)
+    auto func = static_cast<uint16_t>((mode >> 18) & 31);
+    if (func == 0)
         func = PF_PIO;
 
     if (type == OUTPUT || type == OUTPUT_MATCH)
@@ -121,7 +118,7 @@ void pinMode(int pin, int mode)
 
     if (func)
     {
-        int funcNum = getPinFunctionNumber(pin, func);
+        const int8_t funcNum = getPinFunctionNumber(pin, func);
         if (funcNum >= 0)
             iocon |= funcNum;
         else
@@ -131,10 +128,10 @@ void pinMode(int pin, int mode)
     *(ioconPointer(pin)) = iocon;
 }
 
-void pinDirection(int pin, int dir)
+void pinDirection(const uint32_t pin, const uint32_t dir)
 {
     LPC_GPIO_TypeDef* port = gpioPorts[digitalPinToPort(pin)];
-    unsigned short mask = digitalPinToBitMask(pin);
+    const uint32_t mask = digitalPinToBitMask(pin);
 
     if (dir == OUTPUT)
         port->DIR |= mask;
@@ -142,10 +139,10 @@ void pinDirection(int pin, int dir)
         port->DIR &= ~mask;
 }
 
-void pinInterruptMode(int pin, int mode)
+void pinInterruptMode(const uint32_t pin, const uint16_t mode)
 {
     LPC_GPIO_TypeDef* port = gpioPorts[digitalPinToPort(pin)];
-    unsigned short mask = digitalPinToBitMask(pin);
+    const uint32_t mask = digitalPinToBitMask(pin);
 
     /* Configure the pin as input */
     pinMode(pin, INPUT);
