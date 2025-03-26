@@ -6,6 +6,7 @@
  */
 
 #include <cstring>
+#include <sblib/utils.h>
 #include <sblib/eib/mask0701.h>
 
 #if defined(INCLUDE_SERIAL)

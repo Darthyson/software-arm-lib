@@ -7,10 +7,9 @@
  *  it under the terms of the GNU General Public License version 3 as
  *  published by the Free Software Foundation.
  */
-#ifndef sblib_utils_h
-#define sblib_utils_h
+#ifndef SBLIB_UTILS_H
+#define SBLIB_UTILS_H
 
-#include <cstddef>
 #include <sblib/types.h>
 #include <sblib/libconfig.h>
 
@@ -54,25 +53,6 @@ void setKNX_TX_Pin(int newTxPin);
  * @return True if hash successfully created, false if not.
  */
 int hashUID(byte* uid, const int len_uid, byte* hash, const int len_hash);
-
-/**
- * Get the offset of a field in a class, structure or type.
- *
- * @param type - the class, structure or type.
- * @param member - the member
- * @return The offset of the member.
- *
- * @brief E.g. for the structure
- *        struct ex
- *        {
- *            char a;
- *            char b
- *            short c;
- *        };
- *
- *        OFFSET_OF(ex,c) returns 2
- */
-#define OFFSET_OF(type, field)  (offsetof(type, field))
 
 /**
  * Include the C++ code snippet if DEBUG is defined, do not include the code
@@ -190,4 +170,4 @@ int hashUID(byte* uid, const int len_uid, byte* hash, const int len_hash);
  */
 extern "C" void HardFault_Handler();
 
-#endif /*sblib_utils_h*/
+#endif /* SBLIB_UTILS_H */

@@ -8,6 +8,7 @@
  *  published by the Free Software Foundation.
  */
 
+#include <sblib/utils.h>
 #include <sblib/eib/property_types.h>
 #include <sblib/eib/bcu_default.h>
 

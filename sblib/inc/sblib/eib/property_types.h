@@ -8,11 +8,11 @@
  *  it under the terms of the GNU General Public License version 3 as
  *  published by the Free Software Foundation.
  */
-#ifndef sblib_property_types_h
-#define sblib_property_types_h
+#ifndef SBLIB_PROPERTY_TYPES
+#define SBLIB_PROPERTY_TYPES
 
+#include <cstddef>
 #include <sblib/types.h>
-#include <sblib/utils.h>
 #include <sblib/eib/bcu_base.h>
 
 // See BCU2 help:
@@ -484,7 +484,7 @@ enum PropertyPointerType
 };
 
 /** Define a PropertyDef pointer to variable v in the internal constants table */
-#define PD_CONSTANTS_OFFSET(v) (OFFSET_OF(ConstPropValues, v) + PPT_CONSTANTS)
+#define PD_CONSTANTS_OFFSET(v) (offsetof(ConstPropValues, v) + PPT_CONSTANTS)
 
 /** Mark the end of a property definition table */
 #define PROPERTY_DEF_TABLE_END  { 0, 0, 0 }
@@ -504,4 +504,4 @@ inline bool PropertyDef::isEepromPointer() const
     return (valAddr & PPT_USER_EEPROM) != 0;
 }
 
-#endif /*sblib_property_types_h*/
+#endif /* SBLIB_PROPERTY_TYPES */
