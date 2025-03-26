@@ -479,11 +479,8 @@ bool Ds3231::SetCtrlStatReg(ds3231_cntl_stat_t data, bool bSetControl, bool bSet
 *****************************************************************************/
 bool Ds3231::GetCtrlStatReg(ds3231_cntl_stat_t* data)
 {
-    uint8_t local_data[] = {0, 0, 0};
+    uint8_t local_data[2] = {0, 0};
     local_data[0] = CONTROL;
-    local_data[1] = data->control;
-    local_data[2] = data->status;
-
     if (Chip_I2C_MasterSend(I2C0, DS3231_I2C_ADRS, (const uint8_t*)local_data, 1) == 1 &&
         Chip_I2C_MasterRead(I2C0, DS3231_I2C_ADRS, local_data, 2) == 2)
     {
@@ -511,7 +508,7 @@ bool Ds3231::GetCtrlStatReg(ds3231_cntl_stat_t* data)
 *****************************************************************************/
 time_t Ds3231::GetEpoch(void)
 {
-    struct tm sys_time;                       //system vars
+    struct tm sys_time{};                       //system vars
     ds3231_time_t rtc_time = {0, 0, 0, 0, 0}; //RTC vars
     ds3231_calendar_t rtc_calendar = {0, 0, 0, 0};
 
