@@ -94,6 +94,7 @@ set(RELEASE_FLAGS_ARM
 
 set (COMMON_X86_X64_FLAGS
         -Wall -Wlogical-op -Woverloaded-virtual
+        -std=c++17
         -O0
         -g3
         -c

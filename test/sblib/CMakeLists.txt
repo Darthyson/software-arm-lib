@@ -58,8 +58,11 @@ set(RELEASE_DEFINES
 
 set(CORE_FLAGS
         -Wall -Wlogical-op -Woverloaded-virtual
+        -std=c++17
         -O0
         -g3
+        -c
+        -fmessage-length=0
 )
 
 set(DEBUG32_FLAGS
