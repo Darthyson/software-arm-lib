@@ -17,8 +17,8 @@
 /**
  * Configure the mode of an I/O pin.
  *
- * @param pin - the pin to configure: PIO0_0, PIO0_1, ...  (see sblib/ioports.h)
- * @param mode - the I/O mode to set. Use a combination of the PinMode values (see below)
+ * @param pin   The pin to configure: PIO0_0, PIO0_1, ... @ref PortPin
+ * @param mode  The I/O mode to set. Use a combination of the PinMode values (see below)
  *
  * Examples:
  * Configure PIO0_2 to digital input: pinMode(PIO0_2, INPUT);
@@ -33,16 +33,16 @@ void pinMode(int pin, int mode);
  * Configure the direction of an I/O pin. This does not change the other configuration
  * settings of the pin.
  *
- * @param pin - the pin to configure: PIO0_0, PIO0_1, ...  (see sblib/ioports.h)
- * @param dir - the direction: INPUT or OUTPUT
+ * @param pin   The pin to configure: PIO0_0, PIO0_1, ... @ref PortPin
+ * @param dir   The direction: INPUT or OUTPUT
  */
 void pinDirection(int pin, int dir);
 
 /**
  * Configure the interrupt for the I/O port
  *
- * @param pin - the pin to configure: PIO0_0, PIO0_1, ... (see sblib/ioports.h)
- * @param mode - the interrupt mode. Use a combination of PinInterruptMode values (see below)
+ * @param pin   The pin to configure: PIO0_0, PIO0_1, ... @ref PortPin
+ * @param mode  The interrupt mode. Use a combination of @ref PinInterruptMode values
  */
 void pinInterruptMode(int pin, int mode);
 
@@ -63,9 +63,9 @@ void pinDisableInterrupt(int pin);
  * The following PinMode values are supported: INPUT, OUTPUT, PULL_UP, PULL_DOWN,
  * REPEATER_MODE, HYSTERESIS, OPEN_DRAIN.
  *
- * @param portNum - the port to configure: PIO0, PIO1, PIO2, PIO3  (see sblib/ioports.h)
- * @param pinMask - the bit mask for the port pins that shall be configured.
- * @param mode - the I/O mode to set. Use a combination of the PinMode values.
+ * @param portNum   The port to configure: PIO0, PIO1, PIO2, PIO3  (see sblib/ioports.h)
+ * @param pinMask   The bit mask for the port pins that shall be configured.
+ * @param mode      The I/O mode to set. Use a combination of the PinMode values.
  *
  * Example: to configure pins 0,1,2 of port 0 to open drain output:
  *          portMode(PIO0, 7, OUTPUT|OPEN_DRAIN);
@@ -78,24 +78,24 @@ void portMode(int portNum, int pinMask, int mode);
  * Configure the direction of an I/O pin. This does not change the other configuration
  * settings of the port pins.
  *
- * @param portNum - the port to configure: PIO0, PIO1, PIO2, PIO3  (see sblib/ioports.h)
- * @param pinMask - the bit mask for the port pins that shall be configured.
- * @param dir - the direction: INPUT or OUTPUT
+ * @param portNum   The port to configure: PIO0, PIO1, PIO2, PIO3  (see sblib/ioports.h)
+ * @param pinMask   The bit mask for the port pins that shall be configured.
+ * @param dir       The direction: INPUT or OUTPUT
  */
 void portDirection(int portNum, int pinMask, int dir);
 
 /**
  * Set the value of a digital output pin.
  *
- * @param pin - the pin to set: PIO0_0, PIO0_1, ...
- * @param value - the value to set: true or false.
+ * @param pin   The pin to set: PIO0_0, PIO0_1, ... @ref PortPin
+ * @param value The value to set: true or false.
  */
 void digitalWrite(int pin, bool value);
 
 /**
  * Read the value of a digital input pin.
  *
- * @param pin - the pin to read: PIO0_0, PIO0_1, ...
+ * @param pin   The pin to read: PIO0_0, PIO0_1, ... @ref PortPin
  * @return The value of the pin: true (1) or false (0).
  */
 bool digitalRead(int pin);
@@ -105,10 +105,10 @@ bool digitalRead(int pin);
  * pulses the output. Output of a bit happens when the clock pin is high. This
  * is a software function. For hardware supported output of data, see SPI or I2C.
  *
- * @param dataPin - the data pin to output the byte to
- * @param clockPin - the clock pin
- * @param bitOrder - the bit order: LSBFIRST or MSBFIRST.
- * @param val - the value to output.
+ * @param dataPin   The data pin to output the byte to
+ * @param clockPin  The clock pin
+ * @param bitOrder  The bit order: LSBFIRST or MSBFIRST.
+ * @param val       The value to output.
  */
 void shiftOut(int dataPin, int clockPin, BitOrder bitOrder, byte val);
 
@@ -118,9 +118,9 @@ void shiftOut(int dataPin, int clockPin, BitOrder bitOrder, byte val);
  * the pulses for reading. This is a software function. For hardware supported input
  * of data, see SPI or I2C.
  *
- * @param dataPin - the data pin to read the byte from
- * @param clockPin - the clock pin
- * @param bitOrder - the bit order: LSBFIRST or MSBFIRST.
+ * @param dataPin   The data pin to read the byte from
+ * @param clockPin  The clock pin
+ * @param bitOrder  The bit order: LSBFIRST or MSBFIRST.
  *
  * @return The read byte.
  */
@@ -132,9 +132,9 @@ byte shiftIn(int dataPin, int clockPin, BitOrder bitOrder);
  * to 3 minutes in length, but must be called at least a few dozen microseconds
  * before the start of the pulse.
  *
- * @param pin - the pin to measure.
- * @param state - the state of the pin to measure: 1 measures a high pulse, 0 measures a low pulse.
- * @param timeout - the timeout to wait for the pulse to end, in microseconds.
+ * @param pin       The pin to measure.
+ * @param state     The state of the pin to measure: true measures a high pulse, false measures a low pulse.
+ * @param timeout   The timeout to wait for the pulse to end, in microseconds.
  *
  * @return The length of the pulse in microseconds.
  */
@@ -144,23 +144,23 @@ unsigned int pulseIn(int pin, int state, unsigned int timeout);
 /**
  * Get the port number of the pin.
  *
- * @param pin - the pin to process, e.g. PIO1_9
+ * @param pin   The pin to process, e.g. PIO1_9
  * @return The port number of the pin, e.g. 1
  */
 #define digitalPinToPort(pin) ((pin >> 5) & 3)
 
 /**
- * Get the pin number of the pin.
+ * Get the number of the pin.
  *
- * @param pin - the pin to process, e.g. PIO1_9
- * @return The pin number of the pin, e.g. 9
+ * @param pin   The pin to process, e.g. PIO1_9
+ * @return The number of the pin, e.g. 9
  */
 #define digitalPinToPinNum(pin) (pin & 31)
 
 /**
  * Get the bit mask for the pin.
  *
- * @param pin - the pin to process, e.g. PIO1_9
+ * @param pin   The pin to process, e.g. PIO1_9
  * @return The bit mask for the pin, e.g. 0x200
  */
 #define digitalPinToBitMask(pin) (1 << (pin & 31))
