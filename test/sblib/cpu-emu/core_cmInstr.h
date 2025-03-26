@@ -38,6 +38,9 @@
 #ifndef __CORE_CMINSTR_H
 #define __CORE_CMINSTR_H
 
+#pragma GCC diagnostic push
+#pragma GCC diagnostic ignored "-Wconversion"
+#pragma GCC diagnostic ignored "-Wsign-conversion"
 
 /* ##########################  Core Instruction Access  ######################### */
 /** \defgroup CMSIS_Core_InstructionInterface CMSIS Core Instruction Interface
@@ -681,5 +684,6 @@ __attribute__( ( always_inline ) ) __STATIC_INLINE uint8_t __CLZ(uint32_t value)
 #endif
 
 /*@}*/ /* end of group CMSIS_Core_InstructionInterface */
+#pragma GCC diagnostic pop
 
 #endif /* __CORE_CMINSTR_H */
