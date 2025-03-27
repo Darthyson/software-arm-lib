@@ -7,8 +7,8 @@
  *  it under the terms of the GNU General Public License version 3 as
  *  published by the Free Software Foundation.
  */
-#ifndef sblib_ioports_h
-#define sblib_ioports_h
+#ifndef SBLIB_IOPORTS_H_
+#define SBLIB_IOPORTS_H_
 
 #include <cstdint>
 
@@ -250,4 +250,4 @@ enum AnalogChannel : uint8_t
  */
 int8_t getPinFunctionNumber(uint32_t pin, uint16_t func);
 
-#endif /*sblib_ioports_h*/
+#endif /* SBLIB_IOPORTS_H_ */

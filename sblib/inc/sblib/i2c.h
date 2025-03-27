@@ -31,8 +31,8 @@
  * this code.
  */
 
-#ifndef __I2C_11XX_H_
-#define __I2C_11XX_H_
+#ifndef SBLIB_I2C_11XX_H_
+#define SBLIB_I2C_11XX_H_
 
 /*
 #ifdef __cplusplus
@@ -584,4 +584,4 @@ int Chip_I2C_IsStateChanged(I2C_ID_T id);
 }
 #endif
 */
-#endif /* __I2C_11XX_H_ */
+#endif /* SBLIB_I2C_11XX_H_ */

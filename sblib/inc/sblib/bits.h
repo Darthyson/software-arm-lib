@@ -7,8 +7,8 @@
  *  it under the terms of the GNU General Public License version 3 as
  *  published by the Free Software Foundation.
  */
-#ifndef sblib_bits_h
-#define sblib_bits_h
+#ifndef SBLIB_BITS_H_
+#define SBLIB_BITS_H_
 
 #include <sblib/platform.h>
 #include <sblib/types.h>
@@ -52,4 +52,4 @@ inline uint16_t makeWord(const byte high, const byte low)
     return ((uint16_t)((high << 8) | low));
 }
 
-#endif /*sblib_bits_h*/
+#endif /* SBLIB_BITS_H_ */

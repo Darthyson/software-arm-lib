@@ -7,8 +7,8 @@
  *  it under the terms of the GNU General Public License version 3 as
  *  published by the Free Software Foundation.
  */
-#ifndef sblib_spi_h
-#define sblib_spi_h
+#ifndef SBLIB_SPI_H_
+#define SBLIB_SPI_H_
 
 #include <sblib/platform.h>
 
@@ -235,4 +235,4 @@ inline int SPI::transfer(const int value) const
     return transfer(value, SPI_LAST);
 }
 
-#endif /*sblib_spi_h*/
+#endif /* SBLIB_SPI_H_ */

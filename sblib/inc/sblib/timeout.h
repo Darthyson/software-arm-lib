@@ -8,8 +8,8 @@
  *  published by the Free Software Foundation.
  */
 
-#ifndef TIMEOUT_H_
-#define TIMEOUT_H_
+#ifndef SBLIB_TIMEOUT_H_
+#define SBLIB_TIMEOUT_H_
 
 #include "sblib/timer.h"
 
@@ -132,4 +132,4 @@ protected:
 };
 #endif
 
-#endif /* TIMEOUT_H_ */
+#endif /* SBLIB_TIMEOUT_H_ */

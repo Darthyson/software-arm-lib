@@ -11,8 +11,8 @@
  *  Latest version of this library: https://github.com/PaulStoffregen/OneWire
 */
 
-#ifndef onewire_h
-#define onewire_h
+#ifndef SBLIB_ONEWIRE_H_
+#define SBLIB_ONEWIRE_H_
 
 /*
  *  Supported and tested 1-Wire Devices:
@@ -252,4 +252,4 @@ public:
 #endif
 };
 
-#endif /* onewire_h */
+#endif /* SBLIB_ONEWIRE_H_ */

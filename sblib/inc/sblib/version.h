@@ -7,8 +7,8 @@
  *  it under the terms of the GNU General Public License version 3 as
  *  published by the Free Software Foundation.
  */
-#ifndef sblib_version_h
-#define sblib_version_h
+#ifndef SBLIB_VERSION_H_
+#define SBLIB_VERSION_H_
 
 /**
  * The version of the library. An integer value.
@@ -37,4 +37,4 @@
  */
 volatile const char* __attribute__((optimize("O0"))) getAppVersion();
 
-#endif /*sblib_version_h*/
+#endif /* SBLIB_VERSION_H_ */

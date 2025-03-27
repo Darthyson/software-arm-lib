@@ -7,8 +7,8 @@
  *  it under the terms of the GNU General Public License version 3 as
  *  published by the Free Software Foundation.
  */
-#ifndef SBLIB_PLATFORM_H
-#define SBLIB_PLATFORM_H
+#ifndef SBLIB_PLATFORM_H_
+#define SBLIB_PLATFORM_H_
 
 // Per Herb Sutter, the register keyword did not have any effect on C++ programs at all:
 //
@@ -72,4 +72,4 @@ uintptr_t* ioconPointer(Port port, uint8_t pinNum);
 #define FLASH_PAGE_ALIGNMENT (FLASH_PAGE_SIZE - 1) //!< Page alignment which is allowed to flash
 #define FLASH_RAM_BUFFER_ALIGNMENT (4)             //!< MCU's RAM buffer alignment which is allowed to flash
 
-#endif /* SBLIB_PLATFORM_H */
+#endif /* SBLIB_PLATFORM_H_ */

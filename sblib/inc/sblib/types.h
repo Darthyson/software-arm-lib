@@ -7,8 +7,8 @@
  *  it under the terms of the GNU General Public License version 3 as
  *  published by the Free Software Foundation.
  */
-#ifndef sblib_types_h
-#define sblib_types_h
+#ifndef SBLIB_TYPES_H_
+#define SBLIB_TYPES_H_
 
 #include <cstdint>
 
@@ -205,4 +205,4 @@ enum TimerPWM
 #define LITTLE_ENDIAN _LITTLE_ENDIAN
 #endif /* BIG_ENDIAN */
 
-#endif /*sblib_types_h*/
+#endif /* SBLIB_TYPES_H_ */

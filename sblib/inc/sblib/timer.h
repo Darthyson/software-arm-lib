@@ -7,8 +7,8 @@
  *  it under the terms of the GNU General Public License version 3 as
  *  published by the Free Software Foundation.
  */
-#ifndef sblib_timer_h
-#define sblib_timer_h
+#ifndef SBLIB_TIMER_H_
+#define SBLIB_TIMER_H_
 
 #include <limits.h>
 #include <sblib/platform.h>
@@ -663,4 +663,4 @@ static inline void delay_cycles(unsigned int cycles)
         : "0" (cycles) // this is also an input value
         : "cc");
 }
-#endif /*sblib_timer_h*/
+#endif /* SBLIB_TIMER_H_ */

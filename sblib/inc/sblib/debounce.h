@@ -7,8 +7,8 @@
  *  it under the terms of the GNU General Public License version 3 as
  *  published by the Free Software Foundation.
  */
-#ifndef sblib_debounce_h
-#define sblib_debounce_h
+#ifndef SBLIB_DEBOUNCE_H_
+#define SBLIB_DEBOUNCE_H_
 #include <cstdint>
 
 /**
@@ -63,4 +63,4 @@ private:
     int32_t last = 0;
 };
 
-#endif /*sblib_debounce_h*/
+#endif /* SBLIB_DEBOUNCE_H_ */

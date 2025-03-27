@@ -21,8 +21,8 @@
  *  published by the Free Software Foundation.
  */
 
-#ifndef sblib_main_h
-#define sblib_main_h
+#ifndef SBLIB_MAIN_H_
+#define SBLIB_MAIN_H_
 
 #include <sblib/eib/bcu_base.h>
 
@@ -50,4 +50,4 @@ void loop();
  */
 void loop_noapp();
 
-#endif /*sblib_main_h*/
+#endif /* SBLIB_MAIN_H_ */

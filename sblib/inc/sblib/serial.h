@@ -15,8 +15,8 @@
  * it under the terms of the GNU General Public License version 3 as
  * published by the Free Software Foundation.
  */
-#ifndef sblib_serial_h
-#define sblib_serial_h
+#ifndef SBLIB_SERIAL_H_
+#define SBLIB_SERIAL_H_
 
 #include <sblib/buffered_stream.h>
 #include <sblib/interrupt.h>
@@ -188,4 +188,4 @@ inline void Serial::begin(const int baudRate)
 }
 
 /** @}*/
-#endif /*sblib_serial_h*/
+#endif /* SBLIB_SERIAL_H_ */

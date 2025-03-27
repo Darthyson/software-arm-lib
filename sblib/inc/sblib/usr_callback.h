@@ -34,4 +34,4 @@ public:
     virtual void Notify(UsrCallbackType type) =0;
 };
 
-#endif
+#endif /* SBLIB_USR_CALLBACK_H_ */

@@ -35,6 +35,6 @@ uint32_t hwPinInfo();
 uint32_t hwPinRun();
 uint8_t hwInvertProgButton();
 
-#endif /*SBLIB_HARDWARE_DESCRIPTOR_H_*/
+#endif /* SBLIB_HARDWARE_DESCRIPTOR_H_ */
 
 /** @}*/

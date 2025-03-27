@@ -7,8 +7,8 @@
  *  it under the terms of the GNU General Public License version 3 as
  *  published by the Free Software Foundation.
  */
-#ifndef sblib_math_h
-#define sblib_math_h
+#ifndef SBLIB_MATH_H_
+#define SBLIB_MATH_H_
 
 /**
  * The number PI
@@ -100,4 +100,4 @@
  */
 #define sq(x) ((x) * (x))
 
-#endif /*sblib_math_h*/
+#endif /* SBLIB_MATH_H_ */

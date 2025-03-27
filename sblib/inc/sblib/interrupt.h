@@ -7,8 +7,8 @@
  *  it under the terms of the GNU General Public License version 3 as
  *  published by the Free Software Foundation.
  */
-#ifndef sblib_interrupt_h
-#define sblib_interrupt_h
+#ifndef SBLIB_INTERRUPT_H_
+#define SBLIB_INTERRUPT_H_
 
 #include <sblib/platform.h>
 #include <sblib/types.h>
@@ -177,4 +177,4 @@ ALWAYS_INLINE bool getInterruptEnabled(const IRQn_Type interruptType)
     fatalError();
     return false; // Just here to make the linter happy
 }
-#endif /*sblib_interrupt_h*/
+#endif /* SBLIB_INTERRUPT_H_ */

@@ -7,8 +7,8 @@
  *  it under the terms of the GNU General Public License version 3 as
  *  published by the Free Software Foundation.
  */
-#ifndef sblib_buffered_stream_h
-#define sblib_buffered_stream_h
+#ifndef SBLIB_BUFFERED_STREAM_H_
+#define SBLIB_BUFFERED_STREAM_H_
 
 #include <sblib/stream.h>
 
@@ -94,4 +94,4 @@ ALWAYS_INLINE bool BufferedStream::writeBufferFull() const
     return ((writeTail + 1) & BufferedStream::BUFFER_SIZE_MASK) == writeHead;
 }
 
-#endif /* sblib_buffered_stream_h */
+#endif /* SBLIB_BUFFERED_STREAM_H_ */

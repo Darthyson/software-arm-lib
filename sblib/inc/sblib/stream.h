@@ -7,8 +7,8 @@
  *  it under the terms of the GNU General Public License version 3 as
  *  published by the Free Software Foundation.
  */
-#ifndef sblib_stream_h
-#define sblib_stream_h
+#ifndef SBLIB_STREAM_H_
+#define SBLIB_STREAM_H_
 
 #include <sblib/print.h>
 #include <cstring>
@@ -334,4 +334,4 @@ inline bool Stream::findUntil(const byte* target, const int targetLen, const cha
     return findUntil((const char*)target, targetLen, terminate, termLen);
 }
 
-#endif /*sblib_stream_h*/
+#endif /* SBLIB_STREAM_H_ */

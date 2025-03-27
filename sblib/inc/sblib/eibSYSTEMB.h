@@ -7,8 +7,8 @@
  *  it under the terms of the GNU General Public License version 3 as
  *  published by the Free Software Foundation.
  */
-#ifndef sblib_eibSYSTEMB_h
-#define sblib_eibSYSTEMB_h
+#ifndef SBLIB_EIBSYSTEMB_H_
+#define SBLIB_EIBSYSTEMB_H_
 
 #include <sblib/core.h>
 
@@ -17,4 +17,4 @@
 #include <sblib/eib/systemb.h>
 #include <sblib/eib/com_objectsSYSTEMB.h>
 
-#endif /*sblib_eibSYSTEMB_h*/
+#endif /* SBLIB_EIBSYSTEMB_H_ */

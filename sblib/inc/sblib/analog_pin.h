@@ -7,8 +7,8 @@
  *  it under the terms of the GNU General Public License version 3 as
  *  published by the Free Software Foundation.
  */
-#ifndef sblib_analog_pin_h
-#define sblib_analog_pin_h
+#ifndef SBLIB_ANALOG_PIN_H_
+#define SBLIB_ANALOG_PIN_H_
 
 #include <sblib/ioports.h>
 #include <sblib/types.h>
@@ -78,4 +78,4 @@ int analogValidRead(int channel);
  */
 //void analogWrite(int pin, byte val);
 
-#endif /*sblib_analog_pin_h*/
+#endif /* SBLIB_ANALOG_PIN_H_ */

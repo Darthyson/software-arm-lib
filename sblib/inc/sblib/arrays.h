@@ -7,8 +7,8 @@
  *  it under the terms of the GNU General Public License version 3 as
  *  published by the Free Software Foundation.
  */
-#ifndef sblib_arrays_h
-#define sblib_arrays_h
+#ifndef SBLIB_ARRAYS_H_
+#define SBLIB_ARRAYS_H_
 
 #include <sblib/types.h>
 
@@ -42,4 +42,4 @@ short indexOf(unsigned short val, const unsigned short* arr, short count);
  */
 short indexOf(byte val, const byte* arr, short count);
 
-#endif /*sblib_arrays_h*/
+#endif /* SBLIB_ARRAYS_H_ */

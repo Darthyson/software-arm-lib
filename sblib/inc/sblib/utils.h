@@ -7,8 +7,8 @@
  *  it under the terms of the GNU General Public License version 3 as
  *  published by the Free Software Foundation.
  */
-#ifndef SBLIB_UTILS_H
-#define SBLIB_UTILS_H
+#ifndef SBLIB_UTILS_H_
+#define SBLIB_UTILS_H_
 
 #include <sblib/types.h>
 #include <sblib/libconfig.h> // Do not delete this line! We need it for the below debug macros, e.g. DUMP_MEM_OPS
@@ -128,4 +128,4 @@ int hashUID(byte* uid, const int len_uid, byte* hash, const int len_hash);
  */
 extern "C" void HardFault_Handler();
 
-#endif /* SBLIB_UTILS_H */
+#endif /* SBLIB_UTILS_H_ */

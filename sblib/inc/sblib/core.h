@@ -7,8 +7,8 @@
  *  it under the terms of the GNU General Public License version 3 as
  *  published by the Free Software Foundation.
  */
-#ifndef sblib_core_h
-#define sblib_core_h
+#ifndef SBLIB_CORE_H_
+#define SBLIB_CORE_H_
 
 #include <sblib/analog_pin.h>
 #include <sblib/bits.h>
@@ -22,4 +22,4 @@
 #include <sblib/utils.h>
 #include <sblib/version.h>
 
-#endif /*sblib_core_h*/
+#endif /* SBLIB_CORE_H_ */

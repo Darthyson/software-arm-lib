@@ -7,8 +7,8 @@
  *  it under the terms of the GNU General Public License version 3 as
  *  published by the Free Software Foundation.
  */
-#ifndef SBLIB_DIGITAL_PIN_H
-#define SBLIB_DIGITAL_PIN_H
+#ifndef SBLIB_DIGITAL_PIN_H_
+#define SBLIB_DIGITAL_PIN_H_
 
 #include <cstdint>
 #include <sblib/ioports.h>
@@ -361,4 +361,4 @@ ALWAYS_INLINE void pinDisableInterrupt(const uint32_t pin)
     port->IE &= ~mask;
 }
 
-#endif /* SBLIB_DIGITAL_PIN_H */
+#endif /* SBLIB_DIGITAL_PIN_H_ */

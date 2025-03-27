@@ -7,8 +7,8 @@
  *  it under the terms of the GNU General Public License version 3 as
  *  published by the Free Software Foundation.
  */
-#ifndef sblib_print_h
-#define sblib_print_h
+#ifndef SBLIB_PRINT_H_
+#define SBLIB_PRINT_H_
 
 #include <sblib/types.h>
 
@@ -318,4 +318,4 @@ inline int Print::println(const char* str, const void* ptr)
     return print(str, ptr) + println();
 }
 
-#endif /*sblib_print_h*/
+#endif /* SBLIB_PRINT_H_ */
