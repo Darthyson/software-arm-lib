@@ -111,7 +111,7 @@ void UserEeprom::writeUserEeprom()
     interrupts();
 }
 
-UserEeprom::UserEeprom(unsigned int start, unsigned int size, unsigned int flashSize) :
+UserEeprom::UserEeprom(const unsigned int start, const unsigned int size, const unsigned int flashSize) :
     Memory(start, size),
     userEepromData(new byte[size]()),
     userEepromFlashSize(flashSize)
@@ -146,7 +146,7 @@ uint16_t UserEeprom::getUInt16(uint32_t address) const
     return makeWord(userEepromData[address], userEepromData[address + 1]);
 }
 
-void UserEeprom::modified(bool newModified)
+void UserEeprom::modified(const bool newModified)
 {
     userEepromModified = newModified;
     if (userEepromModified)

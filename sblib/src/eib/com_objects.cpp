@@ -201,7 +201,7 @@ ComObjects::ComObjects(BcuBase* bcuInstance) :
     nextUpdatedObjIndex(0)
 {}
 
-int ComObjects::telegramObjectSize(int objno)
+int ComObjects::telegramObjectSize(const int objno)
 {
     int type = objectType(objno);
     if (type < BIT_7)
@@ -209,7 +209,7 @@ int ComObjects::telegramObjectSize(int objno)
     return objectSize(objno);
 }
 
-void ComObjects::addObjectFlags(int objno, int flags)
+void ComObjects::addObjectFlags(const int objno, int flags)
 {
     byte* flagsTab = objectFlagsTable();
     if (flagsTab == 0)
@@ -233,7 +233,7 @@ void ComObjects::addObjectFlags(int objno, int flags)
     d(serial.println();)
 }
 
-void ComObjects::setObjectFlags(int objno, int flags)
+void ComObjects::setObjectFlags(const int objno, const int flags)
 {
     byte* flagsPtr = objectFlagsTable();
     if (flagsPtr == nullptr)
@@ -261,7 +261,7 @@ void ComObjects::setObjectFlags(int objno, int flags)
     d(serial.println(" out: 0x", *flagsPtr, HEX, 2);)
 }
 
-unsigned int ComObjects::objectRead(int objno)
+unsigned int ComObjects::objectRead(const int objno)
 {
     int sz = objectSize(objno);
     byte* ptr = objectValuePtr(objno) + sz;
@@ -275,7 +275,7 @@ unsigned int ComObjects::objectRead(int objno)
     return value;
 }
 
-void ComObjects::_objectWrite(int objno, unsigned int value, int flags)
+void ComObjects::_objectWrite(const int objno, unsigned int value, const int flags)
 {
     byte* ptr = objectValuePtr(objno);
     if (ptr == nullptr)
@@ -302,7 +302,7 @@ void ComObjects::_objectWrite(int objno, unsigned int value, int flags)
     setObjectFlags(objno, flags); //clear any pending ram com object flags and set new flags
 }
 
-void ComObjects::_objectWriteBytes(int objno, byte* value, int flags)
+void ComObjects::_objectWriteBytes(const int objno, const byte* value, const int flags)
 {
     byte* ptr = objectValuePtr(objno);
     int sz = objectSize(objno);
@@ -319,7 +319,7 @@ inline int ComObjects::objectCount()
     return *objectConfigTable();
 }
 
-int ComObjects::firstObjectAddr(int objno)
+int ComObjects::firstObjectAddr(const int objno)
 {
     byte* assocTab = bcu->addrTables->assocTable();
     byte* assocTabEnd = assocTab + (*assocTab << 1);
@@ -343,7 +343,7 @@ int ComObjects::firstObjectAddr(int objno)
     return (0);
 }
 
-void ComObjects::sendGroupReadTelegram(int objno, int addr)
+void ComObjects::sendGroupReadTelegram(const int objno, const int addr)
 {
     auto sendBuffer = bcu->acquireSendBuffer();
     ///\todo Set routing count and priority according to the parameters set from ETS in the EEPROM, add ID/objno for result association from bus-layer
@@ -356,7 +356,7 @@ void ComObjects::sendGroupReadTelegram(int objno, int addr)
     transmitting_object_no = objno; //save transmitting object for status check
 }
 
-void ComObjects::sendGroupWriteTelegram(int objno, int addr, bool isResponse)
+void ComObjects::sendGroupWriteTelegram(const int objno, const int addr, const bool isResponse)
 {
     byte* valuePtr = objectValuePtr(objno);
     int objSize = telegramObjectSize(objno);
@@ -533,7 +533,7 @@ int ComObjects::nextUpdatedObject()
     return INVALID_OBJECT_NUMBER;
 }
 
-void ComObjects::processGroupWriteTelegram(int objno, byte* tel)
+void ComObjects::processGroupWriteTelegram(const int objno, const byte* tel)
 {
     byte* valuePtr = objectValuePtr(objno);
 

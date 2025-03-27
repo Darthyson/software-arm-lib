@@ -17,7 +17,7 @@
 #define PRINTBUF_SIZE (8 * sizeof(int) + 1)
 
 
-int Print::print(int value, Base base, int digits)
+int Print::print(int value, const Base base, int digits)
 {
     int wlen = 0;
     if (value < 0)
@@ -30,14 +30,14 @@ int Print::print(int value, Base base, int digits)
     return print((uintptr_t) value, base, digits) + wlen;
 }
 
-int Print::print(const char* str, int value, Base base, int digits)
+int Print::print(const char* str, const int value, const Base base, const int digits)
 {
     int wlen = print(str);
     wlen += print(value, base, digits);
     return wlen;
 }
 
-int Print::print(uintptr_t value, Base base, int digits)
+int Print::print(uintptr_t value, const Base base, int digits)
 {
     byte buf[PRINTBUF_SIZE]; // need the maximum size for binary printing
 
@@ -58,14 +58,14 @@ int Print::print(uintptr_t value, Base base, int digits)
     return write((byte*) pos, buf + PRINTBUF_SIZE - pos);
 }
 
-int Print::print(const char* str, uintptr_t value, Base base, int digits)
+int Print::print(const char* str, const uintptr_t value, const Base base, const int digits)
 {
     int wlen = print(str);
     wlen += print(value, base, digits);
     return wlen;
 }
 
-int Print::print(float value, int precision)
+int Print::print(const float value, int precision)
 {
     int number = (int)value;
     float fraction = abs((float)(value - number));
@@ -87,7 +87,7 @@ int Print::print(float value, int precision)
     return wlen;
 }
 
-int Print::print(const char* str, float value, int precision)
+int Print::print(const char* str, const float value, const int precision)
 {
     int wlen = print(str);
     wlen += print(value, precision);
@@ -117,28 +117,28 @@ int Print::write(const char* str)
     return 0;
 }
 
-int Print::println(const char* str, uintptr_t value, Base base, int digits)
+int Print::println(const char* str, const uintptr_t value, const Base base, const int digits)
 {
     int wlen = print(str, value, base, digits);
     wlen += println();
     return wlen;
 }
 
-int Print::println(const char* str, int value, Base base, int digits)
+int Print::println(const char* str, const int value, const Base base, const int digits)
 {
     int wlen = print(str, value, base, digits);
     wlen += println();
     return wlen;
 }
 
-int Print::println(float value, int precision)
+int Print::println(const float value, const int precision)
 {
     int wlen = print(value, precision);
     wlen += println();
     return wlen;
 }
 
-int Print::println(const char* str, float value, int precision)
+int Print::println(const char* str, const float value, const int precision)
 {
     int wlen = print(str, value, precision);
     wlen += println();

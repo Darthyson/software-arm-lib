@@ -34,14 +34,14 @@
 #define UART_IE_RBR 0x01    //!> UART read-buffer-ready interrupt
 #define UART_IE_THRE 0x02   //!> UART transmit-hold-register-empty interrupt
 
-Serial::Serial(int rxPin, int txPin) :
+Serial::Serial(const int rxPin, const int txPin) :
     enabled_(false)
 {
     setRxPin(rxPin);
     setTxPin(txPin);
 }
 
-void Serial::setRxPin(int rxPin)
+void Serial::setRxPin(const int rxPin)
 {
     if (enabled())
     {
@@ -50,7 +50,7 @@ void Serial::setRxPin(int rxPin)
     pinMode(rxPin, SERIAL_RXD);
 }
 
-void Serial::setTxPin(int txPin)
+void Serial::setTxPin(const int txPin)
 {
     if (enabled())
     {
@@ -59,7 +59,7 @@ void Serial::setTxPin(int txPin)
     pinMode(txPin, SERIAL_TXD);
 }
 
-void Serial::begin(int baudRate, SerialConfig config)
+void Serial::begin(const int baudRate, const SerialConfig config)
 {
     disableInterrupt(UART_IRQn);
 

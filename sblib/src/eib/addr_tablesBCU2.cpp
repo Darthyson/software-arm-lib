@@ -9,7 +9,7 @@
 #include <sblib/eib/bcu2.h>
 #include <sblib/bits.h>
 
-int AddrTablesBCU2::indexOfAddr(int addr)
+int AddrTablesBCU2::indexOfAddr(const int addr)
 {
     byte* tab = addrTable();
     int num = 0;

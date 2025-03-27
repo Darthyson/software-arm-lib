@@ -9,7 +9,7 @@
 #include <sblib/eib/bcu2.h>
 #include <sblib/bits.h>
 
-byte* ComObjectsBCU2::objectValuePtr(int objno)
+byte* ComObjectsBCU2::objectValuePtr(const int objno)
 {
     // The object configuration
     const ComConfigBCU2* cfg = objectConfigBCU2(objno);
@@ -46,7 +46,7 @@ byte* ComObjectsBCU2::objectFlagsTable()
     return ((BcuDefault*)bcu)->userMemoryPtr(flagsTableAddress);
 }
 
-const ComConfigBCU2* ComObjectsBCU2::objectConfigBCU2(int objno)
+const ComConfigBCU2* ComObjectsBCU2::objectConfigBCU2(const int objno)
 {
     const byte* configTable = objectConfigTable();
     if (configTable == nullptr)
@@ -57,7 +57,7 @@ const ComConfigBCU2* ComObjectsBCU2::objectConfigBCU2(int objno)
     return (const ComConfigBCU2*) (configTable + offSet);
 }
 
-const ComConfig& ComObjectsBCU2::objectConfig(int objno)
+const ComConfig& ComObjectsBCU2::objectConfig(const int objno)
 {
     return objectConfigBCU2(objno)->baseConfig;
 }

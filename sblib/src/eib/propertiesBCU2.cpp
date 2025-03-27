@@ -24,7 +24,7 @@
 // see KNX 6/6 Profiles, p. 94+
 // see KNX 3/7/3 Standardized Identifier Tables, p. 11+
 
-const PropertyDef* PropertiesBCU2::findProperty(PropertyID propertyId, const PropertyDef* table)
+const PropertyDef* PropertiesBCU2::findProperty(const PropertyID propertyId, const PropertyDef* table)
 {
     const PropertyDef* defFound = nullptr;
 
@@ -53,7 +53,7 @@ const PropertyDef* PropertiesBCU2::findProperty(PropertyID propertyId, const Pro
  *
  * @return The property definition, or 0 if not found.
  */
-const PropertyDef* PropertiesBCU2::propertyDef(int objectIdx, PropertyID propertyId)
+const PropertyDef* PropertiesBCU2::propertyDef(const int objectIdx, const PropertyID propertyId)
 {
     if (objectIdx >= NUM_PROP_OBJECTS)
     {
@@ -530,7 +530,7 @@ LoadState PropertiesBCU2::handleDataRelativeAllocation(const int objectIdx, cons
     return LS_LOADING;
 }
 
-int PropertiesBCU2::loadProperty(int objectIdx, const byte* data, int len)
+int PropertiesBCU2::loadProperty(const int objectIdx, const byte* data, int len)
 {
     // See KNX 3/5/2, 3.27 DM_LoadStateMachineWrite
     // See KNX 6/6 Profiles, p. 101 for load states
@@ -603,7 +603,7 @@ int PropertiesBCU2::loadProperty(int objectIdx, const byte* data, int len)
     return LS_LOADING;
 }
 
-bool PropertiesBCU2::propertyValueReadTelegram(int objectIdx, PropertyID propertyId, int count, int start, uint8_t* sendBuffer)
+bool PropertiesBCU2::propertyValueReadTelegram(const int objectIdx, const PropertyID propertyId, const int count, int start, uint8_t* sendBuffer)
 {
     DB_PROPERTIES(serial.print("propertyValueReadTelegram: "); printObjectIdx(objectIdx); serial.print(" "); printPropertyID(propertyId);serial.println(););
     const PropertyDef* def = propertyDef(objectIdx, propertyId);
@@ -633,7 +633,7 @@ bool PropertiesBCU2::propertyValueReadTelegram(int objectIdx, PropertyID propert
     return true;
 }
 
-bool PropertiesBCU2::propertyValueWriteTelegram(int objectIdx, PropertyID propertyId, int count, int start, uint8_t* sendBuffer)
+bool PropertiesBCU2::propertyValueWriteTelegram(const int objectIdx, const PropertyID propertyId, const int count, int start, uint8_t* sendBuffer)
 {
     const PropertyDef* def = propertyDef(objectIdx, propertyId);
     if (!def)
@@ -674,7 +674,7 @@ bool PropertiesBCU2::propertyValueWriteTelegram(int objectIdx, PropertyID proper
     return true;
 }
 
-bool PropertiesBCU2::propertyDescReadTelegram(int objectIdx, PropertyID propertyId, int index, uint8_t* sendBuffer)
+bool PropertiesBCU2::propertyDescReadTelegram(const int objectIdx, const PropertyID propertyId, const int index, uint8_t* sendBuffer)
 {
     const PropertyDef* def;
 
@@ -713,7 +713,7 @@ bool PropertiesBCU2::propertyDescReadTelegram(int objectIdx, PropertyID property
 
 #ifdef DUMP_PROPERTIES
 
-void PropertiesBCU2::printObjectIdx(int objectIdx)
+void PropertiesBCU2::printObjectIdx(const int objectIdx)
 {
     serial.print("objectIdx=0x", objectIdx, HEX, 2);
     if ((objectIdx >= OT_DEVICE) && (objectIdx <= OT_RF_MEDIUM))
@@ -727,7 +727,7 @@ void PropertiesBCU2::printObjectIdx(int objectIdx)
     }
 }
 
-void PropertiesBCU2::printLoadState(int loadstate)
+void PropertiesBCU2::printLoadState(const int loadstate)
 {
     serial.print("loadstate=0x", loadstate, HEX, 2);
     if ((loadstate >= LS_UNLOADED) && (loadstate <= LS_LOADCOMPLETING))
@@ -741,7 +741,7 @@ void PropertiesBCU2::printLoadState(int loadstate)
     }
 }
 
-void PropertiesBCU2::printSegmentType(int segmenttype)
+void PropertiesBCU2::printSegmentType(const int segmenttype)
 {
     serial.print("segmenttype=0x", segmenttype, HEX, 2);
     if ((segmenttype >= ST_ALLOC_ABS_DATA_SEG) && (segmenttype <= ST_DATA_RELATIVE_ALLOCATION))
@@ -755,7 +755,7 @@ void PropertiesBCU2::printSegmentType(int segmenttype)
     }
 }
 
-void PropertiesBCU2::printPropertyID(int propertyid)
+void PropertiesBCU2::printPropertyID(const int propertyid)
 {
     serial.print("propertyid=0x", propertyid, HEX, 2);
     if ((propertyid >= PID_OBJECT_TYPE) && (propertyid <= PID_CHANNEL_32_PARAM))
@@ -773,7 +773,7 @@ void PropertiesBCU2::printPropertyID(int propertyid)
     }
 }
 
-void PropertiesBCU2::printData(const byte* data, int len)
+void PropertiesBCU2::printData(const byte* data, const int len)
 {
     serial.print("Data: ");
     for (int i = 0; i < len; i++)

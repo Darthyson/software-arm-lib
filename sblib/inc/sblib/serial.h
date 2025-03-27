@@ -178,7 +178,7 @@ private:
 //
 //  Inline functions
 //
-inline void Serial::begin(int baudRate)
+inline void Serial::begin(const int baudRate)
 {
     if (enabled())
     {

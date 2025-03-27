@@ -19,7 +19,7 @@ public:
     UserEepromMASK0701() : UserEepromBCU2(0x3f00, 3072, 4096) {}
 
 protected:
-    UserEepromMASK0701(unsigned int start, unsigned int size, unsigned int flashSize) : UserEepromBCU2(start, size, flashSize) {};
+    UserEepromMASK0701(const unsigned int start, const unsigned int size, const unsigned int flashSize) : UserEepromBCU2(start, size, flashSize) {};
 };
 
 #endif /*sblib_usereeprom_mask0701_h*/

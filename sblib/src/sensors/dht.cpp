@@ -24,7 +24,7 @@
 ** Returned value: none
 **
 *****************************************************************************/
-void DHT::DHTInit(int pin, int DHTtype)
+void DHT::DHTInit(const int pin, const int DHTtype)
 {
     this->_pin = pin;
     this->_DHTtype = DHTtype;
@@ -48,7 +48,7 @@ void DHT::DHTInit(int pin, int DHTtype)
 **                 false on error. Check _lastError for reason.
 **
 *****************************************************************************/
-bool DHT::readData(bool bForceRead)
+bool DHT::readData(const bool bForceRead)
 {
     bool bRet = false;
     this->_lastError = ERROR_NONE;
@@ -184,7 +184,7 @@ bool DHT::readData(bool bForceRead)
 ** Returned value: Converter value
 **
 *****************************************************************************/
-float DHT::ConvertTemperature(eScale Scale)
+float DHT::ConvertTemperature(const eScale Scale)
 {
     if (Scale == FARENHEIT)
         return (this->_lastTemperature * 9 / 5 + 32);
@@ -204,7 +204,7 @@ float DHT::ConvertTemperature(eScale Scale)
 ** Returned value:
 **
 *****************************************************************************/
-uint32_t DHT::expectPulse(bool level)
+uint32_t DHT::expectPulse(const bool level)
 {
     uint32_t count = 0;
     while (digitalRead(_pin) == level)
@@ -229,7 +229,7 @@ uint32_t DHT::expectPulse(bool level)
 ** Returned value: Dew Point
 **
 *****************************************************************************/
-float DHT::CalcdewPointFast(float celsius, float humidity)
+float DHT::CalcdewPointFast(const float celsius, const float humidity)
 {
     float temp = (17.271f * celsius) / (237.7f + celsius) + logf(humidity / 100.0f);
     return ((237.7f * temp) / (17.271f - temp));

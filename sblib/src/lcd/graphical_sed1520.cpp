@@ -18,8 +18,8 @@
 #define DATA_PORT_PINMASK 255
 
 
-LcdGraphicalSED1520::LcdGraphicalSED1520(int dataPort, int pinA0, int pinCS1, int pinCS2,
-                                         int pinRD, int pinWR, const Font& font)
+LcdGraphicalSED1520::LcdGraphicalSED1520(const int dataPort, const int pinA0, const int pinCS1, const int pinCS2,
+                                         const int pinRD, const int pinWR, const Font& font)
     : LcdGraphical(font, DISPLAY_WIDTH, DISPLAY_HEIGHT)
       , dataPort(dataPort)
       , pinA0(pinA0)

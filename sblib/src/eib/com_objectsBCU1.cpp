@@ -14,7 +14,7 @@
 #   include <sblib/serial.h>
 #endif
 
-int ComObjectsBCU1::objectSize(int objno)
+int ComObjectsBCU1::objectSize(const int objno)
 {
     // The size of the object types BIT_7...VARDATA in bytes
     const byte objectTypeSizes[10] = {1, 1, 2, 3, 4, 6, 8, 10, 14, 14};
@@ -27,7 +27,7 @@ int ComObjectsBCU1::objectSize(int objno)
     return -1;
 }
 
-byte* ComObjectsBCU1::objectValuePtr(int objno)
+byte* ComObjectsBCU1::objectValuePtr(const int objno)
 {
     // The object configuration
     const ComConfigBCU1* cfg = objectConfigBCU1(objno);
@@ -65,7 +65,7 @@ byte* ComObjectsBCU1::objectValuePtr(int objno)
  *  @return void
  *
  */
-void ComObjectsBCU1::processGroupTelegram(uint16_t addr, int apci, byte* tel, int trg_objno)
+void ComObjectsBCU1::processGroupTelegram(const uint16_t addr, const int apci, byte* tel, const int trg_objno)
 {
     /**
      * Spec: Resources 4.11.2 Group Object Association Table - Realization Type 1
@@ -171,9 +171,9 @@ byte* ComObjectsBCU1::objectFlagsTable() // stored in RAM
     return ((BcuDefault*)bcu)->userMemoryPtr(*objCfgTablePtr);
 }
 
-inline const ComConfig& ComObjectsBCU1::objectConfig(int objno) { return objectConfigBCU1(objno)->baseConfig; }
+inline const ComConfig& ComObjectsBCU1::objectConfig(const int objno) { return objectConfigBCU1(objno)->baseConfig; }
 
-inline const ComConfigBCU1* ComObjectsBCU1::objectConfigBCU1(int objno)
+inline const ComConfigBCU1* ComObjectsBCU1::objectConfigBCU1(const int objno)
 {
     byte* objConfigTable = objectConfigTable();
     if (objConfigTable == nullptr)

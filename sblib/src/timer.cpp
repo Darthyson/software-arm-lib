@@ -63,7 +63,7 @@ void delay(unsigned int msec)
 }
 
 #ifndef IAP_EMULATION
-void delayMicroseconds(unsigned int usec)
+void delayMicroseconds(const unsigned int usec)
 {
     uint16_t lastSystemTickValue = SysTick->VAL; // get our start SysTickcount
     int ticksToWait = 1; // as fast as we can go
@@ -106,7 +106,7 @@ unsigned int millis()
     return systemTime;
 }
 
-unsigned int elapsed(unsigned int ref)
+unsigned int elapsed(const unsigned int ref)
 {
     return millis() - ref;
 }
@@ -119,7 +119,7 @@ Timer timer32_0(TIMER32_0);
 Timer timer32_1(TIMER32_1);
 
 
-Timer::Timer(byte aTimerNum)
+Timer::Timer(const byte aTimerNum)
 {
     timerNum = aTimerNum;
     timer = timers[aTimerNum];
@@ -135,7 +135,7 @@ void Timer::begin()
 }
 
 
-void Timer::matchMode(int channel, int mode)
+void Timer::matchMode(const int channel, const int mode)
 {
     // Configure the match control channel
     const int offset = channel * 3;
@@ -147,7 +147,7 @@ void Timer::matchMode(int channel, int mode)
     matchModePinConfig(channel, mode);
 }
 
-int Timer::matchMode(int channel) const
+int Timer::matchMode(const int channel) const
 {
     // Query the match control channel
     int offset = channel * 3;
@@ -160,7 +160,7 @@ int Timer::matchMode(int channel) const
     return mode;
 }
 
-void Timer::captureMode(int channel, int mode)
+void Timer::captureMode(const int channel, const int mode)
 {
     short offset = channel * 3;
 
@@ -173,7 +173,7 @@ void Timer::captureMode(int channel, int mode)
                | (val << offset);
 }
 
-int Timer::captureMode(int channel) const
+int Timer::captureMode(const int channel) const
 {
     int mode = ((timer->CCR >> (channel * 3)) & 7) << 6;
 
@@ -186,7 +186,7 @@ int Timer::captureMode(int channel) const
     return mode;
 }
 
-void Timer::counterMode(int mode, int clearMode)
+void Timer::counterMode(const int mode, const int clearMode)
 {
     int config = 0;
 
@@ -213,7 +213,7 @@ void Timer::counterMode(int mode, int clearMode)
     timer->CTCR = config;
 }
 
-void Timer::setIRQPriority(uint32_t newPriority)
+void Timer::setIRQPriority(const uint32_t newPriority)
 {
     if (this == &timer16_0)
     {

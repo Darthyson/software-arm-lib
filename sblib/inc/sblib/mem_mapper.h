@@ -108,7 +108,7 @@ public:
      *
      * @param value - BIG_ENDIAN or LITTLE_ENDIAN
      */
-    void setEndianess(int value)
+    void setEndianess(const int value)
     {
         endianess = value;
     }

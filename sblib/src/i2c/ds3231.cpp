@@ -45,7 +45,7 @@ void Ds3231::Ds3231Init()
 **           rtn_val = rtc.SetTime(time);
 **
 *****************************************************************************/
-bool Ds3231::SetTime(ds3231_time_t time)
+bool Ds3231::SetTime(const ds3231_time_t time)
 {
     uint8_t data[] = {0, 0, 0, 0};
     uint8_t data_length = 0;
@@ -138,7 +138,7 @@ bool Ds3231::GetTime(ds3231_time_t* time)
 **            rtn_val = rtc.SetCalendar(calendar);
 **
 *****************************************************************************/
-bool Ds3231::SetCalendar(ds3231_calendar_t calendar)
+bool Ds3231::SetCalendar(const ds3231_calendar_t calendar)
 {
     uint8_t data[] = {0, 0, 0, 0, 0};
     uint8_t data_length = 0;
@@ -213,7 +213,7 @@ bool Ds3231::GetCalendar(ds3231_calendar_t* calendar)
 **           rtn_val = rtc.SetAlarm(alarm, FALSE);
 **
 *****************************************************************************/
-bool Ds3231::SetAlarm(ds3231_alrm_t alarm, bool bAlarmNumber)
+bool Ds3231::SetAlarm(const ds3231_alrm_t& alarm, const bool bAlarmNumber)
 {
     uint8_t data[] = {0, 0, 0, 0, 0};
     uint8_t data_length = 0;
@@ -360,7 +360,7 @@ bool Ds3231::SetAlarm(ds3231_alrm_t alarm, bool bAlarmNumber)
 **          rtn_val = rtc.GetAlarm(&alarm, FALSE);
 **
 *****************************************************************************/
-bool Ds3231::GetAlarm(ds3231_alrm_t* alarm, bool bAlarmNumber)
+bool Ds3231::GetAlarm(ds3231_alrm_t* alarm, const bool bAlarmNumber)
 {
     bool bRet = false;
     uint8_t data[4];
@@ -445,7 +445,7 @@ bool Ds3231::GetAlarm(ds3231_alrm_t* alarm, bool bAlarmNumber)
 **           rtn_val = rtc.SetCtrlStatReg(data);
 **
 *****************************************************************************/
-bool Ds3231::SetCtrlStatReg(ds3231_cntl_stat_t data, bool bSetControl, bool bSetStatus)
+bool Ds3231::SetCtrlStatReg(const ds3231_cntl_stat_t data, const bool bSetControl, const bool bSetStatus)
 {
     uint8_t local_data[] = {0, 0, 0};
     uint8_t data_length = 0;
@@ -546,7 +546,7 @@ time_t Ds3231::GetEpoch(void)
 ** Returned value: TRUE on success, FALSE on failure
 **
 *****************************************************************************/
-bool Ds3231::CheckAlarm(bool bAlarmNumber)
+bool Ds3231::CheckAlarm(const bool bAlarmNumber)
 {
     bool bRet = 0;
     ds3231_cntl_stat_t data;
@@ -584,7 +584,7 @@ bool Ds3231::CheckAlarm(bool bAlarmNumber)
 ** Returned value: TRUE on success, FALSE on failure
 **
 *****************************************************************************/
-bool Ds3231::ResetAlarm(bool bAlarmNumber)
+bool Ds3231::ResetAlarm(const bool bAlarmNumber)
 {
     bool bRet = 0;
     ds3231_cntl_stat_t data;
@@ -617,7 +617,7 @@ bool Ds3231::ResetAlarm(bool bAlarmNumber)
 ** Returned value: TRUE on success, FALSE on failure
 **
 *****************************************************************************/
-bool Ds3231::TurnOnAlarm(bool bAlarmNumber)
+bool Ds3231::TurnOnAlarm(const bool bAlarmNumber)
 {
     bool bRet = 0;
     ds3231_cntl_stat_t data;
@@ -652,7 +652,7 @@ bool Ds3231::TurnOnAlarm(bool bAlarmNumber)
 ** Returned value: TRUE on success, FALSE on failure
 **
 *****************************************************************************/
-bool Ds3231::EnableOscillator(bool TF, bool bBattery, uint8_t RS_bit_SQW)
+bool Ds3231::EnableOscillator(const bool TF, const bool bBattery, const uint8_t RS_bit_SQW)
 {
     bool bRet = false;
     ds3231_cntl_stat_t data;
@@ -757,7 +757,7 @@ uint16_t Ds3231::uchar_2_bcd(uint8_t data)
 ** Example: none
 **
 *****************************************************************************/
-uint8_t Ds3231::bcd_2_uchar(uint8_t bcd)
+uint8_t Ds3231::bcd_2_uchar(const uint8_t bcd)
 {
     uint8_t rtn_val = 0;
 

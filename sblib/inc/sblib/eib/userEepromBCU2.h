@@ -67,7 +67,7 @@ public:
     virtual byte* orderInfo() const { return &userEepromData[orderInfoOffset]; }
 
 protected:
-    UserEepromBCU2(unsigned int start, unsigned int size, unsigned int flashSize) : UserEepromBCU1(start, size, flashSize) {};
+    UserEepromBCU2(const unsigned int start, const unsigned int size, const unsigned int flashSize) : UserEepromBCU1(start, size, flashSize) {};
 };
 
 #endif /*sblib_usereeprom_bcu2_h*/

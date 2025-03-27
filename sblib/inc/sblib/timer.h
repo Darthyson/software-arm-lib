@@ -497,7 +497,7 @@ protected:
 //
 
 
-ALWAYS_INLINE void Timer::prescaler(unsigned int factor)
+ALWAYS_INLINE void Timer::prescaler(const unsigned int factor)
 {
     timer->PR = factor;
 }
@@ -539,7 +539,7 @@ ALWAYS_INLINE unsigned int Timer::value() const
     return timer->TC;
 }
 
-ALWAYS_INLINE void Timer::value(unsigned int val)
+ALWAYS_INLINE void Timer::value(const unsigned int val)
 {
     timer->TC = val;
 }
@@ -554,32 +554,32 @@ ALWAYS_INLINE void Timer::resetFlags()
     timer->IR = 0xff;
 }
 
-ALWAYS_INLINE void Timer::resetFlag(TimerMatch match)
+ALWAYS_INLINE void Timer::resetFlag(const TimerMatch match)
 {
     timer->IR = (1 << match);
 }
 
-ALWAYS_INLINE void Timer::resetFlag(TimerCapture capture)
+ALWAYS_INLINE void Timer::resetFlag(const TimerCapture capture)
 {
     timer->IR = (16 << capture);
 }
 
-ALWAYS_INLINE bool Timer::flag(TimerMatch match) const
+ALWAYS_INLINE bool Timer::flag(const TimerMatch match) const
 {
     return timer->IR & (1 << match);
 }
 
-ALWAYS_INLINE bool Timer::flag(TimerCapture capture) const
+ALWAYS_INLINE bool Timer::flag(const TimerCapture capture) const
 {
     return timer->IR & (16 << capture);
 }
 
-ALWAYS_INLINE int Timer::flagMask(TimerMatch match)
+ALWAYS_INLINE int Timer::flagMask(const TimerMatch match)
 {
     return 1 << match;
 }
 
-ALWAYS_INLINE int Timer::flagMask(TimerCapture capture)
+ALWAYS_INLINE int Timer::flagMask(const TimerCapture capture)
 {
     return 16 << capture;
 }
@@ -595,32 +595,32 @@ ALWAYS_INLINE void Timer::noInterrupts()
 }
 
 
-ALWAYS_INLINE unsigned int Timer::match(int channel) const
+ALWAYS_INLINE unsigned int Timer::match(const int channel) const
 {
     return (&timer->MR0)[channel];
 }
 
-ALWAYS_INLINE void Timer::match(int channel, unsigned int value)
+ALWAYS_INLINE void Timer::match(const int channel, const unsigned int value)
 {
     (&timer->MR0)[channel] = value;
 }
 
-ALWAYS_INLINE unsigned int Timer::capture(int channel) const
+ALWAYS_INLINE unsigned int Timer::capture(const int channel) const
 {
     return (&timer->CR0)[channel];
 }
 
-ALWAYS_INLINE void Timer::pwmEnable(int channel)
+ALWAYS_INLINE void Timer::pwmEnable(const int channel)
 {
     timer->PWMC |= 1 << channel;
 }
 
-ALWAYS_INLINE void Timer::pwmDisable(int channel)
+ALWAYS_INLINE void Timer::pwmDisable(const int channel)
 {
     timer->PWMC &= ~(1 << channel);
 }
 
-ALWAYS_INLINE void Timer::matchModePinConfig(int channel, int mode)
+ALWAYS_INLINE void Timer::matchModePinConfig(const int channel, const int mode)
 {
     int offset = channel << 1;
     timer->EMR = (timer->EMR
@@ -633,7 +633,7 @@ ALWAYS_INLINE bool Timer::is32bitTimer(void)
     return (bool)(this->timerNum > 1);
 }
 
-ALWAYS_INLINE bool Timer::getMatchChannelLevel(int channel)
+ALWAYS_INLINE bool Timer::getMatchChannelLevel(const int channel)
 {
     return (bool)(timer->EMR & (1 << channel));
 }

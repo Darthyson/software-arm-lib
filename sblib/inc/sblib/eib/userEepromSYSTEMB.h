@@ -32,7 +32,7 @@ public:
     virtual byte* eibObjMcb() const { return &userEepromData[eibObjMcbOffset]; }
 
 protected:
-    UserEepromSYSTEMB(unsigned int start, unsigned int size, unsigned int flashSize) : UserEepromMASK0701(start, size, flashSize) {};
+    UserEepromSYSTEMB(const unsigned int start, const unsigned int size, const unsigned int flashSize) : UserEepromMASK0701(start, size, flashSize) {};
 };
 
 #endif /*sblib_usereeprom_systemb_h*/

@@ -47,7 +47,7 @@ uint16_t makeWord(byte high, byte low);
 //  Inline functions
 //
 
-inline uint16_t makeWord(byte high, byte low)
+inline uint16_t makeWord(const byte high, const byte low)
 {
     return ((uint16_t)((high << 8) | low));
 }

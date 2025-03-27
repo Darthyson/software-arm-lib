@@ -43,7 +43,7 @@ unsigned short floatToDpt9(int value)
     }
 }
 
-int dpt9ToFloat(unsigned short dptValue)
+int dpt9ToFloat(const unsigned short dptValue)
 {
     int exp = (dptValue >> 11) & 15;
     int value;

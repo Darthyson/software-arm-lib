@@ -10,7 +10,7 @@
 
 #include <sblib/lcd/font.h>
 
-Font::Font(int firstChar, int numChars, int charWidth, const char* data)
+Font::Font(const int firstChar, const int numChars, const int charWidth, const char* data)
     : firstChar(firstChar)
       , numChars(numChars)
       , charWidth(charWidth)

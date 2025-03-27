@@ -29,7 +29,7 @@
 #include <sblib/timer.h>
 //#include <sblib/serial.h>
 
-SHT1x::SHT1x(int dataP, int clockP) :
+SHT1x::SHT1x(const int dataP, const int clockP) :
     dataPin(dataP),
     clockPin(clockP),
     lastTemperatureC(INVALID_TEMPERATURE),
@@ -58,7 +58,7 @@ void SHT1x::clockCycle()
     digitalWrite(clockPin, false);
 }
 
-float SHT1x::convertRawTemperature(const float& temperature, eScale type)
+float SHT1x::convertRawTemperature(const float& temperature, const eScale type)
 {
     // Conversion coefficients from SHT1x datasheet
     const float D1 = -39.7f; // @ 3.5V VDD (-39.6 @ 3.0V)
@@ -185,7 +185,7 @@ void SHT1x::sendTransmissionStart()
     __NOP();
 }
 
-bool SHT1x::sendByteToSHT(uint8_t toSend, bool isCommand)
+bool SHT1x::sendByteToSHT(const uint8_t toSend, const bool isCommand)
 {
     activateDataPin();
     if (isCommand)

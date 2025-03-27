@@ -19,7 +19,7 @@
  *
  * On most sensor boards, it was 0x76
  */
-BH1750::BH1750(byte addr)
+BH1750::BH1750(const byte addr)
 {
     i2c_lpcopen_init();
     BH1750_I2CADDR = addr;
@@ -30,7 +30,7 @@ BH1750::BH1750(byte addr)
  * @param mode Measurement mode
  * @param addr Address of the sensor
  */
-bool BH1750::begin(Mode mode, byte addr)
+bool BH1750::begin(const Mode mode, const byte addr)
 {
     LOG("begin");
     i2c_lpcopen_init();
@@ -128,7 +128,7 @@ bool BH1750::configure(Mode mode)
  * @return bool true if MTReg successful set
  *         false if MTreg not changed or parameter out of range
  */
-bool BH1750::setMTreg(byte MTreg)
+bool BH1750::setMTreg(const byte MTreg)
 {
     LOG("setMTreg %d", MTreg);
     // Bug: lowest value seems to be 32!
@@ -179,7 +179,7 @@ bool BH1750::setMTreg(byte MTreg)
  * @return a boolean if a new measurement is possible
  *
  */
-bool BH1750::measurementReady(bool maxWait)
+bool BH1750::measurementReady(const bool maxWait)
 {
     unsigned long delaytime = 0;
     switch (BH1750_MODE)

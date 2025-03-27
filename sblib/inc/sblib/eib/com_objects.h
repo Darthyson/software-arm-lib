@@ -130,7 +130,7 @@ public:
      * @param objno - the ID of the communication object.
      * @param value - the new value of the communication object.
      */
-    void objectWrite(int objno, byte* value);
+    void objectWrite(int objno, const byte* value);
 
     /**
      * Set the value of a communication object. Calling this function triggers the
@@ -173,7 +173,7 @@ public:
      * @param objno - the ID of the communication object.
      * @param value - the new value of the communication object.
      */
-    void objectUpdate(int objno, byte* value);
+    void objectUpdate(int objno, const byte* value);
 
     /**
      * Set the value of a communication object and mark the communication object
@@ -311,7 +311,7 @@ protected:
      */
     void setObjectFlags(int objno, int flags);
     void _objectWrite(int objno, unsigned int value, int flags);
-    void _objectWriteBytes(int objno, byte* value, int flags);
+    void _objectWriteBytes(int objno, const byte* value, int flags);
 
     /**
      * @return The number of communication objects.
@@ -349,7 +349,7 @@ protected:
      * @param isResponse - true if response telegram, false if write telegram
      */
     void sendGroupWriteTelegram(int objno, int addr, bool isResponse);
-    void processGroupWriteTelegram(int objno, byte* tel);
+    void processGroupWriteTelegram(int objno, const byte* tel);
 
     BcuBase* bcu;
     int le_ptr;
@@ -363,69 +363,69 @@ protected:
 //  Inline functions
 //
 
-inline void ComObjects::objectEndian(int val)
+inline void ComObjects::objectEndian(const int val)
 {
     le_ptr = val;
 }
 
-inline void ComObjects::processGroupTelegram(int addr, int apci, byte* tel)
+inline void ComObjects::processGroupTelegram(const int addr, const int apci, byte* tel)
 {
     // call with neg/invalid object
 
     processGroupTelegram(addr, apci, tel, INVALID_OBJECT_NUMBER);
 }
 
-inline ComType ComObjects::objectType(int objno)
+inline ComType ComObjects::objectType(const int objno)
 {
     return (ComType)objectConfig(objno).type;
 }
 
-inline void ComObjects::requestObjectRead(int objno)
+inline void ComObjects::requestObjectRead(const int objno)
 {
     setObjectFlags(objno, COMFLAG_TRANSREQ | COMFLAG_DATAREQ);
 }
 
-inline void ComObjects::objectWritten(int objno)
+inline void ComObjects::objectWritten(const int objno)
 {
     addObjectFlags(objno, COMFLAG_TRANSREQ);
 }
 
-inline void ComObjects::objectSetValue(int objno, unsigned int value)
+inline void ComObjects::objectSetValue(const int objno, const unsigned int value)
 {
     _objectWrite(objno, value, 0);
 }
 
-inline void ComObjects::objectWrite(int objno, unsigned int value)
+inline void ComObjects::objectWrite(const int objno, const unsigned int value)
 {
     _objectWrite(objno, value, COMFLAG_TRANSREQ);
 }
 
-inline void ComObjects::objectWrite(int objno, byte* value)
+inline void ComObjects::objectWrite(const int objno, const byte* value)
 {
     _objectWriteBytes(objno, value, COMFLAG_TRANSREQ);
 }
 
-inline void ComObjects::objectWriteFloat(int objno, int value)
+inline void ComObjects::objectWriteFloat(const int objno, const int value)
 {
     _objectWrite(objno, floatToDpt9(value), COMFLAG_TRANSREQ);
 }
 
-inline void ComObjects::objectUpdate(int objno, unsigned int value)
+inline void ComObjects::objectUpdate(const int objno, const unsigned int value)
 {
     _objectWrite(objno, value, COMFLAG_UPDATE);
 }
 
-inline void ComObjects::objectUpdate(int objno, byte* value)
+inline void ComObjects::objectUpdate(const int objno, const byte* value)
 {
     _objectWriteBytes(objno, value, COMFLAG_UPDATE);
 }
 
-inline void ComObjects::objectUpdateFloat(int objno, int value)
+inline void ComObjects::objectUpdateFloat(const int objno, const int value)
 {
     _objectWrite(objno, floatToDpt9(value), COMFLAG_UPDATE);
 }
 
-inline float ComObjects::objectReadFloat(int objno)
+inline float ComObjects::objectReadFloat(const int objno)
 {
     return dpt9ToFloat(objectRead(objno));
 }

@@ -211,7 +211,7 @@ uint16_t PropertiesSYSTEMB::crc16(uint8_t* ptr, int len)
     return crc;
 }
 
-int PropertiesSYSTEMB::loadProperty(int objectIdx, const byte* data, int len)
+int PropertiesSYSTEMB::loadProperty(const int objectIdx, const byte* data, int len)
 {
     // See KNX 3/5/2, 3.27 DM_LoadStateMachineWrite
     // See KNX 6/6 Profiles, p. 101 for load states
@@ -307,7 +307,7 @@ int PropertiesSYSTEMB::loadProperty(int objectIdx, const byte* data, int len)
     return LS_LOADING;
 }
 
-bool PropertiesSYSTEMB::propertyValueReadTelegram(int objectIdx, PropertyID propertyId, int count, int start, uint8_t* sendBuffer)
+bool PropertiesSYSTEMB::propertyValueReadTelegram(const int objectIdx, const PropertyID propertyId, const int count, int start, uint8_t* sendBuffer)
 {
     // DB_PROPERTIES(serial.print("propertyValueReadTelegram: "); printObjectIdx(objectIdx); serial.print(" "); printPropertyID(propertyId);serial.println(););
     const PropertyDef* def = propertyDef(objectIdx, propertyId);
@@ -343,7 +343,7 @@ bool PropertiesSYSTEMB::propertyValueReadTelegram(int objectIdx, PropertyID prop
     return true;
 }
 
-bool PropertiesSYSTEMB::propertyValueWriteTelegram(int objectIdx, PropertyID propertyId, int count, int start, uint8_t* sendBuffer)
+bool PropertiesSYSTEMB::propertyValueWriteTelegram(const int objectIdx, const PropertyID propertyId, const int count, int start, uint8_t* sendBuffer)
 {
     const PropertyDef* def = propertyDef(objectIdx, propertyId);
     if (!def)

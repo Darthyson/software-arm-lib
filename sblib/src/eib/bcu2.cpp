@@ -13,7 +13,7 @@
 #include <sblib/eib/knx_lpdu.h>
 #include <sblib/internal/iap.h>
 
-void BCU2::setOwnAddress(uint16_t addr)
+void BCU2::setOwnAddress(const uint16_t addr)
 {
     BcuDefault::setOwnAddress(addr);
     if (userEeprom->loadState()[OT_ADDR_TABLE] == LS_LOADING)
@@ -25,7 +25,7 @@ void BCU2::setOwnAddress(uint16_t addr)
     }
 }
 
-inline void BCU2::begin(int manufacturer, int deviceType, int version, word readOnlyCommObjectTableAddress)
+inline void BCU2::begin(const int manufacturer, const int deviceType, const int version, const word readOnlyCommObjectTableAddress)
 {
     BcuDefault::begin(manufacturer, deviceType, version);
 
@@ -75,7 +75,7 @@ inline void BCU2::begin(int manufacturer, int deviceType, int version, word read
     static_cast<ComObjectsBCU2*>(this->comObjects)->printObjectConfigTable();
 }
 
-void BCU2::begin(int manufacturer, int deviceType, int version)
+void BCU2::begin(const int manufacturer, const int deviceType, const int version)
 {
     begin(manufacturer, deviceType, version, 0);
 }
@@ -101,7 +101,7 @@ BCU2::BCU2(UserRamBCU2* userRam, UserEepromBCU2* userEeprom, ComObjectsBCU2* com
     properties(properties)
 {}
 
-bool BCU2::processApci(ApciCommand apciCmd, unsigned char* telegram, uint8_t telLength, uint8_t* sendBuffer)
+bool BCU2::processApci(const ApciCommand apciCmd, unsigned char* telegram, const uint8_t telLength, uint8_t* sendBuffer)
 {
     uint8_t count;
     uint16_t address;
@@ -165,7 +165,7 @@ void BCU2::setHardwareType(const byte* hardwareType, uint8_t size)
     memcpy(userEeprom->order(), hardwareType, size);
 }
 
-bool BCU2::processBroadCastTelegram(ApciCommand apciCmd, unsigned char* telegram, uint8_t telLength)
+bool BCU2::processBroadCastTelegram(const ApciCommand apciCmd, unsigned char* telegram, const uint8_t telLength)
 {
     switch (apciCmd)
     {

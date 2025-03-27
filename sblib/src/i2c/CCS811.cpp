@@ -28,7 +28,7 @@
 #include <sblib/digital_pin.h>
 
 
-bool CCS811Class::begin(uint8_t I2C_ADDR, int WAKE_PIN) {
+bool CCS811Class::begin(const uint8_t I2C_ADDR, const int WAKE_PIN) {
     delay(70); // from datasheet - up to 70ms on the first Reset after new application download; up to 20ms delay after power on
     _I2C_ADDR = I2C_ADDR;
     _WAKE_PIN = WAKE_PIN;
@@ -128,7 +128,7 @@ uint16_t CCS811Class::getBaseline(void) {
 }
 
 // set the baseline from before reading to the CCS811
-void CCS811Class::setBaseline(uint16_t baseline) {
+void CCS811Class::setBaseline(const uint16_t baseline) {
     _digitalWrite(_WAKE_PIN, false);
     delayMicroseconds(50); // recommended 50us delay after asserting WAKE pin
     uint8_t i2cData[] = {BASELINE_REG, (uint8_t)(baseline >> 8), (uint8_t)baseline};
@@ -136,7 +136,7 @@ void CCS811Class::setBaseline(uint16_t baseline) {
     digitalWrite(_WAKE_PIN, true); // set WAKE_PIN high - this puts sensor in sleep mode (~2uA) and all I2C communications are ignored
 }
 
-char CCS811Class::readErrorID(char _status) {
+char CCS811Class::readErrorID(const char _status) {
     _digitalWrite(_WAKE_PIN, false);
     delayMicroseconds(50); // recommended 50us delay after asserting WAKE pin
     uint8_t error_id;      // = ERROR_ID;
@@ -162,7 +162,7 @@ void CCS811Class::sleep() {
 // Mode 1 – Constant power mode, IAQ measurement every second
 // Mode 2 – Pulse heating mode IAQ measurement every 10 seconds
 // Mode 3 – Low power pulse heating mode IAQ measurement every 60
-void CCS811Class::setMode(uint8_t modeNumber) {
+void CCS811Class::setMode(const uint8_t modeNumber) {
     _digitalWrite(_WAKE_PIN, false);
     delayMicroseconds(50); // recommended 50us delay after asserting WAKE pin
     uint8_t i2cData[] = {MEAS_MODE, (uint8_t)(modeNumber << 4)};
@@ -199,7 +199,7 @@ int CCS811Class::readCO2(void) {
     return CO2;
 }
 
-void CCS811Class::compensate(float t, float rh) // compensate for temperature and relative humidity
+void CCS811Class::compensate(const float t, const float rh) // compensate for temperature and relative humidity
 {
     _digitalWrite(_WAKE_PIN, false);
     delayMicroseconds(50); // recommended 50us delay after asserting WAKE pin
@@ -225,7 +225,7 @@ void CCS811Class::compensate(float t, float rh) // compensate for temperature an
     digitalWrite(_WAKE_PIN, true);
 }
 
-void CCS811Class::_digitalWrite(int WAKE_PIN, bool VAL) // asserts WAKE pin with a small delay to ensure reliable communication - thanks to djdehaan for this fix
+void CCS811Class::_digitalWrite(const int WAKE_PIN, const bool VAL) // asserts WAKE pin with a small delay to ensure reliable communication - thanks to djdehaan for this fix
 {
     digitalWrite(WAKE_PIN, VAL);
     delayMicroseconds(60);

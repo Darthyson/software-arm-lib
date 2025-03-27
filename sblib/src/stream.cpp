@@ -13,7 +13,7 @@
 #include <sblib/math.h>
 #include <sblib/timer.h>
 
-int Stream::parseInt(char skipChar)
+int Stream::parseInt(const char skipChar)
 {
     bool negative = false;
     int value = 0;
@@ -41,7 +41,7 @@ int Stream::parseInt(char skipChar)
     return value;
 }
 
-int Stream::_readBytesUntil(int terminator, char* buffer, int length)
+int Stream::_readBytesUntil(const int terminator, char* buffer, const int length)
 {
     int count;
     for (count = 0; count < length; ++count)
@@ -56,7 +56,7 @@ int Stream::_readBytesUntil(int terminator, char* buffer, int length)
     return count;
 }
 
-bool Stream::findUntil(const char* target, int targetLen, const char* terminator, int termLen)
+bool Stream::findUntil(const char* target, const int targetLen, const char* terminator, const int termLen)
 {
     int targetIdx = 0;
     int termIdx = 0;

@@ -58,7 +58,7 @@
 // The SPI port registers
 static LPC_SSP_TypeDef* const ports[2] = {LPC_SSP0, LPC_SSP1};
 
-SPI::SPI(int spiPort, int mode)
+SPI::SPI(const int spiPort, const int mode)
     :
     port(*ports[spiPort])
 {
@@ -101,12 +101,12 @@ SPI::SPI(int spiPort, int mode)
     port.CPSR = 2;
 }
 
-void SPI::setClockDivider(int div)
+void SPI::setClockDivider(const int div)
 {
     port.CR0 = (port.CR0 & ~0xff00) | (((div - 1) & 255) << 8);
 }
 
-void SPI::setDataSize(SpiDataSize dataSize)
+void SPI::setDataSize(const SpiDataSize dataSize)
 {
     port.CR0 = (port.CR0 & ~15) | SPI_DATA_SIZE_OFFS(dataSize);
 }
@@ -121,7 +121,7 @@ void SPI::end()
     port.CR1 &= ~SSP_CR1_ENABLED;
 }
 
-int SPI::transfer(int val, SpiTransferMode transferMode)
+int SPI::transfer(const int val, SpiTransferMode transferMode)
 {
     // Clear all remaining data in the receive FIFO
     while (port.SR & SSP_SR_RNE)
@@ -143,7 +143,7 @@ int SPI::transfer(int val, SpiTransferMode transferMode)
 
 static SPI* instances[2];
 
-void SPI::transferBlock(uint16_t* sndData, int bytes, uint16_t* recData, bool asynchron)
+void SPI::transferBlock(uint16_t* sndData, const int bytes, uint16_t* recData, const bool asynchron)
 {
     // Clear all remaining data in the receive FIFO
     while (port.SR & SSP_SR_RNE)

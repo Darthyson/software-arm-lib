@@ -93,12 +93,12 @@ bool SHT4xClass::measureHighPrecisionTicks(uint16_t& temperatureTicks, uint16_t&
 }
 
 
-float SHT4xClass::convertTicksToCelsius(uint16_t ticks)
+float SHT4xClass::convertTicksToCelsius(const uint16_t ticks)
 {
     return static_cast<float>(ticks * 175.0f / 65535.0f - 45.0f);
 }
 
-float SHT4xClass::convertTicksToPercentRH(uint16_t ticks)
+float SHT4xClass::convertTicksToPercentRH(const uint16_t ticks)
 {
     return static_cast<float>(ticks * 125.0f / 65535.0f - 6.0f);
 }
@@ -154,7 +154,7 @@ bool SHT4xClass::writeCommand(Sht4xCommand command)
     return Chip_I2C_MasterSend(I2C0, eSHT4xAddress, &cmd, sizeof(cmd)) == sizeof(cmd);
 }
 
-bool SHT4xClass::readSensor(Sht4xCommand command, uint8_t* buffer, uint8_t bufferLength)
+bool SHT4xClass::readSensor(const Sht4xCommand command, uint8_t* buffer, uint8_t bufferLength)
 {
     uint8_t resultLength;
 

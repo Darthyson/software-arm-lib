@@ -269,7 +269,7 @@ inline Stream::Stream()
     timeout = 1000;
 }
 
-inline void Stream::setTimeout(unsigned int newTimeout)
+inline void Stream::setTimeout(const unsigned int newTimeout)
 {
     timeout = newTimeout;
 }
@@ -279,22 +279,22 @@ inline int Stream::parseInt()
     return parseInt('0');
 }
 
-inline int Stream::readBytes(char* buffer, int length)
+inline int Stream::readBytes(char* buffer, const int length)
 {
     return _readBytesUntil(-1, buffer, length);
 }
 
-inline int Stream::readBytes(byte* buffer, int length)
+inline int Stream::readBytes(byte* buffer, const int length)
 {
     return _readBytesUntil(-1, (char*)buffer, length);
 }
 
-inline int Stream::readBytesUntil(char terminator, char* buffer, int length)
+inline int Stream::readBytesUntil(const char terminator, char* buffer, const int length)
 {
     return _readBytesUntil(terminator, (char*)buffer, length);
 }
 
-inline int Stream::readBytesUntil(char terminator, byte* buffer, int length)
+inline int Stream::readBytesUntil(const char terminator, byte* buffer, const int length)
 {
     return _readBytesUntil(terminator, (char*)buffer, length);
 }
@@ -309,12 +309,12 @@ inline bool Stream::find(const byte* target)
     return find((const char*)target);
 }
 
-inline bool Stream::find(const char* target, int length)
+inline bool Stream::find(const char* target, const int length)
 {
     return findUntil(target, length, (const char*)0, 0);
 }
 
-inline bool Stream::find(const byte* target, int length)
+inline bool Stream::find(const byte* target, const int length)
 {
     return find((const char*)target, length);
 }
@@ -329,7 +329,7 @@ inline bool Stream::findUntil(const byte* target, const char* terminator)
     return findUntil((const char*)target, terminator);
 }
 
-inline bool Stream::findUntil(const byte* target, int targetLen, const char* terminate, int termLen)
+inline bool Stream::findUntil(const byte* target, const int targetLen, const char* terminate, const int termLen)
 {
     return findUntil((const char*)target, targetLen, terminate, termLen);
 }

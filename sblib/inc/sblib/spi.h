@@ -230,7 +230,7 @@ public:
 };
 
 
-inline int SPI::transfer(int value)
+inline int SPI::transfer(const int value)
 {
     return transfer(value, SPI_LAST);
 }

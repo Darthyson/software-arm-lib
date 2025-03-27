@@ -340,7 +340,7 @@ inline uint16_t TLayer4::ownAddress()
     return (ownAddr);
 }
 
-inline void TLayer4::setOwnAddress(uint16_t addr)
+inline void TLayer4::setOwnAddress(const uint16_t addr)
 {
     ownAddr = addr;
 }

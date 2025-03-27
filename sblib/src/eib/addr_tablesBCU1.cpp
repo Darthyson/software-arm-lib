@@ -7,7 +7,7 @@
 
 #include <sblib/eib/addr_tablesBCU1.h>
 
-int AddrTablesBCU1::indexOfAddr(int addr)
+int AddrTablesBCU1::indexOfAddr(const int addr)
 {
     byte* tab = addrTable();
     int num = 0;

@@ -101,7 +101,7 @@ private:
     //void begin();
     //uint8_t end();
     void writeByte(uint8_t);
-    void writeBytes(uint8_t* data, uint8_t data_length);
+    void writeBytes(const uint8_t* data, uint8_t data_length);
 
     bool activePullUpEnabled = false;
     uint8_t mAddress = 0x18; //!< Address is determined by two pins on the DS2482 AD1/AD0

@@ -46,7 +46,7 @@ void analogEnd()
     LPC_SYSCON->SYSAHBCLKCTRL &= ~(1 << 13);
 }
 
-static unsigned int analogPoll(int channel)
+static unsigned int analogPoll(const int channel)
 {
 #ifdef IAP_EMULATION
     return 0;
@@ -67,7 +67,7 @@ static unsigned int analogPoll(int channel)
     return regVal;
 }
 
-int analogRead(int channel)
+int analogRead(const int channel)
 {
     unsigned int regVal = analogPoll(channel);
     // This bit is 1 if the result of one or more conversions was lost and
@@ -78,7 +78,7 @@ int analogRead(int channel)
     return (int)(regVal >> 6) & 0x3ff;
 }
 
-int analogValidRead(int channel)
+int analogValidRead(const int channel)
 {
     unsigned int regVal = analogPoll(channel);
     // This bit is 1 if the result of one or more conversions was lost and

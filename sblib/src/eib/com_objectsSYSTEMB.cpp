@@ -11,7 +11,7 @@
 #include <sblib/bits.h>
 #include <sblib/eib/typesSYSTEMB.h>
 
-int ComObjectsSYSTEMB::objectSize(int objno)
+int ComObjectsSYSTEMB::objectSize(const int objno)
 {
     // KNX spec v2.1 3/5/1 p. 178 (section 4.12.5.2.4.1.4)
     // The size of the object types 6...20 in bytes
@@ -27,7 +27,7 @@ int ComObjectsSYSTEMB::objectSize(int objno)
     return 252;
 }
 
-byte* ComObjectsSYSTEMB::objectValuePtr(int objno)
+byte* ComObjectsSYSTEMB::objectValuePtr(const int objno)
 {
     int ramAddr = bcu->userRam->startAddr() + 2;
     for (int i = 1; i < objno; i++)
@@ -51,7 +51,7 @@ byte* ComObjectsSYSTEMB::objectValuePtr(int objno)
  *  @return void
  *
  */
-void ComObjectsSYSTEMB::processGroupTelegram(uint16_t addr, int apci, byte* tel, int trg_objno)
+void ComObjectsSYSTEMB::processGroupTelegram(const uint16_t addr, const int apci, byte* tel, const int trg_objno)
 {
     //
     // Spec: Resources 4.11.4 Group Object Association Table - Realization Type 6
@@ -112,7 +112,7 @@ byte* ComObjectsSYSTEMB::objectFlagsTable()
     return ((BcuDefault*)bcu)->userMemoryPtr(makeWord(configTable[1], configTable[2]));
 }
 
-inline const ComConfig& ComObjectsSYSTEMB::objectConfig(int objno)
+inline const ComConfig& ComObjectsSYSTEMB::objectConfig(const int objno)
 {
     return (*(const ComConfigSYSTEMB*) (objectConfigTable() + 2 + (objno - 1) * sizeof(ComConfigSYSTEMB))).baseConfig;
 }

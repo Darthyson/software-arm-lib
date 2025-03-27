@@ -298,12 +298,12 @@ inline int Print::println(const char* str)
     return this->write(str) + println();
 }
 
-inline int Print::println(int value, Base base, int digits)
+inline int Print::println(const int value, const Base base, const int digits)
 {
     return print(value, base, digits) + println();
 }
 
-inline int Print::println(uintptr_t value, Base base, int digits)
+inline int Print::println(const uintptr_t value, const Base base, const int digits)
 {
     return print(value, base, digits) + println();
 }

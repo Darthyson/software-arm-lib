@@ -60,12 +60,12 @@ void HardFault_Handler()
     }
 }
 
-void setFatalErrorPin(int newPin)
+void setFatalErrorPin(const int newPin)
 {
     fatalErrorPin = newPin;
 }
 
-void setKNX_TX_Pin(int newTxPin)
+void setKNX_TX_Pin(const int newTxPin)
 {
     eibTxPin = newTxPin;
 }

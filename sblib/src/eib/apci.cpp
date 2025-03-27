@@ -37,31 +37,31 @@ ApciCommand apciCommand(unsigned char* telegram)
     }
 }
 
-void setApciCommand(unsigned char* telegram, ApciCommand newApciCommand, byte additionalData)
+void setApciCommand(unsigned char* telegram, const ApciCommand newApciCommand, const byte additionalData)
 {
     telegram[APCI_HIGH_BYTE] = HIGH_BYTE(newApciCommand);
     telegram[APCI_LOW_BYTE] = lowByte(newApciCommand);
     telegram[APCI_LOW_BYTE] |= additionalData;
 }
 
-bool checkApciForMagicWord(byte eraseCode, byte channelNumber)
+bool checkApciForMagicWord(const byte eraseCode, const byte channelNumber)
 {
     // special version of APCI_MASTER_RESET_PDU used by Selfbus bootloader
     // restart with parameters, special meaning of erase=7 and channel=255 for bootloader mode
     return ((eraseCode == BOOTLOADER_MAGIC_ERASE) && (channelNumber == BOOTLOADER_MAGIC_CHANNEL));
 }
 
-uint8_t mainGroup(uint16_t address)
+uint8_t mainGroup(const uint16_t address)
 {
     return (highByte(address) >> 3);
 }
 
-uint8_t middleGroup(uint16_t address)
+uint8_t middleGroup(const uint16_t address)
 {
     return (highByte(address) & 0x07);
 }
 
-uint8_t lowGroup(uint16_t address)
+uint8_t lowGroup(const uint16_t address)
 {
     return (lowByte(address));
 }

@@ -23,7 +23,7 @@
 ** Returned value: none
 **
 *****************************************************************************/
-void OneWire::OneWireInit(int pin, bool bParasitePowerMode /* false */)
+void OneWire::OneWireInit(const int pin, const bool bParasitePowerMode /* false */)
 {
     this->pin = pin;
     this->m_bParasitePowerMode = bParasitePowerMode;
@@ -96,7 +96,7 @@ bool OneWire::OneWireReset()
 ** Returned value: none
 **
 *****************************************************************************/
-void OneWire::OneWireWriteBit(uint8_t uValue)
+void OneWire::OneWireWriteBit(const uint8_t uValue)
 {
     pinDisableInterrupt(this->pin);
     if (uValue & 1)
@@ -166,7 +166,7 @@ uint8_t OneWire::OneWireReadBit()
 ** Returned value: none
 **
 *****************************************************************************/
-void OneWire::OneWireWrite(uint8_t v)
+void OneWire::OneWireWrite(const uint8_t v)
 {
     for (uint8_t bitMask = 0x01; bitMask; bitMask <<= 1)
     {
@@ -198,7 +198,7 @@ void OneWire::OneWireWrite(uint8_t v)
 ** Returned value: none
 **
 *****************************************************************************/
-void OneWire::OneWireWriteBytes(const uint8_t* buf, uint16_t count)
+void OneWire::OneWireWriteBytes(const uint8_t* buf, const uint16_t count)
 {
     for (uint16_t i = 0; i < count; i++)
         this->OneWireWrite(buf[i]);
@@ -244,7 +244,7 @@ uint8_t OneWire::OneWireRead()
 ** Returned value: bytes buffer
 **
 *****************************************************************************/
-void OneWire::OneWireReadBytes(uint8_t* buf, uint16_t count)
+void OneWire::OneWireReadBytes(uint8_t* buf, const uint16_t count)
 {
     for (uint16_t i = 0; i < count; i++)
     {
@@ -349,7 +349,7 @@ void OneWire::OneWireResetSearch()
 ** Returned value: none
 **
 *****************************************************************************/
-void OneWire::OneWireTargetSearch(uint8_t family_code)
+void OneWire::OneWireTargetSearch(const uint8_t family_code)
 {
     this->ROM_NO[0] = family_code; // set the search state to find SearchFamily type devices
     for (uint8_t i = 1; i < 8; i++)
@@ -529,7 +529,7 @@ uint8_t OneWire::OneWireCRC8(const uint8_t* addr, uint8_t len)
 ** Returned value: true, if the CRC matches.
 **
 *****************************************************************************/
-bool OneWire::OneWireCheckCRC16(const uint8_t* input, uint16_t len, const uint8_t* inverted_crc, uint16_t crc)
+bool OneWire::OneWireCheckCRC16(const uint8_t* input, const uint16_t len, const uint8_t* inverted_crc, uint16_t crc)
 {
     crc = ~OneWireCRC16(input, len, crc);
     return (crc & 0xFF) == inverted_crc[0] && (crc >> 8) == inverted_crc[1];
@@ -555,7 +555,7 @@ bool OneWire::OneWireCheckCRC16(const uint8_t* input, uint16_t len, const uint8_
 ** Returned value: The CRC16, as defined by Dallas Semiconductor.
 **
 *****************************************************************************/
-uint16_t OneWire::OneWireCRC16(const uint8_t* input, uint16_t len, uint16_t crc)
+uint16_t OneWire::OneWireCRC16(const uint8_t* input, const uint16_t len, uint16_t crc)
 {
     static const uint8_t oddparity[16] = {0, 1, 1, 0, 1, 0, 0, 1, 1, 0, 0, 1, 0, 1, 1, 0};
     for (uint16_t i = 0; i < len; i++)

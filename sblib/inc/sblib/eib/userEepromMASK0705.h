@@ -13,7 +13,7 @@ public:
     UserEepromMASK0705() : UserEepromMASK0701(0x3f00, 3072, 4096) {}
 
 protected:
-    UserEepromMASK0705(unsigned int start, unsigned int size, unsigned int flashSize) : UserEepromMASK0701(start, size, flashSize) {};
+    UserEepromMASK0705(const unsigned int start, const unsigned int size, const unsigned int flashSize) : UserEepromMASK0701(start, size, flashSize) {};
 };
 
 #endif /*sblib_usereeprom_mask0705_h*/

@@ -72,7 +72,7 @@ public:
     virtual byte& checksum() const { return userEepromData[checksumOffset]; }
 
 protected:
-    UserEepromBCU1(unsigned int start, unsigned int size, unsigned int flashSize) : UserEeprom(start, size, flashSize) {};
+    UserEepromBCU1(const unsigned int start, const unsigned int size, const unsigned int flashSize) : UserEeprom(start, size, flashSize) {};
 };
 
 #endif /*sblib_usereeprom_bcu1_h*/

@@ -63,7 +63,7 @@ enum
     T_GROUP_ADDRESS_FLAG_Msk = (1UL << T_GROUP_ADDRESS_FLAG_Pos) //!< Bitmask to check for an group address
 };
 
-inline byte sequenceNumber(unsigned char* telegram)
+inline byte sequenceNumber(const unsigned char* telegram)
 {
     byte tpci = telegram[TPDU_LOW_BYTE];
     if (tpci != 0xFF)
@@ -76,7 +76,7 @@ inline byte sequenceNumber(unsigned char* telegram)
     }
 }
 
-inline void setSequenceNumber(unsigned char* telegram, byte newSequenceNumber)
+inline void setSequenceNumber(unsigned char* telegram, const byte newSequenceNumber)
 {
     telegram[TPDU_LOW_BYTE] &= static_cast<byte>(~T_SEQUENCE_NUMBER_Msk);
     telegram[TPDU_LOW_BYTE] |= static_cast<byte>(newSequenceNumber << T_SEQUENCE_NUMBER_FIRST_BIT_Pos);

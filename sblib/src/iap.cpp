@@ -162,7 +162,7 @@ IAP_Status iapErasePageRange(const unsigned int startPageNumber, const unsigned 
     return (IAP_Status) p.stat;
 }
 
-IAP_Status iapProgram(uint8_t* rom, const uint8_t* ram, unsigned int size)
+IAP_Status iapProgram(uint8_t* rom, const uint8_t* ram, const unsigned int size)
 {
     // IMPORTANT: Address of ram must be word aligned. Otherwise you'll run into a IAP_SRC_ADDR_ERROR
     // Use '__attribute__ ((aligned (FLASH_PAGE_ALIGNMENT)))' to force correct alignment even with compiler optimization -Ox

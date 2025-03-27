@@ -20,7 +20,7 @@ public:
     UserRamMASK0701() : UserRamBCU2(0x5FC, 0x304, 3) {}
 
 protected:
-    UserRamMASK0701(uint32_t start, uint32_t size, uint32_t shadowSize) : UserRamBCU2(start, size, shadowSize) {}
+    UserRamMASK0701(const uint32_t start, const uint32_t size, const uint32_t shadowSize) : UserRamBCU2(start, size, shadowSize) {}
 };
 
 #endif /* SBLIB_EIB_USERRAM_MASK0701_H_ */

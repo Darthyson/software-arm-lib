@@ -47,7 +47,7 @@ Bus::Bus(AddrTables* addrTable, Timer& aTimer, const uint32_t& aRxPin, const uin
  *
  * //todo get defined values from usereeprom for busy-retry and nack-retry
  */
-void Bus::begin(uint16_t physicalAddress)
+void Bus::begin(const uint16_t physicalAddress)
 {
     //todo load send-retries from eprom -- this should actually be done by the BCU
     //sendRetriesMax = userEeprom.maxRetransmit & 0x03;
@@ -114,7 +114,7 @@ void Bus::begin(uint16_t physicalAddress)
 #endif
 }
 
-void Bus::pause(bool waitForTelegramSent)
+void Bus::pause(const bool waitForTelegramSent)
 {
     auto paused = false;
 
@@ -340,7 +340,7 @@ void Bus::prepareForSending()
  * @param bool of all received char parity and frame checksum error
  *
  */
-void Bus::handleTelegram(bool valid)
+void Bus::handleTelegram(const bool valid)
 {
 #ifdef DEBUG_BUS
     b1 = (((unsigned int)rx_telegram[0] << 24) | ((unsigned int)rx_telegram[1] << 16) | ((unsigned int)rx_telegram[2] << 8) | (rx_telegram[3]));
@@ -1411,7 +1411,7 @@ void Bus::end()
     pause(true);
 }
 
-void Bus::setOwnAddress(uint16_t newAddress)
+void Bus::setOwnAddress(const uint16_t newAddress)
 {
     ownAddress = newAddress;
 }

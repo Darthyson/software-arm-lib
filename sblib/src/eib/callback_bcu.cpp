@@ -12,7 +12,7 @@ CallbackBcu::CallbackBcu(BcuBase* aBcu)
 
 }
 
-void CallbackBcu::finishedSendingTelegram(bool successful)
+void CallbackBcu::finishedSendingTelegram(const bool successful)
 {
     bcu->finishedSendingTelegram(successful);
 }

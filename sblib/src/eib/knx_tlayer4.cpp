@@ -63,7 +63,7 @@ dump2(
 uint16_t disconnectCount = 0; //!< number of disconnects since system reset
 uint16_t repeatedT_ACKcount = 0;
 
-void dumpTelegramBytes(bool tx, const unsigned char* telegram, const uint8_t length, const bool newLine = true)
+void dumpTelegramBytes(const bool tx, const unsigned char* telegram, const uint8_t length, const bool newLine = true)
 {
     dump2(
         serial.print(LOG_SEP);
@@ -92,7 +92,7 @@ void dumpTelegramBytes(bool tx, const unsigned char* telegram, const uint8_t len
     );
 }
 
-void dumpState(TLayer4::TL4State dumpState)
+void dumpState(const TLayer4::TL4State dumpState)
 {
     dump2(
         switch (dumpState)
@@ -150,7 +150,7 @@ void dumpSequenceNumber(unsigned char* telegram, const uint8_t tpci)
     );
 }
 
-void dumpTelegramInfo(unsigned char* telegram, const uint16_t address, uint8_t tpci, const bool isTX,
+void dumpTelegramInfo(unsigned char* telegram, const uint16_t address, const uint8_t tpci, const bool isTX,
     const TLayer4::TL4State state)
 {
     dump2(
@@ -228,7 +228,7 @@ void dumpLogHeader()
     );
 }
 
-TLayer4::TLayer4(uint8_t maxTelegramLength):
+TLayer4::TLayer4(const uint8_t maxTelegramLength):
     ownAddr(PHY_ADDR_DEFAULT),
     sendTelegram(new byte[maxTelegramLength]()),
     sendConnectedTelegram(new byte[maxTelegramLength]()),
@@ -261,13 +261,13 @@ void TLayer4::_begin()
     repeatedT_ACKcount = 0;
 }
 
-void TLayer4::processTelegram(unsigned char* telegram, uint8_t telLength)
+void TLayer4::processTelegram(unsigned char* telegram, const uint8_t telLength)
 {
     processTelegramInternal(telegram, telLength);
     discardReceivedTelegram();
 }
 
-void TLayer4::processTelegramInternal(unsigned char* telegram, uint8_t telLength)
+void TLayer4::processTelegramInternal(unsigned char* telegram, const uint8_t telLength)
 {
     uint16_t destAddr = destinationAddress(telegram);
     ApciCommand apciCmd = apciCommand(telegram);
@@ -347,7 +347,7 @@ void TLayer4::processConControlTelegram(const uint16_t& senderAddr, const TPDU& 
     }
 }
 
-bool TLayer4::processConControlConnectPDU(uint16_t senderAddr)
+bool TLayer4::processConControlConnectPDU(const uint16_t senderAddr)
 {
     // event E00 and E01 handling
     dump2(
@@ -382,7 +382,7 @@ bool TLayer4::processConControlConnectPDU(uint16_t senderAddr)
     return (false);
 }
 
-bool TLayer4::processConControlDisconnectPDU(uint16_t senderAddr)
+bool TLayer4::processConControlDisconnectPDU(const uint16_t senderAddr)
 {
     dump2(
         serial.print("T_DISCONNECT");
@@ -417,7 +417,7 @@ bool TLayer4::processConControlDisconnectPDU(uint16_t senderAddr)
     return (true);
 }
 
-bool TLayer4::processConControlAcknowledgmentPDU(uint16_t senderAddr, const TPDU& tpci, unsigned char* telegram, uint8_t telLength)
+bool TLayer4::processConControlAcknowledgmentPDU(const uint16_t senderAddr, const TPDU& tpci, unsigned char* telegram, const uint8_t telLength)
 {
     if (!(tpci & T_ACKNOWLEDGE_Msk))
     {
@@ -545,7 +545,7 @@ bool TLayer4::processConControlAcknowledgmentPDU(uint16_t senderAddr, const TPDU
     }
 }
 
-void TLayer4::sendConControlTelegram(TPDU cmd, uint16_t address, int8_t senderSeqNo)
+void TLayer4::sendConControlTelegram(const TPDU cmd, const uint16_t address, const int8_t senderSeqNo)
 {
     auto sendBuffer = acquireSendBuffer();
 
@@ -600,7 +600,7 @@ uint8_t* TLayer4::acquireSendBuffer()
     return sendTelegram;
 }
 
-void TLayer4::finishedSendingTelegram(bool successful)
+void TLayer4::finishedSendingTelegram(const bool successful)
 {
     sendTelegramBufferState = TELEGRAM_FREE;
 
@@ -622,7 +622,7 @@ void TLayer4::finishedSendingTelegram(bool successful)
     }
 }
 
-void TLayer4::processDirectTelegram(ApciCommand apciCmd, unsigned char* telegram, uint8_t telLength)
+void TLayer4::processDirectTelegram(const ApciCommand apciCmd, unsigned char* telegram, const uint8_t telLength)
 {
     dump2(
         serial.print("DirectTele");
@@ -733,7 +733,7 @@ void TLayer4::actionA00Nothing()
     dump2(serial.println("A00Nothing"));
 }
 
-void TLayer4::actionA01Connect(uint16_t address)
+void TLayer4::actionA01Connect(const uint16_t address)
 {
     dump2(
         serial.print("A01Connect with ");
@@ -749,7 +749,7 @@ void TLayer4::actionA01Connect(uint16_t address)
     dump2(lastTick = connectedTime;); // for debug logging
 }
 
-void TLayer4::actionA02sendAckPduAndProcessApci(ApciCommand apciCmd, const int8_t seqNo, unsigned char* telegram, uint8_t telLength)
+void TLayer4::actionA02sendAckPduAndProcessApci(const ApciCommand apciCmd, const int8_t seqNo, unsigned char* telegram, const uint8_t telLength)
 {
     dump2(serial.print("actionA02 "));
     dumpTelegramBytes(false, telegram, telLength);
@@ -896,7 +896,7 @@ void TLayer4::actionA09RepeatMessage()
     connectedTime = millis();    // "restart the connection timeout timer"
 }
 
-void TLayer4::actionA10Disconnect(uint16_t address)
+void TLayer4::actionA10Disconnect(const uint16_t address)
 {
     disconnectCount++;
     dump2(
@@ -966,7 +966,7 @@ void TLayer4::resetConnection()
     sendConnectedTelegramBuffer2State = TELEGRAM_FREE;
 }
 
-bool TLayer4::setTL4State(TLayer4::TL4State newState)
+bool TLayer4::setTL4State(const TLayer4::TL4State newState)
 {
     dump2(
         dumpState(state);

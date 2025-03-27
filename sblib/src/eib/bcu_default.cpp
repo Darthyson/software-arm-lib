@@ -80,7 +80,7 @@ void BcuDefault::_begin()
     groupTelWaitMillis = DEFAULT_GROUP_TEL_WAIT_MILLIS;
 }
 
-void BcuDefault::begin(int manufacturer, int deviceType, int version)
+void BcuDefault::begin(const int manufacturer, const int deviceType, const int version)
 {
     setOwnAddress(makeWord(userEeprom->addrTab()[0], userEeprom->addrTab()[1]));
     userRam->status() = BCU_STATUS_LINK_LAYER | BCU_STATUS_TRANSPORT_LAYER | BCU_STATUS_APPLICATION_LAYER | BCU_STATUS_USER_MODE;
@@ -102,7 +102,7 @@ void BcuDefault::begin(int manufacturer, int deviceType, int version)
     userEeprom->modified(false);
 }
 
-void BcuDefault::setOwnAddress(uint16_t addr)
+void BcuDefault::setOwnAddress(const uint16_t addr)
 {
     if (addr != makeWord(userEeprom->addrTab()[0], userEeprom->addrTab()[1]))
     {
@@ -157,7 +157,7 @@ void BcuDefault::end()
     BcuBase::end();
 }
 
-byte* BcuDefault::userMemoryPtr(unsigned int addr)
+byte* BcuDefault::userMemoryPtr(const unsigned int addr)
 {
     if (userEeprom->inRange(addr))
     {
@@ -185,12 +185,12 @@ void BcuDefault::setUsrCallback(UsrCallback* callback)
     usrCallback = callback;
 }
 
-void BcuDefault::enableGroupTelSend(bool enable)
+void BcuDefault::enableGroupTelSend(const bool enable)
 {
     sendGrpTelEnabled = enable;
 }
 
-void BcuDefault::setGroupTelRateLimit(unsigned int limit)
+void BcuDefault::setGroupTelRateLimit(const unsigned int limit)
 {
     if ((limit > 0) && (limit <= MAX_GROUP_TEL_PER_SECOND))
         groupTelWaitMillis = 1000 / limit;
@@ -201,7 +201,7 @@ void BcuDefault::setGroupTelRateLimit(unsigned int limit)
 /**
  * todo check for RX status and inform upper layer if needed
  */
-bool BcuDefault::processGroupAddressTelegram(ApciCommand apciCmd, uint16_t groupAddress, unsigned char* telegram, uint8_t telLength)
+bool BcuDefault::processGroupAddressTelegram(const ApciCommand apciCmd, const uint16_t groupAddress, unsigned char* telegram, uint8_t telLength)
 {
     DB_COM_OBJ(
         serial.println();
@@ -213,7 +213,7 @@ bool BcuDefault::processGroupAddressTelegram(ApciCommand apciCmd, uint16_t group
     return (true);
 }
 
-bool BcuDefault::processBroadCastTelegram(ApciCommand apciCmd, unsigned char* telegram, uint8_t telLength)
+bool BcuDefault::processBroadCastTelegram(const ApciCommand apciCmd, unsigned char* telegram, uint8_t telLength)
 {
     if (!programmingMode())
     {
@@ -237,7 +237,7 @@ bool BcuDefault::processBroadCastTelegram(ApciCommand apciCmd, unsigned char* te
     return (true);
 }
 
-bool BcuDefault::processApciMemoryWritePDU(int addressStart, byte* payLoad, int lengthPayLoad)
+bool BcuDefault::processApciMemoryWritePDU(const int addressStart, byte* payLoad, const int lengthPayLoad)
 {
     DB_MEM_OPS(
         serial.print("ApciMemoryWritePDU: 0x", addressStart, HEX, 4);
@@ -251,7 +251,7 @@ bool BcuDefault::processApciMemoryWritePDU(int addressStart, byte* payLoad, int 
     return processApciMemoryOperation(addressStart, payLoad, lengthPayLoad, false);
 }
 
-bool BcuDefault::processApciMemoryReadPDU(int addressStart, byte* payLoad, int lengthPayLoad)
+bool BcuDefault::processApciMemoryReadPDU(const int addressStart, byte* payLoad, const int lengthPayLoad)
 {
     DB_MEM_OPS(
         serial.print("ApciMemoryReadPDU : 0x", addressStart, HEX, 4);
@@ -447,7 +447,7 @@ bool BcuDefault::processApciMemoryOperation(unsigned int addressStart, byte* pay
     return (lengthPayLoad == 0);
 }
 
-bool BcuDefault::processApci(ApciCommand apciCmd, unsigned char* telegram, uint8_t telLength, uint8_t* sendBuffer)
+bool BcuDefault::processApci(ApciCommand apciCmd, unsigned char* telegram, const uint8_t telLength, uint8_t* sendBuffer)
 {
     uint8_t count;
     uint16_t address;
@@ -520,7 +520,7 @@ bool BcuDefault::processApci(ApciCommand apciCmd, unsigned char* telegram, uint8
     return (false);
 }
 
-bool BcuDefault::processDeviceDescriptorReadTelegram(uint8_t* sendBuffer, int id)
+bool BcuDefault::processDeviceDescriptorReadTelegram(uint8_t* sendBuffer, const int id)
 {
     if (id != 0)
     {
@@ -534,7 +534,7 @@ bool BcuDefault::processDeviceDescriptorReadTelegram(uint8_t* sendBuffer, int id
     return (true);
 }
 
-bool BcuDefault::processApciMasterResetPDU(uint8_t* sendBuffer, uint8_t eraseCode, uint8_t channelNumber)
+bool BcuDefault::processApciMasterResetPDU(uint8_t* sendBuffer, const uint8_t eraseCode, const uint8_t channelNumber)
 {
     RestartPDUErrorcode errorCode;
     RestartType restartType;
@@ -583,7 +583,7 @@ void BcuDefault::softSystemReset()
     BcuBase::softSystemReset();
 }
 
-bool BcuDefault::flushUserMemory(UsrCallbackType reason)
+bool BcuDefault::flushUserMemory(const UsrCallbackType reason)
 {
 ///\todo workaround for lib test cases running into an infinitive loop
 #ifndef IAP_EMULATION

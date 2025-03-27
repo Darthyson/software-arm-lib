@@ -26,7 +26,7 @@
 ** Returned value: none
 **
 *****************************************************************************/
-void DS18x20::DS18x20Init(int pin, bool bParasiteMode)
+void DS18x20::DS18x20Init(const int pin, const bool bParasiteMode)
 {
     this->_OW_DS18x.OneWireInit(pin, bParasiteMode);
 }
@@ -61,7 +61,7 @@ void DS18x20::DS18x20DeInit()
 **                 m_dsDev        - Includes the Information about the devices
 **
 *****************************************************************************/
-uint8_t DS18x20::Search(uint8_t uMaxDeviceSearch)
+uint8_t DS18x20::Search(const uint8_t uMaxDeviceSearch)
 {
     uint8_t bRet = 4;
     this->m_foundDevices = 0;
@@ -118,7 +118,7 @@ uint8_t DS18x20::Search(uint8_t uMaxDeviceSearch)
 **                 following global Parameter of sDS18x20 will be filled:
 **
 *****************************************************************************/
-bool DS18x20::startConversion(int deviceIdx)
+bool DS18x20::startConversion(const int deviceIdx)
 {
     if (deviceIdx >= this->m_foundDevices)
         return false;
@@ -137,7 +137,7 @@ bool DS18x20::startConversion(int deviceIdx)
     return false;
 }
 
-bool DS18x20::readResult(int deviceIdx)
+bool DS18x20::readResult(const int deviceIdx)
 {
     if (deviceIdx >= this->m_foundDevices)
         return false;
@@ -193,14 +193,14 @@ bool DS18x20::readResult(int deviceIdx)
     return true;
 }
 
-bool DS18x20::lastReadOk(int deviceIdx)
+bool DS18x20::lastReadOk(const int deviceIdx)
 {
     if (deviceIdx >= this->m_foundDevices)
         return false;
     return this->m_dsDev[deviceIdx].lastReadOK;
 }
 
-float DS18x20::temperature(int deviceIdx)
+float DS18x20::temperature(const int deviceIdx)
 {
     if (deviceIdx >= this->m_foundDevices)
         return -999.9f;
@@ -259,7 +259,7 @@ bool DS18x20::readResultAll()
 /*
  * Returns a string representation of the requested sensor
  */
-const char* DS18x20::TypeStr(int deviceNum)
+const char* DS18x20::TypeStr(const int deviceNum)
 {
     if (deviceNum >= this->m_foundDevices)
     {
@@ -290,7 +290,7 @@ const char* DS18x20::TypeStr(int deviceNum)
 ** Returned value: Converted value
 **
 *****************************************************************************/
-float DS18x20::ConvertTemperature(float fTemperature, eScale Scale)
+float DS18x20::ConvertTemperature(const float fTemperature, const eScale Scale)
 {
     if (Scale == FARENHEIT)
         return (fTemperature * 9 / 5 + 32);

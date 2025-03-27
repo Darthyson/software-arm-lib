@@ -21,7 +21,7 @@
 
 #include <sblib/eib/memory.h>
 
-Memory::Memory(uint32_t start, uint32_t size):
+Memory::Memory(const uint32_t start, const uint32_t size):
     startAddress(start),
     endAddress(start + size - 1),
     sizeTotal(size) {}
@@ -41,12 +41,12 @@ uint32_t Memory::size() const
     return (sizeTotal);
 }
 
-bool Memory::inRange(uint32_t address) const
+bool Memory::inRange(const uint32_t address) const
 {
     return ((address >= startAddr()) && (address <= endAddr()));
 }
 
-bool Memory::inRange(uint32_t start, uint32_t end) const
+bool Memory::inRange(const uint32_t start, const uint32_t end) const
 {
     return ((start <= end) &&
             (start >= startAddr()) &&

@@ -87,7 +87,7 @@
 #define CMD_ADV_CONTROL       0xfa
 
 
-LcdGraphicalEADOGS::LcdGraphicalEADOGS(int spiPort, int pinData, int pinClock, int pinCD, int pinCS,
+LcdGraphicalEADOGS::LcdGraphicalEADOGS(const int spiPort, const int pinData, const int pinClock, const int pinCD, const int pinCS,
                                        const Font& font)
     : LcdGraphical(font, DISPLAY_WIDTH, DISPLAY_HEIGHT)
       , spi(spiPort)
@@ -140,13 +140,13 @@ void LcdGraphicalEADOGS::end()
     spi.end();
 }
 
-void LcdGraphicalEADOGS::inverse(bool enable)
+void LcdGraphicalEADOGS::inverse(const bool enable)
 {
     digitalWrite(pinCD, 0);
     spi.transfer(enable ? CMD_DISP_INVERSE : CMD_DISP_NORMAL);
 }
 
-void LcdGraphicalEADOGS::pos(int x, int y)
+void LcdGraphicalEADOGS::pos(const int x, const int y)
 {
     digitalWrite(pinCD, 0);
     spi.transfer(CMD_COL_ADDR_LSB | (x & 15));
@@ -154,7 +154,7 @@ void LcdGraphicalEADOGS::pos(int x, int y)
     spi.transfer(CMD_PAGE_ADDR | (y & 7));
 }
 
-int LcdGraphicalEADOGS::write(byte ch)
+int LcdGraphicalEADOGS::write(const byte ch)
 {
     int idx = ch - fnt->firstChar;
     if (idx < 0 || idx >= fnt->numChars)

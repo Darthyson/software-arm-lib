@@ -15,7 +15,7 @@ OneWireDS2482::OneWireDS2482() {
     i2c_lpcopen_init();
 }
 
-OneWireDS2482::OneWireDS2482(uint8_t address) {
+OneWireDS2482::OneWireDS2482(const uint8_t address) {
     // Address is determined by two pins on the DS2482 AD1/AD0
     // Pass 0b00, 0b01, 0b10 or 0b11
     mAddress = 0x18 | address;
@@ -40,12 +40,12 @@ uint8_t OneWireDS2482::end() {
     return i2c_DS2842->I2CStop();
 }
 */
-void OneWireDS2482::writeByte(uint8_t data) {
+void OneWireDS2482::writeByte(const uint8_t data) {
     //i2c_DS2842->Write(mAddress, &data, 1); // 1 Byte
     Chip_I2C_MasterSend(I2C0, mAddress, &data, 1);
 }
 
-void OneWireDS2482::writeBytes(uint8_t *data, uint8_t data_length) {
+void OneWireDS2482::writeBytes(const uint8_t *data, uint8_t data_length) {
     //i2c_DS2842->Write(mAddress, data, data_length);
     Chip_I2C_MasterSend(I2C0, mAddress, data, data_length);
 }
@@ -69,7 +69,7 @@ void OneWireDS2482::deviceReset() {
 }
 
 // Sets the read pointer to the specified register. Overwrites the read pointer position of any 1-Wire communication command in progress.
-void OneWireDS2482::setReadPointer(uint8_t readPointer) {
+void OneWireDS2482::setReadPointer(const uint8_t readPointer) {
 
     uint8_t data_buf[2];
     data_buf[0] = DS2482_COMMAND_SRP;
@@ -80,7 +80,7 @@ void OneWireDS2482::setReadPointer(uint8_t readPointer) {
     //end();
 }
 
-uint8_t OneWireDS2482::setReadPointerAndRead(uint8_t readPointer) {
+uint8_t OneWireDS2482::setReadPointerAndRead(const uint8_t readPointer) {
 
     uint8_t cmd[2];
     uint8_t data;
@@ -147,7 +147,7 @@ uint8_t OneWireDS2482::waitOnBusy() {
 }
 
 // Write to the config register
-void OneWireDS2482::writeConfig(uint8_t config) {
+void OneWireDS2482::writeConfig(const uint8_t config) {
     wireWriteCmdAndData(DS2482_COMMAND_WRITECONFIG, config | (~config) << 4);
 
     // This should return the config bits without the complement
@@ -179,7 +179,7 @@ uint8_t OneWireDS2482::wireReset() {
 }
 
 // Writes a single data byte to the 1-Wire line.
-void OneWireDS2482::wireWriteByte(uint8_t data, uint8_t power) {
+void OneWireDS2482::wireWriteByte(const uint8_t data, const uint8_t power) {
     uint8_t data_buf[2];
     data_buf[0] = DS2482_COMMAND_WRITEBYTE;
     data_buf[1] = data;
@@ -195,7 +195,7 @@ void OneWireDS2482::wireWriteByte(uint8_t data, uint8_t power) {
 }
 
 // Writes a given Command and a single data Byte
-void OneWireDS2482::wireWriteCmdAndData(uint8_t command, uint8_t data, uint8_t power) {
+void OneWireDS2482::wireWriteCmdAndData(const uint8_t command, const uint8_t data, const uint8_t power) {
     uint8_t data_buf[2];
     data_buf[0] = command;
     data_buf[1] = data;
@@ -223,7 +223,7 @@ uint8_t OneWireDS2482::wireReadByte() {
 // (see Table 2). A V value of 0b generates a write-zero time slot (Figure 5); a V value of 1b generates a
 // write-one time slot, which also functions as a read-data time slot (Figure 6). In either case, the logic
 // level at the 1-Wire line is tested at tMSR and SBR is updated.
-void OneWireDS2482::wireWriteBit(uint8_t data, uint8_t power) {
+void OneWireDS2482::wireWriteBit(const uint8_t data, const uint8_t power) {
     wireWriteCmdAndData(DS2482_COMMAND_SINGLEBIT, data ? 0x80 : 0x00, power);
 }
 
@@ -412,7 +412,7 @@ void OneWireDS2482::skip(void) {
 
 // Write a byte.
 // Ignore the power bit
-void OneWireDS2482::write(uint8_t v, uint8_t power) {
+void OneWireDS2482::write(const uint8_t v, const uint8_t power) {
     wireWriteByte(v, power);
 }
 
@@ -427,7 +427,7 @@ uint8_t OneWireDS2482::read_bit(void) {
 }
 
 // Write a bit.
-void OneWireDS2482::write_bit(uint8_t v) {
+void OneWireDS2482::write_bit(const uint8_t v) {
     wireWriteBit(v);
 }
 

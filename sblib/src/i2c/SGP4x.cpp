@@ -34,8 +34,8 @@ SGP4xClass::SGP4xClass():
     GasIndexAlgorithm_init_with_sampling_interval(&nox_algorithm_params, GasIndexAlgorithm_ALGORITHM_TYPE_NOX, GasIndexAlgorithm_DEFAULT_SAMPLING_INTERVAL);
 }
 
-SGP4xResult SGP4xClass::readSensor(Sgp4xCommand command, uint8_t* commandBuffer, uint8_t commandBufferSize,
-                                   uint8_t* readBuffer, uint8_t readBufferSize, uint16_t processDelayMs)
+SGP4xResult SGP4xClass::readSensor(Sgp4xCommand command, uint8_t* commandBuffer, const uint8_t commandBufferSize,
+                                   uint8_t* readBuffer, const uint8_t readBufferSize, const uint16_t processDelayMs)
 {
     if ((commandBuffer == nullptr) || (commandBufferSize < 2))
     {
@@ -88,7 +88,7 @@ SGP4xResult SGP4xClass::readSensor(Sgp4xCommand command, uint8_t* commandBuffer,
     return SGP4xResult::success;
 }
 
-SGP4xResult SGP4xClass::init(uint32_t samplingIntervalMs)
+SGP4xResult SGP4xClass::init(const uint32_t samplingIntervalMs)
 {
     i2c_lpcopen_init();
     rawVocTics = 0;
@@ -150,7 +150,7 @@ SGP4xResult SGP4xClass::executeSelfTest()
     return SGP4xResult::success;
 }
 
-SGP4xResult SGP4xClass::measureRawSignal(float relativeHumidity, float temperature, bool useCompensation)
+SGP4xResult SGP4xClass::measureRawSignal(const float relativeHumidity, const float temperature, const bool useCompensation)
 {
     uint8_t readBuffer[6];
     uint8_t readBufferSize = sizeof(readBuffer) / sizeof(*readBuffer);
@@ -198,7 +198,7 @@ SGP4xResult SGP4xClass::measureRawSignal()
     return measureRawSignal(50.f, 25.f, false);
 }
 
-SGP4xResult SGP4xClass::getSerialnumber(uint8_t* serialNumber, uint8_t length)
+SGP4xResult SGP4xClass::getSerialnumber(uint8_t* serialNumber, const uint8_t length)
 {
     uint8_t readBuffer[9];
     uint8_t readBufferSize = sizeof(readBuffer) / sizeof(*readBuffer);
@@ -283,7 +283,7 @@ uint16_t SGP4xClass::getFeatureSet()
     return featureSet;
 }
 
-uint8_t SGP4xClass::crc8(const uint8_t* data, int len)
+uint8_t SGP4xClass::crc8(const uint8_t* data, const int len)
 {
     /*
      *

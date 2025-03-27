@@ -194,7 +194,7 @@ public:
     bool GetTime(ds3231_time_t* time);
     bool SetCalendar(ds3231_calendar_t calendar);
     bool GetCalendar(ds3231_calendar_t* calendar);
-    bool SetAlarm(ds3231_alrm_t alarm, bool bAlarmNumber);
+    bool SetAlarm(const ds3231_alrm_t& alarm, bool bAlarmNumber);
     bool GetAlarm(ds3231_alrm_t* alarm, bool bAlarmNumber);
     time_t GetEpoch();
     bool SetCtrlStatReg(ds3231_cntl_stat_t data, bool bSetControl = true, bool bSetStatus = true);

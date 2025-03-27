@@ -9,7 +9,7 @@
 #include <sblib/eib/systemb.h>
 #include <sblib/bits.h>
 
-int AddrTablesSYSTEMB::indexOfAddr(int addr)
+int AddrTablesSYSTEMB::indexOfAddr(const int addr)
 {
     byte* tab = addrTable();
     int num = 0;

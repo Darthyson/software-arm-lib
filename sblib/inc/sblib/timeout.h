@@ -41,7 +41,7 @@ public:
     /** Set the new timeout to be in ms seconds
      * @param   ms  The timeout value in milli seconds
      */
-    void start(unsigned int ms)
+    void start(const unsigned int ms)
     {
         if (0 == ms)
             stop();

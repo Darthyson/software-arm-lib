@@ -76,7 +76,7 @@ KNXFrameType frameType(unsigned char* telegram);
 void setFrameType(unsigned char* telegram, KNXFrameType newFrameType);
 
 
-inline void initLpdu(unsigned char* telegram, KNXPriority newPriority, bool newRepeated, KNXFrameType newFrameType)
+inline void initLpdu(unsigned char* telegram, const KNXPriority newPriority, const bool newRepeated, const KNXFrameType newFrameType)
 {
     telegram[LPDU_CONTROL_BYTE] = 0xB0;
     setRepeated(telegram, newRepeated);
@@ -95,7 +95,7 @@ inline bool isRepeated(unsigned char* telegram)
     return ((controlByte(telegram) & MASK_REPEATED) == 0);
 }
 
-inline void setRepeated(unsigned char* telegram, bool repeated)
+inline void setRepeated(unsigned char* telegram, const bool repeated)
 {
     if (repeated)
     {
@@ -114,7 +114,7 @@ inline KNXPriority priority(unsigned char* telegram)
     return ((KNXPriority)((controlByte(telegram) >> 2) & 0x03));
 }
 
-inline void setPriority(unsigned char* telegram, KNXPriority newPriority)
+inline void setPriority(unsigned char* telegram, const KNXPriority newPriority)
 {
     telegram[LPDU_CONTROL_BYTE] = (uint8_t)(newPriority << 2) | (telegram[LPDU_CONTROL_BYTE] & 0xF3);
 }
@@ -124,7 +124,7 @@ inline uint16_t senderAddress(unsigned char* telegram)
     return (unsigned short)((telegram[LPDU_SENDER_HIGH_BYTE] << 8) | telegram[LPDU_SENDER_LOW_BYTE]);
 }
 
-inline void setSenderAddress(unsigned char* telegram, uint16_t newSenderAddress)
+inline void setSenderAddress(unsigned char* telegram, const uint16_t newSenderAddress)
 {
     telegram[LPDU_SENDER_HIGH_BYTE] = HIGH_BYTE(newSenderAddress);
     telegram[LPDU_SENDER_LOW_BYTE] = lowByte(newSenderAddress);
@@ -136,7 +136,7 @@ inline uint16_t destinationAddress(unsigned char* telegram)
     return (makeWord(telegram[LPDU_DESTINATION_HIGH_BYTE], telegram[LPDU_DESTINATION_LOW_BYTE]));
 }
 
-inline void setDestinationAddress(unsigned char* telegram, uint16_t newDestinationAddress)
+inline void setDestinationAddress(unsigned char* telegram, const uint16_t newDestinationAddress)
 {
     telegram[LPDU_DESTINATION_HIGH_BYTE] = HIGH_BYTE(newDestinationAddress);
     telegram[LPDU_DESTINATION_LOW_BYTE] = lowByte(newDestinationAddress);
@@ -154,7 +154,7 @@ inline KNXFrameType frameType(unsigned char* telegram)
     }
 }
 
-inline void setFrameType(unsigned char* telegram, KNXFrameType newFrameType)
+inline void setFrameType(unsigned char* telegram, const KNXFrameType newFrameType)
 {
     if (newFrameType == FRAME_EXTENDED)
     {

@@ -107,7 +107,7 @@ float SHT2xClass::GetDewPoint(void)
     return dewPoint;
 }
 
-uint16_t SHT2xClass::readSensor(uint8_t command)
+uint16_t SHT2xClass::readSensor(const uint8_t command)
 {
     uint32_t timeout = millis() + 300; // 300ms timeout for I2C communication
 
@@ -144,7 +144,7 @@ uint16_t SHT2xClass::readSensor(uint8_t command)
     }
 }
 
-uint8_t SHT2xClass::crc8(const uint8_t* data, uint8_t len)
+uint8_t SHT2xClass::crc8(const uint8_t* data, const uint8_t len)
 {
     // CRC-8 formula from page 14 of SHT spec pdf
     // Sensirion_Humidity_Sensors_SHT2x_CRC_Calculation.pdf

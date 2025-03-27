@@ -11,7 +11,7 @@
 #include <sblib/arrays.h>
 
 
-short indexOf(int val, const int* arr, short count)
+short indexOf(const int val, const int* arr, const short count)
 {
     for (short idx = 0; idx < count; ++idx)
     {
@@ -22,7 +22,7 @@ short indexOf(int val, const int* arr, short count)
     return -1;
 }
 
-short indexOf(unsigned short val, const unsigned short* arr, short count)
+short indexOf(const unsigned short val, const unsigned short* arr, const short count)
 {
     for (short idx = 0; idx < count; ++idx)
     {
@@ -33,7 +33,7 @@ short indexOf(unsigned short val, const unsigned short* arr, short count)
     return -1;
 }
 
-short indexOf(byte val, const byte* arr, short count)
+short indexOf(const byte val, const byte* arr, const short count)
 {
     for (short idx = 0; idx < count; ++idx)
     {

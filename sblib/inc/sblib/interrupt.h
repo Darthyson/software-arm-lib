@@ -139,12 +139,12 @@ ALWAYS_INLINE void waitForInterrupt()
     __WFI();
 }
 
-ALWAYS_INLINE void enableInterrupt(IRQn_Type interruptType)
+ALWAYS_INLINE void enableInterrupt(const IRQn_Type interruptType)
 {
     NVIC->ISER[0] = 1 << (interruptType & 0x1f);
 }
 
-ALWAYS_INLINE void disableInterrupt(IRQn_Type interruptType)
+ALWAYS_INLINE void disableInterrupt(const IRQn_Type interruptType)
 {
     // data synchronization barrier and instruction synchronization barrier to ensure that no interrupt occurs after we disabled them
     __DSB();
@@ -152,12 +152,12 @@ ALWAYS_INLINE void disableInterrupt(IRQn_Type interruptType)
     NVIC->ICER[0] = 1 << (interruptType & 0x1f);
 }
 
-ALWAYS_INLINE void clearPendingInterrupt(IRQn_Type interruptType)
+ALWAYS_INLINE void clearPendingInterrupt(const IRQn_Type interruptType)
 {
     NVIC->ICPR[0] = 1 << (interruptType & 0x1f);
 }
 
-ALWAYS_INLINE void setPendingInterrupt(IRQn_Type interruptType)
+ALWAYS_INLINE void setPendingInterrupt(const IRQn_Type interruptType)
 {
     NVIC->ISPR[0] = 1 << (interruptType & 0x1f);
 }
@@ -167,7 +167,7 @@ ALWAYS_INLINE bool isInsideInterrupt(void)
     return (SCB->ICSR & SCB_ICSR_VECTACTIVE_Msk) != 0;
 }
 
-ALWAYS_INLINE bool getInterruptEnabled(IRQn_Type interruptType)
+ALWAYS_INLINE bool getInterruptEnabled(const IRQn_Type interruptType)
 {
     if (interruptType >= 0)
     {

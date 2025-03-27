@@ -115,7 +115,7 @@ void BcuBase::loop()
     }
 }
 
-bool BcuBase::setProgrammingMode(bool newMode)
+bool BcuBase::setProgrammingMode(const bool newMode)
 {
     if (!progPin)
     {
@@ -131,7 +131,7 @@ bool BcuBase::setProgrammingMode(bool newMode)
     return true;
 }
 
-bool BcuBase::processApci(ApciCommand apciCmd, unsigned char* telegram, uint8_t telLength, uint8_t* sendBuffer)
+bool BcuBase::processApci(const ApciCommand apciCmd, unsigned char* telegram, const uint8_t telLength, uint8_t* sendBuffer)
 {
     switch (apciCmd)
     {
@@ -171,12 +171,12 @@ void BcuBase::discardReceivedTelegram()
     bus->discardReceivedTelegram();
 }
 
-void BcuBase::send(unsigned char* telegram, unsigned short length)
+void BcuBase::send(unsigned char* telegram, const unsigned short length)
 {
     bus->sendTelegram(telegram, length);
 }
 
-void BcuBase::scheduleRestart(RestartType type)
+void BcuBase::scheduleRestart(const RestartType type)
 {
     restartType = type;
     restartSendDisconnect = directConnection();
@@ -201,13 +201,13 @@ void BcuBase::softSystemReset()
     NVIC_SystemReset();
 }
 
-void BcuBase::setProgPin(int prgPin)
+void BcuBase::setProgPin(const int prgPin)
 {
     progPin = prgPin;
     setFatalErrorPin(progPin);
 }
 
-void BcuBase::setOwnAddress(uint16_t addr)
+void BcuBase::setOwnAddress(const uint16_t addr)
 {
     bus->setOwnAddress(addr);
     TLayer4::setOwnAddress(addr);
