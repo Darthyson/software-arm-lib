@@ -14,11 +14,7 @@
 
 #include <sblib/types.h>
 #include <sblib/sensors/units.h>
-
-#ifndef onewire_h
-//#error "Please Include first <OneWire.h>"
 #include <sblib/onewire.h>
-#endif
 
 #ifndef MAX_DS_DEVICES
 #define MAX_DS_DEVICES 10
