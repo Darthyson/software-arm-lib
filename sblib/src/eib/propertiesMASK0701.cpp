@@ -162,17 +162,15 @@ LoadState PropertiesMASK0701::handleAllocAbsTaskSegment(const int objectIdx, con
     switch (objectIdx)
     {
         case OT_ADDR_TABLE:
-        {
             bcu->userEeprom->addrTabAddr() = addr;
             DB_PROPERTIES(serial.println("  ----> userEeprom->addrTabAddr=0x", bcu->userEeprom->addrTabAddr(), HEX, 4); serial.println(););
             break;
-        }
+
         case OT_ASSOC_TABLE:
-        {
             bcu->userEeprom->assocTabAddr() = addr;
             DB_PROPERTIES(serial.println("  ----> userEeprom->assocTabAddr=0x", bcu->userEeprom->assocTabAddr(), HEX, 4); serial.println(););
             break;
-        }
+
         case OT_APPLICATION:
         {
             // we need this newAddress workaround, see comment @void BcuBase::begin(...) in bcu_base.h
@@ -209,13 +207,11 @@ LoadState PropertiesMASK0701::handleAllocAbsTaskSegment(const int objectIdx, con
             );
             break;
         }
+
         default:
-        {
             DB_PROPERTIES(serial.println("  ----> unknown objectIdx"); serial.println(););
             return LS_ERROR;
-        }
-
-            bcu->userEeprom->modified(true);
     }
+    bcu->userEeprom->modified(true);
     return LS_LOADING;
 }
