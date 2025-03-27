@@ -966,7 +966,7 @@ void TLayer4::resetConnection()
     sendConnectedTelegramBuffer2State = TELEGRAM_FREE;
 }
 
-bool TLayer4::setTL4State(const TL4State newState)
+void TLayer4::setTL4State(const TL4State newState)
 {
     dump2(
         dumpState(state);
@@ -974,13 +974,7 @@ bool TLayer4::setTL4State(const TL4State newState)
         dumpState(newState);
         serial.print(" ");
     );
-
-    if (newState == state)
-    {
-        return (true);
-    }
     state = newState;
-    return (true);
 }
 
 /** @}*/

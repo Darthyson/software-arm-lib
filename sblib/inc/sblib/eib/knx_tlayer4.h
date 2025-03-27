@@ -178,12 +178,12 @@ private:
      */
     void processTelegramInternal(unsigned char* telegram, uint8_t telLength);
 
-    /** Sets a new state @ref TL4State for the transport layer state machine
+    /**
+     * Sets a new state @ref TL4State for the transport layer state machine
      *
      * @param  newState new @ref TL4State to set
-     * @return always true
      */
-    bool setTL4State(TL4State newState);
+    void setTL4State(TL4State newState);
 
     /**
      * Process an unicast connection control telegram with our physical address as
