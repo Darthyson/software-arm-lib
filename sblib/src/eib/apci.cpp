@@ -22,7 +22,7 @@
 
 ApciCommand apciCommand(unsigned char* telegram)
 {
-    unsigned short apci = (unsigned short)(((telegram[APCI_HIGH_BYTE] & 0x03) << 8) | telegram[APCI_LOW_BYTE]);
+    auto apci = (unsigned short)(((telegram[APCI_HIGH_BYTE] & 0x03) << 8) | telegram[APCI_LOW_BYTE]);
     unsigned short shortCommand = apci & APCI_GROUP_MASK;
     switch (shortCommand)
     {

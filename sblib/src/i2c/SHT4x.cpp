@@ -149,8 +149,7 @@ uint32_t SHT4xClass::getSerialnumber(void)
  ******************************************************************************/
 bool SHT4xClass::writeCommand(Sht4xCommand command)
 {
-    const uint8_t cmd = (uint8_t)command;
-
+    const auto cmd = (uint8_t)command;
     return Chip_I2C_MasterSend(I2C0, eSHT4xAddress, &cmd, sizeof(cmd)) == sizeof(cmd);
 }
 

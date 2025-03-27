@@ -56,7 +56,7 @@ LoadState PropertiesMASK0701::handleAllocAbsDataSegment(const int objectIdx, con
     const unsigned int absDataSegmentStartAddress = makeWord(payLoad[0], payLoad[1]);
     const unsigned int absDataSegmentLength = makeWord(payLoad[2], payLoad[3]);
     const unsigned int absDataSegmentEndAddress = absDataSegmentStartAddress + absDataSegmentLength - 1;
-    const MemoryType memType = MemoryType(payLoad[5] & 0x07); // take only bits 0..2
+    const auto memType = MemoryType(payLoad[5] & 0x07); // take only bits 0..2
 
     DB_PROPERTIES(
         serial.print("handleAllocAbsDataSegment only partly implemented! ");

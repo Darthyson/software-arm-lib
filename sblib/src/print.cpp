@@ -41,7 +41,7 @@ int Print::print(uintptr_t value, const Base base, int digits)
 {
     byte buf[PRINTBUF_SIZE]; // need the maximum size for binary printing
 
-    short b = (short) base;
+    auto b = (short) base;
     if (b < 2)
         b = 2;
 

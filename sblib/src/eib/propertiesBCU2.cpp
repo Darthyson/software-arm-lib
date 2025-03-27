@@ -84,7 +84,7 @@ LoadState PropertiesBCU2::handleLoadStateMachine(const int objectIdx, const byte
 
     LoadState newLoadState = LS_ERROR;
 
-    LoadControl loadcontrol = LoadControl(data[0] & 7);
+    auto loadcontrol = LoadControl(data[0] & 7);
     switch (loadcontrol) // the control state
     {
         case LC_START_LOADING: // Load
@@ -232,7 +232,7 @@ LoadState PropertiesBCU2::handleAllocAbsDataSegment(const int objectIdx, const b
     const unsigned int absDataSegmentStartAddress = makeWord(payLoad[0], payLoad[1]);
     const unsigned int absDataSegmentLength = makeWord(payLoad[2], payLoad[3]);
     const unsigned int absDataSegmentEndAddress = absDataSegmentStartAddress + absDataSegmentLength - 1;
-    const MemoryType memType = MemoryType(payLoad[5] & 0x07); // take only bits 0..2
+    const auto memType = MemoryType(payLoad[5] & 0x07); // take only bits 0..2
 
     DB_PROPERTIES(
         serial.print("handleAllocAbsDataSegment only partly implemented! ");
@@ -603,7 +603,7 @@ bool PropertiesBCU2::propertyValueReadTelegram(const int objectIdx, const Proper
     if (!def)
         return false; // not found
 
-    const PropertyDataType type = (PropertyDataType)(def->control & PC_TYPE_MASK);
+    const auto type = (PropertyDataType)(def->control & PC_TYPE_MASK);
     const byte* valuePtr = def->valuePointer(bcu);
 
     --start;
