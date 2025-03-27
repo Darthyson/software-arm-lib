@@ -70,7 +70,7 @@ public:
      * @param forceFlash - force pending data to be flashed before operation
      * @return 0 on success, else error
      */
-    int readMem(int virtAddress, byte& data, bool forceFlash = false);
+    int readMem(int virtAddress, byte& data, bool forceFlash = false) const;
 
     /**
      * Read a single byte from virtual address
@@ -119,7 +119,7 @@ public:
      * @param virtAddress - the virtual address of the data byte to access.
      * @return The data byte.
      */
-    unsigned char getUInt8(int virtAddress);
+    unsigned char getUInt8(int virtAddress) const;
     unsigned char& operator[](const int nIndex) const;
 
     /**
@@ -128,7 +128,7 @@ public:
      * @param virtAddress - the virtual address of the 16 bit data to access.
      * @return The 16bit as unsigned short.
      */
-    unsigned short getUInt16(int virtAddress);
+    unsigned short getUInt16(int virtAddress) const;
 
     /**
      * Access the user EEPROM to get a unsigned int
@@ -136,7 +136,7 @@ public:
      * @param virtAddress - the virtual address of the 32 bit data to access.
      * @return The 32bit as unsigned int.
      */
-    unsigned int getUInt32(int virtAddress);
+    unsigned int getUInt32(int virtAddress) const;
 
     /**
      * Access the user EEPROM to set a unsigned byte
@@ -195,7 +195,7 @@ public:
 private:
     int allocatePage(int virtPage);
     int getFlashPageNum(int virtAddress) const;
-    unsigned int getUIntX(int virtAddress, int length);
+    unsigned int getUIntX(int virtAddress, int length) const;
     int setUIntX(int virtAddress, int length, int val);
 
     // These members are initialized in the constructor

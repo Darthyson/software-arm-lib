@@ -70,7 +70,7 @@ public:
      *
      * @return True if a connection is open, otherwise false.
      */
-    bool directConnection();
+    bool directConnection() const;
 
     /**
      * The transport layer 4 processing loop. This is like the application's loop() function,
@@ -83,7 +83,7 @@ public:
      *
      * @return Physical KNX address.
      */
-    uint16_t ownAddress();
+    uint16_t ownAddress() const;
 
     /**
      * Set our own physical address. Normally the physical address is set by ETS when
@@ -98,7 +98,7 @@ public:
      *
      * @return Remote's physical KNX address, 0 in case of no connection
      */
-    uint16_t connectedTo();
+    uint16_t connectedTo() const;
 
     /**
      * Wait for @ref sendTelegram to be free and acquire it.
@@ -329,12 +329,12 @@ private:
     volatile SendTelegramBufferState sendConnectedTelegramBuffer2State = TELEGRAM_FREE;
 };
 
-inline bool TLayer4::directConnection()
+inline bool TLayer4::directConnection() const
 {
     return (state != TLayer4::CLOSED);
 }
 
-inline uint16_t TLayer4::ownAddress()
+inline uint16_t TLayer4::ownAddress() const
 {
     ///\todo bus.ownAddress should also only return uint16_t
     return (ownAddr);
@@ -345,7 +345,7 @@ inline void TLayer4::setOwnAddress(const uint16_t addr)
     ownAddr = addr;
 }
 
-inline uint16_t TLayer4::connectedTo()
+inline uint16_t TLayer4::connectedTo() const
 {
     if (directConnection())
     {

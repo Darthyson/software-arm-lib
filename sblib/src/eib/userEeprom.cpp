@@ -31,7 +31,7 @@ byte* UserEeprom::flashSectorAddress() const
     return (FLASH_BASE_ADDRESS + iapFlashSize() - FLASH_SECTOR_SIZE);
 }
 
-byte* UserEeprom::findValidPage()
+byte* UserEeprom::findValidPage() const
 {
     const byte* firstPage = FLASH_BASE_ADDRESS + iapFlashSize() - FLASH_SECTOR_SIZE;
     byte* page = lastEepromPage();

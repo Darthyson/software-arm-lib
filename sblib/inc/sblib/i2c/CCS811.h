@@ -48,18 +48,18 @@ class CCS811Class
 public:
     CCS811Class() = default;
     bool begin(uint8_t I2C_ADDR, int WAKE_PIN);
-    char readStatus(void);
-    char readHW_ID(void);
-    uint16_t getBaseline(void);
-    void setBaseline(uint16_t baseline);
-    char readErrorID(char _status);
-    int readTVOC(void);
-    int readCO2(void);
-    void setMode(uint8_t modeNumber);
+    char readStatus(void) const;
+    char readHW_ID(void) const;
+    uint16_t getBaseline(void) const;
+    void setBaseline(uint16_t baseline) const;
+    char readErrorID(char _status) const;
+    int readTVOC(void) const;
+    int readCO2(void) const;
+    void setMode(uint8_t modeNumber) const;
     bool getData(void);
-    void compensate(float t, float rh);
+    void compensate(float t, float rh) const;
     static void _digitalWrite(int WAKE_PIN, bool VAL);
-    void sleep();
+    void sleep() const;
     int TVOC = 0; //!< Total VOC level in ppb
     int CO2 = 0; //!< eCO2 level in ppm
 

@@ -40,18 +40,18 @@ SHT1x::SHT1x(const int dataP, const int clockP) :
     releaseDataPin();
 }
 
-void SHT1x::activateDataPin()
+void SHT1x::activateDataPin() const
 {
     pinMode(dataPin, OUTPUT | OPEN_DRAIN);
     digitalWrite(dataPin, true);
 }
 
-void SHT1x::releaseDataPin()
+void SHT1x::releaseDataPin() const
 {
     pinMode(dataPin, INPUT);
 }
 
-void SHT1x::clockCycle()
+void SHT1x::clockCycle() const
 {
     digitalWrite(clockPin, true);
     __NOP();
@@ -168,7 +168,7 @@ bool SHT1x::readTemperatureRaw(int16_t* temperatureRaw)
     return (true);
 }
 
-void SHT1x::sendTransmissionStart()
+void SHT1x::sendTransmissionStart() const
 {
     digitalWrite(dataPin, true);
     digitalWrite(clockPin, true);
@@ -185,7 +185,7 @@ void SHT1x::sendTransmissionStart()
     __NOP();
 }
 
-bool SHT1x::sendByteToSHT(const uint8_t toSend, const bool isCommand)
+bool SHT1x::sendByteToSHT(const uint8_t toSend, const bool isCommand) const
 {
     activateDataPin();
     if (isCommand)
@@ -222,7 +222,7 @@ bool SHT1x::sendByteToSHT(const uint8_t toSend, const bool isCommand)
     return (false);
 }
 
-bool SHT1x::waitForResultSHT()
+bool SHT1x::waitForResultSHT() const
 {
     releaseDataPin();
     unsigned int i = 0;
@@ -243,7 +243,7 @@ bool SHT1x::waitForResultSHT()
     return (false);
 }
 
-uint16_t SHT1x::getData16SHT()
+uint16_t SHT1x::getData16SHT() const
 {
     // Get the most significant bits
     releaseDataPin();
@@ -260,7 +260,7 @@ uint16_t SHT1x::getData16SHT()
     return val;
 }
 
-void SHT1x::skipCrcSHT()
+void SHT1x::skipCrcSHT() const
 {
     // Skip acknowledge to end trans (no CRC)
     activateDataPin();
@@ -321,7 +321,7 @@ float SHT1x::GetDewPoint()
     return dewPoint;
 }
 
-bool SHT1x::getStatusRegister(uint16_t* status)
+bool SHT1x::getStatusRegister(uint16_t* status) const
 {
     activateDataPin();
     for (uint8_t i = 0; i < 10; i++)
@@ -344,7 +344,7 @@ bool SHT1x::getStatusRegister(uint16_t* status)
     return (true);
 }
 
-bool SHT1x::setStatusRegister(const uint16_t& status)
+bool SHT1x::setStatusRegister(const uint16_t& status) const
 {
     if (!sendByteToSHT(sht1xWriteStatusRegister, true))
     {
@@ -358,7 +358,7 @@ bool SHT1x::setStatusRegister(const uint16_t& status)
     return (true);
 }
 
-bool SHT1x::softReset()
+bool SHT1x::softReset() const
 {
     if (!sendByteToSHT(sht1xSoftReset, true))
     {

@@ -69,7 +69,7 @@ public:
     uint8_t getUInt8(uint32_t address) const override;
     uint16_t getUInt16(uint32_t address) const override;
 
-    void cpyFromUserRam(uint32_t address, unsigned char* buffer, uint32_t count);
+    void cpyFromUserRam(uint32_t address, unsigned char* buffer, uint32_t count) const;
     void cpyToUserRam(uint32_t address, const unsigned char* buffer, uint32_t count);
 
     bool isStatusAddress(uint32_t address) const;

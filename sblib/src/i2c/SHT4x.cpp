@@ -103,12 +103,12 @@ float SHT4xClass::convertTicksToPercentRH(const uint16_t ticks)
     return static_cast<float>(ticks * 125.0f / 65535.0f - 6.0f);
 }
 
-float SHT4xClass::getHumidity(void)
+float SHT4xClass::getHumidity(void) const
 {
     return this->humidity;
 }
 
-float SHT4xClass::getTemperature(void)
+float SHT4xClass::getTemperature(void) const
 {
     return this->temperature;
 }

@@ -63,12 +63,12 @@ protected:
     /**
      * Test if the read buffer is full.
      */
-    bool readBufferFull();
+    bool readBufferFull() const;
 
     /**
      * Test if the write buffer is full.
      */
-    bool writeBufferFull();
+    bool writeBufferFull() const;
 };
 
 
@@ -84,12 +84,12 @@ inline void BufferedStream::clearBuffers()
     writeTail = 0;
 }
 
-ALWAYS_INLINE bool BufferedStream::readBufferFull()
+ALWAYS_INLINE bool BufferedStream::readBufferFull() const
 {
     return ((readTail + 1) & BufferedStream::BUFFER_SIZE_MASK) == readHead;
 }
 
-ALWAYS_INLINE bool BufferedStream::writeBufferFull()
+ALWAYS_INLINE bool BufferedStream::writeBufferFull() const
 {
     return ((writeTail + 1) & BufferedStream::BUFFER_SIZE_MASK) == writeHead;
 }

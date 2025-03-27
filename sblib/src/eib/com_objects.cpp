@@ -319,7 +319,7 @@ inline int ComObjects::objectCount()
     return *objectConfigTable();
 }
 
-int ComObjects::firstObjectAddr(const int objno)
+int ComObjects::firstObjectAddr(const int objno) const
 {
     const byte* assocTab = bcu->addrTables->assocTable();
     const byte* assocTabEnd = assocTab + (*assocTab << 1);

@@ -102,7 +102,7 @@ LcdGraphicalEADOGS::LcdGraphicalEADOGS(const int spiPort, const int pinData, con
         pinMode(pinCS, OUTPUT | SPI_SSEL);
 }
 
-void LcdGraphicalEADOGS::begin()
+void LcdGraphicalEADOGS::begin() const
 {
     spi.setClockDivider(128);
     spi.begin();
@@ -135,12 +135,12 @@ void LcdGraphicalEADOGS::begin()
     // --- END TEST CODE
 }
 
-void LcdGraphicalEADOGS::end()
+void LcdGraphicalEADOGS::end() const
 {
     spi.end();
 }
 
-void LcdGraphicalEADOGS::inverse(const bool enable)
+void LcdGraphicalEADOGS::inverse(const bool enable) const
 {
     digitalWrite(pinCD, 0);
     spi.transfer(enable ? CMD_DISP_INVERSE : CMD_DISP_NORMAL);

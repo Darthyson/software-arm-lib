@@ -125,7 +125,7 @@ Timer::Timer(const byte aTimerNum)
     timer = timers[aTimerNum];
 }
 
-void Timer::begin()
+void Timer::begin() const
 {
     LPC_SYSCON->SYSAHBCLKCTRL |= 1 << (7 + timerNum);
 
@@ -135,7 +135,7 @@ void Timer::begin()
 }
 
 
-void Timer::matchMode(const int channel, const int mode)
+void Timer::matchMode(const int channel, const int mode) const
 {
     // Configure the match control channel
     const int offset = channel * 3;
@@ -160,7 +160,7 @@ int Timer::matchMode(const int channel) const
     return mode;
 }
 
-void Timer::captureMode(const int channel, const int mode)
+void Timer::captureMode(const int channel, const int mode) const
 {
     const short offset = channel * 3;
 
@@ -186,7 +186,7 @@ int Timer::captureMode(const int channel) const
     return mode;
 }
 
-void Timer::counterMode(const int mode, const int clearMode)
+void Timer::counterMode(const int mode, const int clearMode) const
 {
     int config = 0;
 
@@ -213,7 +213,7 @@ void Timer::counterMode(const int mode, const int clearMode)
     timer->CTCR = config;
 }
 
-void Timer::setIRQPriority(const uint32_t newPriority)
+void Timer::setIRQPriority(const uint32_t newPriority) const
 {
     if (this == &timer16_0)
     {

@@ -47,7 +47,7 @@ void OneWire::OneWireInit(const int pin, const bool bParasitePowerMode /* false 
 **                 or otherwise held low for more than 250uS
 **
 *****************************************************************************/
-bool OneWire::OneWireReset()
+bool OneWire::OneWireReset() const
 {
     bool bRet = false;
     uint8_t retries = 125;
@@ -96,7 +96,7 @@ bool OneWire::OneWireReset()
 ** Returned value: none
 **
 *****************************************************************************/
-void OneWire::OneWireWriteBit(const uint8_t uValue)
+void OneWire::OneWireWriteBit(const uint8_t uValue) const
 {
     pinDisableInterrupt(this->pin);
     if (uValue & 1)
@@ -129,7 +129,7 @@ void OneWire::OneWireWriteBit(const uint8_t uValue)
 ** Returned value: bit
 **
 *****************************************************************************/
-uint8_t OneWire::OneWireReadBit()
+uint8_t OneWire::OneWireReadBit() const
 {
     uint8_t uRet;
 
@@ -166,7 +166,7 @@ uint8_t OneWire::OneWireReadBit()
 ** Returned value: none
 **
 *****************************************************************************/
-void OneWire::OneWireWrite(const uint8_t v)
+void OneWire::OneWireWrite(const uint8_t v) const
 {
     for (uint8_t bitMask = 0x01; bitMask; bitMask <<= 1)
     {
@@ -198,7 +198,7 @@ void OneWire::OneWireWrite(const uint8_t v)
 ** Returned value: none
 **
 *****************************************************************************/
-void OneWire::OneWireWriteBytes(const uint8_t* buf, const uint16_t count)
+void OneWire::OneWireWriteBytes(const uint8_t* buf, const uint16_t count) const
 {
     for (uint16_t i = 0; i < count; i++)
         this->OneWireWrite(buf[i]);
@@ -223,7 +223,7 @@ void OneWire::OneWireWriteBytes(const uint8_t* buf, const uint16_t count)
 ** Returned value: read byte
 **
 *****************************************************************************/
-uint8_t OneWire::OneWireRead()
+uint8_t OneWire::OneWireRead() const
 {
     uint8_t rRet = 0;
     for (uint8_t bitMask = 0x01; bitMask; bitMask <<= 1)
@@ -244,7 +244,7 @@ uint8_t OneWire::OneWireRead()
 ** Returned value: bytes buffer
 **
 *****************************************************************************/
-void OneWire::OneWireReadBytes(uint8_t* buf, const uint16_t count)
+void OneWire::OneWireReadBytes(uint8_t* buf, const uint16_t count) const
 {
     for (uint16_t i = 0; i < count; i++)
     {
@@ -263,7 +263,7 @@ void OneWire::OneWireReadBytes(uint8_t* buf, const uint16_t count)
 ** Returned value: none
 **
 *****************************************************************************/
-void OneWire::OneWireSelect(const uint8_t rom[8])
+void OneWire::OneWireSelect(const uint8_t rom[8]) const
 {
     this->OneWireWrite(0x55); // Choose ROM
     for (uint8_t i = 0; i < 8; i++)
@@ -283,7 +283,7 @@ void OneWire::OneWireSelect(const uint8_t rom[8])
 ** Returned value: none
 **
 *****************************************************************************/
-void OneWire::OneWireSkip()
+void OneWire::OneWireSkip() const
 {
     this->OneWireWrite(0xCC); // Skip ROM
 }
@@ -302,7 +302,7 @@ void OneWire::OneWireSkip()
 ** Returned value: none
 **
 *****************************************************************************/
-void OneWire::OneWireDePower()
+void OneWire::OneWireDePower() const
 {
     pinDisableInterrupt(this->pin);
     pinMode(this->pin, INPUT);

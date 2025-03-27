@@ -152,8 +152,8 @@ public:
     bool startConversionAll();
 
     // convenience wrappers
-    bool lastReadOk(int deviceIdx);
-    float temperature(int deviceIdx);
+    bool lastReadOk(int deviceIdx) const;
+    float temperature(int deviceIdx) const;
 
     /*
      * Function name:  readResultAll
@@ -172,7 +172,7 @@ public:
     /*
      * Returns a string representation of the requested sensor
      */
-    const char* TypeStr(int deviceNum);
+    const char* TypeStr(int deviceNum) const;
 
     /*
      * Function name:  ConvertTemperature

@@ -78,7 +78,7 @@ void UserRam::cpyToUserRam(uint32_t address, const unsigned char* buffer, uint32
     }
 }
 
-void UserRam::cpyFromUserRam(uint32_t address, unsigned char* buffer, uint32_t count)
+void UserRam::cpyFromUserRam(uint32_t address, unsigned char* buffer, uint32_t count) const
 {
     ///\todo check the real location of status for a BIM112, is it also 0x60 like for a bcu1 and 2?
     if ((address == statusOffset()) && (count == 1))

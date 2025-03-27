@@ -102,13 +102,13 @@ public:
      * Get relative humidity from SHT4x sensor
      * @return the relative humidity in %RH as float
      */
-    float getHumidity(void);
+    float getHumidity(void) const;
 
     /**
      * Get Temperature from SHT4x sensor
      * @return the current temperature in degree C as float
      */
-    float getTemperature(void);
+    float getTemperature(void) const;
 
     /**
      * SHT4x command for a single shot measurement with high repeatability.

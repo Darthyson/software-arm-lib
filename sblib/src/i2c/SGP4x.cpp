@@ -258,27 +258,27 @@ SGP4xResult SGP4xClass::readFeatureSet()
     return SGP4xResult::success;
 }
 
-int32_t SGP4xClass::getVocIndexValue()
+int32_t SGP4xClass::getVocIndexValue() const
 {
     return vocIndexValue;
 }
 
-int32_t SGP4xClass::getNoxIndexValue()
+int32_t SGP4xClass::getNoxIndexValue() const
 {
     return noxIndexValue;
 }
 
-int32_t SGP4xClass::getRawVocValue()
+int32_t SGP4xClass::getRawVocValue() const
 {
     return rawVocTics;
 }
 
-int32_t SGP4xClass::getRawNoxValue()
+int32_t SGP4xClass::getRawNoxValue() const
 {
     return rawNoxTics;
 }
 
-uint16_t SGP4xClass::getFeatureSet()
+uint16_t SGP4xClass::getFeatureSet() const
 {
     return featureSet;
 }

@@ -74,7 +74,7 @@ public:
      *
      * @return If the time as been started
      */
-    bool started(void)
+    bool started(void) const
     {
         return timeout != Timeout::STOPPED;
     }
@@ -83,7 +83,7 @@ public:
      *
      * @return If the time as been stopped
      */
-    bool stopped(void)
+    bool stopped(void) const
     {
         return timeout == Timeout::STOPPED;
     }

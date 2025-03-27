@@ -184,7 +184,7 @@ bool DHT::readData(const bool bForceRead)
 ** Returned value: Converter value
 **
 *****************************************************************************/
-float DHT::ConvertTemperature(const eScale Scale)
+float DHT::ConvertTemperature(const eScale Scale) const
 {
     if (Scale == FARENHEIT)
         return (this->_lastTemperature * 9 / 5 + 32);
@@ -204,7 +204,7 @@ float DHT::ConvertTemperature(const eScale Scale)
 ** Returned value:
 **
 *****************************************************************************/
-uint32_t DHT::expectPulse(const bool level)
+uint32_t DHT::expectPulse(const bool level) const
 {
     uint32_t count = 0;
     while (digitalRead(_pin) == level)

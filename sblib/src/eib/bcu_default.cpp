@@ -157,7 +157,7 @@ void BcuDefault::end()
     BcuBase::end();
 }
 
-byte* BcuDefault::userMemoryPtr(const unsigned int addr)
+byte* BcuDefault::userMemoryPtr(const unsigned int addr) const
 {
     if (userEeprom->inRange(addr))
     {
@@ -175,7 +175,7 @@ void BcuDefault::setMemMapper(MemMapper* mapper)
     memMapper = mapper;
 }
 
-MemMapper* BcuDefault::getMemMapper()
+MemMapper* BcuDefault::getMemMapper() const
 {
     return memMapper;
 }
@@ -275,7 +275,7 @@ bool BcuDefault::processApciMemoryReadPDU(const int addressStart, byte* payLoad,
     return result;
 }
 
-bool BcuDefault::processApciMemoryOperation(unsigned int addressStart, byte* payLoad, unsigned int lengthPayLoad, const bool& readMem)
+bool BcuDefault::processApciMemoryOperation(unsigned int addressStart, byte* payLoad, unsigned int lengthPayLoad, const bool& readMem) const
 {
     if (lengthPayLoad == 0)
     {
@@ -520,7 +520,7 @@ bool BcuDefault::processApci(ApciCommand apciCmd, unsigned char* telegram, const
     return (false);
 }
 
-bool BcuDefault::processDeviceDescriptorReadTelegram(uint8_t* sendBuffer, const int id)
+bool BcuDefault::processDeviceDescriptorReadTelegram(uint8_t* sendBuffer, const int id) const
 {
     if (id != 0)
     {
@@ -583,7 +583,7 @@ void BcuDefault::softSystemReset()
     BcuBase::softSystemReset();
 }
 
-bool BcuDefault::flushUserMemory(const UsrCallbackType reason)
+bool BcuDefault::flushUserMemory(const UsrCallbackType reason) const
 {
 ///\todo workaround for lib test cases running into an infinitive loop
 #ifndef IAP_EMULATION

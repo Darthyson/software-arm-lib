@@ -86,7 +86,7 @@ public:
      * @return True if successful, otherwise false
      * @note The sensor needs ~11ms to reset
      */
-    bool softReset();
+    bool softReset() const;
 
     /**
      * Get humidity as integer from sensor in %rH
@@ -100,7 +100,7 @@ public:
      * Get the last measured humidity
      * @return The last humidity with factor 100 (2045 = 20,45%rH)
      */
-    uint16_t getLastHumidity() { return lastHumidity; }
+    uint16_t getLastHumidity() const { return lastHumidity; }
 
     /**
     * Get temperature as integer from sensor in degree Celsius
@@ -114,7 +114,7 @@ public:
      * Get the last measured temperature in degree Celsius
      * @return The last measured temperature with factor 100 (2045 = 20,45°C)
      */
-    int16_t getLastTemperature() { return lastTemperatureC; }
+    int16_t getLastTemperature() const { return lastTemperatureC; }
 
     /**
      * Gets the current dew point based on the current humidity and temperature
@@ -129,7 +129,7 @@ public:
      * @return True if successful, otherwise false
      * @warning Function is blocking and can take up to 340ms to return (@ref MAX_WAIT_MS)
      */
-    bool getStatusRegister(uint16_t* status);
+    bool getStatusRegister(uint16_t* status) const;
 
     /**
      * Set content of the SHT1x status register e.g. resolution, heater and OTP
@@ -137,7 +137,7 @@ public:
      * @return True if successful, otherwise false
      * @warning Function is blocking and can take up to 340ms to return (@ref MAX_WAIT_MS)
      */
-    bool setStatusRegister(const uint16_t& status);
+    bool setStatusRegister(const uint16_t& status) const;
 
 private:
     /**
@@ -163,21 +163,21 @@ private:
      */
     bool readTemperatureRaw(int16_t *temperatureRaw);
     static float convertRawTemperature(const float& temperature, eScale type);
-    bool sendByteToSHT(uint8_t toSend, bool isCommand);
+    bool sendByteToSHT(uint8_t toSend, bool isCommand) const;
 
     /**
      * Wait for a measurement to complete. It can take up to a maximum of 20/80/320 ms for a 8/12/14bit measurement.
      * @return true if successful, otherwise false
      */
-    bool waitForResultSHT();
-    uint16_t getData16SHT();
-    void skipCrcSHT();
+    bool waitForResultSHT() const;
+    uint16_t getData16SHT() const;
+    void skipCrcSHT() const;
 
-    void activateDataPin();
-    void releaseDataPin();
-    void clockCycle();
+    void activateDataPin() const;
+    void releaseDataPin() const;
+    void clockCycle() const;
 
-    void sendTransmissionStart();
+    void sendTransmissionStart() const;
 
     int dataPin;
     int clockPin;

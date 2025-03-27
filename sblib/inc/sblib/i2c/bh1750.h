@@ -71,7 +71,7 @@ public:
     bool begin(Mode mode = CONTINUOUS_HIGH_RES_MODE, byte addr = BH1750_DEFAULT_I2CADDR);
     bool configure(Mode mode);
     bool setMTreg(byte MTreg);
-    bool measurementReady(bool maxWait = false);
+    bool measurementReady(bool maxWait = false) const;
     float readLightLevel();
 
 private:

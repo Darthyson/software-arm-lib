@@ -22,11 +22,13 @@ OneWireDS2482::OneWireDS2482(const uint8_t address) {
     i2c_lpcopen_init();
 }
 
-uint8_t OneWireDS2482::getAddress() {
+uint8_t OneWireDS2482::getAddress() const
+{
     return mAddress;
 }
 
-uint8_t OneWireDS2482::getError() {
+uint8_t OneWireDS2482::getError() const
+{
     return mError;
 }
 
@@ -40,12 +42,14 @@ uint8_t OneWireDS2482::end() {
     return i2c_DS2842->I2CStop();
 }
 */
-void OneWireDS2482::writeByte(const uint8_t data) {
+void OneWireDS2482::writeByte(const uint8_t data) const
+{
     //i2c_DS2842->Write(mAddress, &data, 1); // 1 Byte
     Chip_I2C_MasterSend(I2C0, mAddress, &data, 1);
 }
 
-void OneWireDS2482::writeBytes(const uint8_t *data, uint8_t data_length) {
+void OneWireDS2482::writeBytes(const uint8_t *data, uint8_t data_length) const
+{
     //i2c_DS2842->Write(mAddress, data, data_length);
     Chip_I2C_MasterSend(I2C0, mAddress, data, data_length);
 }
@@ -69,7 +73,8 @@ void OneWireDS2482::deviceReset() {
 }
 
 // Sets the read pointer to the specified register. Overwrites the read pointer position of any 1-Wire communication command in progress.
-void OneWireDS2482::setReadPointer(const uint8_t readPointer) {
+void OneWireDS2482::setReadPointer(const uint8_t readPointer) const
+{
 
     uint8_t data_buf[2];
     data_buf[0] = DS2482_COMMAND_SRP;
@@ -80,7 +85,8 @@ void OneWireDS2482::setReadPointer(const uint8_t readPointer) {
     //end();
 }
 
-uint8_t OneWireDS2482::setReadPointerAndRead(const uint8_t readPointer) {
+uint8_t OneWireDS2482::setReadPointerAndRead(const uint8_t readPointer) const
+{
 
     uint8_t cmd[2];
     uint8_t data;
@@ -95,17 +101,20 @@ uint8_t OneWireDS2482::setReadPointerAndRead(const uint8_t readPointer) {
 }
 
 // Read the status register
-uint8_t OneWireDS2482::readStatus() {
+uint8_t OneWireDS2482::readStatus() const
+{
     return setReadPointerAndRead(DS2482_POINTER_STATUS);
 }
 
 // Read the data register
-uint8_t OneWireDS2482::readData() {
+uint8_t OneWireDS2482::readData() const
+{
     return setReadPointerAndRead(DS2482_POINTER_DATA);
 }
 
 // Read the config register
-uint8_t OneWireDS2482::readConfig() {
+uint8_t OneWireDS2482::readConfig() const
+{
     return setReadPointerAndRead(DS2482_POINTER_CONFIG);
 }
 

@@ -155,11 +155,11 @@ public:
 
     SGP4xResult readFeatureSet();
 
-    int32_t getVocIndexValue();
-    int32_t getNoxIndexValue();
-    int32_t getRawVocValue();
-    int32_t getRawNoxValue();
-    uint16_t getFeatureSet();
+    int32_t getVocIndexValue() const;
+    int32_t getNoxIndexValue() const;
+    int32_t getRawVocValue() const;
+    int32_t getRawNoxValue() const;
+    uint16_t getFeatureSet() const;
 
     /**
      * Read the sensor's unique serial number

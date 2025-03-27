@@ -86,7 +86,7 @@ public:
      *
      * @return true if successfully, otherwise false
      */
-    bool processApciMemoryOperation(unsigned int addressStart, byte* payLoad, unsigned int lengthPayLoad, const bool& readMem);
+    bool processApciMemoryOperation(unsigned int addressStart, byte* payLoad, unsigned int lengthPayLoad, const bool& readMem) const;
 
     /**
      * Process a APCI_MASTER_RESET_PDU
@@ -128,13 +128,13 @@ public:
 
     UserEeprom* userEeprom;
 
-    byte* userMemoryPtr(unsigned int addr);
+    byte* userMemoryPtr(unsigned int addr) const;
 
     /**
      * Returns a pointer to the instance of the MemMapper object of the BCU
      * @return a pointer to the instance of the MemMapper object, in case of error return is nullptr
      */
-    MemMapper* getMemMapper();
+    MemMapper* getMemMapper() const;
 
     /**
      * Allow an user provided memory mapper to store parameter data via memory write / read
@@ -200,7 +200,7 @@ protected:
      *
      * @return True on success, false on failure
      */
-    bool processDeviceDescriptorReadTelegram(uint8_t* sendBuffer, int id);
+    bool processDeviceDescriptorReadTelegram(uint8_t* sendBuffer, int id) const;
 
     /**
      * Flushes all pending write operations to user memory (eeprom, memmapper) and sends a callback to the user
@@ -208,7 +208,7 @@ protected:
      * @param reason    The reason, why the memory is flushed
      * @return  True if eeprom was flushed, otherwise false
      */
-    bool flushUserMemory(UsrCallbackType reason);
+    bool flushUserMemory(UsrCallbackType reason) const;
 
     MemMapper* memMapper;
     UsrCallback* usrCallback;

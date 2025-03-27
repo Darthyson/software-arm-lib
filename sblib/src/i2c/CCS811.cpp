@@ -86,7 +86,8 @@ bool CCS811Class::begin(const uint8_t I2C_ADDR, const int WAKE_PIN) {
     return true;
 }
 
-char CCS811Class::readStatus(void) {
+char CCS811Class::readStatus(void) const
+{
     delayMicroseconds(20); // recommended 20us delay while performing back to back I2C operations
     _digitalWrite(_WAKE_PIN, false);
     delayMicroseconds(50); // recommended 50us delay after asserting WAKE pin
@@ -96,7 +97,8 @@ char CCS811Class::readStatus(void) {
     return status;
 }
 
-char CCS811Class::readHW_ID(void) {
+char CCS811Class::readHW_ID(void) const
+{
     _digitalWrite(_WAKE_PIN, false);
     delayMicroseconds(50); // recommended 50us delay after asserting WAKE pin
     uint8_t hw_id;         // = HW_ID;
@@ -114,7 +116,8 @@ char CCS811Class::readHW_ID(void) {
 // register and the Algorithms will use the new value in its
 // calculations (until it adjusts it as part of its internal Automatic
 // Baseline Correction).
-uint16_t CCS811Class::getBaseline(void) {
+uint16_t CCS811Class::getBaseline(void) const
+{
     _digitalWrite(_WAKE_PIN, false);
     delayMicroseconds(50); // recommended 50us delay after asserting WAKE pin
     uint8_t buffer[2];
@@ -128,7 +131,8 @@ uint16_t CCS811Class::getBaseline(void) {
 }
 
 // set the baseline from before reading to the CCS811
-void CCS811Class::setBaseline(const uint16_t baseline) {
+void CCS811Class::setBaseline(const uint16_t baseline) const
+{
     _digitalWrite(_WAKE_PIN, false);
     delayMicroseconds(50); // recommended 50us delay after asserting WAKE pin
     const uint8_t i2cData[] = {BASELINE_REG, (uint8_t)(baseline >> 8), (uint8_t)baseline};
@@ -136,7 +140,8 @@ void CCS811Class::setBaseline(const uint16_t baseline) {
     digitalWrite(_WAKE_PIN, true); // set WAKE_PIN high - this puts sensor in sleep mode (~2uA) and all I2C communications are ignored
 }
 
-char CCS811Class::readErrorID(const char _status) {
+char CCS811Class::readErrorID(const char _status) const
+{
     _digitalWrite(_WAKE_PIN, false);
     delayMicroseconds(50); // recommended 50us delay after asserting WAKE pin
     uint8_t error_id;      // = ERROR_ID;
@@ -149,7 +154,8 @@ char CCS811Class::readErrorID(const char _status) {
         return 0;
 }
 
-void CCS811Class::sleep() {
+void CCS811Class::sleep() const
+{
     _digitalWrite(_WAKE_PIN, false);
     delayMicroseconds(50); // recommended 50us delay after asserting WAKE pin
     constexpr uint8_t i2cData[] = {MEAS_MODE, 0x00};
@@ -162,7 +168,8 @@ void CCS811Class::sleep() {
 // Mode 1 – Constant power mode, IAQ measurement every second
 // Mode 2 – Pulse heating mode IAQ measurement every 10 seconds
 // Mode 3 – Low power pulse heating mode IAQ measurement every 60
-void CCS811Class::setMode(const uint8_t modeNumber) {
+void CCS811Class::setMode(const uint8_t modeNumber) const
+{
     _digitalWrite(_WAKE_PIN, false);
     delayMicroseconds(50); // recommended 50us delay after asserting WAKE pin
     const uint8_t i2cData[] = {MEAS_MODE, (uint8_t)(modeNumber << 4)};
@@ -191,15 +198,18 @@ bool CCS811Class::getData(void) {
     return true;
 }
 
-int CCS811Class::readTVOC(void) {
+int CCS811Class::readTVOC(void) const
+{
     return TVOC;
 }
 
-int CCS811Class::readCO2(void) {
+int CCS811Class::readCO2(void) const
+{
     return CO2;
 }
 
-void CCS811Class::compensate(const float t, const float rh) // compensate for temperature and relative humidity
+// compensate for temperature and relative humidity
+void CCS811Class::compensate(const float t, const float rh) const
 {
     _digitalWrite(_WAKE_PIN, false);
     delayMicroseconds(50); // recommended 50us delay after asserting WAKE pin

@@ -106,7 +106,7 @@ protected:
      *
      * @return If successful: number of the last valid flash page, otherwise 0
      */
-    byte* findValidPage();
+    byte* findValidPage() const;
 
     bool userEepromModified = false;
     unsigned int writeUserEepromTime = 0;

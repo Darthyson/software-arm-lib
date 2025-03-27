@@ -61,7 +61,7 @@ public:
      *                 Returns false if there is no device or the bus is shorted
      *                 or otherwise held low for more than 250uS
      */
-    bool OneWireReset();
+    bool OneWireReset() const;
 
     /*
      * Function name:  OneWireWriteBit
@@ -71,7 +71,7 @@ public:
      * parameters:     Value to write
      * Returned value: none
      */
-    void OneWireWriteBit(uint8_t uValue);
+    void OneWireWriteBit(uint8_t uValue) const;
 
     /*
      * Function name:  OneWireReadBit
@@ -80,7 +80,7 @@ public:
      * parameters:     none
      * Returned value: bit
      */
-    uint8_t OneWireReadBit(void);
+    uint8_t OneWireReadBit(void) const;
 
     /*
      * Function name:  OneWireWrite
@@ -96,7 +96,7 @@ public:
      * parameters:     Value
      * Returned value: none
      */
-    void OneWireWrite(uint8_t v);
+    void OneWireWrite(uint8_t v) const;
 
     /*
      * Function name:  OneWireWriteBytes
@@ -108,7 +108,7 @@ public:
      * parameters:     Value buffer, Counter
      * Returned value: none
      */
-    void OneWireWriteBytes(const uint8_t* buf, uint16_t count);
+    void OneWireWriteBytes(const uint8_t* buf, uint16_t count) const;
 
     /*
      * Function name:  OneWireRead
@@ -116,7 +116,7 @@ public:
      * parameters:     none
      * Returned value: read byte
      */
-    uint8_t OneWireRead(void);
+    uint8_t OneWireRead(void) const;
 
     /*
      * Function name:  OneWireReadBytes
@@ -124,7 +124,7 @@ public:
      * parameters:     bytes buffer, read count
      * Returned value: bytes buffer
      */
-    void OneWireReadBytes(uint8_t* buf, uint16_t count);
+    void OneWireReadBytes(uint8_t* buf, uint16_t count) const;
 
     /*
      * Function name:  OneWireSelect
@@ -133,7 +133,7 @@ public:
      * parameters:     ROM
      * Returned value: none
      */
-    void OneWireSelect(const uint8_t rom[8]);
+    void OneWireSelect(const uint8_t rom[8]) const;
 
     /*
      * Function name:  OneWireSkip
@@ -142,7 +142,7 @@ public:
      * parameters:     none
      * Returned value: none
      */
-    void OneWireSkip(void);
+    void OneWireSkip(void) const;
 
     /*
      * Function name:  OneWireDePower
@@ -154,7 +154,7 @@ public:
      * parameters:     none
      * Returned value: none
      */
-    void OneWireDePower(void);
+    void OneWireDePower(void) const;
 
     /*
      * Function name: IsParasiteMode
@@ -162,7 +162,7 @@ public:
      * parameters:    none
      * Returned value: the current power mode state
      */
-    inline bool IsParasiteMode() { return this->m_bParasitePowerMode; }
+    inline bool IsParasiteMode() const { return this->m_bParasitePowerMode; }
 
 #if ONEWIRE_SEARCH
     /*

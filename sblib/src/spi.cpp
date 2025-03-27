@@ -101,27 +101,27 @@ SPI::SPI(const int spiPort, const int mode)
     port.CPSR = 2;
 }
 
-void SPI::setClockDivider(const int div)
+void SPI::setClockDivider(const int div) const
 {
     port.CR0 = (port.CR0 & ~0xff00) | (((div - 1) & 255) << 8);
 }
 
-void SPI::setDataSize(const SpiDataSize dataSize)
+void SPI::setDataSize(const SpiDataSize dataSize) const
 {
     port.CR0 = (port.CR0 & ~15) | SPI_DATA_SIZE_OFFS(dataSize);
 }
 
-void SPI::begin()
+void SPI::begin() const
 {
     port.CR1 |= SSP_CR1_ENABLED;
 }
 
-void SPI::end()
+void SPI::end() const
 {
     port.CR1 &= ~SSP_CR1_ENABLED;
 }
 
-int SPI::transfer(const int val, SpiTransferMode transferMode)
+int SPI::transfer(const int val, SpiTransferMode transferMode) const
 {
     // Clear all remaining data in the receive FIFO
     while (port.SR & SSP_SR_RNE)

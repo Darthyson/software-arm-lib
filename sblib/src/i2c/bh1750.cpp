@@ -179,7 +179,7 @@ bool BH1750::setMTreg(const byte MTreg)
  * @return a boolean if a new measurement is possible
  *
  */
-bool BH1750::measurementReady(const bool maxWait)
+bool BH1750::measurementReady(const bool maxWait) const
 {
     unsigned long delaytime = 0;
     switch (BH1750_MODE)

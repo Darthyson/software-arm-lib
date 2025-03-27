@@ -224,7 +224,7 @@ int MemMapper::writeMemPtr(const int virtAddress, byte* data, const int length)
     return MEM_MAPPER_SUCCESS;
 }
 
-int MemMapper::readMem(const int virtAddress, byte& data, const bool forceFlash)
+int MemMapper::readMem(const int virtAddress, byte& data, const bool forceFlash) const
 {
     const int flashPageNum = getFlashPageNum(virtAddress);
 
@@ -305,7 +305,7 @@ byte* MemMapper::memoryPtr(const int virtAddress, const bool forceFlash) const
     return (iapAddressOfPage(flashPageNum) + (virtAddress & 0xff));
 }
 
-unsigned char MemMapper::getUInt8(const int virtAddress)
+unsigned char MemMapper::getUInt8(const int virtAddress) const
 {
     byte ret;
     readMem(virtAddress, ret);
@@ -317,7 +317,7 @@ unsigned char& MemMapper::operator[](const int nIndex) const
     return memoryPtr(nIndex)[0];
 }
 
-unsigned int MemMapper::getUIntX(const int virtAddress, const int length)
+unsigned int MemMapper::getUIntX(const int virtAddress, const int length) const
 {
     unsigned int ret = 0;
     int address;
@@ -336,12 +336,12 @@ unsigned int MemMapper::getUIntX(const int virtAddress, const int length)
     return ret;
 }
 
-unsigned short MemMapper::getUInt16(const int virtAddress)
+unsigned short MemMapper::getUInt16(const int virtAddress) const
 {
     return (unsigned short)getUIntX(virtAddress, 2);
 }
 
-unsigned int MemMapper::getUInt32(const int virtAddress)
+unsigned int MemMapper::getUInt32(const int virtAddress) const
 {
     return (unsigned int)getUIntX(virtAddress, 4);
 }

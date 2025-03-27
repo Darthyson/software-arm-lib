@@ -58,14 +58,14 @@ public:
 
     void DHTInit(int pin, int DHTtype);
     bool readData(bool bForceRead = false);
-    float ConvertTemperature(eScale Scale);
+    float ConvertTemperature(eScale Scale) const;
     static float CalcdewPointFast(float celsius, float humidity);
     //float CalcdewPoint(float celsius, float humidity);
 private:
     int32_t _pin = 0;
     int32_t _lastReadTime = -2000;
     uint32_t _maxcycles = 0;
-    uint32_t expectPulse(bool level);
+    uint32_t expectPulse(bool level) const;
 };
 
 #endif /* dht_h */

@@ -134,13 +134,13 @@ public:
      * Power on the SPI port. Call this method before starting to use the SPI
      * port.
      */
-    void begin();
+    void begin() const;
 
     /**
      * Power off the SPI port. Call this method when you are done using the
      * SPI port to reduce power consumption.
      */
-    void end();
+    void end() const;
 
     /**
      * Set the SPI clock divider. The clock is divided by this divider
@@ -149,14 +149,14 @@ public:
      *
      * @param div - the clock divider in the range 1..256
      */
-    void setClockDivider(int div);
+    void setClockDivider(int div) const;
 
     /**
      * Set the SPI data size. Default is 8 bit.
      *
      * @param dataSize - the data size, e.g. SPI_DATA_8BIT
      */
-    void setDataSize(SpiDataSize dataSize);
+    void setDataSize(SpiDataSize dataSize) const;
 
     /**
      * Transfer one byte over the SPI bus. Sending and receiving of one
@@ -170,7 +170,7 @@ public:
      *
      * @return The received byte
      */
-    int transfer(int value);
+    int transfer(int value) const;
 
     /**
      * Transfer a value over the SPI bus and receive a value from the bus. The number
@@ -184,7 +184,7 @@ public:
      *
      * @return The received value
      */
-    int transfer(int val, SpiTransferMode transferMode);
+    int transfer(int val, SpiTransferMode transferMode) const;
 
     /**
      * Transfer a block of data SPI bus.
@@ -230,7 +230,7 @@ public:
 };
 
 
-inline int SPI::transfer(const int value)
+inline int SPI::transfer(const int value) const
 {
     return transfer(value, SPI_LAST);
 }

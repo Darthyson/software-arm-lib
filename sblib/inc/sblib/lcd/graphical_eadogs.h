@@ -56,19 +56,19 @@ public:
     /**
      * Begin using the display.
      */
-    void begin();
+    void begin() const;
 
     /**
      * End using the display.
      */
-    void end();
+    void end() const;
 
     /**
      * Switch to inverse mode.
      *
      * @param enable - true to use inverse mode, false for normal mode.
      */
-    void inverse(bool enable);
+    void inverse(bool enable) const;
 
     /**
      * Write a single character.

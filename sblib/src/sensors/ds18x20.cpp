@@ -193,14 +193,14 @@ bool DS18x20::readResult(const int deviceIdx)
     return true;
 }
 
-bool DS18x20::lastReadOk(const int deviceIdx)
+bool DS18x20::lastReadOk(const int deviceIdx) const
 {
     if (deviceIdx >= this->m_foundDevices)
         return false;
     return this->m_dsDev[deviceIdx].lastReadOK;
 }
 
-float DS18x20::temperature(const int deviceIdx)
+float DS18x20::temperature(const int deviceIdx) const
 {
     if (deviceIdx >= this->m_foundDevices)
         return -999.9f;
@@ -259,7 +259,7 @@ bool DS18x20::readResultAll()
 /*
  * Returns a string representation of the requested sensor
  */
-const char* DS18x20::TypeStr(const int deviceNum)
+const char* DS18x20::TypeStr(const int deviceNum) const
 {
     if (deviceNum >= this->m_foundDevices)
     {

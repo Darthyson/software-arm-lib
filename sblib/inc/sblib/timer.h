@@ -166,7 +166,7 @@ public:
      * This powers the timer on and the system clock is connected to the timer.
      * This method must be called before any other method of the timer can be used.
      */
-    void begin();
+    void begin() const;
 
     /**
      * End using the timer.
@@ -174,7 +174,7 @@ public:
      * This removes the system clock from the timer. The timer becomes unusable and
      * cannot be accessed with any other timer method until begin() is called again.
      */
-    void end();
+    void end() const;
 
     /**
      * Set the prescaler. The prescaler can be used to divide the peripheral clock before it is
@@ -184,7 +184,7 @@ public:
      *
      * @param factor - the prescaler division factor.
      */
-    void prescaler(unsigned int factor);
+    void prescaler(unsigned int factor) const;
 
     /**
      * Get the prescaler division factor. The factor is 16 bit for a 16 bit timer, and 32 bit
@@ -196,23 +196,23 @@ public:
     /**
      * Start the timer.
      */
-    void start();
+    void start() const;
 
     /**
      * Stop the timer.
      */
-    void stop();
+    void stop() const;
 
     /**
      * Restart the timer. This is the same as calling reset() and start().
      * If the timer was not previously running, it is started.
      */
-    void restart();
+    void restart() const;
 
     /**
      * Rest the timer.
      */
-    void reset();
+    void reset() const;
 
     /**
      * Read the current value of the timer.
@@ -226,19 +226,19 @@ public:
      *
      * @param val - The new timer value.
      */
-    void value(unsigned int val);
+    void value(unsigned int val) const;
 
     /**
      * Enable timer interrupts for this timer.
      * Use start() to start the timer.
      */
-    void interrupts();
+    void interrupts() const;
 
     /**
      * Disable timer interrupts for this timer.
      * Use stop() to stop the timer.
      */
-    void noInterrupts();
+    void noInterrupts() const;
 
     /**
      * Read the interrupt flags of the timer. This register contains the flags that caused an
@@ -264,21 +264,21 @@ public:
     /**
      * Reset the interrupt flags of the timer.
      */
-    void resetFlags();
+    void resetFlags() const;
 
     /**
      * Reset interrupt flag of a match channel.
      *
      * @param match - the match channel: MAT0, MAT1, MAT2, MAT3.
      */
-    void resetFlag(TimerMatch match);
+    void resetFlag(TimerMatch match) const;
 
     /**
      * Reset interrupt flag of a capture channel.
      *
      * @param capture - the capture channel: CAP0, CAP1.
      */
-    void resetFlag(TimerCapture capture);
+    void resetFlag(TimerCapture capture) const;
 
     /**
      * Test if the timer flag of a match channel is set.
@@ -331,7 +331,7 @@ public:
      * SET:          Set the digital pin of the match channel to 1 on match.
      * TOGGLE:       Toggle the digital pin of the match channel.
      */
-    void matchMode(int channel, int mode);
+    void matchMode(int channel, int mode) const;
 
     /**
      * Get the configuration of a match channel.
@@ -351,7 +351,7 @@ public:
      * @param value - the timer value when the match channel shall match. The value is 16 bit for
      *                16 bit timers and 32 bit for 32 bit timers.
      */
-    void match(int channel, unsigned int value);
+    void match(int channel, unsigned int value) const;
 
     /**
      * Get the timer value of a match channel.
@@ -378,7 +378,7 @@ public:
      * FALLING_EDGE: Capture on falling edge: a sequence of 1 then 0 on the capture pin will cause
      *               the capture channel to be loaded with the current timer value.
      */
-    void captureMode(int channel, int mode);
+    void captureMode(int channel, int mode) const;
 
     /**
      * Get the configuration of a capture channel.
@@ -411,14 +411,14 @@ public:
      * - when the timer value is equal or higher than the match value, the output is high.
      * - when the timer resets the output is low, except if the match value is 0.
      */
-    void pwmEnable(int channel);
+    void pwmEnable(int channel) const;
 
     /**
      * Disable a PWM channel.
      *
      * @param channel - the PWM channel: PWM0, PWM1, PWM2, PWM3.
      */
-    void pwmDisable(int channel);
+    void pwmDisable(int channel) const;
 
     /**
      * Configure the counter mode.
@@ -446,7 +446,7 @@ public:
      *
      * Example:  timer16_0.counterMode(CAP0|RISING_EDGE, CAP1|FALLING_EDGE);
      */
-    void counterMode(int mode, int clearMode);
+    void counterMode(int mode, int clearMode) const;
 
     /**
      * Configure a match pin mode of the channel.
@@ -461,14 +461,14 @@ public:
      * SET:          Set the digital pin of the match channel to 1 on match.
      * TOGGLE:       Toggle the digital pin of the match channel.
      */
-    void matchModePinConfig(int channel, int mode);
+    void matchModePinConfig(int channel, int mode) const;
 
     /**
      * Get the info if it is a 32bit timer
      *
      * @return true if the timer is a 32bit timer, otherwise 16bit timer
      */
-    bool is32bitTimer(void);
+    bool is32bitTimer(void) const;
 
     /**
      * Get the digital level of match channel (even if output pin is disabled)
@@ -477,14 +477,14 @@ public:
      *
      * @return - true = high, false = low
      */
-    bool getMatchChannelLevel(int channel);
+    bool getMatchChannelLevel(int channel) const;
 
     /**
      * Set interrupt priority for the associated hardware timer
      *
      * @param newPriority - new interrupt priority for the timer
      */
-    void setIRQPriority(uint32_t newPriority);
+    void setIRQPriority(uint32_t newPriority) const;
 
 protected:
     LPC_TMR_TypeDef* timer;
@@ -497,7 +497,7 @@ protected:
 //
 
 
-ALWAYS_INLINE void Timer::prescaler(const unsigned int factor)
+ALWAYS_INLINE void Timer::prescaler(const unsigned int factor) const
 {
     timer->PR = factor;
 }
@@ -507,28 +507,28 @@ ALWAYS_INLINE unsigned int Timer::prescaler() const
     return timer->PR;
 }
 
-ALWAYS_INLINE void Timer::start()
+ALWAYS_INLINE void Timer::start() const
 {
     timer->TCR |= 1;
 }
 
-ALWAYS_INLINE void Timer::stop()
+ALWAYS_INLINE void Timer::stop() const
 {
     timer->TCR &= ~1;
 }
 
-ALWAYS_INLINE void Timer::end()
+ALWAYS_INLINE void Timer::end() const
 {
     LPC_SYSCON->SYSAHBCLKCTRL &= ~(1 << (7 + timerNum));
 }
 
-ALWAYS_INLINE void Timer::restart()
+ALWAYS_INLINE void Timer::restart() const
 {
     timer->TCR = 2;
     timer->TCR = 1;
 }
 
-ALWAYS_INLINE void Timer::reset()
+ALWAYS_INLINE void Timer::reset() const
 {
     timer->TCR |= 2;
     timer->TCR &= ~2;
@@ -539,7 +539,7 @@ ALWAYS_INLINE unsigned int Timer::value() const
     return timer->TC;
 }
 
-ALWAYS_INLINE void Timer::value(const unsigned int val)
+ALWAYS_INLINE void Timer::value(const unsigned int val) const
 {
     timer->TC = val;
 }
@@ -549,17 +549,17 @@ ALWAYS_INLINE int Timer::flags() const
     return timer->IR;
 }
 
-ALWAYS_INLINE void Timer::resetFlags()
+ALWAYS_INLINE void Timer::resetFlags() const
 {
     timer->IR = 0xff;
 }
 
-ALWAYS_INLINE void Timer::resetFlag(const TimerMatch match)
+ALWAYS_INLINE void Timer::resetFlag(const TimerMatch match) const
 {
     timer->IR = (1 << match);
 }
 
-ALWAYS_INLINE void Timer::resetFlag(const TimerCapture capture)
+ALWAYS_INLINE void Timer::resetFlag(const TimerCapture capture) const
 {
     timer->IR = (16 << capture);
 }
@@ -584,12 +584,12 @@ ALWAYS_INLINE int Timer::flagMask(const TimerCapture capture)
     return 16 << capture;
 }
 
-ALWAYS_INLINE void Timer::interrupts()
+ALWAYS_INLINE void Timer::interrupts() const
 {
     NVIC_EnableIRQ((IRQn_Type)(TIMER_16_0_IRQn + timerNum));
 }
 
-ALWAYS_INLINE void Timer::noInterrupts()
+ALWAYS_INLINE void Timer::noInterrupts() const
 {
     NVIC_DisableIRQ((IRQn_Type)(TIMER_16_0_IRQn + timerNum));
 }
@@ -600,7 +600,7 @@ ALWAYS_INLINE unsigned int Timer::match(const int channel) const
     return (&timer->MR0)[channel];
 }
 
-ALWAYS_INLINE void Timer::match(const int channel, const unsigned int value)
+ALWAYS_INLINE void Timer::match(const int channel, const unsigned int value) const
 {
     (&timer->MR0)[channel] = value;
 }
@@ -610,17 +610,17 @@ ALWAYS_INLINE unsigned int Timer::capture(const int channel) const
     return (&timer->CR0)[channel];
 }
 
-ALWAYS_INLINE void Timer::pwmEnable(const int channel)
+ALWAYS_INLINE void Timer::pwmEnable(const int channel) const
 {
     timer->PWMC |= 1 << channel;
 }
 
-ALWAYS_INLINE void Timer::pwmDisable(const int channel)
+ALWAYS_INLINE void Timer::pwmDisable(const int channel) const
 {
     timer->PWMC &= ~(1 << channel);
 }
 
-ALWAYS_INLINE void Timer::matchModePinConfig(const int channel, const int mode)
+ALWAYS_INLINE void Timer::matchModePinConfig(const int channel, const int mode) const
 {
     const int offset = channel << 1;
     timer->EMR = (timer->EMR
@@ -628,12 +628,12 @@ ALWAYS_INLINE void Timer::matchModePinConfig(const int channel, const int mode)
                  | ((mode & 0x30) << offset);
 }
 
-ALWAYS_INLINE bool Timer::is32bitTimer(void)
+ALWAYS_INLINE bool Timer::is32bitTimer(void) const
 {
     return (bool)(this->timerNum > 1);
 }
 
-ALWAYS_INLINE bool Timer::getMatchChannelLevel(const int channel)
+ALWAYS_INLINE bool Timer::getMatchChannelLevel(const int channel) const
 {
     return (bool)(timer->EMR & (1 << channel));
 }

@@ -57,17 +57,17 @@ public:
     OneWireDS2482();
     explicit OneWireDS2482(uint8_t address);
 
-    uint8_t getAddress();
-    uint8_t getError();
+    uint8_t getAddress() const;
+    uint8_t getError() const;
     //uint8_t checkPresence();
 
     void deviceReset();
-    void setReadPointer(uint8_t readPointer);
-    uint8_t setReadPointerAndRead(uint8_t readPointer);
-    uint8_t readStatus();
-    uint8_t readData();
+    void setReadPointer(uint8_t readPointer) const;
+    uint8_t setReadPointerAndRead(uint8_t readPointer) const;
+    uint8_t readStatus() const;
+    uint8_t readData() const;
     uint8_t waitOnBusy();
-    uint8_t readConfig();
+    uint8_t readConfig() const;
     void writeConfig(uint8_t config);
     void setStrongPullup();
     void clearStrongPullup();
@@ -100,8 +100,8 @@ public:
 private:
     //void begin();
     //uint8_t end();
-    void writeByte(uint8_t);
-    void writeBytes(const uint8_t* data, uint8_t data_length);
+    void writeByte(uint8_t) const;
+    void writeBytes(const uint8_t* data, uint8_t data_length) const;
 
     bool activePullUpEnabled = false;
     uint8_t mAddress = 0x18; //!< Address is determined by two pins on the DS2482 AD1/AD0
