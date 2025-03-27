@@ -7,8 +7,8 @@
  *  it under the terms of the GNU General Public License version 3 as
  *  published by the Free Software Foundation.
  */
-#ifndef SBLIB_KNX_PROPERTIES_SYSTEMB_H
-#define SBLIB_KNX_PROPERTIES_SYSTEMB_H
+#ifndef SBLIB_KNX_PROPERTIES_SYSTEMB_H_
+#define SBLIB_KNX_PROPERTIES_SYSTEMB_H_
 
 #include <sblib/eib/propertiesMASK0701.h>
 
@@ -30,4 +30,4 @@ public:
 private:
     SYSTEMB* bcu;
 };
-#endif /* SBLIB_KNX_PROPERTIES_SYSTEMB_H */
+#endif /* SBLIB_KNX_PROPERTIES_SYSTEMB_H_ */

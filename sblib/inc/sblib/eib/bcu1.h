@@ -10,8 +10,8 @@
  *  it under the terms of the GNU General Public License version 3 as
  *  published by the Free Software Foundation.
  */
-#ifndef SBLIB_KNX_BCU1_H
-#define SBLIB_KNX_BCU1_H
+#ifndef SBLIB_KNX_BCU1_H_
+#define SBLIB_KNX_BCU1_H_
 
 #include <sblib/eib/bcu_default.h>
 #include <sblib/eib/userEepromBCU1.h>
@@ -46,4 +46,4 @@ public:
     uint16_t getMaskVersion() const override { return 0x12; }
 };
 
-#endif /* SBLIB_KNX_BCU1_H */
+#endif /* SBLIB_KNX_BCU1_H_ */

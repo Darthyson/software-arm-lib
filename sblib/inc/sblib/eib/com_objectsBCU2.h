@@ -29,8 +29,8 @@
  *  it under the terms of the GNU General Public License version 3 as
  *  published by the Free Software Foundation.
  */
-#ifndef SBLIB_KNX_COM_OBJECTS_BCU2_H
-#define SBLIB_KNX_COM_OBJECTS_BCU2_H
+#ifndef SBLIB_KNX_COM_OBJECTS_BCU2_H_
+#define SBLIB_KNX_COM_OBJECTS_BCU2_H_
 
 #include <sblib/eib/com_objectsBCU1.h>
 #include <sblib/eib/typesBCU2.h>
@@ -54,4 +54,4 @@ private:
     const ComConfigBCU2* objectConfigBCU2(int objno);
 };
 
-#endif /* SBLIB_KNX_COM_OBJECTS_BCU2_H */
+#endif /* SBLIB_KNX_COM_OBJECTS_BCU2_H_ */

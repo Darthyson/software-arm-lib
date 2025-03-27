@@ -7,8 +7,8 @@
  *  it under the terms of the GNU General Public License version 3 as
  *  published by the Free Software Foundation.
  */
-#ifndef SBLIB_KNX_ADDR_TABLES_H
-#define SBLIB_KNX_ADDR_TABLES_H
+#ifndef SBLIB_KNX_ADDR_TABLES_H_
+#define SBLIB_KNX_ADDR_TABLES_H_
 
 #include <cstdint>
 #include <sblib/types.h>
@@ -59,4 +59,4 @@ public:
     virtual uint16_t addrCount();
 };
 
-#endif /* SBLIB_KNX_ADDR_TABLES_H */
+#endif /* SBLIB_KNX_ADDR_TABLES_H_ */

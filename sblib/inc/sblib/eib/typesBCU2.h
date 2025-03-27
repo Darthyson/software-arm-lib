@@ -7,8 +7,8 @@
  *  it under the terms of the GNU General Public License version 3 as
  *  published by the Free Software Foundation.
  */
-#ifndef SBLIB_KNX_TYPES_BCU2_H
-#define SBLIB_KNX_TYPES_BCU2_H
+#ifndef SBLIB_KNX_TYPES_BCU2_H_
+#define SBLIB_KNX_TYPES_BCU2_H_
 
 #include <sblib/eib/types.h>
 
@@ -31,4 +31,4 @@ struct ComConfigBCU2
     ComConfig baseConfig;
 };
 
-#endif /* SBLIB_KNX_TYPES_BCU2_H */
+#endif /* SBLIB_KNX_TYPES_BCU2_H_ */

@@ -7,8 +7,8 @@
  *  it under the terms of the GNU General Public License version 3 as
  *  published by the Free Software Foundation.
  */
-#ifndef SBLIB_KNX_TYPES_MASK0705_H
-#define SBLIB_KNX_TYPES_MASK0705_H
+#ifndef SBLIB_KNX_TYPES_MASK0705_H_
+#define SBLIB_KNX_TYPES_MASK0705_H_
 
 #include <sblib/eib/typesMASK0701.h>
 
@@ -17,4 +17,4 @@
  */
 struct ComConfigMASK0705 : ComConfigMASK0701 {};
 
-#endif /* SBLIB_KNX_TYPES_MASK0705_H */
+#endif /* SBLIB_KNX_TYPES_MASK0705_H_ */

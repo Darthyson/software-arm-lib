@@ -1,5 +1,5 @@
-#ifndef SBLIB_KNX_USEREEPROM_MASK0705_H
-#define SBLIB_KNX_USEREEPROM_MASK0705_H
+#ifndef SBLIB_KNX_USEREEPROM_MASK0705_H_
+#define SBLIB_KNX_USEREEPROM_MASK0705_H_
 
 #include <sblib/eib/userEepromMASK0701.h>
 
@@ -16,4 +16,4 @@ protected:
     UserEepromMASK0705(const unsigned int start, const unsigned int size, const unsigned int flashSize) : UserEepromMASK0701(start, size, flashSize) {};
 };
 
-#endif /* SBLIB_KNX_USEREEPROM_MASK0705_H */
+#endif /* SBLIB_KNX_USEREEPROM_MASK0705_H_ */

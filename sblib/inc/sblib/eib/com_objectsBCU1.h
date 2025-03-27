@@ -29,8 +29,8 @@
  *  it under the terms of the GNU General Public License version 3 as
  *  published by the Free Software Foundation.
  */
-#ifndef SBLIB_KNX_COM_OBJECTS_BCU1_H
-#define SBLIB_KNX_COM_OBJECTS_BCU1_H
+#ifndef SBLIB_KNX_COM_OBJECTS_BCU1_H_
+#define SBLIB_KNX_COM_OBJECTS_BCU1_H_
 
 #include <sblib/eib/com_objects.h>
 #include <sblib/eib/typesBCU1.h>
@@ -58,4 +58,4 @@ public:
     const ComConfigBCU1* objectConfigBCU1(int objno); ///\todo make protected again after ramLocation fix, see setup.cpp fixRamLoc(.) of 4sense-bcu1
 };
 
-#endif /* SBLIB_KNX_COM_OBJECTS_BCU1_H */
+#endif /* SBLIB_KNX_COM_OBJECTS_BCU1_H_ */

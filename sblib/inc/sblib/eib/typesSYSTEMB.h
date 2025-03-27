@@ -7,8 +7,8 @@
  *  it under the terms of the GNU General Public License version 3 as
  *  published by the Free Software Foundation.
  */
-#ifndef SBLIB_KNX_TYPES_SYSTEMB_H
-#define SBLIB_KNX_TYPES_SYSTEMB_H
+#ifndef SBLIB_KNX_TYPES_SYSTEMB_H_
+#define SBLIB_KNX_TYPES_SYSTEMB_H_
 
 #include <sblib/eib/types.h>
 
@@ -20,4 +20,4 @@ struct ComConfigSYSTEMB
     ComConfig baseConfig;
 };
 
-#endif /* SBLIB_KNX_TYPES_SYSTEMB_H */
+#endif /* SBLIB_KNX_TYPES_SYSTEMB_H_ */

@@ -7,8 +7,8 @@
  *  it under the terms of the GNU General Public License version 3 as
  *  published by the Free Software Foundation.
  */
-#ifndef SBLIB_KNX_DATAPOINT_TYPES_H
-#define SBLIB_KNX_DATAPOINT_TYPES_H
+#ifndef SBLIB_KNX_DATAPOINT_TYPES_H_
+#define SBLIB_KNX_DATAPOINT_TYPES_H_
 
 
 /**
@@ -40,4 +40,4 @@ unsigned short floatToDpt9(int value);
 int dpt9ToFloat(unsigned short dptValue);
 
 
-#endif /* SBLIB_KNX_DATAPOINT_TYPES_H */
+#endif /* SBLIB_KNX_DATAPOINT_TYPES_H_ */
