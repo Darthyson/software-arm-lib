@@ -182,14 +182,13 @@ TEST_CASE("ioconPointer(port, pinNum)", "[platform]")
         REQUIRE(ioconPointer(PIO3, 5) == &_LPC_IOCON.PIO3_5);
     }
 
-    SECTION("Invalid port 3 pins 6-12")
+    SECTION("Invalid port 3 pins 6-11")
     {
-        // CHECK(ioconPointer(PIO3, 6) == nullptr);
-        // CHECK(ioconPointer(PIO3, 7) == nullptr);
-        // CHECK(ioconPointer(PIO3, 8) == nullptr);
-        // CHECK(ioconPointer(PIO3, 9) == nullptr);
-        // CHECK(ioconPointer(PIO3, 10) == nullptr);
-        // CHECK(ioconPointer(PIO3, 11) == nullptr);
-        // CHECK(ioconPointer(PIO3, 12) == nullptr);
+        REQUIRE(ioconPointer(PIO3, 6) == &_LPC_IOCON.RESERVED0[0]);
+        REQUIRE(ioconPointer(PIO3, 7) == &_LPC_IOCON.RESERVED0[0]);
+        REQUIRE(ioconPointer(PIO3, 8) == &_LPC_IOCON.RESERVED0[0]);
+        REQUIRE(ioconPointer(PIO3, 9) == &_LPC_IOCON.RESERVED0[0]);
+        REQUIRE(ioconPointer(PIO3, 10) == &_LPC_IOCON.RESERVED0[0]);
+        REQUIRE(ioconPointer(PIO3, 11) == &_LPC_IOCON.RESERVED0[0]);
     }
 }

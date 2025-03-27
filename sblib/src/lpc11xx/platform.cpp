@@ -18,7 +18,7 @@ LPC_GPIO_TypeDef* const gpioPorts[4] = { LPC_GPIO0, LPC_GPIO1, LPC_GPIO2, LPC_GP
 #define OFFSET_OF_IOCON(pin)  (offsetof(LPC_IOCON_TypeDef, pin) >> 2)
 
 // Offsets to IO configurations in the structure LPC_IOCON_TypeDef
-static constexpr uint16_t ioconOffsets[4][12] =
+static constexpr uint8_t ioconOffsets[4][12] =
 {
     {
         OFFSET_OF_IOCON(RESET_PIO0_0),
@@ -69,7 +69,12 @@ static constexpr uint16_t ioconOffsets[4][12] =
         OFFSET_OF_IOCON(PIO3_3),
         OFFSET_OF_IOCON(PIO3_4),
         OFFSET_OF_IOCON(PIO3_5),
-        0
+        OFFSET_OF_IOCON(RESERVED0), // No pin 6 on port 3
+        OFFSET_OF_IOCON(RESERVED0), // No pin 7 on port 3
+        OFFSET_OF_IOCON(RESERVED0), // No pin 8 on port 3
+        OFFSET_OF_IOCON(RESERVED0), // No pin 9 on port 3
+        OFFSET_OF_IOCON(RESERVED0), // No pin 10 on port 3
+        OFFSET_OF_IOCON(RESERVED0)  // No pin 11 on port 3
     }
 };
 
