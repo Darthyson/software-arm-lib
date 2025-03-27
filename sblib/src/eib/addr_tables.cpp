@@ -12,6 +12,6 @@
 
 uint16_t AddrTables::addrCount()
 {
-    byte* ptrAddrTable = addrTable();
+    const byte* ptrAddrTable = addrTable();
     return (*ptrAddrTable);
 }

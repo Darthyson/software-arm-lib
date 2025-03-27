@@ -69,7 +69,7 @@ static unsigned int analogPoll(const int channel)
 
 int analogRead(const int channel)
 {
-    unsigned int regVal = analogPoll(channel);
+    const unsigned int regVal = analogPoll(channel);
     // This bit is 1 if the result of one or more conversions was lost and
     // overwritten before the conversion that produced the result.
     if (regVal & ADC_OVERRUN)
@@ -80,7 +80,7 @@ int analogRead(const int channel)
 
 int analogValidRead(const int channel)
 {
-    unsigned int regVal = analogPoll(channel);
+    const unsigned int regVal = analogPoll(channel);
     // This bit is 1 if the result of one or more conversions was lost and
     // overwritten before the conversion that produced the result.
     if (regVal & ADC_OVERRUN)

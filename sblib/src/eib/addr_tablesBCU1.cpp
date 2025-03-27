@@ -16,8 +16,8 @@ int AddrTablesBCU1::indexOfAddr(const int addr)
         num = *tab;
     tab += 3;
 
-    int addrHigh = addr >> 8;
-    int addrLow = addr & 255;
+    const int addrHigh = addr >> 8;
+    const int addrLow = addr & 255;
 
     for (int i = 1; i <= num; ++i, tab += 2)
     {

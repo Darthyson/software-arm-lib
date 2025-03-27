@@ -26,14 +26,14 @@ bool MASK0701::processApciMemoryReadPDU(const int addressStart, byte* payLoad, c
     // See KNX Spec. 3/5/2 3.30.2 p.121  (deprecated)
     if (addressStart >= LOAD_STATE_ADDR && addressStart < LOAD_STATE_ADDR + INTERFACE_OBJECT_COUNT)
     {
-        unsigned int objectIdx = addressStart - LOAD_STATE_ADDR;
+        const unsigned int objectIdx = addressStart - LOAD_STATE_ADDR;
         //memcpy(payLoad, &userEeprom->loadState() + (addressStart - LOAD_STATE_ADDR), lengthPayLoad);
         memcpy(payLoad, &userEeprom->loadState()[objectIdx], lengthPayLoad);
         DB_MEM_OPS(serial.print(" LOAD_STATE_ADDR: 0x", addressStart, HEX); serial.print(", objIdx: ", objectIdx, DEC); serial.println(" *payLoad=0x", *payLoad, HEX, 2));
         DB_PROPERTIES(serial.print(" LOAD_STATE_ADDR: 0x", addressStart, HEX); serial.print(", objIdx: ", objectIdx, DEC); serial.println(" *payLoad=0x", *payLoad, HEX, 2));
         return true;
     }
-    bool result = BcuDefault::processApciMemoryReadPDU(addressStart, payLoad, lengthPayLoad);
+    const bool result = BcuDefault::processApciMemoryReadPDU(addressStart, payLoad, lengthPayLoad);
     return result;
 }
 
@@ -43,7 +43,7 @@ bool MASK0701::processApciMemoryWritePDU(const int addressStart, byte* payLoad, 
     // See KNX Spec. 3/5/2 3.28.2 p.109 (deprecated)
     if (addressStart == LOAD_CONTROL_ADDR)
     {
-        unsigned int objectIdx = payLoad[0] >> 4;
+        const unsigned int objectIdx = payLoad[0] >> 4;
         DB_PROPERTIES(serial.println(" LOAD_CONTROL_ADDR: objectIdx:", objectIdx, HEX));
         if (objectIdx < INTERFACE_OBJECT_COUNT)
         {

@@ -136,7 +136,7 @@ int Serial::write(byte ch)
         return 1;
     }
 
-    int writeTailNext = (writeTail + 1) & BufferedStream::BUFFER_SIZE_MASK;
+    const int writeTailNext = (writeTail + 1) & BufferedStream::BUFFER_SIZE_MASK;
 
     // Wait until the output buffer has space
     while (writeHead == writeTailNext)
@@ -178,8 +178,8 @@ int Serial::read()
         return -1;
     }
 
-    bool readFull = readBufferFull();
-    int ch = BufferedStream::read();
+    const bool readFull = readBufferFull();
+    const int ch = BufferedStream::read();
 
     if (readFull && (LPC_UART->LSR & LSR_RDR))
     {

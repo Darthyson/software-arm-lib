@@ -34,7 +34,7 @@ void delay(unsigned int msec)
     // otherwise "while" will end in an infinite loop
     if (isInsideInterrupt())
     {
-        unsigned int maxDelayMs = MAX_DELAY_MILLISECONDS;
+        constexpr unsigned int maxDelayMs = MAX_DELAY_MILLISECONDS;
         while (msec > maxDelayMs)
         {
             delayMicroseconds(maxDelayMs * 1000);
@@ -82,7 +82,7 @@ void delayMicroseconds(const unsigned int usec)
     {
         // don't use SysTick->CTRL COUNTFLAG, by reading and processing it
         // an undetected overflow can happen
-        uint16_t sysTickValue = SysTick->VAL; // use word access for SysTick register
+        const uint16_t sysTickValue = SysTick->VAL; // use word access for SysTick register
         int elapsed = lastSystemTickValue - sysTickValue;
         if (elapsed < 0)
         {
@@ -162,7 +162,7 @@ int Timer::matchMode(const int channel) const
 
 void Timer::captureMode(const int channel, const int mode)
 {
-    short offset = channel * 3;
+    const short offset = channel * 3;
 
     short val = (mode >> 6) & 3;
     if (mode & INTERRUPT)

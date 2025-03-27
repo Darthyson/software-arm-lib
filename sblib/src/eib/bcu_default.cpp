@@ -258,7 +258,7 @@ bool BcuDefault::processApciMemoryReadPDU(const int addressStart, byte* payLoad,
         serial.print(" count: ", lengthPayLoad, DEC);
     );
 
-    bool result = processApciMemoryOperation(addressStart, payLoad, lengthPayLoad, true);
+    const bool result = processApciMemoryOperation(addressStart, payLoad, lengthPayLoad, true);
 
     DB_MEM_OPS(
         if (result)
@@ -303,8 +303,8 @@ bool BcuDefault::processApciMemoryOperation(unsigned int addressStart, byte* pay
         // check if we have a memMapper and if payLoad is handled by it
         if (memMapper != nullptr)
         {
-            bool startFound = memMapper->isMapped(addressStart);
-            bool endFound = memMapper->isMapped(addressEnd);
+            const bool startFound = memMapper->isMapped(addressStart);
+            const bool endFound = memMapper->isMapped(addressEnd);
             if (startFound && endFound)
             {
                 // start & end fit into memMapper
@@ -560,7 +560,7 @@ bool BcuDefault::processApciMasterResetPDU(uint8_t* sendBuffer, const uint8_t er
     // See KNX spec 2.1 chapter 3/5/2 section 3.7.1.2.2 page 65:
     // "If the Management Server confirms the Master Reset negatively (Error Code != 00h), then it shall set the
     // Process Time to 0000h in the A_Restart_Response-PDU."
-    auto seconds = (errorCode == T_RESTART_NO_ERROR) ? 1 : 0; // 1 second or error
+    const auto seconds = (errorCode == T_RESTART_NO_ERROR) ? 1 : 0; // 1 second or error
 
     // create the APCI_MASTER_RESET_RESPONSE_PDU
     sendBuffer[5] = 0x60 + 4; // routing count in high nibble + response length in low nibble

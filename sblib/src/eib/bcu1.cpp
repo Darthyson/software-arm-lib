@@ -31,9 +31,9 @@ bool BCU1::applicationRunning() const
     if (!enabled)
         return false;
 
-    uint8_t status = userRam->status();
-    uint8_t runState = userRam->runState();
-    uint8_t runError = userEeprom->runError();
+    const uint8_t status = userRam->status();
+    const uint8_t runState = userRam->runState();
+    const uint8_t runError = userEeprom->runError();
     return (
         ((status & (BCU_STATUS_PROGRAMMING_MODE | BCU_STATUS_APPLICATION_LAYER)) == BCU_STATUS_APPLICATION_LAYER) &&
         (runState == 1) &&

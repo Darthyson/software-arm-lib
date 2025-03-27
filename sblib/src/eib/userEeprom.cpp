@@ -33,7 +33,7 @@ byte* UserEeprom::flashSectorAddress() const
 
 byte* UserEeprom::findValidPage()
 {
-    byte* firstPage = FLASH_BASE_ADDRESS + iapFlashSize() - FLASH_SECTOR_SIZE;
+    const byte* firstPage = FLASH_BASE_ADDRESS + iapFlashSize() - FLASH_SECTOR_SIZE;
     byte* page = lastEepromPage();
 
     while (page >= firstPage)
@@ -83,8 +83,8 @@ void UserEeprom::writeUserEeprom()
     if (page == flashSectorAddress())
     {
         // Erase the sector
-        int sectorId = iapSectorOfAddress(page);
-        IAP_Status rc = iapEraseSector(sectorId);
+        const int sectorId = iapSectorOfAddress(page);
+        const IAP_Status rc = iapEraseSector(sectorId);
         if (rc != IAP_SUCCESS)
         {
             fatalError(); // erasing failed

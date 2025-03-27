@@ -54,7 +54,7 @@ bool OneWire::OneWireReset()
 
     pinDisableInterrupt(this->pin);
     // note if the bus was low to start with
-    bool bHigh = digitalRead(this->pin);
+    const bool bHigh = digitalRead(this->pin);
     pinMode(this->pin, INPUT | PULL_UP);
 #if ONEWIRE_INTERNAL_PULLUP
     digitalWrite(this->pin, 1); // enable pull-up resistor
@@ -411,8 +411,8 @@ bool OneWire::OneWireSearch(uint8_t* newAddr)
     do
     {
         // loop to do the search
-        uint8_t id_bit = this->OneWireReadBit(); // read a bit and its complement
-        uint8_t cmp_id_bit = this->OneWireReadBit();
+        const uint8_t id_bit = this->OneWireReadBit(); // read a bit and its complement
+        const uint8_t cmp_id_bit = this->OneWireReadBit();
         if ((id_bit == 1) && (cmp_id_bit == 1))
             break; // check for no devices on 1-wire
         else
@@ -503,7 +503,7 @@ uint8_t OneWire::OneWireCRC8(const uint8_t* addr, uint8_t len)
         uint8_t inbyte = *addr++;
         for (uint8_t i = 8; i; i--)
         {
-            uint8_t mix = (crc ^ inbyte) & 0x01;
+            const uint8_t mix = (crc ^ inbyte) & 0x01;
             crc >>= 1;
             if (mix)
                 crc ^= 0x8C;

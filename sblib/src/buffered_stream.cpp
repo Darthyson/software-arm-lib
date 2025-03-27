@@ -16,7 +16,7 @@ int BufferedStream::read()
     if (readTail == readHead)
         return -1;
 
-    int ch = readBuffer[readHead];
+    const int ch = readBuffer[readHead];
 
     ++readHead;
     readHead &= BufferedStream::BUFFER_SIZE_MASK;

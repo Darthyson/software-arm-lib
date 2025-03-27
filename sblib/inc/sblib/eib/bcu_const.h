@@ -9,7 +9,7 @@
 
 #include <cstdint>
 
-const uint16_t TelegramBufferSize = 23; //!> TL4, Tx/Rx KNX telegram buffer size in bytes to allocate
+constexpr uint16_t TelegramBufferSize = 23; //!> TL4, Tx/Rx KNX telegram buffer size in bytes to allocate
 
 /**
  * BCU status bits for @ref status()

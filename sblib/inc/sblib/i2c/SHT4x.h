@@ -89,7 +89,7 @@ private:
      */
     static uint8_t crc8(const uint8_t* data, int len);
 
-    static const uint8_t eSHT4xAddress = 0x44;
+    static constexpr uint8_t eSHT4xAddress = 0x44;
 
 public:
     /**

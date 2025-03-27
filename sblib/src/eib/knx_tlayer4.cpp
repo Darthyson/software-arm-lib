@@ -118,7 +118,7 @@ void dumpState(const TLayer4::TL4State dumpState)
 void dumpTicks()
 {
     dump2(
-        uint32_t ticks = millis() - lastTick;
+        const uint32_t ticks = millis() - lastTick;
         serial.print(telegramCount, DEC, 6);
         serial.print(LOG_SEP);
         serial.print("t:", (unsigned int)ticks, DEC, 5);
@@ -269,8 +269,8 @@ void TLayer4::processTelegram(unsigned char* telegram, const uint8_t telLength)
 
 void TLayer4::processTelegramInternal(unsigned char* telegram, const uint8_t telLength)
 {
-    uint16_t destAddr = destinationAddress(telegram);
-    ApciCommand apciCmd = apciCommand(telegram);
+    const uint16_t destAddr = destinationAddress(telegram);
+    const ApciCommand apciCmd = apciCommand(telegram);
 
     if (destAddr == 0)
     {
@@ -292,7 +292,7 @@ void TLayer4::processTelegramInternal(unsigned char* telegram, const uint8_t tel
 
     ///\todo function to get tpciCommand in knx_tpdu.h
     unsigned char tpci = telegram[6] & 0xc3; //0b11000011 Transport control field (see KNX 3/3/4 p.6 TPDU)
-    uint16_t senderAddr = senderAddress(telegram);
+    const uint16_t senderAddr = senderAddress(telegram);
 
     dump2(telegramCount++;);
     dumpTelegramInfo(telegram, senderAddr, telegram[6], false, state);
@@ -547,7 +547,7 @@ bool TLayer4::processConControlAcknowledgmentPDU(const uint16_t senderAddr, cons
 
 void TLayer4::sendConControlTelegram(const TPDU cmd, const uint16_t address, const int8_t senderSeqNo)
 {
-    auto sendBuffer = acquireSendBuffer();
+    const auto sendBuffer = acquireSendBuffer();
 
     initLpdu(sendBuffer, PRIORITY_SYSTEM, false, FRAME_STANDARD); // connection control commands always in system priority
     // sender address will be set by bus.sendTelegram()
@@ -582,7 +582,7 @@ void TLayer4::sendPreparedTelegram()
 
 void TLayer4::sendPreparedConnectedTelegram()
 {
-    auto sendBuffer = acquireSendBuffer();
+    const auto sendBuffer = acquireSendBuffer();
     memcpy(sendBuffer, sendConnectedTelegram, telegramSize(sendConnectedTelegram));
     sendPreparedTelegram();
 }
@@ -604,8 +604,8 @@ void TLayer4::finishedSendingTelegram(const bool successful)
 {
     sendTelegramBufferState = TELEGRAM_FREE;
 
-    auto tpci = sendTelegram[6] & 0xc3;                                       //0b11000011 Transport control field (see KNX 3/3/4 p.6 TPDU)
-    auto isConnectionControlCommand = (tpci & T_CONNECTION_CTRL_COMMAND_Msk); // A connection control command
+    const auto tpci = sendTelegram[6] & 0xc3;                                       //0b11000011 Transport control field (see KNX 3/3/4 p.6 TPDU)
+    const auto isConnectionControlCommand = (tpci & T_CONNECTION_CTRL_COMMAND_Msk); // A connection control command
 
     if (isConnectionControlCommand)
     {
@@ -636,7 +636,7 @@ void TLayer4::processDirectTelegram(const ApciCommand apciCmd, unsigned char* te
     if (tpci == 0)
     {
         // T_Data_Individual-PDU: Allow implementations to overwrite fields (priority, destination)
-        auto sendBuffer = acquireSendBuffer();
+        const auto sendBuffer = acquireSendBuffer();
         initLpdu(sendBuffer, priority(telegram), false, FRAME_STANDARD); // same priority as received
         setDestinationAddress(sendBuffer, senderAddr);
         if (processApci(apciCmd, telegram, telLength, sendBuffer))
@@ -776,13 +776,13 @@ void TLayer4::actionA02sendAckPduAndProcessApci(const ApciCommand apciCmd, const
     // messages lingering in the buffer. The message will not be sent prematurely as the sending is
     // triggered in loop(), which can only execute after this function returns.
     *sendBufferState = TELEGRAM_ACQUIRED;
-    auto sendResponse = processApci(apciCmd, telegram, telLength, sendBuffer);
+    const auto sendResponse = processApci(apciCmd, telegram, telLength, sendBuffer);
     if (sendResponse)
     {
         ///\todo normally this has to be done in Layer 2
         initLpdu(sendBuffer, priority(telegram), false, FRAME_STANDARD); // same priority as received
         setDestinationAddress(sendBuffer, connectedAddr);
-        auto sequenceNumber = (sendBuffer == sendConnectedTelegram) ? seqNoSend : ((seqNoSend + 1) & 0x0F);
+        const auto sequenceNumber = (sendBuffer == sendConnectedTelegram) ? seqNoSend : ((seqNoSend + 1) & 0x0F);
         setSequenceNumber(sendBuffer, sequenceNumber);
     }
     else

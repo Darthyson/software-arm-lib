@@ -53,10 +53,10 @@ LoadState PropertiesSYSTEMB::handleAllocAbsDataSegment(const int objectIdx, cons
     // payLoad[6]    : memory attributes    (bit 0-6 reserved, bit 7=0: checksum control disabled
     // payLoad[7]    : reserved
     LoadState newLoadState = LS_ERROR;
-    unsigned int absDataSegmentStartAddress = makeWord(payLoad[0], payLoad[1]);
-    unsigned int absDataSegmentLength = makeWord(payLoad[2], payLoad[3]);
-    unsigned int absDataSegmentEndAddress = absDataSegmentStartAddress + absDataSegmentLength - 1;
-    MemoryType memType = MemoryType(payLoad[5] & 0x07); // take only bits 0..2
+    const unsigned int absDataSegmentStartAddress = makeWord(payLoad[0], payLoad[1]);
+    const unsigned int absDataSegmentLength = makeWord(payLoad[2], payLoad[3]);
+    const unsigned int absDataSegmentEndAddress = absDataSegmentStartAddress + absDataSegmentLength - 1;
+    const MemoryType memType = MemoryType(payLoad[5] & 0x07); // take only bits 0..2
 
     DB_PROPERTIES(
         serial.print("handleAllocAbsDataSegment only partly implemented! ");
@@ -151,13 +151,13 @@ LoadState PropertiesSYSTEMB::handleDataRelativeAllocation(const int objectIdx, c
         serial.println();
     );
 
-    unsigned int reqMemSize = ((payLoad[0] << 24) | (payLoad[1] << 16) | (payLoad[2] << 8) | payLoad[3]);
+    const unsigned int reqMemSize = ((payLoad[0] << 24) | (payLoad[1] << 16) | (payLoad[2] << 8) | payLoad[3]);
     word* tableAddress[] = {
         &bcu->userEeprom->addrTabAddr(), &bcu->userEeprom->assocTabAddr(), &bcu->userEeprom->commsTabAddr(),
         &bcu->userEeprom->eibObjAddr(), &bcu->userEeprom->commsSeg0Addr()
     };
 
-    UserEepromSYSTEMB* userEeprom = (UserEepromSYSTEMB*)bcu->userEeprom;
+    const UserEepromSYSTEMB* userEeprom = (UserEepromSYSTEMB*)bcu->userEeprom;
 
     byte* tableSize[] = {
         &userEeprom->addrTabMcb()[0], &userEeprom->assocTabMcb()[0], &userEeprom->commsTabMcb()[0],
@@ -181,7 +181,7 @@ LoadState PropertiesSYSTEMB::handleDataRelativeAllocation(const int objectIdx, c
     if (payLoad[4] > 0)
     {
         byte* physMemAddr = (byte*)(bcu->userEeprom->userEepromData + (virtMemAddr - bcu->userEeprom->startAddr()));
-        byte fillByte = payLoad[5];
+        const byte fillByte = payLoad[5];
         for (uint32_t i = 0; i < reqMemSize; i++)
             physMemAddr[i] = fillByte;
     }
@@ -225,21 +225,21 @@ int PropertiesSYSTEMB::loadProperty(const int objectIdx, const byte* data, int l
         return LS_ERROR;
     }
 
-    LoadState newLoadState = handleLoadStateMachine(objectIdx, data, len);
+    const LoadState newLoadState = handleLoadStateMachine(objectIdx, data, len);
 
     // When memory load is complete, calculate the crc 16 and store it in the mcb
     if (newLoadState == LS_LOADED)
     {
         const PropertyDef* def = propertyDef(objectIdx, PID_TABLE_REFERENCE);
-        byte* valuePtr = def->valuePointer(bcu);
-        uint16_t virtMemStart = ((valuePtr[1] << 8) + valuePtr[0]);
+        const byte* valuePtr = def->valuePointer(bcu);
+        const uint16_t virtMemStart = ((valuePtr[1] << 8) + valuePtr[0]);
         byte* memStart = (byte*)(bcu->userEeprom->userEepromData + (virtMemStart - bcu->userEeprom->startAddr()));
 
         def = propertyDef(objectIdx, PID_MCB_TABLE);
         byte* mcbPtr = def->valuePointer(bcu);
-        uint16_t memSize = (mcbPtr[2] << 8) + mcbPtr[3];
+        const uint16_t memSize = (mcbPtr[2] << 8) + mcbPtr[3];
 
-        uint16_t crc = crc16(memStart, memSize);
+        const uint16_t crc = crc16(memStart, memSize);
         mcbPtr[6] = (byte)(crc >> 8);
         mcbPtr[7] = (byte)crc;
 
@@ -266,10 +266,10 @@ int PropertiesSYSTEMB::loadProperty(const int objectIdx, const byte* data, int l
     //
     // Additional Load Control: LoadEvent: segmentType
     //
-    int segmentType = data[1]; // this is in both versions of DMP_LoadStateMachineWrite_RCo always the 2.octet
+    const int segmentType = data[1]; // this is in both versions of DMP_LoadStateMachineWrite_RCo always the 2.octet
 
     byte payloadOffset;
-    bool apciPropertyValueWrite = (len == DMP_LOADSTATE_MACHINE_WRITE_RCO_IO_LENGTH); // determine the realization type of DMP_LoadStateMachineWrite_RCo
+    const bool apciPropertyValueWrite = (len == DMP_LOADSTATE_MACHINE_WRITE_RCO_IO_LENGTH); // determine the realization type of DMP_LoadStateMachineWrite_RCo
     if (apciPropertyValueWrite)
         payloadOffset = DMP_LOADSTATE_MACHINE_WRITE_RCO_IO_PAYLOAD_OFFSET; // offset for RCo_IO mode, where the real data for Additional Load Controls starts
     else
@@ -314,11 +314,11 @@ bool PropertiesSYSTEMB::propertyValueReadTelegram(const int objectIdx, const Pro
     if (!def)
         return false; // not found
 
-    PropertyDataType type = (PropertyDataType)(def->control & PC_TYPE_MASK);
-    byte* valuePtr = def->valuePointer(bcu);
+    const PropertyDataType type = (PropertyDataType)(def->control & PC_TYPE_MASK);
+    const byte* valuePtr = def->valuePointer(bcu);
 
     --start;
-    int size = def->size();
+    const int size = def->size();
     int len = count * size;
     if (len > 12)
         return false; // length error
@@ -355,7 +355,7 @@ bool PropertiesSYSTEMB::propertyValueWriteTelegram(const int objectIdx, const Pr
         return false; // not writable
     }
 
-    PropertyDataType type = def->type();
+    const PropertyDataType type = def->type();
     byte* valuePtr = def->valuePointer(bcu);
 
     const byte* data = bcu->bus->telegram + 12;
@@ -364,7 +364,7 @@ bool PropertiesSYSTEMB::propertyValueWriteTelegram(const int objectIdx, const Pr
     if (type == PDT_CONTROL)
     {
         len = bcu->bus->telegramLen - 13;
-        int state = loadProperty(objectIdx, data, len);
+        const int state = loadProperty(objectIdx, data, len);
         bcu->userEeprom->loadState()[objectIdx] = state;
         sendBuffer[12] = state;
         len = 1;
@@ -372,7 +372,7 @@ bool PropertiesSYSTEMB::propertyValueWriteTelegram(const int objectIdx, const Pr
     else
     {
         --start;
-        int size = def->size();
+        const int size = def->size();
         len = count * size;
         DB_PROPERTIES(serial.print("propertyValueWriteTelegram: "); printObjectIdx(objectIdx); serial.print(" "); printPropertyID(propertyId); serial.println(););
         if (propertyId == PID_MCB_TABLE)

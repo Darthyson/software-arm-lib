@@ -52,7 +52,7 @@ bool DHT::readData(const bool bForceRead)
 {
     bool bRet = false;
     this->_lastError = ERROR_NONE;
-    int currenttime = millis();
+    const int currenttime = millis();
     if (!bForceRead && ((currenttime - this->_lastReadTime) < 2000))
     {
         this->_lastError = ERROR_TIMER_NOT_REACHED;
@@ -116,8 +116,8 @@ bool DHT::readData(const bool bForceRead)
         for (uint8_t i = 0; i < 40 && this->_lastError == ERROR_NONE; ++i)
         {
             // state cycle count), or 1 (high state cycle count > low state cycle count).
-            uint8_t lowCycles = cycles[2 * i];
-            uint8_t highCycles = cycles[2 * i + 1];
+            const uint8_t lowCycles = cycles[2 * i];
+            const uint8_t highCycles = cycles[2 * i + 1];
             if ((lowCycles == 0) || (highCycles == 0))
             {
                 this->_lastError = ERROR_DATA_TIMEOUT;
@@ -231,7 +231,7 @@ uint32_t DHT::expectPulse(const bool level)
 *****************************************************************************/
 float DHT::CalcdewPointFast(const float celsius, const float humidity)
 {
-    float temp = (17.271f * celsius) / (237.7f + celsius) + logf(humidity / 100.0f);
+    const float temp = (17.271f * celsius) / (237.7f + celsius) + logf(humidity / 100.0f);
     return ((237.7f * temp) / (17.271f - temp));
 }
 

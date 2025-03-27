@@ -24,13 +24,13 @@ public:
     UserRamBCU1() : UserRam(0, 0x100, 3) {}
 
 
-    static const uint32_t _runStateOffset = 0x61; ///\todo properties still need this to be public
+    static constexpr uint32_t _runStateOffset = 0x61; ///\todo properties still need this to be public
     /**
      * BCU 1 device control (address 0x62). See enum @ref DeviceControl
      */
-    static const uint32_t _deviceControlOffset = 0x62; ///\todo properties still need this to be public
-    static const uint32_t _peiTypeOffset = 0x63;       ///\todo properties still need this to be public
-    static const uint32_t _user2Offset = 0xC8;         ///\todo properties still need this to be public
+    static constexpr uint32_t _deviceControlOffset = 0x62; ///\todo properties still need this to be public
+    static constexpr uint32_t _peiTypeOffset = 0x63;       ///\todo properties still need this to be public
+    static constexpr uint32_t _user2Offset = 0xC8;         ///\todo properties still need this to be public
 
     uint8_t& deviceControl() const override { return userRamData[_deviceControlOffset]; }
     uint8_t& peiType() const override { return userRamData[_peiTypeOffset]; }
@@ -44,7 +44,7 @@ protected:
     /**
      * BCU 1 system status (address 0x60). See enum @ref BcuStatus
      */
-    static const uint32_t _statusOffset = 0x60; //!< this is questionable: "real status address 0x0100" ?? is it really?
+    static constexpr uint32_t _statusOffset = 0x60; //!< this is questionable: "real status address 0x0100" ?? is it really?
 
 
 #if 0

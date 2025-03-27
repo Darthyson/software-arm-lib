@@ -48,7 +48,7 @@ int Print::print(uintptr_t value, const Base base, int digits)
     byte* pos = buf + PRINTBUF_SIZE;
     do
     {
-        byte ch = value % b;
+        const byte ch = value % b;
         *--pos = (ch < 10 ? '0' : 'A' - 10) + ch;
 
         value /= b;
@@ -67,7 +67,7 @@ int Print::print(const char* str, const uintptr_t value, const Base base, const 
 
 int Print::print(const float value, int precision)
 {
-    int number = (int)value;
+    const int number = (int)value;
     float fraction = abs((float)(value - number));
     int wlen = print(number);
 

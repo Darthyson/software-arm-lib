@@ -47,8 +47,8 @@ public:
     const int userRamShadowSize = 3;
 
 private:
-    static const uint16_t LOAD_CONTROL_ADDR = 0x104; /** Address for load control */
-    static const uint16_t LOAD_STATE_ADDR = 0xb6e9;  /** Address for load state */
+    static constexpr uint16_t LOAD_CONTROL_ADDR = 0x104; /** Address for load control */
+    static constexpr uint16_t LOAD_STATE_ADDR = 0xb6e9;  /** Address for load state */
 };
 
 #endif /*sblib_mask0701_h*/

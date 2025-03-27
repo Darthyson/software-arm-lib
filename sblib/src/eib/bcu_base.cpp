@@ -146,7 +146,7 @@ bool BcuBase::processApci(const ApciCommand apciCmd, unsigned char* telegram, co
 
 void BcuBase::sendApciIndividualAddressReadResponse()
 {
-    auto sendBuffer = acquireSendBuffer();
+    const auto sendBuffer = acquireSendBuffer();
     initLpdu(sendBuffer, PRIORITY_SYSTEM, false, FRAME_STANDARD);
     // 1+2 contain the sender address, which is set by bus.sendTelegram()
     setDestinationAddress(sendBuffer, 0x0000); // Zero target address, it's a broadcast

@@ -50,7 +50,7 @@ enum eLastError
 class DHT
 {
 public:
-    static const uint32_t leadTime = 2000; // once every 2 seconds
+    static constexpr uint32_t leadTime = 2000; // once every 2 seconds
     float _lastTemperature, _lastHumidity;
     eLastError _lastError;
     uint8_t _DHTtype;

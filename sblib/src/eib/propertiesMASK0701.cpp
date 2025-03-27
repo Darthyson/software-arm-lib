@@ -53,10 +53,10 @@ LoadState PropertiesMASK0701::handleAllocAbsDataSegment(const int objectIdx, con
     // payLoad[6]    : memory attributes    (bit 0-6 reserved, bit 7=0: checksum control disabled
     // payLoad[7]    : reserved
     LoadState newLoadState = LS_ERROR;
-    unsigned int absDataSegmentStartAddress = makeWord(payLoad[0], payLoad[1]);
-    unsigned int absDataSegmentLength = makeWord(payLoad[2], payLoad[3]);
-    unsigned int absDataSegmentEndAddress = absDataSegmentStartAddress + absDataSegmentLength - 1;
-    MemoryType memType = MemoryType(payLoad[5] & 0x07); // take only bits 0..2
+    const unsigned int absDataSegmentStartAddress = makeWord(payLoad[0], payLoad[1]);
+    const unsigned int absDataSegmentLength = makeWord(payLoad[2], payLoad[3]);
+    const unsigned int absDataSegmentEndAddress = absDataSegmentStartAddress + absDataSegmentLength - 1;
+    const MemoryType memType = MemoryType(payLoad[5] & 0x07); // take only bits 0..2
 
     DB_PROPERTIES(
         serial.print("handleAllocAbsDataSegment only partly implemented! ");
@@ -157,7 +157,7 @@ LoadState PropertiesMASK0701::handleAllocAbsTaskSegment(const int objectIdx, con
         serial.flush();
     );
 
-    int addr = makeWord(payLoad[0], payLoad[1]);
+    const int addr = makeWord(payLoad[0], payLoad[1]);
     // addr is used for address table, association table and communication object table
     switch (objectIdx)
     {

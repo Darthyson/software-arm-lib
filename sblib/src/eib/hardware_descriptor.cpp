@@ -61,7 +61,7 @@ struct HardwareDescriptor
     uint32_t crc32;
 };
 
-__attribute__((used, section (".selfbus"), )) const HardwareDescriptor
+__attribute__((used, section (".selfbus"), )) constexpr HardwareDescriptor
 selfbusHardwareDescriptor =
 {
     .guid = 0xFEAFDEBA,

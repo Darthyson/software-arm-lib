@@ -61,7 +61,7 @@ void SHT1x::clockCycle()
 float SHT1x::convertRawTemperature(const float& temperature, const eScale type)
 {
     // Conversion coefficients from SHT1x datasheet
-    const float D1 = -39.7f; // @ 3.5V VDD (-39.6 @ 3.0V)
+    constexpr float D1 = -39.7f; // @ 3.5V VDD (-39.6 @ 3.0V)
     float D2 = 0.01f;        // default
     switch (type)
     {
@@ -115,12 +115,12 @@ bool SHT1x::readHumidity(float* humidity)
     // const float C2 =  0.0405f;    // for 12 Bit
     // const float C3 = -0.0000028f; // for 12 Bit
 
-    const float T1 = 0.01f;    // for 14 Bit @ 5V
-    const float T2 = 0.00008f; // for 14 Bit @ 5V
+    constexpr float T1 = 0.01f;    // for 14 Bit @ 5V
+    constexpr float T2 = 0.00008f; // for 14 Bit @ 5V
 
-    const float C1 = -2.0468f;    // for 12 Bit
-    const float C2 = 0.0367f;     // for 12 Bit
-    const float C3 = -1.5955E-6f; // for 12 Bit
+    constexpr float C1 = -2.0468f;    // for 12 Bit
+    constexpr float C2 = 0.0367f;     // for 12 Bit
+    constexpr float C3 = -1.5955E-6f; // for 12 Bit
 
     // Get current temperature for humidity correction
     if (!readTemperatureC(&temperatureC))
@@ -307,16 +307,16 @@ float SHT1x::GetDewPoint()
         return (INVALID_DEW_POINT);
     }
 
-    float temperature = getLastTemperature() / 100;
+    const float temperature = getLastTemperature() / 100;
 
     // Specify the constants for water vapor and barometric pressure.
 #define WATER_VAPOR 17.62f
 #define BAROMETRIC_PRESSURE 243.5f
 
     // Calculate the intermediate value 'gamma'
-    float gamma = logf(humidity / 100) + (WATER_VAPOR * temperature) / (BAROMETRIC_PRESSURE + temperature);
+    const float gamma = logf(humidity / 100) + (WATER_VAPOR * temperature) / (BAROMETRIC_PRESSURE + temperature);
     // Calculate dew point in Celsius
-    float dewPoint = BAROMETRIC_PRESSURE * gamma / (WATER_VAPOR - gamma);
+    const float dewPoint = BAROMETRIC_PRESSURE * gamma / (WATER_VAPOR - gamma);
 
     return dewPoint;
 }

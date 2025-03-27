@@ -622,7 +622,7 @@ ALWAYS_INLINE void Timer::pwmDisable(const int channel)
 
 ALWAYS_INLINE void Timer::matchModePinConfig(const int channel, const int mode)
 {
-    int offset = channel << 1;
+    const int offset = channel << 1;
     timer->EMR = (timer->EMR
                   & ~(0x30 << offset))
                  | ((mode & 0x30) << offset);

@@ -214,7 +214,7 @@ void Bus::sendTelegram(byte* telegram, const uint16_t length)
     sendCurTelegram = telegram;
 
     DB_TELEGRAM(
-        unsigned int t = ttimer.value();
+        const unsigned int t = ttimer.value();
         serial.print("QUE: (", t, DEC, 8); // queued to send
         serial.print(") ");
         for (uint16_t i = 0; i <= length; ++i)
@@ -375,7 +375,7 @@ void Bus::handleTelegram(const bool valid)
     if (nextByteIndex >= 8 && valid && ((rx_telegram[0] & VALID_DATA_FRAME_TYPE_MASK) == VALID_DATA_FRAME_TYPE_VALUE)
         && nextByteIndex <= TelegramBufferSize)
     {
-        int destAddr = (rx_telegram[3] << 8) | rx_telegram[4];
+        const int destAddr = (rx_telegram[3] << 8) | rx_telegram[4];
         bool processTel = false;
 
         // Only process the telegram if it is for us
@@ -486,7 +486,7 @@ void Bus::handleTelegram(const bool valid)
     else
     {
         // We received an acknowledgment frame, wrong checksum/parity or more than one byte but too short for a telegram
-        auto isAcknowledgeFrame = (nextByteIndex == 1) &&
+        const auto isAcknowledgeFrame = (nextByteIndex == 1) &&
                                   (currentByte == SB_BUS_ACK ||
                                    currentByte == SB_BUS_NACK ||
                                    currentByte == SB_BUS_BUSY ||
@@ -574,7 +574,7 @@ __attribute__((optimize("Os"))) void Bus::timerInterruptHandler()
     bool timeout;
     uint32_t time;
     unsigned int dt, tv, cv;
-    auto isCaptureEvent = timer.flag(captureChannel);
+    const auto isCaptureEvent = timer.flag(captureChannel);
 
     // debug processing takes about 7-8us
     tbint(state+8000, ttimer.value(), isCaptureEvent, timer.capture(captureChannel), timer.value(), timer.match(timeChannel), tb_in);
@@ -583,8 +583,8 @@ __attribute__((optimize("Os"))) void Bus::timerInterruptHandler()
     // not just a spike. Except it's us who are pulling down the bus, then this would be a waste of time.
     if (isCaptureEvent)
     {
-        auto captureValue = timer.capture(captureChannel);
-        auto matchValue = timer.match(timeChannel);
+        const auto captureValue = timer.capture(captureChannel);
+        const auto matchValue = timer.match(timeChannel);
 
         // If captureValue is >= timer.match(pwmChannel), then it's us pulling down the bus.
         if (captureValue < timer.match(pwmChannel))
@@ -604,8 +604,8 @@ __attribute__((optimize("Os"))) void Bus::timerInterruptHandler()
                 // would be 1.9us. Then captureValue is 1 (it's an integer) and we must ensure to wait until
                 // timerValue is 5 such that the real wait time is >=3us -- if we would only wait till 4, the
                 // real wait time would only be >=2us.
-                auto timerValue = timer.value();
-                auto elapsedMicroseconds = (timerValue >= captureValue) ? (timerValue - captureValue) : (matchValue + 1 - captureValue + timerValue);
+                const auto timerValue = timer.value();
+                const auto elapsedMicroseconds = (timerValue >= captureValue) ? (timerValue - captureValue) : (matchValue + 1 - captureValue + timerValue);
                 if (elapsedMicroseconds > ZERO_BIT_MIN_TIME)
                 {
                     break;
@@ -928,9 +928,9 @@ STATE_SWITCH:
                     time = PRE_SEND_TIME;
                 // KNX spec 2.1 chapter 3/2/2 section 2.3.4 p. 37: Guarantee of access fairness
                 // Add some random delay of up to 3 bit times if it is not the last try.
-                auto canRepeat = sendRetriesMax > 0 && sendBusyRetriesMax > 0;
-                auto isLastRepeatChance = repeatTelegram && (sendRetries + 1 >= sendRetriesMax || sendBusyRetries + 1 >= sendBusyRetriesMax);
-                auto isLastCollisionChance = collisions == COLLISION_RETRY_MAX;
+                const auto canRepeat = sendRetriesMax > 0 && sendBusyRetriesMax > 0;
+                const auto isLastRepeatChance = repeatTelegram && (sendRetries + 1 >= sendRetriesMax || sendBusyRetries + 1 >= sendBusyRetriesMax);
+                const auto isLastCollisionChance = collisions == COLLISION_RETRY_MAX;
                 if (canRepeat && !isLastRepeatChance && !isLastCollisionChance)
                 {
                     time += (millis() * RANDOMIZE_FACTOR) % RANDOMIZE_MODULUS;
@@ -980,8 +980,8 @@ STATE_SWITCH:
             // We will receive our own start bit here too.
             if (!timer.flag(timeChannel))
             {
-                auto captureTime = timer.capture(captureChannel);
-                auto pwmTime = timer.match(pwmChannel);
+                const auto captureTime = timer.capture(captureChannel);
+                const auto pwmTime = timer.match(pwmChannel);
 
                 // If it's too early, we can either ignore it or switch to RX. Obviously, ignoring
                 // actually means to lose a telegram (which would need to be repeated by the sender
@@ -1089,7 +1089,7 @@ STATE_SWITCH:
                  * next bit start window is in 69us, and the n-bit low pulse starts at n*104 - 35us and ends at n*104 -> check for edge window: the high phase
                  * of the last bit : 69us - margin till 69us before next falling edge at pwmChannel time + margin
                  */
-                auto captureTime = timer.capture(captureChannel);
+                const auto captureTime = timer.capture(captureChannel);
 
                 if (captureTime < REFLECTION_IGNORE_DELAY)
                 {
@@ -1153,7 +1153,7 @@ STATE_SWITCH:
                         // Copy all bytes we transmitted without collision over to the receive buffer and update checksum accordingly.
                         for (auto i = 0; i < nextByteIndex; i++)
                         {
-                            auto b = sendCurTelegram[i];
+                            const auto b = sendCurTelegram[i];
                             rx_telegram[i] = b;
                             checksum ^= b;
                         }
@@ -1163,7 +1163,7 @@ STATE_SWITCH:
                     // the next falling edge, captureTime when we received it. Unfortunately, pwmChannel can
                     // be 0xffff in case there are no 0 bits left to send. Thus, use (timeChannel - BIT_PULSE_TIME)
                     // instead. BIT_OFFSET_MAX is to account for slight timing differences and integer arithmetic.
-                    auto collisionBitCount = (timer.match(timeChannel) - captureTime + (BIT_OFFSET_MAX - BIT_PULSE_TIME)) / BIT_TIME;
+                    const auto collisionBitCount = (timer.match(timeChannel) - captureTime + (BIT_OFFSET_MAX - BIT_PULSE_TIME)) / BIT_TIME;
                     bitMask >>= collisionBitCount + 1;
 
                     // Pretend that we also received a 0 bit last time, such that there is no need to set any

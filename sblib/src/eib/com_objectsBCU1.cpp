@@ -19,7 +19,7 @@ int ComObjectsBCU1::objectSize(const int objno)
     // The size of the object types BIT_7...VARDATA in bytes
     const byte objectTypeSizes[10] = {1, 1, 2, 3, 4, 6, 8, 10, 14, 14};
 
-    int type = objectType(objno);
+    const int type = objectType(objno);
     if (type < BIT_7)
         return 1;
     if (type <= VARDATA)
@@ -101,7 +101,7 @@ void ComObjectsBCU1::processGroupTelegram(const uint16_t addr, const int apci, b
             continue;
         }
         // We found an association for our addr
-        int objno = assocTab[idx + 1]; // Get the com-object number from the assoc table
+        const int objno = assocTab[idx + 1]; // Get the com-object number from the assoc table
         DB_COM_OBJ(serial.println("objno  : ", objno););
 
         if (objno == trg_objno)
@@ -111,7 +111,7 @@ void ComObjectsBCU1::processGroupTelegram(const uint16_t addr, const int apci, b
         }
 
         //DB_COM_OBJ(serial.println("commsTabAddr: 0x", ((UserEepromBCU1*)((BcuDefault*)bcu)->userEeprom)->commsTabAddr(), HEX););
-        uint8_t objConf = objectConfig(objno).config;
+        const uint8_t objConf = objectConfig(objno).config;
         DB_COM_OBJ(serial.println("objConf: 0x", objConf, HEX, 2););
 
         if ((objConf & COMCONF_COMM) != COMCONF_COMM)
@@ -162,7 +162,7 @@ byte* ComObjectsBCU1::objectConfigTable() // stored in eeprom
 
 byte* ComObjectsBCU1::objectFlagsTable() // stored in RAM
 {
-    uint8_t* objCfgTablePtr = objectConfigTable();
+    const uint8_t* objCfgTablePtr = objectConfigTable();
     if (objCfgTablePtr == 0)
     {
         return (nullptr);
@@ -175,7 +175,7 @@ inline const ComConfig& ComObjectsBCU1::objectConfig(const int objno) { return o
 
 inline const ComConfigBCU1* ComObjectsBCU1::objectConfigBCU1(const int objno)
 {
-    byte* objConfigTable = objectConfigTable();
+    const byte* objConfigTable = objectConfigTable();
     if (objConfigTable == nullptr)
     {
         return (nullptr);

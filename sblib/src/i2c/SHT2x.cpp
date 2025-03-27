@@ -96,20 +96,20 @@ int SHT2xClass::GetTemperature(void)
 
 float SHT2xClass::GetDewPoint(void)
 {
-    float humidity = GetHumidity();
-    float temperature = GetTemperature();
+    const float humidity = GetHumidity();
+    const float temperature = GetTemperature();
 
     // Calculate the intermediate value 'gamma'
-    float gamma = logf(humidity / 100) + WATER_VAPOR * temperature / (BAROMETRIC_PRESSURE + temperature);
+    const float gamma = logf(humidity / 100) + WATER_VAPOR * temperature / (BAROMETRIC_PRESSURE + temperature);
     // Calculate dew point in Celsius
-    float dewPoint = BAROMETRIC_PRESSURE * gamma / (WATER_VAPOR - gamma);
+    const float dewPoint = BAROMETRIC_PRESSURE * gamma / (WATER_VAPOR - gamma);
 
     return dewPoint;
 }
 
 uint16_t SHT2xClass::readSensor(const uint8_t command)
 {
-    uint32_t timeout = millis() + 300; // 300ms timeout for I2C communication
+    const uint32_t timeout = millis() + 300; // 300ms timeout for I2C communication
 
     if (!initialized)
     {

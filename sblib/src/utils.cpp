@@ -72,8 +72,8 @@ void setKNX_TX_Pin(const int newTxPin)
 
 int hashUID(byte* uid, const int len_uid, byte* hash, const int len_hash)
 {
-    const int MAX_HASH_WIDE = 16;
-    uint64_t BigPrime48 = 281474976710597u; // FF FF FF FF FF C5
+    constexpr int MAX_HASH_WIDE = 16;
+    constexpr uint64_t BigPrime48 = 281474976710597u; // FF FF FF FF FF C5
     uint64_t a, b;
 
     if ((len_uid <= 0) || (len_uid > MAX_HASH_WIDE)) // maximum of 16 bytes can be hashed by this function
@@ -81,7 +81,7 @@ int hashUID(byte* uid, const int len_uid, byte* hash, const int len_hash)
     if ((len_hash <= 0) || (len_hash > len_uid))
         return 0;
 
-    unsigned int mid = len_uid / 2;
+    const unsigned int mid = len_uid / 2;
     memcpy(&a, &uid[0], mid);             // copy first half of uid-bytes to a
     memcpy(&b, &uid[mid], len_uid - mid); // copy second half of uid-bytes to b
 

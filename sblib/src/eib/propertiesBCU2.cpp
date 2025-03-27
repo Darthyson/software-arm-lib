@@ -156,7 +156,7 @@ LoadState PropertiesBCU2::handleAllocAbsTaskSegment(const int objectIdx, const b
         serial.println(" Vers.: 0x", payLoad[7], HEX, 2);
     );
 
-    int addr = makeWord(payLoad[0], payLoad[1]);
+    const int addr = makeWord(payLoad[0], payLoad[1]);
     // addr is used for address table, association table and communication object table
     switch (objectIdx)
     {
@@ -236,10 +236,10 @@ LoadState PropertiesBCU2::handleAllocAbsDataSegment(const int objectIdx, const b
     // payLoad[6]    : memory attributes    (bit 0-6 reserved, bit 7=0: checksum control disabled
     // payLoad[7]    : reserved
     LoadState newLoadState = LS_ERROR;
-    unsigned int absDataSegmentStartAddress = makeWord(payLoad[0], payLoad[1]);
-    unsigned int absDataSegmentLength = makeWord(payLoad[2], payLoad[3]);
-    unsigned int absDataSegmentEndAddress = absDataSegmentStartAddress + absDataSegmentLength - 1;
-    MemoryType memType = MemoryType(payLoad[5] & 0x07); // take only bits 0..2
+    const unsigned int absDataSegmentStartAddress = makeWord(payLoad[0], payLoad[1]);
+    const unsigned int absDataSegmentLength = makeWord(payLoad[2], payLoad[3]);
+    const unsigned int absDataSegmentEndAddress = absDataSegmentStartAddress + absDataSegmentLength - 1;
+    const MemoryType memType = MemoryType(payLoad[5] & 0x07); // take only bits 0..2
 
     DB_PROPERTIES(
         serial.print("handleAllocAbsDataSegment only partly implemented! ");
@@ -433,7 +433,7 @@ LoadState PropertiesBCU2::handleTaskCtrl2(const int objectIdx, const byte* payLo
     // payLoad[4..5] : CommObjSegPtr1 (1111h)
     // payLoad[6..7] : CommObjSegPtr2 (2222h)
 
-    word addr = makeWord(payLoad[2], payLoad[3]);
+    const word addr = makeWord(payLoad[2], payLoad[3]);
     // we need this newAddress workaround, see comment @void BcuBase::begin(...) in bcu_base.h
     word newAddress = bcu->getCommObjectTableAddressStatic();
     if (newAddress == 0) // set newAddress, in case bcu doesn't provide a read-only address
@@ -556,7 +556,7 @@ int PropertiesBCU2::loadProperty(const int objectIdx, const byte* data, int len)
     //
     // Additional Load Control: LoadEvent: segmentType
     //
-    int segmentType = data[1]; // this is in both versions of DMP_LoadStateMachineWrite_RCo always the 2.octet
+    const int segmentType = data[1]; // this is in both versions of DMP_LoadStateMachineWrite_RCo always the 2.octet
 
     byte payloadOffset;
     bool apciPropertyValueWrite = (len == DMP_LOADSTATE_MACHINE_WRITE_RCO_IO_LENGTH); // determine the realization type of DMP_LoadStateMachineWrite_RCo
@@ -610,12 +610,12 @@ bool PropertiesBCU2::propertyValueReadTelegram(const int objectIdx, const Proper
     if (!def)
         return false; // not found
 
-    PropertyDataType type = (PropertyDataType)(def->control & PC_TYPE_MASK);
-    byte* valuePtr = def->valuePointer(bcu);
+    const PropertyDataType type = (PropertyDataType)(def->control & PC_TYPE_MASK);
+    const byte* valuePtr = def->valuePointer(bcu);
 
     --start;
-    int size = def->size();
-    int len = count * size;
+    const int size = def->size();
+    const int len = count * size;
     if (len > 10)
         return false; // length error
 
@@ -645,7 +645,7 @@ bool PropertiesBCU2::propertyValueWriteTelegram(const int objectIdx, const Prope
         return false; // not writable
     }
 
-    PropertyDataType type = def->type();
+    const PropertyDataType type = def->type();
     byte* valuePtr = def->valuePointer(bcu);
 
     const byte* data = bcu->bus->telegram + 12;
@@ -653,7 +653,7 @@ bool PropertiesBCU2::propertyValueWriteTelegram(const int objectIdx, const Prope
     if (type == PDT_CONTROL)
     {
         len = bcu->bus->telegramLen - 13;
-        int state = loadProperty(objectIdx, data, len);
+        const int state = loadProperty(objectIdx, data, len);
         bcu->userEeprom->loadState()[objectIdx] = state;
         sendBuffer[12] = state;
         len = 1;
@@ -661,7 +661,7 @@ bool PropertiesBCU2::propertyValueWriteTelegram(const int objectIdx, const Prope
     else
     {
         --start;
-        int size = def->size();
+        const int size = def->size();
         len = count * size;
         DB_PROPERTIES(serial.print("propertyValueWriteTelegram: "); printObjectIdx(objectIdx); serial.print(" "); printPropertyID(propertyId);serial.println(););
         reverseCopy(valuePtr + start * size, data, len);

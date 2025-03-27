@@ -145,8 +145,8 @@ IAP_Status iapErasePage(const unsigned int pageNumber)
 
 IAP_Status iapErasePageRange(const unsigned int startPageNumber, const unsigned int endPageNumber)
 {
-    unsigned int startSector = startPageNumber / (FLASH_SECTOR_SIZE / FLASH_PAGE_SIZE); // each sector has 16 pages
-    unsigned int endSector = endPageNumber / (FLASH_SECTOR_SIZE / FLASH_PAGE_SIZE);     // each sector has 16 pages
+    const unsigned int startSector = startPageNumber / (FLASH_SECTOR_SIZE / FLASH_PAGE_SIZE); // each sector has 16 pages
+    const unsigned int endSector = endPageNumber / (FLASH_SECTOR_SIZE / FLASH_PAGE_SIZE);     // each sector has 16 pages
     IAP_Parameter p;
 
     p.stat = _prepareSectorRange(startSector, endSector); // even not mentioned in manual, this prepare is needed
@@ -168,8 +168,8 @@ IAP_Status iapProgram(uint8_t* rom, const uint8_t* ram, const unsigned int size)
     // Use '__attribute__ ((aligned (FLASH_PAGE_ALIGNMENT)))' to force correct alignment even with compiler optimization -Ox
 
     IAP_Parameter p;
-    uint32_t startSector = iapSectorOfAddress(rom);
-    uint32_t endSector = iapSectorOfAddress(rom + size - 1);
+    const uint32_t startSector = iapSectorOfAddress(rom);
+    const uint32_t endSector = iapSectorOfAddress(rom + size - 1);
 
     // in order to access flash we need to disable all interrupts
     noInterrupts();
@@ -256,9 +256,9 @@ unsigned int iapFlashSize()
     IAP_Parameter p;
     p.cmd = CMD_BLANK_CHECK;
 
-    const int sectorInc = FLASH_SIZE_SEARCH_INC / FLASH_SECTOR_SIZE;
+    constexpr int sectorInc = FLASH_SIZE_SEARCH_INC / FLASH_SECTOR_SIZE;
     unsigned int sector = sectorInc;
-    const int maxSector = MAX_FLASH_SIZE / FLASH_SECTOR_SIZE;
+    constexpr int maxSector = MAX_FLASH_SIZE / FLASH_SECTOR_SIZE;
 
     while (sector < maxSector)
     {

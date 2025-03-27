@@ -169,7 +169,7 @@ uint8_t OneWireDS2482::wireReset() {
     writeByte(DS2482_COMMAND_RESETWIRE);
     //end();
 
-    uint8_t status = waitOnBusy();
+    const uint8_t status = waitOnBusy();
 
     if (status & DS2482_STATUS_SD) {
         mError = DS2482_ERROR_SHORT;
@@ -230,7 +230,7 @@ void OneWireDS2482::wireWriteBit(const uint8_t data, const uint8_t power) {
 // As wireWriteBit
 uint8_t OneWireDS2482::wireReadBit() {
     wireWriteBit(1);
-    uint8_t status = waitOnBusy();
+    const uint8_t status = waitOnBusy();
     return status & DS2482_STATUS_SBR ? 1 : 0;
 }
 
@@ -286,8 +286,8 @@ uint8_t OneWireDS2482::wireSearch(uint8_t *address) {
     wireWriteByte(WIRE_COMMAND_SEARCH);
 
     for (uint8_t i = 0; i < 64; i++) {
-        int searchByte = i / 8;
-        int searchBit = 1 << i % 8;
+        const int searchByte = i / 8;
+        const int searchBit = 1 << i % 8;
 
         if (i < searchLastDiscrepancy)
             direction = searchAddress[searchByte] & searchBit;
@@ -297,10 +297,10 @@ uint8_t OneWireDS2482::wireSearch(uint8_t *address) {
         waitOnBusy();
         wireWriteCmdAndData(DS2482_COMMAND_TRIPLET, direction ? 0x80 : 0x00);
 
-        uint8_t status = waitOnBusy();
+        const uint8_t status = waitOnBusy();
 
-        uint8_t id = status & DS2482_STATUS_SBR;
-        uint8_t comp_id = status & DS2482_STATUS_TSB;
+        const uint8_t id = status & DS2482_STATUS_SBR;
+        const uint8_t comp_id = status & DS2482_STATUS_TSB;
         direction = status & DS2482_STATUS_DIR;
 
         if (id && comp_id) {

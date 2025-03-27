@@ -264,7 +264,7 @@ void ComObjects::setObjectFlags(const int objno, const int flags)
 unsigned int ComObjects::objectRead(const int objno)
 {
     int sz = objectSize(objno);
-    byte* ptr = objectValuePtr(objno) + sz;
+    const byte* ptr = objectValuePtr(objno) + sz;
     unsigned int value = *--ptr;
 
     while (--sz > 0)
@@ -321,8 +321,8 @@ inline int ComObjects::objectCount()
 
 int ComObjects::firstObjectAddr(const int objno)
 {
-    byte* assocTab = bcu->addrTables->assocTable();
-    byte* assocTabEnd = assocTab + (*assocTab << 1);
+    const byte* assocTab = bcu->addrTables->assocTable();
+    const byte* assocTabEnd = assocTab + (*assocTab << 1);
 
     for (++assocTab; assocTab < assocTabEnd; assocTab += 2)
     {
@@ -337,7 +337,7 @@ int ComObjects::firstObjectAddr(const int objno)
             continue;
         }
 
-        byte* addr = bcu->addrTables->addrTable() + 1 + (assocTab[0] << 1);
+        const byte* addr = bcu->addrTables->addrTable() + 1 + (assocTab[0] << 1);
         return ((addr[0] << 8) | addr[1]);
     }
     return (0);
@@ -345,7 +345,7 @@ int ComObjects::firstObjectAddr(const int objno)
 
 void ComObjects::sendGroupReadTelegram(const int objno, const int addr)
 {
-    auto sendBuffer = bcu->acquireSendBuffer();
+    const auto sendBuffer = bcu->acquireSendBuffer();
     ///\todo Set routing count and priority according to the parameters set from ETS in the EEPROM, add ID/objno for result association from bus-layer
     // check of spec 3.7.4. : no additional search for associations to Grp Addr for local read and possible response
     initLpdu(sendBuffer, PRIORITY_LOW, false, FRAME_STANDARD);
@@ -358,12 +358,12 @@ void ComObjects::sendGroupReadTelegram(const int objno, const int addr)
 
 void ComObjects::sendGroupWriteTelegram(const int objno, const int addr, const bool isResponse)
 {
-    byte* valuePtr = objectValuePtr(objno);
-    int objSize = telegramObjectSize(objno);
+    const byte* valuePtr = objectValuePtr(objno);
+    const int objSize = telegramObjectSize(objno);
     byte addData = 0;
     ApciCommand cmd;
 
-    auto sendBuffer = bcu->acquireSendBuffer();
+    const auto sendBuffer = bcu->acquireSendBuffer();
     ///\todo Set routing count and priority according to the parameters set from ETS in the EEPROM, add ID/objno for result association from bus-layer
     initLpdu(sendBuffer, PRIORITY_LOW, false, FRAME_STANDARD);
     setDestinationAddress(sendBuffer, addr);
@@ -393,7 +393,7 @@ bool ComObjects::sendNextGroupTelegram()
         return (false);
     }
 
-    uint16_t numObjs = objectCount();
+    const uint16_t numObjs = objectCount();
     if (numObjs == 0)
     {
         return (false);
@@ -446,8 +446,8 @@ bool ComObjects::sendNextGroupTelegram()
                 Type Octet  // high mem
         */
         const ComConfig& configTab = objectConfig(objno);
-        uint16_t config = configTab.config;
-        uint16_t addr = firstObjectAddr(objno);
+        const uint16_t config = configTab.config;
+        const uint16_t addr = firstObjectAddr(objno);
 
         // check if <transmit enable> and <communication enable> is set in the config for the resp. object.
         if ((addr == 0) || !(config & COMCONF_COMM) || !(config & COMCONF_TRANS))
@@ -497,7 +497,7 @@ int ComObjects::nextUpdatedObject()
         return (INVALID_OBJECT_NUMBER);
     }
 
-    uint16_t numObjs = objectCount();
+    const uint16_t numObjs = objectCount();
 
     if (numObjs == 0)
     {

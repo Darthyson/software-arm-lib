@@ -46,7 +46,7 @@ int Stream::_readBytesUntil(const int terminator, char* buffer, const int length
     int count;
     for (count = 0; count < length; ++count)
     {
-        int ch = timedRead();
+        const int ch = timedRead();
         if (ch < 0 || ch == terminator)
             break;
 
@@ -89,7 +89,7 @@ bool Stream::findUntil(const char* target, const int targetLen, const char* term
 
 int Stream::timedRead()
 {
-    int start = millis();
+    const int start = millis();
     int ch = -1;
 
     while (ch < 0 && elapsed(start) < timeout)
@@ -102,7 +102,7 @@ int Stream::timedRead()
 
 int Stream::timedPeek()
 {
-    int start = millis();
+    const int start = millis();
     int ch = -1;
 
     while (ch < 0 && elapsed(start) < timeout)

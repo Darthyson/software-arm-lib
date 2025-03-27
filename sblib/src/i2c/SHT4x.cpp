@@ -51,7 +51,7 @@ bool SHT4xClass::init(void)
 {
     i2c_lpcopen_init();
 
-    bool initialized = writeCommand(Sht4xCommand::softReset);
+    const bool initialized = writeCommand(Sht4xCommand::softReset);
     delay(1);
     return initialized;
 }
@@ -149,7 +149,7 @@ uint32_t SHT4xClass::getSerialnumber(void)
  ******************************************************************************/
 bool SHT4xClass::writeCommand(Sht4xCommand command)
 {
-    uint8_t cmd = (uint8_t)command;
+    const uint8_t cmd = (uint8_t)command;
 
     return Chip_I2C_MasterSend(I2C0, eSHT4xAddress, &cmd, sizeof(cmd)) == sizeof(cmd);
 }
@@ -170,7 +170,7 @@ bool SHT4xClass::readSensor(const Sht4xCommand command, uint8_t* buffer, uint8_t
         return false;
     }
 
-    uint32_t timeout = millis() + 300; // 300ms timeout for I2C communication
+    const uint32_t timeout = millis() + 300; // 300ms timeout for I2C communication
     // loop to receive measurement result within the timeout period
     do
     {

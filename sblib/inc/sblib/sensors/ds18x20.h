@@ -68,7 +68,7 @@ public:
     //  DS18B20 11 bit = 375ms (0.125deg) / 8
     //  DS18B20 10 bit = 187.5ms (0.25deg) / 4
     //  DS18B20 9 bit = 93.75ms (0.5deg) / 2
-    static const uint32_t leadTime = 750 + 50; // just in case
+    static constexpr uint32_t leadTime = 750 + 50; // just in case
     uint8_t m_foundDevices;                    // Number of found devices
     sDS18x20 m_dsDev[MAX_DS_DEVICES];          // Object list and informations of the found devices
 

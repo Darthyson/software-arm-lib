@@ -25,8 +25,8 @@ byte* ComObjectsBCU2::objectValuePtr(const int objno)
 
 byte* ComObjectsBCU2::objectConfigTable()
 {
-    byte* addr = (byte*) &((BCU2*)bcu)->userEeprom->commsTabAddr();
-    uint16_t comObjTableAddr = makeWord(*(addr + 1), *addr);
+    const byte* addr = (byte*) &((BCU2*)bcu)->userEeprom->commsTabAddr();
+    const uint16_t comObjTableAddr = makeWord(*(addr + 1), *addr);
     return ((BcuDefault*)bcu)->userMemoryPtr(comObjTableAddr);
 }
 
@@ -53,7 +53,7 @@ const ComConfigBCU2* ComObjectsBCU2::objectConfigBCU2(const int objno)
     {
         return (nullptr);
     }
-    uint16_t offSet = 1 + sizeof(ComConfigBCU2::DataPtrType) + objno * sizeof(ComConfigBCU2);
+    const uint16_t offSet = 1 + sizeof(ComConfigBCU2::DataPtrType) + objno * sizeof(ComConfigBCU2);
     return (const ComConfigBCU2*) (configTable + offSet);
 }
 

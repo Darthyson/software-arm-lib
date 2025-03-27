@@ -17,7 +17,7 @@ int ComObjectsSYSTEMB::objectSize(const int objno)
     // The size of the object types 6...20 in bytes
     const byte objectTypeSizes[15] = {1, 1, 2, 3, 4, 6, 8, 10, 14, 5, 7, 9, 11, 12, 13};
 
-    int type = objectType(objno);
+    const int type = objectType(objno);
     if (type < BIT_7)
         return 1;
     if (type < 21)
@@ -99,7 +99,7 @@ void ComObjectsSYSTEMB::processGroupTelegram(const uint16_t addr, const int apci
 
 byte* ComObjectsSYSTEMB::objectConfigTable()
 {
-    byte* addr = (byte*) &((SYSTEMB*)bcu)->userEeprom->commsTabAddr();
+    const byte* addr = (byte*) &((SYSTEMB*)bcu)->userEeprom->commsTabAddr();
     return ((BcuDefault*)bcu)->userMemoryPtr(makeWord(*(addr + 1), *addr));
 }
 

@@ -235,8 +235,8 @@ void dumpShortAcknowledgeFrameTiming(int delta)
 
 void dumpFrameTiming(int delta)
 {
-    auto prio = priority(const_cast<unsigned char *>(telBuffer));
-    auto isRepetition = isRepeated(const_cast<unsigned char *>(telBuffer));
+    const auto prio = priority(const_cast<unsigned char *>(telBuffer));
+    const auto isRepetition = isRepeated(const_cast<unsigned char *>(telBuffer));
     if (prio == PRIORITY_SYSTEM || prio == PRIORITY_ALARM || isRepetition)
         delta -= BIT_TIMES_DELAY(50);
     else
@@ -248,7 +248,7 @@ void dumpFrameTiming(int delta)
         serial.print(" ", delta);
         if (telLength >= 3)
         {
-            uint16_t senderAddr = makeWord(telBuffer[1], telBuffer[2]);
+            const uint16_t senderAddr = makeWord(telBuffer[1], telBuffer[2]);
             serial.print(" (");
             dumpKNXAddress(senderAddr);
             serial.print(")");
@@ -265,7 +265,7 @@ void dumpRXTelegram()
     // Cache telRXStartTime, because the next telegram might start before we're done logging the last one.
     // Does not apply to end times, because if these get overwritten before we log them, then all logged
     // telegram content is wrong as well.
-    auto startTime = telRXStartTime;
+    const auto startTime = telRXStartTime;
 
     serial.print("RX : (S", startTime, DEC, 10);
     serial.print(" E", telRXEndTime, DEC, 10);
@@ -393,7 +393,7 @@ void debugBus()
         tv= td_b[tb_out].ttv;
         cv= td_b[tb_out].tcv;
         tmv= td_b[tb_out].ttmv;
-        bool cf = td_b[tb_out].tc;
+        const bool cf = td_b[tb_out].tc;
         if ((s>=8000 && s<=8999) )
         {
             serial.println();

@@ -79,7 +79,7 @@ bool CCS811Class::begin(const uint8_t I2C_ADDR, const int WAKE_PIN) {
      * 011: Mode 3 – Low power pulse heating mode IAQ measurement every 60 seconds
      * 100: Mode 4 – Constant power mode, sensor measurement every 250ms
      */
-    uint8_t i2cData[2] = {MEAS_MODE, 0x20}; // Mode 2 – Pulse heating mode IAQ measurement every 10 seconds
+    constexpr uint8_t i2cData[2] = {MEAS_MODE, 0x20}; // Mode 2 – Pulse heating mode IAQ measurement every 10 seconds
     Chip_I2C_MasterSend(I2C0, _I2C_ADDR, i2cData, sizeof(i2cData));
     digitalWrite(_WAKE_PIN, true);
 
@@ -120,7 +120,7 @@ uint16_t CCS811Class::getBaseline(void) {
     uint8_t buffer[2];
     Chip_I2C_MasterCmdRead(I2C0, _I2C_ADDR, BASELINE_REG, buffer, 2); // read BASELINE register
 
-    uint16_t baseline = ((uint8_t)buffer[0] << 8) + buffer[1];
+    const uint16_t baseline = ((uint8_t)buffer[0] << 8) + buffer[1];
 
     digitalWrite(_WAKE_PIN, true);
 
@@ -131,7 +131,7 @@ uint16_t CCS811Class::getBaseline(void) {
 void CCS811Class::setBaseline(const uint16_t baseline) {
     _digitalWrite(_WAKE_PIN, false);
     delayMicroseconds(50); // recommended 50us delay after asserting WAKE pin
-    uint8_t i2cData[] = {BASELINE_REG, (uint8_t)(baseline >> 8), (uint8_t)baseline};
+    const uint8_t i2cData[] = {BASELINE_REG, (uint8_t)(baseline >> 8), (uint8_t)baseline};
     Chip_I2C_MasterSend(I2C0, _I2C_ADDR, i2cData, sizeof(i2cData));
     digitalWrite(_WAKE_PIN, true); // set WAKE_PIN high - this puts sensor in sleep mode (~2uA) and all I2C communications are ignored
 }
@@ -152,7 +152,7 @@ char CCS811Class::readErrorID(const char _status) {
 void CCS811Class::sleep() {
     _digitalWrite(_WAKE_PIN, false);
     delayMicroseconds(50); // recommended 50us delay after asserting WAKE pin
-    uint8_t i2cData[] = {MEAS_MODE, 0x00};
+    constexpr uint8_t i2cData[] = {MEAS_MODE, 0x00};
     Chip_I2C_MasterSend(I2C0, _I2C_ADDR, i2cData, sizeof(i2cData));
     digitalWrite(_WAKE_PIN, true); // set WAKE_PIN high - this puts sensor in sleep mode (~2uA) and all I2C communications are ignored
 }
@@ -165,7 +165,7 @@ void CCS811Class::sleep() {
 void CCS811Class::setMode(const uint8_t modeNumber) {
     _digitalWrite(_WAKE_PIN, false);
     delayMicroseconds(50); // recommended 50us delay after asserting WAKE pin
-    uint8_t i2cData[] = {MEAS_MODE, (uint8_t)(modeNumber << 4)};
+    const uint8_t i2cData[] = {MEAS_MODE, (uint8_t)(modeNumber << 4)};
     Chip_I2C_MasterSend(I2C0, _I2C_ADDR, i2cData, sizeof(i2cData));
     digitalWrite(_WAKE_PIN, true); // set WAKE_PIN high - this puts sensor in sleep mode (~2uA) and all I2C communications are ignored
 }
@@ -177,7 +177,7 @@ bool CCS811Class::getData(void) {
     delayMicroseconds(50); // recommended 50us delay after asserting WAKE pin
     uint8_t buffer[4];
 
-    uint8_t len = Chip_I2C_MasterCmdRead(I2C0, _I2C_ADDR, ALG_RESULT_DATA, buffer, 4); // reading ALG_RESULT_DATA clears DATA_READY bit in 0x00
+    const uint8_t len = Chip_I2C_MasterCmdRead(I2C0, _I2C_ADDR, ALG_RESULT_DATA, buffer, 4); // reading ALG_RESULT_DATA clears DATA_READY bit in 0x00
     digitalWrite(_WAKE_PIN, true);
 
     if (len != 4)
@@ -209,7 +209,7 @@ void CCS811Class::compensate(const float t, const float rh) // compensate for te
     else if (t < 0)            // account for negative temperatures
         _temp = (int)t - 0.5f;
     _temp = _temp + 25;   // temperature high byte is stored as T+25°C in the sensor's memory so the value of byte is positive
-    int _rh = (int)rh + 0.5f; // this will round off the floating point to the nearest integer value
+    const int _rh = (int)rh + 0.5f; // this will round off the floating point to the nearest integer value
 
     uint8_t _ENV_DATA[5];
 

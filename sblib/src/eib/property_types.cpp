@@ -41,7 +41,7 @@ byte* PropertyDef::valuePointer(BcuBase* bcu) const
 {
     if (control & PC_POINTER)
     {
-        int offs = valAddr & PPT_OFFSET_MASK;
+        const int offs = valAddr & PPT_OFFSET_MASK;
 
         switch (valAddr & PPT_MASK)
         {

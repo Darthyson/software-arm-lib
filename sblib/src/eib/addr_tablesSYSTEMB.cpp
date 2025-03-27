@@ -18,8 +18,8 @@ int AddrTablesSYSTEMB::indexOfAddr(const int addr)
         num = (tab[0] << 8) + tab[1];
     tab += 2;
 
-    int addrHigh = addr >> 8;
-    int addrLow = addr & 255;
+    const int addrHigh = addr >> 8;
+    const int addrLow = addr & 255;
 
     for (int i = 1; i <= num; ++i, tab += 2)
     {

@@ -126,7 +126,7 @@ int MemMapper::allocatePage(const int virtPage)
 int MemMapper::addRange(const int virtAddress, const int length)
 {
     bool tableModified = false;
-    int virtPage = virtAddress >> 8;
+    const int virtPage = virtAddress >> 8;
 
     if ((virtAddress & 0xff) || virtPage < 0 || virtPage >= FLASH_PAGE_SIZE)
     {
@@ -138,7 +138,7 @@ int MemMapper::addRange(const int virtAddress, const int length)
         return MEM_MAPPER_INVALID_LENGTH;
     }
 
-    byte pages = length >> 8;
+    const byte pages = length >> 8;
 
     for (int page = virtPage; page < (pages + virtPage); page++)
     {
@@ -164,7 +164,7 @@ int MemMapper::addRange(const int virtAddress, const int length)
 
 int MemMapper::getFlashPageNum(const int virtAddress) const
 {
-    int virtPage = virtAddress >> 8;
+    const int virtPage = virtAddress >> 8;
 
     if ((virtPage < 0) || (virtPage >= FLASH_PAGE_SIZE))
     {
@@ -176,7 +176,7 @@ int MemMapper::getFlashPageNum(const int virtAddress) const
 
 int MemMapper::writeMem(const int virtAddress, const byte data)
 {
-    int flashPageNum = getFlashPageNum(virtAddress);
+    const int flashPageNum = getFlashPageNum(virtAddress);
     if (flashPageNum < 0)
     {
         return flashPageNum;
@@ -226,7 +226,7 @@ int MemMapper::writeMemPtr(const int virtAddress, byte* data, const int length)
 
 int MemMapper::readMem(const int virtAddress, byte& data, const bool forceFlash)
 {
-    int flashPageNum = getFlashPageNum(virtAddress);
+    const int flashPageNum = getFlashPageNum(virtAddress);
 
     if (flashPageNum < 0)
     {
@@ -273,7 +273,7 @@ bool MemMapper::isMapped(const int virtAddress)
     {
         return (true);
     }
-    int pageNum = getFlashPageNum(virtAddress);
+    const int pageNum = getFlashPageNum(virtAddress);
     return ((pageNum != MEM_MAPPER_INVALID_ADDRESS) && (pageNum != 0));
 }
 
@@ -284,7 +284,7 @@ bool MemMapper::isMappedRange(const int virtStartAddress, const int virtEndAddre
 
 byte* MemMapper::memoryPtr(const int virtAddress, const bool forceFlash) const
 {
-    int flashPageNum = getFlashPageNum(virtAddress);
+    const int flashPageNum = getFlashPageNum(virtAddress);
 
     if (flashPageNum < 0)
     {

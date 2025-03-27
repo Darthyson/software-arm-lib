@@ -164,7 +164,7 @@ void SPI::transferBlock(uint16_t* sndData, const int bytes, uint16_t* recData, c
     }
     else
     {
-        int no = &port == LPC_SSP0 ? 0 : 1;
+        const int no = &port == LPC_SSP0 ? 0 : 1;
         instances[no] = this;
         port.IMSC |= (1 << 3); // XXX
         if (!no)
@@ -206,7 +206,7 @@ void SPI::continueBlockTransfer(void)
     }
     if (!sndCount)
     {
-        int no = &port == LPC_SSP0 ? 0 : 1;
+        const int no = &port == LPC_SSP0 ? 0 : 1;
         if (!no)
         {
             NVIC_DisableIRQ(SSP0_IRQn);

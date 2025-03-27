@@ -34,7 +34,7 @@ inline void BCU2::begin(const int manufacturer, const int deviceType, const int 
 
     if (userEeprom->loadState()[OT_ADDR_TABLE] == LS_LOADING)
     {
-        byte* addrTab = addrTables->addrTable() + 1;
+        const byte* addrTab = addrTables->addrTable() + 1;
         setOwnAddress(makeWord(*(addrTab), *(addrTab + 1)));
     }
 
@@ -203,7 +203,7 @@ bool BCU2::processBroadCastTelegram(const ApciCommand apciCmd, unsigned char* te
 
 void BCU2::sendApciIndividualAddressSerialNumberReadResponse()
 {
-    auto sendBuffer = acquireSendBuffer();
+    const auto sendBuffer = acquireSendBuffer();
     initLpdu(sendBuffer, PRIORITY_SYSTEM, false, FRAME_STANDARD);
     // 1+2 contain the sender address, which is set by bus.sendTelegram()
     setDestinationAddress(sendBuffer, 0x0000); // Zero target address, it's a broadcast

@@ -18,8 +18,8 @@ int AddrTablesBCU2::indexOfAddr(const int addr)
         num = *tab;
     tab += 3;
 
-    int addrHigh = addr >> 8;
-    int addrLow = addr & 255;
+    const int addrHigh = addr >> 8;
+    const int addrLow = addr & 255;
 
     for (int i = 1; i <= num; ++i, tab += 2)
     {
@@ -32,21 +32,21 @@ int AddrTablesBCU2::indexOfAddr(const int addr)
 
 byte* AddrTablesBCU2::addrTable()
 {
-    byte* addr = (byte*) &bcu->userEeprom->addrTabAddr();
-    unsigned short memAddr = makeWord(*(addr + 1), *addr);
+    const byte* addr = (byte*) &bcu->userEeprom->addrTabAddr();
+    const unsigned short memAddr = makeWord(*(addr + 1), *addr);
 
     return bcu->userMemoryPtr(memAddr);
 }
 
 byte* AddrTablesBCU2::assocTable()
 {
-    byte* addr = (byte*) &bcu->userEeprom->assocTabAddr();
+    const byte* addr = (byte*) &bcu->userEeprom->assocTabAddr();
     return bcu->userMemoryPtr(makeWord(*(addr + 1), *addr));
 }
 
 uint16_t AddrTablesBCU2::addrCount()
 {
-    byte* ptrAddrTable = addrTable();
-    uint16_t count = makeWord(*(ptrAddrTable + 1), *ptrAddrTable);
+    const byte* ptrAddrTable = addrTable();
+    const uint16_t count = makeWord(*(ptrAddrTable + 1), *ptrAddrTable);
     return (count);
 }
