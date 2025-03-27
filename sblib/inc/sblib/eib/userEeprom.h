@@ -5,8 +5,8 @@
  *      Author: dridders
  */
 
-#ifndef SBLIB_EIB_USEREEPROM_H_
-#define SBLIB_EIB_USEREEPROM_H_
+#ifndef SBLIB_KNX_USEREEPROM_H_
+#define SBLIB_KNX_USEREEPROM_H_
 
 #include <sblib/eib/memory.h>
 #include <sblib/bits.h>
@@ -115,4 +115,4 @@ protected:
 };
 
 
-#endif /* SBLIB_EIB_USEREEPROM_H_ */
+#endif /* SBLIB_KNX_USEREEPROM_H_ */

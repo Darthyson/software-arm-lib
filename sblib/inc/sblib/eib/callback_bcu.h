@@ -4,8 +4,8 @@
  *  published by the Free Software Foundation.
  */
 
-#ifndef SBLIB_EIB_CALLBACK_BCU_H_
-#define SBLIB_EIB_CALLBACK_BCU_H_
+#ifndef SBLIB_KNX_CALLBACK_BCU_H_
+#define SBLIB_KNX_CALLBACK_BCU_H_
 
 #include <cstdint>
 #include <sblib/eib/callback_bus.h>
@@ -26,4 +26,4 @@ private:
     BcuBase* bcu;
 };
 
-#endif /* SBLIB_EIB_CALLBACK_BCU_H_ */
+#endif /* SBLIB_KNX_CALLBACK_BCU_H_ */

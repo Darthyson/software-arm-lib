@@ -1,5 +1,5 @@
-#ifndef sblib_usereeprom_systemb_h
-#define sblib_usereeprom_systemb_h
+#ifndef SBLIB_KNX_USEREEPROM_SYSTEMB_H
+#define SBLIB_KNX_USEREEPROM_SYSTEMB_H
 
 #include <sblib/eib/userEepromMASK0701.h>
 
@@ -35,4 +35,4 @@ protected:
     UserEepromSYSTEMB(const unsigned int start, const unsigned int size, const unsigned int flashSize) : UserEepromMASK0701(start, size, flashSize) {};
 };
 
-#endif /*sblib_usereeprom_systemb_h*/
+#endif /* SBLIB_KNX_USEREEPROM_SYSTEMB_H */

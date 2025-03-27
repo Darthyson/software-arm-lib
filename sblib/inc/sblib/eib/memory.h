@@ -18,8 +18,8 @@
  published by the Free Software Foundation.
  ---------------------------------------------------------------------------*/
 
-#ifndef SBLIB_EIB_MEMORY_H_
-#define SBLIB_EIB_MEMORY_H_
+#ifndef SBLIB_KNX_MEMORY_H_
+#define SBLIB_KNX_MEMORY_H_
 
 #include <cstdint>
 #include <sblib/types.h>
@@ -113,5 +113,5 @@ protected:
 };
 
 
-#endif /* SBLIB_EIB_MEMORY_H_ */
+#endif /* SBLIB_KNX_MEMORY_H_ */
 /** @}*/

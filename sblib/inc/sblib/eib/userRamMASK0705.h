@@ -5,8 +5,8 @@
  *      Author: dridders
  */
 
-#ifndef SBLIB_EIB_USERRAM_MASK0705_H_
-#define SBLIB_EIB_USERRAM_MASK0705_H_
+#ifndef SBLIB_KNX_USERRAM_MASK0705_H_
+#define SBLIB_KNX_USERRAM_MASK0705_H_
 
 #include <cstdint>
 #include <sblib/eib/userRamMASK0701.h>
@@ -23,4 +23,4 @@ protected:
     UserRamMASK0705(const uint32_t start, const uint32_t size, const uint32_t shadowSize) : UserRamMASK0701(start, size, shadowSize) {}
 };
 
-#endif /* SBLIB_EIB_USERRAM_MASK0705_H_ */
+#endif /* SBLIB_KNX_USERRAM_MASK0705_H_ */

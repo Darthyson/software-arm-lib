@@ -5,8 +5,8 @@
  *      Author: dridders
  */
 
-#ifndef SBLIB_EIB_USERRAM_BCU1_H_
-#define SBLIB_EIB_USERRAM_BCU1_H_
+#ifndef SBLIB_KNX_USERRAM_BCU1_H_
+#define SBLIB_KNX_USERRAM_BCU1_H_
 
 #include <cstdint>
 #include <sblib/eib/userRam.h>
@@ -108,4 +108,4 @@ protected:
 #endif
 };
 
-#endif /* SBLIB_EIB_USERRAM_BCU1_H_ */
+#endif /* SBLIB_KNX_USERRAM_BCU1_H_ */

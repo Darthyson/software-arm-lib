@@ -10,8 +10,8 @@
  *  it under the terms of the GNU General Public License version 3 as
  *  published by the Free Software Foundation.
  */
-#ifndef sblib_mask0705_h
-#define sblib_mask0705_h
+#ifndef SBLIB_KNX_MASK0705_H
+#define SBLIB_KNX_MASK0705_H
 
 #include <sblib/eib/mask0701.h>
 #include <sblib/eib/userEepromMASK0705.h>
@@ -48,4 +48,4 @@ public:
     const int userRamShadowSize = 3;
 };
 
-#endif /*sblib_mask0705_h*/
+#endif /* SBLIB_KNX_MASK0705_H */

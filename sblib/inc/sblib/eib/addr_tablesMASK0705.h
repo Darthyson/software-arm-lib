@@ -7,8 +7,8 @@
  *  it under the terms of the GNU General Public License version 3 as
  *  published by the Free Software Foundation.
  */
-#ifndef sblib_addr_tables_MASK0705_h
-#define sblib_addr_tables_MASK0705_h
+#ifndef SBLIB_KNX_ADDR_TABLES_MASK0705_H
+#define SBLIB_KNX_ADDR_TABLES_MASK0705_H
 
 #include <sblib/eib/addr_tablesMASK0701.h>
 
@@ -21,4 +21,4 @@ public:
     explicit AddrTablesMASK0705(MASK0705* bcu) : AddrTablesMASK0701((MASK0701*)bcu) {}
 };
 
-#endif /*sblib_addr_tables_MASK0705_h*/
+#endif /* SBLIB_KNX_ADDR_TABLES_MASK0705_H */

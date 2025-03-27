@@ -7,8 +7,8 @@
  *  it under the terms of the GNU General Public License version 3 as
  *  published by the Free Software Foundation.
  */
-#ifndef sblib_addr_tables_BCU2_h
-#define sblib_addr_tables_BCU2_h
+#ifndef SBLIB_KNX_ADDR_TABLES_BCU2_H
+#define SBLIB_KNX_ADDR_TABLES_BCU2_H
 
 #include <sblib/eib/addr_tables.h>
 
@@ -64,4 +64,4 @@ private:
     BCU2* bcu;
 };
 
-#endif /*sblib_addr_tables_BCU2_h*/
+#endif /* SBLIB_KNX_ADDR_TABLES_BCU2_H */

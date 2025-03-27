@@ -5,8 +5,8 @@
  *      Author: dridders
  */
 
-#ifndef SBLIB_EIB_USERRAM_BCU2_H_
-#define SBLIB_EIB_USERRAM_BCU2_H_
+#ifndef SBLIB_KNX_USERRAM_BCU2_H_
+#define SBLIB_KNX_USERRAM_BCU2_H_
 
 #include <cstdint>
 #include <sblib/eib/userRamBCU1.h>
@@ -24,4 +24,4 @@ protected:
     UserRamBCU2(const uint32_t start, const uint32_t size, const uint32_t shadowSize) : UserRamBCU1(start, size, shadowSize) {}
 };
 
-#endif /* SBLIB_EIB_USERRAM_BCU2_H_ */
+#endif /* SBLIB_KNX_USERRAM_BCU2_H_ */

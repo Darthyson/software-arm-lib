@@ -7,8 +7,8 @@
  *  it under the terms of the GNU General Public License version 3 as
  *  published by the Free Software Foundation.
  */
-#ifndef sblib_addr_tables_SYSTEMB_h
-#define sblib_addr_tables_SYSTEMB_h
+#ifndef SBLIB_KNX_ADDR_TABLES_SYSTEMB_H
+#define SBLIB_KNX_ADDR_TABLES_SYSTEMB_H
 
 #include <sblib/eib/addr_tablesMASK0701.h>
 
@@ -35,4 +35,4 @@ private:
     SYSTEMB* bcu;
 };
 
-#endif /*sblib_addr_tables_SYSTEMB_h*/
+#endif /* SBLIB_KNX_ADDR_TABLES_SYSTEMB_H */

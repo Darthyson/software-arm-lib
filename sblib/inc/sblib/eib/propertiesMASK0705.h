@@ -7,8 +7,8 @@
  *  it under the terms of the GNU General Public License version 3 as
  *  published by the Free Software Foundation.
  */
-#ifndef sblib_properties_mask0705_h
-#define sblib_properties_mask0705_h
+#ifndef SBLIB_KNX_PROPERTIES_MASK0705_H
+#define SBLIB_KNX_PROPERTIES_MASK0705_H
 
 #include <sblib/eib/propertiesMASK0701.h>
 
@@ -20,4 +20,4 @@ class PropertiesMASK0705 : public PropertiesMASK0701
 public:
     explicit PropertiesMASK0705(MASK0705* bcu) : PropertiesMASK0701((MASK0701*)bcu) {}
 };
-#endif /*sblib_properties_mask0705_h*/
+#endif /* SBLIB_KNX_PROPERTIES_MASK0705_H */

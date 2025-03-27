@@ -7,8 +7,8 @@
  *  it under the terms of the GNU General Public License version 3 as
  *  published by the Free Software Foundation.
  */
-#ifndef sblib_eib_types_h
-#define sblib_eib_types_h
+#ifndef SBLIB_KNX_TYPES_H
+#define SBLIB_KNX_TYPES_H
 
 #include <sblib/types.h>
 
@@ -178,4 +178,4 @@ enum ComFlag
     COMFLAG_MASK = 0x15
 };
 
-#endif /*sblib_eib_types_h*/
+#endif /* SBLIB_KNX_TYPES_H */

@@ -19,8 +19,8 @@
  published by the Free Software Foundation.
  ---------------------------------------------------------------------------*/
 
-#ifndef TLAYER4_H_
-#define TLAYER4_H_
+#ifndef SBLIB_KNX_TLAYER4_H_
+#define SBLIB_KNX_TLAYER4_H_
 
 #include <cstdint>
 #include <sblib/eib/knx_tpdu.h>
@@ -357,5 +357,5 @@ inline uint16_t TLayer4::connectedTo() const
     }
 }
 
-#endif /* TLAYER4_H_ */
+#endif /* SBLIB_KNX_TLAYER4_H_ */
 /** @}*/

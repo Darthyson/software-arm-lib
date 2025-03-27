@@ -6,8 +6,8 @@
  *  it under the terms of the GNU General Public License version 3 as
  *  published by the Free Software Foundation.
  */
-#ifndef sblib_BcuBase_h
-#define sblib_BcuBase_h
+#ifndef SBLIB_KNX_BCUBASE_H
+#define SBLIB_KNX_BCUBASE_H
 
 #include <sblib/eib/com_objects.h>
 #include <sblib/timeout.h>
@@ -142,4 +142,4 @@ private:
     Timeout restartTimeout;
 };
 
-#endif /*sblib_BcuBase_h*/
+#endif /* SBLIB_KNX_BCUBASE_H */

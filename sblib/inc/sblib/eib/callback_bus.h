@@ -4,8 +4,8 @@
  *  published by the Free Software Foundation.
  */
 
-#ifndef SBLIB_EIB_CALLBACK_BUS_H_
-#define SBLIB_EIB_CALLBACK_BUS_H_
+#ifndef SBLIB_KNX_CALLBACK_BUS_H_
+#define SBLIB_KNX_CALLBACK_BUS_H_
 
 #include <cstdint>
 
@@ -18,4 +18,4 @@ public:
 };
 
 
-#endif /* SBLIB_EIB_CALLBACK_BUS_H_ */
+#endif /* SBLIB_KNX_CALLBACK_BUS_H_ */

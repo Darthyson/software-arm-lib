@@ -7,8 +7,8 @@
  *  it under the terms of the GNU General Public License version 3 as
  *  published by the Free Software Foundation.
  */
-#ifndef sblib_eib_types_systemb_h
-#define sblib_eib_types_systemb_h
+#ifndef SBLIB_KNX_TYPES_SYSTEMB_H
+#define SBLIB_KNX_TYPES_SYSTEMB_H
 
 #include <sblib/eib/types.h>
 
@@ -20,4 +20,4 @@ struct ComConfigSYSTEMB
     ComConfig baseConfig;
 };
 
-#endif /*sblib_eib_types_systemb_h*/
+#endif /* SBLIB_KNX_TYPES_SYSTEMB_H */

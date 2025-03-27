@@ -7,8 +7,8 @@
  *  it under the terms of the GNU General Public License version 3 as
  *  published by the Free Software Foundation.
  */
-#ifndef sblib_properties_mask0701_h
-#define sblib_properties_mask0701_h
+#ifndef SBLIB_KNX_PROPERTIES_MASK0701_H
+#define SBLIB_KNX_PROPERTIES_MASK0701_H
 
 #include <sblib/eib/propertiesBCU2.h>
 #include <sblib/eib/userRamMASK0701.h>
@@ -37,4 +37,4 @@ private:
 };
 
 
-#endif /*sblib_properties_mask0701_h*/
+#endif /* SBLIB_KNX_PROPERTIES_MASK0701_H */

@@ -10,8 +10,8 @@
  *  it under the terms of the GNU General Public License version 3 as
  *  published by the Free Software Foundation.
  */
-#ifndef sblib_bcu2_h
-#define sblib_bcu2_h
+#ifndef SBLIB_KNX_BCU2_H
+#define SBLIB_KNX_BCU2_H
 
 #include <sblib/eib/bcu1.h>
 #include <sblib/eib/userEepromBCU2.h>
@@ -140,4 +140,4 @@ protected:
     word commObjectTableAddressStatic = 0; //!> The read-only CommObjectTable address which can't be changed by KNX telegrams
 };
 
-#endif /*sblib_bcu2_h*/
+#endif /* SBLIB_KNX_BCU2_H */

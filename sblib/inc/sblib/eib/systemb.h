@@ -10,8 +10,8 @@
  *  it under the terms of the GNU General Public License version 3 as
  *  published by the Free Software Foundation.
  */
-#ifndef sblib_systemb_h
-#define sblib_systemb_h
+#ifndef SBLIB_KNX_SYSTEMB_H
+#define SBLIB_KNX_SYSTEMB_H
 
 #include <sblib/eib/mask0701.h>
 #include <sblib/eib/userEepromSYSTEMB.h>
@@ -36,4 +36,4 @@ public:
     uint16_t getMaskVersion() const override { return 0x7B0; }
 };
 
-#endif /*sblib_systemb_h*/
+#endif /* SBLIB_KNX_SYSTEMB_H */

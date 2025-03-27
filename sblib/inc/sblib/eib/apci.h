@@ -7,8 +7,8 @@
  *  it under the terms of the GNU General Public License version 3 as
  *  published by the Free Software Foundation.
  */
-#ifndef sblib_apci_h
-#define sblib_apci_h
+#ifndef SBLIB_KNX_APCI_H
+#define SBLIB_KNX_APCI_H
 
 #include <sblib/types.h>
 
@@ -158,4 +158,4 @@ uint8_t mainGroup(uint16_t address);
 uint8_t middleGroup(uint16_t address);
 uint8_t lowGroup(uint16_t address);
 
-#endif /*sblib_apci_h*/
+#endif /* SBLIB_KNX_APCI_H */

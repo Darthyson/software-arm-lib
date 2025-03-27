@@ -7,8 +7,8 @@
  *  it under the terms of the GNU General Public License version 3 as
  *  published by the Free Software Foundation.
  */
-#ifndef sblib_bus_h
-#define sblib_bus_h
+#ifndef SBLIB_KNX_BUS_H
+#define SBLIB_KNX_BUS_H
 
 #include <sblib/timer.h>
 #include <sblib/eib/addr_tables.h>
@@ -284,4 +284,4 @@ private:
 #define BUS_TIMER_INTERRUPT_HANDLER(handler, busObj) \
     extern "C" void handler() { busObj.timerInterruptHandler(); }
 
-#endif /*sblib_bus_h*/
+#endif /* SBLIB_KNX_BUS_H */

@@ -7,8 +7,8 @@
  *  it under the terms of the GNU General Public License version 3 as
  *  published by the Free Software Foundation.
  */
-#ifndef sblib_BcuDefault_h
-#define sblib_BcuDefault_h
+#ifndef SBLIB_KNX_BCUDEFAULT_H
+#define SBLIB_KNX_BCUDEFAULT_H
 
 #include <sblib/mem_mapper.h>
 #include <sblib/usr_callback.h>
@@ -220,4 +220,4 @@ protected:
 #define  MAX_GROUP_TEL_PER_SECOND  28
 #define  DEFAULT_GROUP_TEL_WAIT_MILLIS  1000/MAX_GROUP_TEL_PER_SECOND
 
-#endif /*sblib_BcuDefault_h*/
+#endif /* SBLIB_KNX_BCUDEFAULT_H */

@@ -30,8 +30,8 @@
  *  published by the Free Software Foundation.
  */
 
-#ifndef sblib_com_objects_h
-#define sblib_com_objects_h
+#ifndef SBLIB_KNX_COM_OBJECTS_H
+#define SBLIB_KNX_COM_OBJECTS_H
 
 #include <sys/param.h>
 #include <sblib/eib/types.h>
@@ -430,4 +430,4 @@ inline float ComObjects::objectReadFloat(const int objno)
     return dpt9ToFloat(objectRead(objno));
 }
 
-#endif /*sblib_com_objects_h*/
+#endif /* SBLIB_KNX_COM_OBJECTS_H */

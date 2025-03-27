@@ -1,5 +1,5 @@
-#ifndef sblib_usereeprom_bcu1_h
-#define sblib_usereeprom_bcu1_h
+#ifndef SBLIB_KNX_USEREEPROM_BCU1_H
+#define SBLIB_KNX_USEREEPROM_BCU1_H
 
 #include <sblib/eib/userEeprom.h>
 
@@ -75,4 +75,4 @@ protected:
     UserEepromBCU1(const unsigned int start, const unsigned int size, const unsigned int flashSize) : UserEeprom(start, size, flashSize) {};
 };
 
-#endif /*sblib_usereeprom_bcu1_h*/
+#endif /* SBLIB_KNX_USEREEPROM_BCU1_H */

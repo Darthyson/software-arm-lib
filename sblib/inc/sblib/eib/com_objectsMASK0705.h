@@ -29,8 +29,8 @@
  *  it under the terms of the GNU General Public License version 3 as
  *  published by the Free Software Foundation.
  */
-#ifndef sblib_com_objects_MASK0705_h
-#define sblib_com_objects_MASK0705_h
+#ifndef SBLIB_KNX_COM_OBJECTS_MASK0705_H
+#define SBLIB_KNX_COM_OBJECTS_MASK0705_H
 
 #include <sblib/eib/com_objectsMASK0701.h>
 
@@ -42,4 +42,4 @@ public:
     explicit ComObjectsMASK0705(BcuDefault* bcuInstance) : ComObjectsMASK0701(bcuInstance) {}
 };
 
-#endif /*sblib_com_objects_MASK0705_h*/
+#endif /* SBLIB_KNX_COM_OBJECTS_MASK0705_H */

@@ -8,8 +8,8 @@
  *  it under the terms of the GNU General Public License version 3 as
  *  published by the Free Software Foundation.
  */
-#ifndef SBLIB_PROPERTY_TYPES
-#define SBLIB_PROPERTY_TYPES
+#ifndef SBLIB_KNX_PROPERTY_TYPES
+#define SBLIB_KNX_PROPERTY_TYPES
 
 #include <cstddef>
 #include <sblib/types.h>
@@ -504,4 +504,4 @@ inline bool PropertyDef::isEepromPointer() const
     return (valAddr & PPT_USER_EEPROM) != 0;
 }
 
-#endif /* SBLIB_PROPERTY_TYPES */
+#endif /* SBLIB_KNX_PROPERTY_TYPES */

@@ -10,8 +10,8 @@
  *  it under the terms of the GNU General Public License version 3 as
  *  published by the Free Software Foundation.
  */
-#ifndef sblib_mask0701_h
-#define sblib_mask0701_h
+#ifndef SBLIB_KNX_MASK0701_H
+#define SBLIB_KNX_MASK0701_H
 
 #include <sblib/eib/bcu2.h>
 #include <sblib/eib/userEepromMASK0701.h>
@@ -51,4 +51,4 @@ private:
     static constexpr uint16_t LOAD_STATE_ADDR = 0xb6e9;  /** Address for load state */
 };
 
-#endif /*sblib_mask0701_h*/
+#endif /* SBLIB_KNX_MASK0701_H */

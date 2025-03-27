@@ -29,8 +29,8 @@
  *  it under the terms of the GNU General Public License version 3 as
  *  published by the Free Software Foundation.
  */
-#ifndef sblib_com_objects_SYSTEMB_h
-#define sblib_com_objects_SYSTEMB_h
+#ifndef SBLIB_KNX_COM_OBJECTS_SYSTEMB_H
+#define SBLIB_KNX_COM_OBJECTS_SYSTEMB_H
 
 #include <sblib/eib/com_objectsMASK0701.h>
 
@@ -51,4 +51,4 @@ protected:
     byte* objectFlagsTable() override;
 };
 
-#endif /*sblib_com_objects_SYSTEMB_h*/
+#endif /* SBLIB_KNX_COM_OBJECTS_SYSTEMB_H */

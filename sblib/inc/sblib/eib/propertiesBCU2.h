@@ -7,8 +7,8 @@
  *  it under the terms of the GNU General Public License version 3 as
  *  published by the Free Software Foundation.
  */
-#ifndef sblib_properties_bcu2_h
-#define sblib_properties_bcu2_h
+#ifndef SBLIB_KNX_PROPERTIES_BCU2_H
+#define SBLIB_KNX_PROPERTIES_BCU2_H
 
 #include <sblib/eib/userEepromBCU2.h>
 #include <sblib/eib/userRamBCU2.h>
@@ -550,4 +550,4 @@ inline const PropertyDef* const* PropertiesBCU2::propertiesTab() const
     return propertiesTabInstance;
 }
 
-#endif /*sblib_properties_bcu2_h*/
+#endif /* SBLIB_KNX_PROPERTIES_BCU2_H */

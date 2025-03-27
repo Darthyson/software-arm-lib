@@ -5,8 +5,8 @@
  *      Author: dridders
  */
 
-#ifndef SBLIB_EIB_USERRAM_H_
-#define SBLIB_EIB_USERRAM_H_
+#ifndef SBLIB_KNX_USERRAM_H_
+#define SBLIB_KNX_USERRAM_H_
 
 #include <cstdint>
 #include <sblib/eib/memory.h>
@@ -89,4 +89,4 @@ private:
 };
 
 
-#endif /* SBLIB_EIB_USERRAM_H_ */
+#endif /* SBLIB_KNX_USERRAM_H_ */
