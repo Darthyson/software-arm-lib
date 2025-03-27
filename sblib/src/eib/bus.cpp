@@ -1025,10 +1025,10 @@ STATE_SWITCH:
 
                 tb_t(state + 400, ttimer.value(), tb_in);
                 state = Bus::SEND_BIT_0; // start bit edge in time, prepare to send bit 0 when timer times out (rising edge)
-#       ifdef PIO_FOR_TEL_END_IND
-            if (sendAck)
-                digitalWrite(PIO_FOR_TEL_END_IND, 0);
-#       endif
+#ifdef PIO_FOR_TEL_END_IND
+                if (sendAck)
+                    digitalWrite(PIO_FOR_TEL_END_IND, 0);
+#endif
                 break;
             }
             else
