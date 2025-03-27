@@ -7,8 +7,8 @@
  *  it under the terms of the GNU General Public License version 3 as
  *  published by the Free Software Foundation.
  */
-#ifndef sblib_lcd_font_h
-#define sblib_lcd_font_h
+#ifndef SBLIB_LCD_FONT_H_
+#define SBLIB_LCD_FONT_H_
 
 /**
  * A font for graphical LCD displays.
@@ -49,4 +49,4 @@ public:
     const char* data;
 };
 
-#endif /*sblib_lcd_font_h*/
+#endif /* SBLIB_LCD_FONT_H_ */

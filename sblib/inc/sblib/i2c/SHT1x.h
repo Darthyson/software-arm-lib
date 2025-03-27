@@ -23,8 +23,8 @@
  * temperature / humidity sensors from Sensirion (www.sensirion.com).
  */
 
-#ifndef sblib_SHT1x_h
-#define sblib_SHT1x_h
+#ifndef SBLIB_I2C_SHT1X_H_
+#define SBLIB_I2C_SHT1X_H_
 
 #include <cstdint>
 #include <sblib/timeout.h>
@@ -185,4 +185,4 @@ private:
     uint16_t lastHumidity;
 };
 
-#endif /*sblib_SHT1x_h*/
+#endif /* SBLIB_I2C_SHT1X_H_ */

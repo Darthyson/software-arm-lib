@@ -7,8 +7,8 @@
  *  it under the terms of the GNU General Public License version 3 as
  *  published by the Free Software Foundation.
  */
-#ifndef sblib_lcd_graphical_h
-#define sblib_lcd_graphical_h
+#ifndef SBLIB_LCD_GRAPHICAL_H_
+#define SBLIB_LCD_GRAPHICAL_H_
 
 #include <sblib/print.h>
 
@@ -62,4 +62,4 @@ inline void LcdGraphical::font(const Font& font)
     this->fnt = &font;
 }
 
-#endif /*sblib_lcd_graphical_h*/
+#endif /* SBLIB_LCD_GRAPHICAL_H_ */

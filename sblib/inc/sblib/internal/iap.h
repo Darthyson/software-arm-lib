@@ -6,8 +6,8 @@
  *  published by the Free Software Foundation.
  */
 
-#ifndef sblib_iap_h
-#define sblib_iap_h
+#ifndef SBLIB_INTERNAL_IAP_H_
+#define SBLIB_INTERNAL_IAP_H_
 
 #include <sblib/platform.h>
 #include <sblib/types.h>
@@ -154,4 +154,4 @@ IAP_Status iapReadPartID(unsigned int* partId);
 unsigned int iapFlashSize();
 
 
-#endif /* sblib_iap_h */
+#endif /* SBLIB_INTERNAL_IAP_H_ */

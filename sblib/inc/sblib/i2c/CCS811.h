@@ -22,8 +22,8 @@
    Adapted to lpcopen I2C functions by Oliver Stefan (2021)
  ****************************************************/
 
-#ifndef SB_LIB_CCS811_H
-#define SB_LIB_CCS811_H
+#ifndef SBLIB_I2C_CCS811_H_
+#define SBLIB_I2C_CCS811_H_
 
 #include <cstdint>
 
@@ -68,4 +68,4 @@ private:
     uint8_t _I2C_ADDR = 0x5a; //!< Low pegel on CCS811 pin ADDR => address = 0x5a, if high => address = 0x5B.
 };
 
-#endif /* SB_LIB_CCS811_H */
+#endif /* SBLIB_I2C_CCS811_H_ */

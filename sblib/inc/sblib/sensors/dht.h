@@ -8,8 +8,10 @@
  *  published by the Free Software Foundation.
  */
 
-#ifndef dht_h
-#define dht_h
+#ifndef SBLIB_SENSORS_DHT_H_
+#define SBLIB_SENSORS_DHT_H_
+
+
 #include <sblib/sensors/units.h>
 
 /****************************************************************************
@@ -68,4 +70,4 @@ private:
     uint32_t expectPulse(bool level) const;
 };
 
-#endif /* dht_h */
+#endif /* SBLIB_SENSORS_DHT_H_ */

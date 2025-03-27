@@ -7,8 +7,8 @@
  *
  *  Adapted to Selfbus Library by Oliver Stefan (2019)
  */
-#ifndef IAQ_CORE_H
-#define IAQ_CORE_H
+#ifndef SBLIB_I2C_IAQ_CORE_H_
+#define SBLIB_I2C_IAQ_CORE_H_
 ///\todo IAQ-CORE Funktionen werden aktuell in keinem Projekt benötigt und
 ///      wurden noch nicht an die neuen I2C Funktionen angepasst.
 ///      Daher sind alle IAQ-CORE Funktionen vorerst deaktiviert
@@ -27,4 +27,4 @@ public:
     bool GetIAQco2(uint16_t &CO2eq);
 };
 */
-#endif
+#endif /* SBLIB_I2C_IAQ_CORE_H_ */

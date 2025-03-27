@@ -6,8 +6,8 @@
  *  published by the Free Software Foundation.
  */
 
-#ifndef SBLIB_GPIO_LPC11XX_H_
-#define SBLIB_GPIO_LPC11XX_H_
+#ifndef SBLIB_HARDWARE_GPIO_LPC11XX_H_
+#define SBLIB_HARDWARE_GPIO_LPC11XX_H_
 
 #include <sblib/ioports.h>
 
@@ -60,4 +60,4 @@
 #define PIN_LT8     PIO0_11
 #define PIN_LT9     PIO2_3
 
-#endif /* SBLIB_GPIO_LPC11XX_H_ */
+#endif /* SBLIB_HARDWARE_GPIO_LPC11XX_H_ */

@@ -14,8 +14,8 @@
 
 */
 
-#ifndef SB_LIB_BH1750_H
-#define SB_LIB_BH1750_H
+#ifndef SBLIB_I2C_BH1750_H_
+#define SBLIB_I2C_BH1750_H_
 
 #include <sblib/core.h>
 #include <sblib/i2c.h>
@@ -85,4 +85,4 @@ private:
     unsigned long lastReadTimestamp = 0;
 };
 
-#endif /* SB_LIB_BH1750_H */
+#endif /* SBLIB_I2C_BH1750_H_ */

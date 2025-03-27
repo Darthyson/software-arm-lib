@@ -8,8 +8,8 @@
  *  published by the Free Software Foundation. Based on Justin Jordan
  *  Copyright (C) 2015 Maxim Integrated Products, Inc., All Rights Reserved.
  */
-#ifndef ds3231_h
-#define ds3231_h
+#ifndef SBLIB_I2C_DS3231_H_
+#define SBLIB_I2C_DS3231_H_
 
 #include <time.h>
 
@@ -209,4 +209,4 @@ private:
     uint16_t uchar_2_bcd(uint8_t data);
     uint8_t bcd_2_uchar(uint8_t bcd);
 };
-#endif /* DS3231_H */
+#endif /* SBLIB_I2C_DS3231_H_ */

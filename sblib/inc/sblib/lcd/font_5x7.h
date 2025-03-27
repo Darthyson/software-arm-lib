@@ -7,8 +7,8 @@
  *  it under the terms of the GNU General Public License version 3 as
  *  published by the Free Software Foundation.
  */
-#ifndef sblib_lcd_font_5x7_h
-#define sblib_lcd_font_5x7_h
+#ifndef SBLIB_LCD_FONT_5X7_H_
+#define SBLIB_LCD_FONT_5X7_H_
 
 #include <sblib/lcd/font.h>
 
@@ -17,4 +17,4 @@
  */
 extern Font font_5x7;
 
-#endif /*sblib_lcd_font_5x7_h*/
+#endif /* SBLIB_LCD_FONT_5X7_H_ */

@@ -8,8 +8,8 @@
  *  it under the terms of the GNU General Public License version 3 as
  *  published by the Free Software Foundation.
  */
-#ifndef sblib_lcd_graphical_sed1520_h
-#define sblib_lcd_graphical_sed1520_h
+#ifndef SBLIB_LCD_GRAPHICAL_SED1520_H_
+#define SBLIB_LCD_GRAPHICAL_SED1520_H_
 
 #include <sblib/lcd/graphical.h>
 #include <sblib/ioports.h>
@@ -62,4 +62,4 @@ protected:
 };
 
 
-#endif /*sblib_lcd_graphical_sed1520_h*/
+#endif /* SBLIB_LCD_GRAPHICAL_SED1520_H_ */

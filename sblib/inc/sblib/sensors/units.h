@@ -2,8 +2,8 @@
 // Created by mario on 08.06.20.
 //
 
-#ifndef SBLIB_UNITS_H
-#define SBLIB_UNITS_H
+#ifndef SBLIB_SENSORS_UNITS_H_
+#define SBLIB_SENSORS_UNITS_H_
 
 // Temperature conversions types
 typedef enum eScale
@@ -14,4 +14,4 @@ typedef enum eScale
 } eScale;
 
 
-#endif //SBLIB_UNITS_H
+#endif /* SBLIB_SENSORS_UNITS_H_ */

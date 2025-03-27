@@ -5,8 +5,8 @@
  * Ported to selfbus by Oliver Stefan (2021)
  */
 
-#ifndef __ONEWIRE_H__
-#define __ONEWIRE_H__
+#ifndef SBLIB_ONEWIRE_DS2482_H_
+#define SBLIB_ONEWIRE_DS2482_H_
 
 #include <sblib/core.h>
 #include <sblib/i2c.h>
@@ -112,4 +112,4 @@ private:
     uint8_t searchLastDeviceFlag = 0;
 };
 
-#endif
+#endif /* SBLIB_ONEWIRE_DS2482_H_ */

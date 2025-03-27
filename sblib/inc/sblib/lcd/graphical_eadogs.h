@@ -7,8 +7,8 @@
  *  it under the terms of the GNU General Public License version 3 as
  *  published by the Free Software Foundation.
  */
-#ifndef sblib_lcd_graphical_eadogs_h
-#define sblib_lcd_graphical_eadogs_h
+#ifndef SBLIB_LCD_GRAPHICAL_EADOGS_H_
+#define SBLIB_LCD_GRAPHICAL_EADOGS_H_
 
 #include <sblib/lcd/graphical.h>
 #include <sblib/ioports.h>
@@ -93,4 +93,4 @@ protected:
 };
 
 
-#endif /*sblib_lcd_graphical_eadogs_h*/
+#endif /* SBLIB_LCD_GRAPHICAL_EADOGS_H_ */

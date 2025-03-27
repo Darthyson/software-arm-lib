@@ -27,8 +27,8 @@
  */
 
 
-#ifndef SHT2X_H
-#define SHT2X_H
+#ifndef SBLIB_I2C_SHT2X_H_
+#define SBLIB_I2C_SHT2X_H_
 
 #include <cstdint>
 
@@ -87,4 +87,4 @@ protected:
     static uint8_t crc8(const uint8_t* data, uint8_t len);
 };
 
-#endif
+#endif /* SBLIB_I2C_SHT2X_H_ */

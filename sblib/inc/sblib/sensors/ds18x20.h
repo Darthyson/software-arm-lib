@@ -8,8 +8,10 @@
  *  published by the Free Software Foundation.
  */
 
-#ifndef ds18x20_h
-#define ds18x20_h
+#ifndef SBLIB_SENSORS_DS18X20_H_
+#define SBLIB_SENSORS_DS18X20_H_
+
+
 #include <sblib/types.h>
 #include <sblib/sensors/units.h>
 
@@ -187,4 +189,4 @@ private:
     OneWire _OW_DS18x;
 };
 
-#endif /* ds18x20_h */
+#endif /* SBLIB_SENSORS_DS18X20_H_ */

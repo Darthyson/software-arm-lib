@@ -11,8 +11,8 @@
  ---------------------------------------------------------------------------*/
 
 
-#ifndef SGP4X_H
-#define SGP4X_H
+#ifndef SBLIB_I2C_SGP4X_H_
+#define SBLIB_I2C_SGP4X_H_
 
 #include <cstdint>
 #include <sblib/i2c/sensirion_gas_index_algorithm.h>
@@ -173,4 +173,4 @@ public:
     static constexpr uint8_t maxSerialNumberLength = 6;
 };
 
-#endif
+#endif /* SBLIB_I2C_SGP4X_H_ */

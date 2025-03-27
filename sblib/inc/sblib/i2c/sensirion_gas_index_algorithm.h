@@ -29,8 +29,8 @@
  * POSSIBILITY OF SUCH DAMAGE.
  */
 
-#ifndef GASINDEXALGORITHM_H_
-#define GASINDEXALGORITHM_H_
+#ifndef SBLIB_I2C_GASINDEXALGORITHM_H_
+#define SBLIB_I2C_GASINDEXALGORITHM_H_
 
 #include <cstdint>
 
@@ -288,4 +288,4 @@ void GasIndexAlgorithm_get_sampling_interval(
 void GasIndexAlgorithm_process(GasIndexAlgorithmParams* params, int32_t sraw,
                                int32_t* gas_index);
 
-#endif /* GASINDEXALGORITHM_H_ */
+#endif /* SBLIB_I2C_GASINDEXALGORITHM_H_ */

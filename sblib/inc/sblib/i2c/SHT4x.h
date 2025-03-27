@@ -33,8 +33,8 @@
  */
 
 
-#ifndef SHT4X_H
-#define SHT4X_H
+#ifndef SBLIB_I2C_SHT4X_H_
+#define SBLIB_I2C_SHT4X_H_
 
 #include <cstdint>
 
@@ -126,4 +126,4 @@ public:
     uint32_t getSerialnumber(void);
 };
 
-#endif  /*sblib_SHT4x_h*/
+#endif /* SBLIB_I2C_SHT4X_H_ */
