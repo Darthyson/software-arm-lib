@@ -183,7 +183,7 @@ private:
      * @param  newState new @ref TL4State to set
      * @return always true
      */
-    bool setTL4State(TLayer4::TL4State newState);
+    bool setTL4State(TL4State newState);
 
     /**
      * Process an unicast connection control telegram with our physical address as
@@ -294,14 +294,14 @@ private:
      */
     void actionA10Disconnect(uint16_t address);
 
-    TLayer4::TL4State state = TLayer4::CLOSED; //!< Current state of the TL4 state machine
-    uint16_t connectedAddr = 0;                //!< Remote address of the connected partner
-    int8_t seqNoSend = -1;                     //!< Sequence number for the next telegram we send
-    int8_t seqNoRcv = -1;                      //!< Sequence number of the last telegram received from connected partner
-    int8_t repCount = 0;                       //!< Telegram repetition count
-    int8_t conCtrlRepCount = 0;                //!< Connection control telegram repetition count
-    uint32_t connectedTime = 0;                //!< System time of the last connection oriented telegram
-    uint32_t sentTelegramTime = 0;             //!< System time of the last sent telegram
+    TL4State state = CLOSED;        //!< Current state of the TL4 state machine
+    uint16_t connectedAddr = 0;     //!< Remote address of the connected partner
+    int8_t seqNoSend = -1;          //!< Sequence number for the next telegram we send
+    int8_t seqNoRcv = -1;           //!< Sequence number of the last telegram received from connected partner
+    int8_t repCount = 0;            //!< Telegram repetition count
+    int8_t conCtrlRepCount = 0;     //!< Connection control telegram repetition count
+    uint32_t connectedTime = 0;     //!< System time of the last connection oriented telegram
+    uint32_t sentTelegramTime = 0;  //!< System time of the last sent telegram
 
     uint16_t ownAddr; //!< Our own physical address on the bus
 
@@ -331,7 +331,7 @@ private:
 
 inline bool TLayer4::directConnection() const
 {
-    return (state != TLayer4::CLOSED);
+    return (state != CLOSED);
 }
 
 inline uint16_t TLayer4::ownAddress() const

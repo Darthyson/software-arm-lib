@@ -245,7 +245,7 @@ void TLayer4::_begin()
             serial.println("TLayer4::_begin debugging active");
             );
 #endif
-    state = TLayer4::CLOSED;
+    state = CLOSED;
     sendTelegramBufferState = TELEGRAM_FREE;
     sendConnectedTelegramBufferState = TELEGRAM_FREE;
     sendConnectedTelegramBuffer2State = TELEGRAM_FREE;
@@ -357,12 +357,12 @@ bool TLayer4::processConControlConnectPDU(const uint16_t senderAddr)
 
     switch (state)
     {
-        case TLayer4::CLOSED:
+        case CLOSED:
             actionA01Connect(senderAddr);
             return (true);
 
-        case TLayer4::OPEN_IDLE:
-        case TLayer4::OPEN_WAIT:
+        case OPEN_IDLE:
+        case OPEN_WAIT:
             if (connectedAddr == senderAddr)
             {
                 // event E00
@@ -391,16 +391,16 @@ bool TLayer4::processConControlDisconnectPDU(const uint16_t senderAddr)
     // event E02 and E03 handling
     switch (state)
     {
-        case TLayer4::CLOSED:
+        case CLOSED:
             actionA00Nothing();
             break;
 
-        case TLayer4::OPEN_IDLE:
-        case TLayer4::OPEN_WAIT:
+        case OPEN_IDLE:
+        case OPEN_WAIT:
             if (senderAddr == connectedAddr)
             {
                 // event E02
-                setTL4State(TLayer4::CLOSED);
+                setTL4State(CLOSED);
                 actionA05DisconnectUser();
             }
             else
@@ -442,7 +442,7 @@ bool TLayer4::processConControlAcknowledgmentPDU(const uint16_t senderAddr, cons
         );
 
         // check CLOSED and OPEN_IDLE states for E08, E09, E10
-        if ((state == TLayer4::CLOSED) || (state == TLayer4::OPEN_IDLE))
+        if ((state == CLOSED) || (state == OPEN_IDLE))
         {
             dump2(
                 serial.print(" EVENT 8/9/10 ");
@@ -485,7 +485,7 @@ bool TLayer4::processConControlAcknowledgmentPDU(const uint16_t senderAddr, cons
             serial.print(LOG_SEP);
         );
         actionA08IncrementSequenceNumber();
-        setTL4State(TLayer4::OPEN_IDLE);
+        setTL4State(OPEN_IDLE);
         dumpTelegramBytes(false, telegram, telLength);
         return (true);
     }
@@ -499,7 +499,7 @@ bool TLayer4::processConControlAcknowledgmentPDU(const uint16_t senderAddr, cons
 
         // check CLOSED state for events E11, E12, E13, E14
         const byte curSeqNo = sequenceNumber(telegram);
-        if ((state == TLayer4::CLOSED) || (curSeqNo != seqNoSend) || (connectedAddr != senderAddr))
+        if ((state == CLOSED) || (curSeqNo != seqNoSend) || (connectedAddr != senderAddr))
         {
             dump2(
                 if (connectedAddr != senderAddr)
@@ -520,7 +520,7 @@ bool TLayer4::processConControlAcknowledgmentPDU(const uint16_t senderAddr, cons
             return (false);
         }
 
-        if (repCount < TL4_MAX_REPETITION_COUNT && state == TLayer4::OPEN_WAIT)
+        if (repCount < TL4_MAX_REPETITION_COUNT && state == OPEN_WAIT)
         {
             // event E12
             dump2(
@@ -653,7 +653,7 @@ void TLayer4::processDirectTelegram(const ApciCommand apciCmd, unsigned char* te
     const uint8_t seqNo = sequenceNumber(telegram);
 
     // check for event E07 or CLOSED state of events E04, E05, E06
-    if ((connectedAddr != senderAddr) || (state == TLayer4::CLOSED))
+    if ((connectedAddr != senderAddr) || (state == CLOSED))
     {
         // event E07 or state CLOSED -> always action A00
         dump2(
@@ -687,7 +687,7 @@ void TLayer4::processDirectTelegram(const ApciCommand apciCmd, unsigned char* te
 
     if (seqNo == seqNoRcv)
     {
-        // event E04 and state != TLayer4::CLOSED
+        // event E04 and state != CLOSED
         actionA02sendAckPduAndProcessApci(apciCmd, seqNo, telegram, telLength);
         return;
     }
@@ -745,7 +745,7 @@ void TLayer4::actionA01Connect(const uint16_t address)
     seqNoSend = 0;
     seqNoRcv = 0;
     connectedTime = millis(); // "start connection timeout timer"
-    setTL4State(TLayer4::OPEN_IDLE);
+    setTL4State(OPEN_IDLE);
     dump2(lastTick = connectedTime;); // for debug logging
 }
 
@@ -818,7 +818,7 @@ void TLayer4::actionA05DisconnectUser()
 void TLayer4::actionA06DisconnectAndClose()
 {
     disconnectCount++;
-    setTL4State(TLayer4::CLOSED);
+    setTL4State(CLOSED);
     dump2(
         serial.println("actionA06DisconnectAndClose");
     );
@@ -855,7 +855,7 @@ void TLayer4::actionA07SendDirectTelegram()
         serial.print(LOG_SEP);
     );
 
-    setTL4State(TLayer4::OPEN_WAIT);
+    setTL4State(OPEN_WAIT);
     sendConnectedTelegramBufferState = TELEGRAM_SENDING;
 
     dump2(
@@ -916,7 +916,7 @@ void TLayer4::loop()
         return;
 
     // Send a disconnect after TL4_CONNECTION_TIMEOUT_MS milliseconds inactivity
-    if ((state != TLayer4::CLOSED) && (elapsed(connectedTime) >= TL4_CONNECTION_TIMEOUT_MS))
+    if ((state != CLOSED) && (elapsed(connectedTime) >= TL4_CONNECTION_TIMEOUT_MS))
     {
         // event E16
         actionA06DisconnectAndClose();
@@ -924,14 +924,14 @@ void TLayer4::loop()
     }
 
     // Send a potential response message
-    if ((state == TLayer4::OPEN_IDLE) && (sendConnectedTelegramBufferState == TELEGRAM_ACQUIRED))
+    if ((state == OPEN_IDLE) && (sendConnectedTelegramBufferState == TELEGRAM_ACQUIRED))
     {
         // event E15
         actionA07SendDirectTelegram();
     }
 
     // Repeat the message after TL4_T_ACK_TIMEOUT_MS milliseconds
-    if ((state == TLayer4::OPEN_WAIT) && (elapsed(sentTelegramTime) >= TL4_T_ACK_TIMEOUT_MS))
+    if ((state == OPEN_WAIT) && (elapsed(sentTelegramTime) >= TL4_T_ACK_TIMEOUT_MS))
     {
         if (repCount < TL4_MAX_REPETITION_COUNT)
         {
@@ -966,7 +966,7 @@ void TLayer4::resetConnection()
     sendConnectedTelegramBuffer2State = TELEGRAM_FREE;
 }
 
-bool TLayer4::setTL4State(const TLayer4::TL4State newState)
+bool TLayer4::setTL4State(const TL4State newState)
 {
     dump2(
         dumpState(state);
