@@ -172,25 +172,21 @@ LoadState PropertiesMASK0701::handleAllocAbsTaskSegment(const int objectIdx, con
             break;
 
         case OT_APPLICATION:
-        {
             // we need this newAddress workaround, see comment @void BcuBase::begin(...) in bcu_base.h
-            word newAddress = bcu->getCommObjectTableAddressStatic();
-            if (newAddress == 0) // set newAddress, in case bcu doesn't provide a read-only address
+            if (bcu->getCommObjectTableAddressStatic() == 0)
             {
-                newAddress = addr;
+                // Set commsTabAddr if no read-only address is provided
+                bcu->userEeprom->commsTabAddr() = addr;
+                DB_PROPERTIES(serial.println("  ----> userEeprom->commsTabAddr = 0x", bcu->userEeprom->commsTabAddr(), HEX, 4););
             }
-
-            bcu->userEeprom->commsTabAddr() = newAddress;
-
-            DB_PROPERTIES(
-                if (bcu->userEeprom->commsTabAddr() != addr)
-                {
+            else
+            {
+                DB_PROPERTIES(
                     serial.println();
                     serial.println("  ----> userEeprom->commsTabAddr MARKED AS READ-ONLY, WON'T CHANGE TO 0x", addr, HEX, 4);
                     serial.println();
-                }
-                serial.println("  ----> userEeprom->commsTabAddr = 0x", bcu->userEeprom->commsTabAddr(), HEX, 4);
-            );
+                );
+            }
 
             bcu->userEeprom->appPeiType() = payLoad[2];
             bcu->userEeprom->manufacturerH() = payLoad[3];
@@ -206,7 +202,6 @@ LoadState PropertiesMASK0701::handleAllocAbsTaskSegment(const int objectIdx, con
                 serial.println();
             );
             break;
-        }
 
         default:
             DB_PROPERTIES(serial.println("  ----> unknown objectIdx"); serial.println(););
