@@ -22,8 +22,8 @@
  * When creating a bus object, the handler for the timer must also be
  * created. Example:
  *
- * Bus mybus(timer32_0);
- * BUS_TIMER_INTERRUPT_HANDLER(TIMER32_0_IRQHandler, mybus);
+ * Bus myBus(timer32_0);
+ * BUS_TIMER_INTERRUPT_HANDLER(TIMER32_0_IRQHandler, myBus);
  */
 class Bus
 {
@@ -113,9 +113,9 @@ public:
     [[nodiscard]] bool sendingFrame() const;
 
     /**
-     * Test if there is a received telegram in bus.telegram[].
+     * Test if there is a received telegram in @ref telegram.
      *
-     * @return True if there is a telegram in bus.telegram[], false if not.
+     * @return True if there is a telegram in @ref telegram, false if not.
      */
     [[nodiscard]] bool telegramReceived() const;
 
