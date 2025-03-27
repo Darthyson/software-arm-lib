@@ -7,12 +7,10 @@
  *  it under the terms of the GNU General Public License version 3 as
  *  published by the Free Software Foundation.
  */
+
+
 #include <sblib/digital_pin.h>
-
-#include <sblib/arrays.h>
 #include <sblib/platform.h>
-#include <sblib/utils.h>
-
 
 void portMode(const uint8_t portNum, uint32_t pinMask, const uint32_t mode)
 {
@@ -32,7 +30,7 @@ void portMode(const uint8_t portNum, uint32_t pinMask, const uint32_t mode)
     for (int pinNum = 0; pinMask != 0; ++pinNum, pinMask >>= 1)
     {
         if (pinMask & 1)
-            *(ioconPointer(portNum, pinNum)) = iocon;
+            *(ioconPointer(static_cast<Port>(portNum), pinNum)) = iocon;
     }
 }
 

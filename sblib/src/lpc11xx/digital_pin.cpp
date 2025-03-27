@@ -125,7 +125,7 @@ void pinMode(const uint32_t pin, const uint32_t mode)
             fatalError(); // the pin does not have the desired function
     }
 
-    *(ioconPointer(pin)) = iocon;
+    *(ioconPointer(static_cast<PortPin>(pin))) = iocon;
 }
 
 void pinDirection(const uint32_t pin, const uint32_t dir)

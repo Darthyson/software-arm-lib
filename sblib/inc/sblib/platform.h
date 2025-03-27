@@ -7,8 +7,8 @@
  *  it under the terms of the GNU General Public License version 3 as
  *  published by the Free Software Foundation.
  */
-#ifndef sblib_platform_h
-#define sblib_platform_h
+#ifndef SBLIB_PLATFORM_H
+#define SBLIB_PLATFORM_H
 
 // Per Herb Sutter, the register keyword did not have any effect on C++ programs at all:
 //
@@ -25,6 +25,9 @@
 
 #if defined(__LPC11XX__)
 #include <LPC11xx.h>
+#include <cstdint>
+#include <sblib/ioports.h>
+
 /**
  * Low level table of the IO ports
  */
@@ -41,7 +44,7 @@ extern LPC_GPIO_TypeDef* const gpioPorts[4];
  * @param pin - the IO pin to get the configuration for
  * @return a pointer to the IO configuration register.
  */
-unsigned int* ioconPointer(int pin);
+uintptr_t* ioconPointer(PortPin pin);
 
 /**
  * Get a pointer to a low level IO configuration register.
@@ -50,7 +53,7 @@ unsigned int* ioconPointer(int pin);
  * @param pinNum - the number of the pin to get the configuration for
  * @return a pointer to the IO configuration register.
  */
-unsigned int* ioconPointer(int port, int pinNum);
+uintptr_t* ioconPointer(Port port, uint8_t pinNum);
 
 
 #ifdef IAP_EMULATION
@@ -69,4 +72,4 @@ unsigned int* ioconPointer(int port, int pinNum);
 #define FLASH_PAGE_ALIGNMENT (FLASH_PAGE_SIZE - 1) //!< Page alignment which is allowed to flash
 #define FLASH_RAM_BUFFER_ALIGNMENT (4)             //!< MCU's RAM buffer alignment which is allowed to flash
 
-#endif /*sblib_platform_h*/
+#endif /* SBLIB_PLATFORM_H */
