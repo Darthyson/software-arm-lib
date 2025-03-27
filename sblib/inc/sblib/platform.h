@@ -21,10 +21,14 @@
 //
 // As compiler output is indeed exactly the same, regardless of whether register is
 // specified or not, it's ok to hide it from the compiler with the preprocessor's help.
-#define register
+#define register // must be declared before the LPC11xx.h include
 
 #if defined(__LPC11XX__)
-#include <LPC11xx.h>
+#   include <LPC11xx.h>
+#else
+#   error "Unsupported platform"
+#endif
+
 #include <cstdint>
 #include <sblib/ioports.h>
 
@@ -32,11 +36,6 @@
  * Low level table of the IO ports
  */
 extern LPC_GPIO_TypeDef* const gpioPorts[4];
-
-#else
-#error "Unsupported platform"
-#endif
-#include <core_cm0.h>
 
 /**
  * Get a pointer to a low level IO configuration register.
@@ -57,13 +56,14 @@ uintptr_t* ioconPointer(Port port, uint8_t pinNum);
 
 
 #ifdef IAP_EMULATION
-  extern uint8_t FLASH[];
-# define LPC_FLASH_BASE (FLASH)
-#else
+    extern uint8_t FLASH[];
+#   define LPC_FLASH_BASE (FLASH)
+#endif
+
 #ifndef LPC_FLASH_BASE
-  #define LPC_FLASH_BASE 0
+#   define LPC_FLASH_BASE 0
 #endif
-#endif
+
 
 #define FLASH_BASE_ADDRESS   ((uint8_t *)LPC_FLASH_BASE) //!< The base address of the flash
 
