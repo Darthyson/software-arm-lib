@@ -20,8 +20,9 @@
 #include <sblib/eib/bus_debug.h>
 #include <sblib/eib/bcu_const.h>
 
+
 // constructor for Bus object. Initialize basic interface parameter to bus and set SM to IDLE
-Bus::Bus(AddrTables* addrTable, Timer& aTimer, const int& aRxPin, const int& aTxPin,
+Bus::Bus(AddrTables* addrTable, Timer& aTimer, const uint32_t& aRxPin, const uint32_t& aTxPin,
          const TimerCapture& aCaptureChannel, const TimerMatch& aPwmChannel, CallbackBus* aCallback)
     :
     addressTable(addrTable),
@@ -30,7 +31,7 @@ Bus::Bus(AddrTables* addrTable, Timer& aTimer, const int& aRxPin, const int& aTx
     txPin(aTxPin),
     captureChannel(aCaptureChannel),
     pwmChannel(aPwmChannel),
-    timeChannel((TimerMatch)((pwmChannel + 2) & 3)), // +2 to be compatible to old code during refactoring
+    timeChannel(static_cast<TimerMatch>((pwmChannel + 2) & 3)), // +2 to be compatible to old code during refactoring
     callBack(aCallback),
     ownAddress(PHY_ADDR_DEFAULT)
 {
@@ -150,7 +151,7 @@ void Bus::resume()
     interrupts();
 }
 
-bool Bus::canPause(bool waitForTelegramSent)
+bool Bus::canPause(const bool waitForTelegramSent) const
 {
     // Trivial case: IDLE is always safe.
     if (state == IDLE)
@@ -176,13 +177,13 @@ bool Bus::canPause(bool waitForTelegramSent)
     return true;
 }
 
-void Bus::prepareTelegram(unsigned char* telegram, unsigned short length) const
+void Bus::prepareTelegram(uint8_t* telegram, const uint16_t length) const
 {
     setSenderAddress(telegram, ownAddress);
 
     // Calculate the checksum
-    unsigned char checksum = 0xff;
-    for (unsigned short i = 0; i < length; ++i)
+    uint8_t checksum = 0xff;
+    for (uint16_t i = 0; i < length; ++i)
     {
         checksum ^= telegram[i];
     }
@@ -202,7 +203,7 @@ void Bus::prepareTelegram(unsigned char* telegram, unsigned short length) const
  * @param telegram - the telegram to be sent.
  * @param length - the length of the telegram in sbSendTelegram[], without the checksum
  */
-void Bus::sendTelegram(unsigned char* telegram, unsigned short length)
+void Bus::sendTelegram(byte* telegram, const uint16_t length)
 {
     prepareTelegram(telegram, length);
 
@@ -213,13 +214,12 @@ void Bus::sendTelegram(unsigned char* telegram, unsigned short length)
     sendCurTelegram = telegram;
 
     DB_TELEGRAM(
-        unsigned int t;
-        t = ttimer.value();
+        unsigned int t = ttimer.value();
         serial.print("QUE: (", t, DEC, 8); // queued to send
         serial.print(") ");
-        for (int i = 0; i <= length; ++i)
+        for (uint16_t i = 0; i <= length; ++i)
         {
-            if (i)
+            if (i != 0)
                 serial.print(" ");
             serial.print(telegram[i], HEX, 2);
         }
@@ -259,7 +259,7 @@ void Bus::initState()
     // So, wait for 42 bit times in INIT, then transition to
     // WAIT_50BT_FOR_NEXT_RX_OR_PENDING_TX_OR_IDLE.
 
-    const uint16_t waitTime = BIT_TIMES_DELAY(2) + WAIT_40BIT;
+    constexpr uint16_t waitTime = BIT_TIMES_DELAY(2) + WAIT_40BIT;
 
     timer.captureMode(captureChannel, FALLING_EDGE | INTERRUPT);
     timer.matchMode(timeChannel, INTERRUPT); // at timeout we can start to receive, but need to wait 10BT more before starting to send

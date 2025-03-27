@@ -39,7 +39,7 @@ public:
      * @param aPwmChannel     - the timer match channel of txPin, e.g. MAT0
      * @param aCallback       - Callback class to inform bcu of events, e.g. telegram sending finished
      */
-    Bus(AddrTables* addrTable, Timer& aTimer, const int& aRxPin, const int& aTxPin,
+    Bus(AddrTables* addrTable, Timer& aTimer, const uint32_t& aRxPin, const uint32_t& aTxPin,
         const TimerCapture& aCaptureChannel, const TimerMatch& aPwmChannel, CallbackBus* aCallback);
 
     /**
@@ -110,14 +110,14 @@ public:
      *
      * @return True if there is a frame to be sent, false if not.
      */
-    bool sendingFrame() const;
+    [[nodiscard]] bool sendingFrame() const;
 
     /**
      * Test if there is a received telegram in bus.telegram[].
      *
      * @return True if there is a telegram in bus.telegram[], false if not.
      */
-    bool telegramReceived() const;
+    [[nodiscard]] bool telegramReceived() const;
 
     /**
      * Discard the received telegram. Call this method when you successfully
@@ -158,7 +158,7 @@ private:
      *
      * @param waitForTelegramSent - Whether to wait for an enqueued telegram to be sent or not.
      */
-    bool canPause(bool waitForTelegramSent);
+    [[nodiscard]] bool canPause(bool waitForTelegramSent) const;
 
     /**
      * Switch to @ref Bus::INIT state
@@ -206,7 +206,7 @@ private:
      * @param telegram   The telegram to process
      * @param length     The length of the telegram
      */
-    void prepareTelegram(unsigned char* telegram, unsigned short length) const;
+    void prepareTelegram(uint8_t* telegram, uint16_t length) const;
 
     /**
      * Handle the received bytes on a low level. This function is called by
