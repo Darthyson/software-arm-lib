@@ -50,6 +50,7 @@ TEST_CASE("FLASH_RAM_BUFFER_ALIGNMENT", "[platform]")
 
 TEST_CASE("ioconPointer(pin)", "[platform]")
 {
+#warning "TODO fix sblib and enable ioconPointer tests"
     ///\todo All below tests with nullptr are failing with current sblib
     SECTION("Invalid pin")
     {
@@ -118,7 +119,8 @@ TEST_CASE("ioconPointer(pin)", "[platform]")
 
 TEST_CASE("ioconPointer(port, pinNum)", "[platform]")
 {
-    ///\todo All below tests with nullptr are failing with current sblib
+#warning "TODO fix sblib and enable remaining ioconPointer tests"
+    ///\todo All below tests with nullptr are failing with sblib 2.10
     SECTION("Port 0")
     {
         REQUIRE(ioconPointer(0, 0) == &_LPC_IOCON.RESET_PIO0_0);
