@@ -145,7 +145,9 @@
 // list here all defines which need the serial port
 #if defined(DEBUG_BUS) || defined(DEBUG_BUS_BITLEVEL) || defined(DUMP_TELEGRAMS) || defined(DUMP_COM_OBJ) || \
     defined(DUMP_MEM_OPS) || defined(DUMP_PROPERTIES) || defined(DUMP_TL4)
-#   define INCLUDE_SERIAL
+#   ifndef INCLUDE_SERIAL
+#       define INCLUDE_SERIAL
+#   endif
 #endif
 
 #if defined(INCLUDE_SERIAL) && !defined(SERIAL_SPEED)
