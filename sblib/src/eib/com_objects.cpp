@@ -295,9 +295,9 @@ void ComObjects::_objectWrite(const int objno, unsigned int value, const int fla
 
     //addObjectFlags(objno, flags);
     d(
-      serial.print("ComObjects::_objectWrite call setObjectFlags(", objno, DEC, 3);
-      serial.print(", 0x", flags, HEX, 2);
-      serial.println(")");
+        serial.print("ComObjects::_objectWrite call setObjectFlags(", objno, DEC, 3);
+        serial.print(", 0x", flags, HEX, 2);
+        serial.println(")");
     )
     setObjectFlags(objno, flags); //clear any pending ram com object flags and set new flags
 }
