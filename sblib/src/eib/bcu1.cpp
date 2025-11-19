@@ -23,7 +23,7 @@ inline void BCU1::begin(const int manufacturer, const int deviceType, const int 
 {
     BcuDefault::begin(manufacturer, deviceType, version);
     BcuDefault::_begin();
-    comObjects->printObjectConfigTable();
+    static_cast<ComObjectsBCU1*>(this->comObjects)->printObjectConfigTable();
 }
 
 bool BCU1::applicationRunning() const
