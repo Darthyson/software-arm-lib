@@ -3,8 +3,8 @@ cmake_minimum_required(VERSION 3.30)
 project(sblib LANGUAGES CXX VERSION 2.10)
 
 set(CMAKE_VERBOSE_MAKEFILE ON CACHE BOOL "Enable verbose output from the build system")
-set(CMAKE_C_STANDARD 17)
-set(CMAKE_C_STANDARD_REQUIRED ON)
+set(CMAKE_CXX_STANDARD 17)
+set(CMAKE_CXX_STANDARD_REQUIRED ON)
 
 set(SBLPC_DIR ${CMAKE_SOURCE_DIR}/../../CMSIS_CORE_LPC11xx CACHE PATH "Where the CMSIS_CORE_LPC11xx lib is")
 # todo write docu how to get/set our CMAKE_TOOLCHAIN_FILE (CMSIS_CORE_LPC11xx/LPC11xx.cmake).
@@ -97,7 +97,6 @@ set(RELEASE_FLAGS_ARM
 
 set (COMMON_X86_X64_FLAGS
         -Wall -Wlogical-op -Woverloaded-virtual
-        -std=c++17
         -O0
         -g3
         -c

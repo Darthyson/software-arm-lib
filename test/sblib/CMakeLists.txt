@@ -3,8 +3,8 @@ cmake_minimum_required(VERSION 3.30)
 project(sblib-test CXX)
 
 set(CMAKE_VERBOSE_MAKEFILE ON CACHE BOOL "Enable verbose output from the build system")
-set(CMAKE_C_STANDARD 17)
-set(CMAKE_C_STANDARD_REQUIRED ON)
+set(CMAKE_CXX_STANDARD 17)
+set(CMAKE_CXX_STANDARD_REQUIRED ON)
 
 
 set(CATCH_PATH "${CMAKE_SOURCE_DIR}/../../Catch" CACHE PATH "Path the Catch project")
@@ -58,7 +58,6 @@ set(RELEASE_DEFINES
 
 set(CORE_FLAGS
         -Wall -Wlogical-op -Woverloaded-virtual
-        -std=c++17
         -O0
         -g3
         -c
