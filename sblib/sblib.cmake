@@ -84,6 +84,7 @@ set(SBLIB_KNX_SRC
         inc/sblib/eib/com_objectsMASK0701.h
         inc/sblib/eib/com_objectsMASK0705.h
         inc/sblib/eib/com_objectsSYSTEMB.h
+        inc/sblib/eib/com_objects_debug.h
         inc/sblib/eib/datapoint_types.h
         inc/sblib/eib/knx_lpdu.h
         inc/sblib/eib/knx_npdu.h
@@ -137,6 +138,7 @@ set(SBLIB_KNX_SRC
         src/eib/com_objectsBCU1.cpp
         src/eib/com_objectsBCU2.cpp
         src/eib/com_objectsSYSTEMB.cpp
+        src/eib/com_objects_debug.cpp
         src/eib/datapoint_types.cpp
         src/eib/hardware_descriptor.cpp
         src/eib/knx_tlayer4.cpp
