@@ -30,7 +30,7 @@ set(LOGGING OFF CACHE BOOL "Whether to through the serial port")
 # todo create options for all defines/symbols
 option(DEBUG_BUS "Enable dumping of state machine interrupt data e.g timer values" OFF)
 option(DEBUG_BUS_BITLEVEL "Extension used with DEBUG_BUS to dump interrupt of each bit -
-        use with care due to easy overflow of the trace buffer" OFF)
+                           Use with care due to easy overflow of the trace buffer" OFF)
 
 set(DEBUG_DEFINES_CORE
         INCLUDE_SERIAL
