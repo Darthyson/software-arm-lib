@@ -132,7 +132,7 @@ if(COMPILER_SUPPORTS_64BIT)
             $<$<CONFIG:Release>:${RELEASE_X64_FLAGS}>
     )
     target_link_options(${TARGET_X64} PRIVATE "-m64")
-    target_link_libraries(${TARGET_X86} "sblib-test_x64")
+    target_link_libraries(${TARGET_X64} "sblib-test_x64")
 else()
     message(NOTICE "Looks like the compiler has no 64bit support. (in ${PROJECT_NAME})")
 endif()
