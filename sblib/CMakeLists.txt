@@ -9,14 +9,12 @@ set(CMAKE_CXX_STANDARD 17)
 set(CMAKE_CXX_STANDARD_REQUIRED ON)
 
 set(SBLPC_DIR ${CMAKE_SOURCE_DIR}/../../CMSIS_CORE_LPC11xx CACHE PATH "Where the CMSIS_CORE_LPC11xx lib is")
-# todo write docu how to get/set our CMAKE_TOOLCHAIN_FILE (CMSIS_CORE_LPC11xx/LPC11xx.cmake).
-# Set it here only, if cross-compiling, otherwise sblib-test and lib-test-cases builds will fail
-# Set toolchain file, if cross-compiling and it´s not specified
+# Toolchain file is set in CMakePresets.json or on command line
 if(CMAKE_CROSSCOMPILING AND NOT DEFINED CMAKE_TOOLCHAIN_FILE)
-    get_filename_component(CMAKE_TOOLCHAIN_FILE ${SBLPC_DIR}/LPC11xx.cmake REALPATH CACHE)
+    message(FATAL_ERROR "Cross-compiling but CMAKE_TOOLCHAIN_FILE not set. Set in CMakePresets.json or configure with -DCMAKE_TOOLCHAIN_FILE=<path to>/arm-none-eabi_mcuxpresso.cmake")
 endif()
-if(CMAKE_CROSSCOMPILING AND NOT EXISTS ${CMAKE_TOOLCHAIN_FILE})
-    message(FATAL_ERROR "Toolchain file does not exist: " ${CMAKE_TOOLCHAIN_FILE})
+if(CMAKE_CROSSCOMPILING AND DEFINED CMAKE_TOOLCHAIN_FILE AND NOT EXISTS "${CMAKE_TOOLCHAIN_FILE}")
+    message(FATAL_ERROR "Toolchain file does not exist: ${CMAKE_TOOLCHAIN_FILE}")
 endif()
 
 set(TARGET_ARM ${PROJECT_NAME})
@@ -27,7 +25,6 @@ set(TARGET_X64 ${PROJECT_NAME}_x64)
 set(CMAKE_BUILD_TYPE "Debug" CACHE STRING "How to build")
 set_property(CACHE CMAKE_BUILD_TYPE PROPERTY STRINGS Debug Release)
 set(LOGGING OFF CACHE BOOL "Whether to through the serial port")
-
 
 
 # todo create options for all defines/symbols
