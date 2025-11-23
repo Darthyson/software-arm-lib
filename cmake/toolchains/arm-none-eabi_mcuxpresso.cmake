@@ -4,6 +4,11 @@ if(NOT TOOLCHAIN_PREFIX)
             Specify path to arm-none-eabi toolchain with e.g. --DTOOLCHAIN_PREFIX=C:/nxp/MCUXpressoIDE_25.6.136/ide/tools")
 endif()
 
+if(NOT EXISTS ${TOOLCHAIN_PREFIX})
+    message(FATAL_ERROR "TOOLCHAIN_PREFIX directory \"${TOOLCHAIN_PREFIX}\" does not exist.\
+            Specify path to arm-none-eabi toolchain with e.g. --DTOOLCHAIN_PREFIX=C:/nxp/MCUXpressoIDE_25.6.136/ide/tools")
+endif()
+
 set(CMAKE_SYSTEM_NAME Generic)
 set(CMAKE_SYSTEM_VERSION 1)
 set(CMAKE_SYSTEM_PROCESSOR arm)
