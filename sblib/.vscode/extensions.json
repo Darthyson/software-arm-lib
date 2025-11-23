@@ -1,15 +1,15 @@
 {  
   "recommendations": [  
-	"ms-vscode.cmake-tools",
-	"cschlosser.doxdocgen",
-	"ms-vscode.cpptools",
-	"ms-vscode.cpptools-extension-pack",
-	"ms-vscode.cpptools-themes"
-	"jeff-hykin.better-cpp-syntax",
-	"marus25.cortex-debug",
-	"mcu-debug.debug-tracker-vscode",
-	"mcu-debug.memory-view",
-	"mcu-debug.peripheral-viewer",
-	"mcu-debug.rtos-views",
+    "ms-vscode.cmake-tools",
+    "cschlosser.doxdocgen",
+    "ms-vscode.cpptools",
+    "ms-vscode.cpptools-extension-pack",
+    "ms-vscode.cpptools-themes"
+    "jeff-hykin.better-cpp-syntax",
+    "marus25.cortex-debug",
+    "mcu-debug.debug-tracker-vscode",
+    "mcu-debug.memory-view",
+    "mcu-debug.peripheral-viewer",
+    "mcu-debug.rtos-views",
   ]
 }
