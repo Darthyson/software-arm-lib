@@ -21,9 +21,6 @@ set(TARGET_ARM ${PROJECT_NAME})
 set(TARGET_X86 ${PROJECT_NAME}_x86)
 set(TARGET_X64 ${PROJECT_NAME}_x64)
 
-
-set(CMAKE_BUILD_TYPE "Debug" CACHE STRING "How to build")
-set_property(CACHE CMAKE_BUILD_TYPE PROPERTY STRINGS Debug Release)
 set(LOGGING OFF CACHE BOOL "Whether to through the serial port")
 
 

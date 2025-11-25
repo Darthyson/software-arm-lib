@@ -13,10 +13,10 @@
             "binaryDir": "${sourceDir}/cmake-build/${presetName}"
         },
         {
-            "name": "default-generator-ninja",
-            "description": "Sets the Ninja generator",
+            "name": "default-generator-ninja-multi-config",
+            "description": "Sets the Ninja Multi Config generator",
             "hidden": true,
-            "generator": "Ninja"
+            "generator": "Ninja Multi-Config"
         },
         {
             "name": "default-toolchain-arm-none-eabi",
@@ -25,184 +25,115 @@
             "toolchainFile": "${sourceDir}/../cmake/toolchains/arm-none-eabi_mcuxpresso.cmake"
         },
         {
-            "name": "default-arm",
-            "description": "Sets Toolchain arm-none-eabi (using MCUXpresso), build directory and Ninja generator",
-            "hidden": true,
+            "name": "arm",
+            "displayName": "ARM Target",
+            "description": "Sets Toolchain arm-none-eabi (using MCUXpresso), build directory and Ninja Multi Config generator",
+            "hidden": false,
             "inherits": [
                 "default-build-directory",
-                "default-generator-ninja",
+                "default-generator-ninja-multi-config",
                 "default-toolchain-arm-none-eabi"
             ]
         },
         {
-            "name": "debug-arm",
-            "displayName": "ARM Debug Configure",
-            "description": "Sets Toolchain arm-none-eabi (using MCUXpresso), build directory and Ninja generator",
-            "inherits": [
-                "default-arm"
-            ],
+            "name": "x86",
+            "displayName": "x86 Target",
+            "description": "Sets architecture x86, build directory and Ninja Multi Config generator",
             "hidden": false,
-            "cacheVariables": {
-                "CMAKE_BUILD_TYPE": "Debug"
-            }
-        },
-        {
-            "name": "release-arm",
-            "displayName": "ARM Release Configure",
-            "description": "Sets Toolchain arm-none-eabi (using MCUXpresso), build directory and Ninja generator",
-            "inherits": [
-                "default-arm"
-            ],
-            "hidden": false,
-            "cacheVariables": {
-                "CMAKE_BUILD_TYPE": "Release"
-            }
-        },
-        {
-            "name": "default-x86",
-            "description": "Sets architecture x86, build directory and Ninja generator",
-            "hidden": true,
             "inherits": [
                 "default-build-directory",
-                "default-generator-ninja"
+                "default-generator-ninja-multi-config"
             ],
             "cacheVariables": {
                 "SBLIB_ARCHITECTURE": "x86"
             }
         },
         {
-            "name": "default-x64",
-            "description": "Sets architecture x64, build directory and Ninja generator",
-            "hidden": true,
+            "name": "x64",
+            "displayName": "x64 Target",
+            "description": "Sets architecture x64, build directory and Ninja Multi Config generator",
+            "hidden": false,
             "inherits": [
                 "default-build-directory",
-                "default-generator-ninja"
+                "default-generator-ninja-multi-config"
             ],
             "cacheVariables": {
                 "SBLIB_ARCHITECTURE": "x64"
-            }
-        },
-        {
-            "name": "debug-x86",
-            "displayName": "x86 Debug Configure",
-            "description": "Configure x86 Debug",
-            "inherits": [
-                "default-x86"
-            ],
-            "hidden": false,
-            "cacheVariables": {
-                "CMAKE_BUILD_TYPE": "Debug"
-            }
-        },
-        {
-            "name": "release-x86",
-            "displayName": "x86 Release Configure",
-            "description": "Configure x86 Release",
-            "inherits": [
-                "default-x86"
-            ],
-            "hidden": false,
-            "cacheVariables": {
-                "CMAKE_BUILD_TYPE": "Release"
-            }
-        },
-        {
-            "name": "debug-x64",
-            "displayName": "x64 Debug Configure",
-            "description": "Configure x64 Debug",
-            "inherits": [
-                "default-x64"
-            ],
-            "hidden": false,
-            "cacheVariables": {
-                "CMAKE_BUILD_TYPE": "Debug"
-            }
-        },
-        {
-            "name": "release-x64",
-            "displayName": "x64 Release Configure",
-            "description": "Configure x64 Release",
-            "inherits": [
-                "default-x64"
-            ],
-            "hidden": false,
-            "cacheVariables": {
-                "CMAKE_BUILD_TYPE": "Release"
             }
         }
     ],
     "buildPresets": [
         {
-            "name": "Debug-arm",
-            "configurePreset": "debug-arm",
+            "name": "debug-arm",
+            "configurePreset": "arm",
+            "configuration": "Debug",
             "displayName": "ARM Target Debug Build",
             "description": "Build ARM target in Debug configuration",
             "hidden": false,
             "verbose": true,
             "targets": [
                 "sblib"
-            ],
-            "jobs": 16
+            ]
         },
         {
-            "name": "Release-arm",
-            "configurePreset": "release-arm",
+            "name": "release-arm",
+            "configurePreset": "arm",
+            "configuration": "Release",
             "displayName": "ARM Target Release Build", 
             "description": "Build ARM target in Release configuration",
             "hidden": false,
             "verbose": true,
             "targets": [
                 "sblib"
-            ],
-            "jobs": 16
+            ]
         },
         {
-            "name": "Debug-x86",
-            "configurePreset": "debug-x86",
+            "name": "debug-x86",
+            "configurePreset": "x86",
+            "configuration": "Debug",
             "displayName": "x86 Target Debug Build",
             "description": "Build x86 target in Debug configuration",
             "hidden": false,
             "verbose": true,
             "targets": [
                 "sblib_x86"
-            ],
-            "jobs": 16
+            ]
         },
         {
-            "name": "Release-x86",
-            "configurePreset": "release-x86",
+            "name": "release-x86",
+            "configurePreset": "x86",
+            "configuration": "Release",
             "displayName": "x86 Target Release Build",
             "description": "Build x86 target in Release configuration",
             "hidden": false,
             "verbose": true,
             "targets": [
                 "sblib_x86"
-            ],
-            "jobs": 16
+            ]
         },
         {
-            "name": "Debug-x64",
-            "configurePreset": "debug-x64",
+            "name": "debug-x64",
+            "configurePreset": "x64",
+            "configuration": "Debug",
             "displayName": "x64 Target Debug Build",
             "description": "Build x64 target in Debug configuration",
             "hidden": false,
             "verbose": true,
             "targets": [
                 "sblib_x64"
-            ],
-            "jobs": 16
+            ]
         },
         {
-            "name": "Release-x64",
-            "configurePreset": "release-x64",
+            "name": "release-x64",
+            "configurePreset": "x64",
+            "configuration": "Release",
             "displayName": "x64 Target Release Build",
             "description": "Build x64 target in Release configuration",
             "hidden": false,
             "verbose": true,
             "targets": [
                 "sblib_x64"
-            ],
-            "jobs": 16
+            ]
         }
     ]
 }
