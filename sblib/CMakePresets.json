@@ -25,61 +25,21 @@
             "toolchainFile": "${sourceDir}/../cmake/toolchains/arm-none-eabi_mcuxpresso.cmake"
         },
         {
-            "name": "toolchain-prefix-windows",
-            "description": "Sets Toolchain prefix to MCUXpresso on Windows",
-            "hidden": true,
-            "environment": {
-                "MCUXPRESSO_TOOLCHAIN_PATH": "C:/nxp/MCUXpressoIDE_25.6.136/ide/tools"
-            },
-            "cacheVariables": {
-                "TOOLCHAIN_PREFIX": {
-                    "type": "STRING",
-                    "value": "$env{MCUXPRESSO_TOOLCHAIN_PATH}"
-                }
-            }
-        },
-        {
-            "name": "toolchain-prefix-linux",
-            "description": "Sets Toolchain prefix to MCUXpresso on Linux",
-            "hidden": true,
-            "environment": {
-                "MCUXPRESSO_TOOLCHAIN_PATH": "/usr/local/mcuxpressoide-25.6.136/ide/tools"
-            },
-            "cacheVariables": {
-                "TOOLCHAIN_PREFIX": {
-                    "type": "STRING",
-                    "value": "$env{MCUXPRESSO_TOOLCHAIN_PATH}"
-                }
-            } 
-        },
-        {
-            "name": "default-arm-windows",
-            "description": "Sets Windows Toolchain arm-none-eabi (using MCUXpresso), build directory and Ninja generator",
+            "name": "default-arm",
+            "description": "Sets Toolchain arm-none-eabi (using MCUXpresso), build directory and Ninja generator",
             "hidden": true,
             "inherits": [
                 "default-build-directory",
                 "default-generator-ninja",
-                "default-toolchain-arm-none-eabi",
-                "toolchain-prefix-windows"
+                "default-toolchain-arm-none-eabi"
             ]
         },
         {
-            "name": "default-arm-linux",
-            "description": "Sets Linux Toolchain arm-none-eabi (using MCUXpresso), build directory and Ninja generator",
-            "hidden": true,
+            "name": "debug-arm",
+            "displayName": "ARM Debug Configure",
+            "description": "Sets Toolchain arm-none-eabi (using MCUXpresso), build directory and Ninja generator",
             "inherits": [
-                "default-build-directory",
-                "default-generator-ninja",
-                "default-toolchain-arm-none-eabi",
-                "toolchain-prefix-linux"
-            ]
-        },
-        {
-            "name": "debug-arm-windows",
-            "displayName": "ARM Debug Configure (Windows)",
-            "description": "Sets Windows Toolchain arm-none-eabi (using MCUXpresso), build directory and Ninja generator",
-            "inherits": [
-                "default-arm-windows"
+                "default-arm"
             ],
             "hidden": false,
             "cacheVariables": {
@@ -87,35 +47,11 @@
             }
         },
         {
-            "name": "release-arm-windows",
-            "displayName": "ARM Release Configure (Windows)",
-            "description": "Sets Windows Toolchain arm-none-eabi (using MCUXpresso), build directory and Ninja generator",
+            "name": "release-arm",
+            "displayName": "ARM Release Configure",
+            "description": "Sets Toolchain arm-none-eabi (using MCUXpresso), build directory and Ninja generator",
             "inherits": [
-                "default-arm-windows"
-            ],
-            "hidden": false,
-            "cacheVariables": {
-                "CMAKE_BUILD_TYPE": "Release"
-            }
-        },
-        {
-            "name": "debug-arm-linux",
-            "displayName": "ARM Debug Configure (Linux)",
-            "description": "Sets Linux Toolchain arm-none-eabi (using MCUXpresso), build directory and Ninja generator",
-            "inherits": [
-                "default-arm-linux"
-            ],
-            "hidden": false,
-            "cacheVariables": {
-                "CMAKE_BUILD_TYPE": "Debug"
-            }
-        },
-        {
-            "name": "release-arm-linux",
-            "displayName": "ARM Release Configure (Linux)",
-            "description": "Sets Linux Toolchain arm-none-eabi (using MCUXpresso), build directory and Ninja generator",
-            "inherits": [
-                "default-arm-linux"
+                "default-arm"
             ],
             "hidden": false,
             "cacheVariables": {
@@ -197,10 +133,10 @@
     ],
     "buildPresets": [
         {
-            "name": "Debug-arm-windows",
-            "configurePreset": "debug-arm-windows",
-            "displayName": "ARM Target Debug Build Windows",
-            "description": "Build ARM target in Debug configuration on Windows",
+            "name": "Debug-arm",
+            "configurePreset": "debug-arm",
+            "displayName": "ARM Target Debug Build",
+            "description": "Build ARM target in Debug configuration",
             "hidden": false,
             "verbose": true,
             "targets": [
@@ -209,23 +145,10 @@
             "jobs": 16
         },
         {
-            "name": "Release-arm-windows",
-            "configurePreset": "release-arm-windows",
-            "displayName": "ARM Target Release Build Windows", 
-            "description": "Build ARM target in Release configuration on Windows",
-            "hidden": false,
-            "verbose": true,
-            "targets": [
-                "sblib"
-            ],
-            "jobs": 16
-        }
-        ,
-        {
-            "name": "Debug-arm-linux",
-            "configurePreset": "debug-arm-linux",
-            "displayName": "ARM Target Debug Build on Linux",
-            "description": "Build ARM target in Debug configuration on Linux",
+            "name": "Release-arm",
+            "configurePreset": "release-arm",
+            "displayName": "ARM Target Release Build", 
+            "description": "Build ARM target in Release configuration",
             "hidden": false,
             "verbose": true,
             "targets": [
@@ -233,19 +156,6 @@
             ],
             "jobs": 16
         },
-        {
-            "name": "Release-arm-linux",
-            "configurePreset": "release-arm-linux",
-            "displayName": "ARM Target Release Build on Linux", 
-            "description": "Build ARM target in Release configuration on Linux",
-            "hidden": false,
-            "verbose": true,
-            "targets": [
-                "sblib"
-            ],
-            "jobs": 16
-        }
-        ,
         {
             "name": "Debug-x86",
             "configurePreset": "debug-x86",

@@ -1,12 +1,13 @@
 cmake_minimum_required(VERSION 3.28)
 if(NOT TOOLCHAIN_PREFIX)
-    message(FATAL_ERROR "No TOOLCHAIN_PREFIX specified.\
-            Specify path to arm-none-eabi toolchain with e.g. --DTOOLCHAIN_PREFIX=C:/nxp/MCUXpressoIDE_25.6.136/ide/tools")
+    set(TOOLCHAIN_PREFIX $ENV{MCUXPRESSO_TOOLCHAIN_PATH})
+    message(STATUS "No TOOLCHAIN_PREFIX specified. Using environment variable MCUXPRESSO_TOOLCHAIN_PATH=\"${TOOLCHAIN_PREFIX}\"")    
 endif()
 
 if(NOT EXISTS ${TOOLCHAIN_PREFIX})
     message(FATAL_ERROR "TOOLCHAIN_PREFIX directory \"${TOOLCHAIN_PREFIX}\" does not exist.\
-            Specify path to arm-none-eabi toolchain with e.g. --DTOOLCHAIN_PREFIX=C:/nxp/MCUXpressoIDE_25.6.136/ide/tools")
+            Specify path to arm-none-eabi toolchain with --DTOOLCHAIN_PREFIX=\"C:/nxp/MCUXpressoIDE_25.6.136/ide/tools\" (Windows), \
+            --DTOOLCHAIN_PREFIX=\"/usr/local/mcuxpressoide-25.6.136/ide/tools\" (Linux) or set environment variable MCUXPRESSO_TOOLCHAIN_PATH.")
 endif()
 
 set(CMAKE_SYSTEM_NAME Generic)
