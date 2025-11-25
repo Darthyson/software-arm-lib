@@ -1,4 +1,4 @@
-cmake_minimum_required(VERSION 3.31)
+cmake_minimum_required(VERSION 3.28)
 if(NOT TOOLCHAIN_PREFIX)
     message(FATAL_ERROR "No TOOLCHAIN_PREFIX specified.\
             Specify path to arm-none-eabi toolchain with e.g. --DTOOLCHAIN_PREFIX=C:/nxp/MCUXpressoIDE_25.6.136/ide/tools")
@@ -34,9 +34,11 @@ else()
     message(NOTICE "Could not find MCUXpresso in ${TOOLCHAIN_PREFIX}. Build may not work correctly.")
 endif()
 
-if(CMAKE_HOST_EXECUTABLE_SUFFIX STREQUAL ".exe") # CMAKE_HOST_EXECUTABLE_SUFFIX since CMake 3.31
+if(CMAKE_HOST_WIN32) # todo use if(CMAKE_HOST_EXECUTABLE_SUFFIX STREQUAL ".exe") when switching to CMake >=3.31
+    set(EXE_SUFFIX ".exe") # todo replace with CMAKE_HOST_EXECUTABLE_SUFFIX when switching to CMake >=3.31
     set(BATCH_SUFFIX ".cmd")
 else()
+    set(EXE_SUFFIX "")
     set(BATCH_SUFFIX "")
 endif()
 
@@ -46,7 +48,7 @@ set(TARGET_TRIPLET "arm-none-eabi")
 get_filename_component(LINK_SERVER_BIN ${TOOLCHAIN_PREFIX}/../LinkServer/binaries REALPATH CACHE "Path to LinkServer binaries")
 set(BOOT_LINK1 ${LINK_SERVER_BIN}/boot_link1${BATCH_SUFFIX} CACHE FILEPATH "boot_link1 Filename")
 set(BOOT_LINK2 ${LINK_SERVER_BIN}/boot_link2${BATCH_SUFFIX} CACHE FILEPATH "boot_link2 Filename")
-set(REDLINK ${LINK_SERVER_BIN}/crt_emu_cm_redlink${CMAKE_HOST_EXECUTABLE_SUFFIX} CACHE FILEPATH "redlink")
+set(REDLINK ${LINK_SERVER_BIN}/crt_emu_cm_redlink${EXE_SUFFIX} CACHE FILEPATH "redlink")
 if(NOT EXISTS ${BOOT_LINK1})
     message(FATAL_ERROR "boot_link1 file does not exist: " ${BOOT_LINK1})
 endif()
@@ -64,14 +66,14 @@ get_filename_component(TOOLCHAIN_INC_DIR ${TOOLCHAIN_PREFIX}/${TARGET_TRIPLET}/i
 get_filename_component(TOOLCHAIN_LIB_DIR ${TOOLCHAIN_PREFIX}/${TARGET_TRIPLET}/lib REALPATH CACHE)
 
 set(TOOLS_PREFIX ${TOOLCHAIN_BIN_DIR}/${TARGET_TRIPLET})
-set(CMAKE_C_COMPILER ${TOOLS_PREFIX}-gcc${CMAKE_HOST_EXECUTABLE_SUFFIX} CACHE FILEPATH "c compiler")
-set(CMAKE_CXX_COMPILER ${TOOLS_PREFIX}-g++${CMAKE_HOST_EXECUTABLE_SUFFIX} CACHE FILEPATH "cxx compiler")
-set(CMAKE_ASM_COMPILER ${TOOLS_PREFIX}-as${CMAKE_HOST_EXECUTABLE_SUFFIX} CACHE FILEPATH "asm compiler")
-set(CMAKE_OBJCOPY ${TOOLS_PREFIX}-objcopy${CMAKE_HOST_EXECUTABLE_SUFFIX} CACHE FILEPATH "objcopy")
-set(CMAKE_OBJDUMP ${TOOLS_PREFIX}-objdump${CMAKE_HOST_EXECUTABLE_SUFFIX} CACHE FILEPATH "objdump")
-set(CMAKE_AR ${TOOLS_PREFIX}-ar${CMAKE_HOST_EXECUTABLE_SUFFIX} CACHE FILEPATH "archiver")
-set(CMAKE_STRIP ${TOOLS_PREFIX}-strip${CMAKE_HOST_EXECUTABLE_SUFFIX} CACHE FILEPATH "strip")
-set(CMAKE_SIZE ${TOOLS_PREFIX}-size${CMAKE_HOST_EXECUTABLE_SUFFIX} CACHE FILEPATH "size")
+set(CMAKE_C_COMPILER ${TOOLS_PREFIX}-gcc${EXE_SUFFIX} CACHE FILEPATH "c compiler")
+set(CMAKE_CXX_COMPILER ${TOOLS_PREFIX}-g++${EXE_SUFFIX} CACHE FILEPATH "cxx compiler")
+set(CMAKE_ASM_COMPILER ${TOOLS_PREFIX}-as${EXE_SUFFIX} CACHE FILEPATH "asm compiler")
+set(CMAKE_OBJCOPY ${TOOLS_PREFIX}-objcopy${EXE_SUFFIX} CACHE FILEPATH "objcopy")
+set(CMAKE_OBJDUMP ${TOOLS_PREFIX}-objdump${EXE_SUFFIX} CACHE FILEPATH "objdump")
+set(CMAKE_AR ${TOOLS_PREFIX}-ar${EXE_SUFFIX} CACHE FILEPATH "archiver")
+set(CMAKE_STRIP ${TOOLS_PREFIX}-strip${EXE_SUFFIX} CACHE FILEPATH "strip")
+set(CMAKE_SIZE ${TOOLS_PREFIX}-size${EXE_SUFFIX} CACHE FILEPATH "size")
 
 if(NOT EXISTS ${CMAKE_C_COMPILER})
     message(FATAL_ERROR "CMAKE_C_COMPILER file does not exist: ${CMAKE_C_COMPILER}")
