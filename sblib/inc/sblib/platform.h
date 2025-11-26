@@ -43,7 +43,7 @@ extern LPC_GPIO_TypeDef* const gpioPorts[4];
  * @param pin - the IO pin to get the configuration for
  * @return a pointer to the IO configuration register.
  */
-uintptr_t* ioconPointer(PortPin pin);
+uint32_t* ioconPointer(PortPin pin);
 
 /**
  * Get a pointer to a low level IO configuration register.
@@ -52,8 +52,7 @@ uintptr_t* ioconPointer(PortPin pin);
  * @param pinNum - the number of the pin to get the configuration for
  * @return a pointer to the IO configuration register.
  */
-uintptr_t* ioconPointer(Port port, uint8_t pinNum);
-
+uint32_t* ioconPointer(Port port, uint8_t pinNum);
 
 #ifdef IAP_EMULATION
     extern uint8_t FLASH[];

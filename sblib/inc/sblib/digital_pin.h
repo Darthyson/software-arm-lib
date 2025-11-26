@@ -147,7 +147,7 @@ uint32_t pulseIn(uint32_t pin, bool state, uint32_t timeout);
  * @param pin   The pin to process, e.g. PIO1_9
  * @return The port number of the pin, e.g. 1
  */
-constexpr uint8_t digitalPinToPort(const uint32_t pin) {return (pin >> 5) & 3;} // 3 = 0b0000 0011
+constexpr Port digitalPinToPort(const uint32_t pin) {return static_cast<Port>((pin >> 5) & 3);} // 3 = 0b0000 0011
 
 /**
  * Get the number of the pin.

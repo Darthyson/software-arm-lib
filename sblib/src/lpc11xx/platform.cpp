@@ -78,14 +78,12 @@ static constexpr uint8_t ioconOffsets[4][12] =
     }
 };
 
-uintptr_t* ioconPointer(const PortPin pin)
+uint32_t* ioconPointer(const PortPin pin)
 {
-    return reinterpret_cast<uintptr_t*>(LPC_IOCON_BASE) +
-        ioconOffsets[digitalPinToPort(pin)][digitalPinToPinNum(pin)];
+    return ioconPointer(digitalPinToPort(pin), digitalPinToPinNum(pin));
 }
 
-uintptr_t* ioconPointer(const Port port, const uint8_t pinNum)
+uint32_t* ioconPointer(const Port port, const uint8_t pinNum)
 {
-    return reinterpret_cast<uintptr_t*>(LPC_IOCON_BASE) +
-        ioconOffsets[port][pinNum];
+    return ((uint32_t*)(LPC_IOCON_BASE) + ioconOffsets[port][pinNum]);
 }
