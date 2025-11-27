@@ -6,10 +6,11 @@
  * published by the Free Software Foundation.
  */
 
-#include <catch.hpp>
+#include "test_ioports.h"
 #include <cstdio>
 #include <sblib/ioports.h>
-#include "test_ioports.h"
+
+#include <catch.hpp> // If possible, include catch.hpp as last header
 
 
 /**

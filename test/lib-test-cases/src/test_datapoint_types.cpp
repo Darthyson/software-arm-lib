@@ -8,10 +8,10 @@
  *  published by the Free Software Foundation.
  */
 
-#include <catch.hpp>
 #include <sblib/eib/datapoint_types.h>
-
 #include <limits.h>
+
+#include <catch.hpp> // If possible, include catch.hpp as last header
 
 
 TEST_CASE("Datapoint type conversion: floatToDpt9","[SBLIB]")

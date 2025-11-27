@@ -29,6 +29,7 @@
 #undef private
 #undef protected
 
+
 typedef struct
 {
     unsigned char  state;

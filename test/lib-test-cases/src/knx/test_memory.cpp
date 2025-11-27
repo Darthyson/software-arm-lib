@@ -6,8 +6,9 @@
  * published by the Free Software Foundation.
  */
 
-#include <catch.hpp>
 #include "test_memory.h"
+
+#include <catch.hpp> // If possible, include catch.hpp as last header
 
 
 struct TestRange

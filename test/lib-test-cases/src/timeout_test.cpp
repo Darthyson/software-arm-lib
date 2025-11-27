@@ -8,10 +8,11 @@
  *  published by the Free Software Foundation.
  */
 
-#include <catch.hpp>
-#include "protocol.h"
+#include <protocol.h>
+#include <sblib/timeout.h>
 
-#include "sblib/timeout.h"
+#include <catch.hpp> // If possible, include catch.hpp as last header
+
 
 Timeout to;
 

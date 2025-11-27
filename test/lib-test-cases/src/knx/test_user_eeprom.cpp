@@ -6,13 +6,13 @@
  * published by the Free Software Foundation.
  */
 
-#include <catch.hpp>
+#include <catch.hpp> // If possible, include catch.hpp as last header
+
+#include "test_user_eeprom.h"
 #include <vector>
 #include <cstring>
 #include <iap_emu.h>
 #include <sblib/internal/iap.h>
-
-#include "test_user_eeprom.h"
 
 
 struct TestSize

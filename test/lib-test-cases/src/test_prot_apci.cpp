@@ -19,11 +19,11 @@
  published by the Free Software Foundation.
  ---------------------------------------------------------------------------*/
 
-#include <catch.hpp>
-#include <protocol.h>
 #include <sblib/eib/apci.h>
+#include <protocol.h>
 
-// #include "tc_tlayer4_stepfunction.h"
+#include <catch.hpp> // If possible, include catch.hpp as last header
+
 
 #define MANUFACTURER (0x0004)
 #define DEVICE       (0x2060)

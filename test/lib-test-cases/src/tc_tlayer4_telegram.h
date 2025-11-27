@@ -25,6 +25,7 @@
 #include "tc_tlayer4_stepfunction.h"
 #include <protocol.h>
 
+
 static Telegram testCaseTelegrams_01[] =
 {
     // KNX Spec. 8/3/4 2.2.1.1 p.12 (all styles)

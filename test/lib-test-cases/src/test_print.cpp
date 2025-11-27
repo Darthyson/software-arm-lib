@@ -6,11 +6,13 @@
  * published by the Free Software Foundation.
  */
 
-#include <catch.hpp> ///\todo replace with catch2/catch_test_macros.hpp
 #include <sblib/print.h>
 #include <string>
 #include <vector>
 #include <cstring>
+
+#include <catch.hpp> ///\todo replace with catch2/catch_test_macros.hpp
+
 
 /**
  * Mock implementation of Print class for testing

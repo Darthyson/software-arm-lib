@@ -12,6 +12,11 @@
 #ifndef PROTOCOL_H_
 #define PROTOCOL_H_
 
+#include <string.h>
+#include <stdio.h>
+
+#include "iap_emu.h"
+
 ///\todo Check why catch.hpp must stay in this header. Maybe it´s related to below #define #undef of private and protected
 ///      otherwise we get compiler error: expected primary-expression before 'volatile'   core_cm0.h  /sblib-test/cpu-emu line 163
 ///      from core_cm0.h line 162:
@@ -29,10 +34,7 @@
 #   include <sblib/eib/systemb.h>
 #undef private
 #undef protected
-#include "iap_emu.h"
 
-#include <string.h>
-#include <stdio.h>
 
 
 extern BcuDefault* bcuUnderTest;

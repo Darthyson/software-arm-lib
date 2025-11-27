@@ -6,9 +6,12 @@
  * published by the Free Software Foundation.
  */
 
-#include <catch.hpp>
-#include <sblib/platform.h>
 #include <sblib/ioports.h>
+
+#include <catch.hpp> // If possible, include catch.hpp as last header
+
+#include <sblib/platform.h>
+
 
 TEST_CASE("gpioPorts[4]", "[platform]")
 {

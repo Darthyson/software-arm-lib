@@ -19,9 +19,12 @@
  published by the Free Software Foundation.
  ---------------------------------------------------------------------------*/
 
-#include <catch.hpp>
-#include <sblib/eib/knx_lpdu.h>
 #include <string.h>
+ 
+#include <catch.hpp> // If possible, include catch.hpp as last header
+
+#include <sblib/eib/knx_lpdu.h>
+ 
 
 const int testTelLength = 24;
 unsigned char testTelegram[testTelLength];

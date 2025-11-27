@@ -16,7 +16,7 @@
 #include <sblib/bits.h>
 
 ///\todo Check why catch.hpp must stay in protocol.h. More details in protocol.h
-#include <catch.hpp>
+//#include <catch.hpp>
 
 extern unsigned int wfiSystemTimeInc;
 

@@ -8,15 +8,15 @@
  *  published by the Free Software Foundation.
  */
 
-#include <catch.hpp>
-
 #include <string.h>
 #include <stdio.h>
+#include <math.h>
+#include <iap_emu.h>
+
+#include <catch.hpp> // If possible, include catch.hpp as last header
+
 #include <sblib/internal/iap.h>
 #include <sblib/platform.h>
-#include <iap_emu.h>
-#include <math.h>
-
 #include <sblib/eibBCU1.h>
 #include <sblib/eibBCU2.h>
 #include <sblib/eibMASK0701.h>

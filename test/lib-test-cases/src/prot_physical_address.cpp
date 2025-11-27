@@ -8,8 +8,10 @@
  *  published by the Free Software Foundation.
  */
 
-#include "protocol.h"
-#include <catch.hpp>
+#include <protocol.h>
+
+#include <catch.hpp> // If possible, include catch.hpp as last header
+
 
 #define MANUFACTURER (0x0004)
 #define DEVICE       (0x2060)
