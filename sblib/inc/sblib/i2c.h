@@ -39,7 +39,14 @@
 extern "C" {
 #endif
 */
-#include <sblib/core.h>
+
+// Must be defined before the LPC11xx.h include. Check #define register in platform.h for more details.
+#define register
+#if defined(__LPC11XX__)
+#   include <LPC11xx.h>
+#else
+#   error "Unsupported mcu"
+#endif
 
 
 // aus lpcopen chip.h
