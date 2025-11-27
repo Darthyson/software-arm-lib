@@ -8,10 +8,8 @@
  *  by the Free Software Foundation.
  */
 
-#include <math.h>
-#include <sblib/core.h>
-
 #include <sblib/sensors/ds18x20.h>
+#include <sblib/timer.h>
 
 
 /*****************************************************************************

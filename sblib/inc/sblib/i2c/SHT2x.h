@@ -32,6 +32,7 @@
 
 #include <cstdint>
 
+
 class SHT2xClass
 {
 public:
@@ -44,25 +45,25 @@ public:
     /**
      * Initialize the SHTxx sensor
      */
-    void Init(void);
+    void Init();
 
     /**
      * Get humidity from SHT2x sensor
      * @return The humidity with factor 100 (2045 = 20,45%rH)
      */
-    int GetHumidity(void);
+    int GetHumidity();
 
     /**
     * Get temperature from SHT2x sensor
     * @return Temperature with factor 100 (2045 = 20,45°C)
     */
-    int GetTemperature(void);
+    int GetTemperature();
 
     /**
      * Get the current dew point based on the current humidity and temperature
      * @return The dew point in °C 
      */
-    float GetDewPoint(void);
+    float GetDewPoint();
 
 private:
     /**

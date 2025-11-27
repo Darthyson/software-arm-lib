@@ -11,10 +11,11 @@
 #ifndef SBLIB_SENSORS_DHT_H_
 #define SBLIB_SENSORS_DHT_H_
 
-
 #include <sblib/sensors/units.h>
+#include <cstdint>
 
-/****************************************************************************
+
+ /****************************************************************************
  *  Works with DHT11, DHT22
  *      SEN11301P,  Grove - Temperature & Humidity Sensor    (Seeed Studio)
  *      SEN51035P,  Grove - Temperature & Humidity Sensor Pro (Seeed Studio)

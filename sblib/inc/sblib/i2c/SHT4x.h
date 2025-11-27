@@ -38,6 +38,7 @@
 
 #include <cstdint>
 
+
 enum class Sht4xCommand : uint8_t
 {
     measHi = 0xFD,
@@ -96,19 +97,19 @@ public:
      * Initialize the SHT4x sensor
      * @return True if successfully initialized, otherwise false
      */
-    bool init(void);
+    bool init();
 
     /**
      * Get relative humidity from SHT4x sensor
      * @return the relative humidity in %RH as float
      */
-    float getHumidity(void) const;
+    float getHumidity() const;
 
     /**
      * Get Temperature from SHT4x sensor
      * @return the current temperature in degree C as float
      */
-    float getTemperature(void) const;
+    float getTemperature() const;
 
     /**
      * SHT4x command for a single shot measurement with high repeatability.
@@ -121,9 +122,9 @@ public:
      * @return the dew point in Deg C
      * @warning not implemented
      */
-    float getDewPoint(void);
+    float getDewPoint();
 
-    uint32_t getSerialnumber(void);
+    uint32_t getSerialnumber();
 };
 
 #endif /* SBLIB_I2C_SHT4X_H_ */

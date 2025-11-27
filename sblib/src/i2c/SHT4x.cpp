@@ -38,16 +38,15 @@
  * Sensirion code adapted to Selfbus Library by Doumanix (2023)
  */
 
-#include <cstdint>
-#include <sblib/math.h>
+#include <sblib/i2c/SHT4x.h>
 #include <sblib/i2c.h>
 #include <sblib/timer.h>
-#include <sblib/i2c/SHT4x.h>
+
 
 #define WATER_VAPOR         (17.62f) //!< constant for water vapor
 #define BAROMETRIC_PRESSURE (243.5f) //!< constant for barometric pressure
 
-bool SHT4xClass::init(void)
+bool SHT4xClass::init()
 {
     i2c_lpcopen_init();
 
@@ -103,17 +102,17 @@ float SHT4xClass::convertTicksToPercentRH(const uint16_t ticks)
     return static_cast<float>(ticks * 125.0f / 65535.0f - 6.0f);
 }
 
-float SHT4xClass::getHumidity(void) const
+float SHT4xClass::getHumidity() const
 {
     return this->humidity;
 }
 
-float SHT4xClass::getTemperature(void) const
+float SHT4xClass::getTemperature() const
 {
     return this->temperature;
 }
 
-float SHT4xClass::getDewPoint(void)
+float SHT4xClass::getDewPoint()
 {
   /*
     float humidity = getHumidity();
@@ -129,7 +128,7 @@ float SHT4xClass::getDewPoint(void)
     return (-1.0f); // function not implemented
 }
 
-uint32_t SHT4xClass::getSerialnumber(void)
+uint32_t SHT4xClass::getSerialnumber()
 {
     uint8_t result[6] = {};
     if (!readSensor(Sht4xCommand::getSerial, result, sizeof(result) / sizeof(*result)))

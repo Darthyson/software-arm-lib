@@ -9,9 +9,8 @@
  */
 
 #include <sblib/stream.h>
-
-#include <sblib/math.h>
 #include <sblib/timer.h>
+
 
 int Stream::parseInt(const char skipChar)
 {

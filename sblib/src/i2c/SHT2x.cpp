@@ -26,11 +26,10 @@
  * Adapted to lpcopen I2C functions by Oliver Stefan (2021)
  */
 
-#include <cstdint>
-#include <math.h>
+#include <sblib/i2c/SHT2x.h>
 #include <sblib/i2c.h>
 #include <sblib/timer.h>
-#include <sblib/i2c/SHT2x.h>
+#include <cmath>
 
 // Specify the constants for water vapor and barometric pressure.
 #define WATER_VAPOR 17.62f
@@ -51,7 +50,7 @@ typedef enum
     eReadUserReg        = 0xE7,
 } HUM_MEASUREMENT_CMD_T;
 
-void SHT2xClass::Init(void)
+void SHT2xClass::Init()
 {
     i2c_lpcopen_init();
 
@@ -64,7 +63,7 @@ void SHT2xClass::Init(void)
     }
 }
 
-int SHT2xClass::GetHumidity(void)
+int SHT2xClass::GetHumidity()
 {
     unsigned int value = readSensor(eRHumidityHoldCmd);
     if (value == 0 || !(value & 0x2))
@@ -79,7 +78,7 @@ int SHT2xClass::GetHumidity(void)
     return value; //-600 + 12500 / 65536 * value;  //changed to int and factor 100
 }
 
-int SHT2xClass::GetTemperature(void)
+int SHT2xClass::GetTemperature()
 {
     int value = readSensor(eTempHoldCmd);
     if (value == 0 || (value & 0x2))
@@ -94,13 +93,13 @@ int SHT2xClass::GetTemperature(void)
     return value; //-4685 + 17572 / 65536 * value;    //changed to int and factor 100
 }
 
-float SHT2xClass::GetDewPoint(void)
+float SHT2xClass::GetDewPoint()
 {
     const float humidity = GetHumidity();
     const float temperature = GetTemperature();
 
     // Calculate the intermediate value 'gamma'
-    const float gamma = logf(humidity / 100) + WATER_VAPOR * temperature / (BAROMETRIC_PRESSURE + temperature);
+    const float gamma = std::logf(humidity / 100) + WATER_VAPOR * temperature / (BAROMETRIC_PRESSURE + temperature);
     // Calculate dew point in Celsius
     const float dewPoint = BAROMETRIC_PRESSURE * gamma / (WATER_VAPOR - gamma);
 

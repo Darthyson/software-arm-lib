@@ -9,8 +9,8 @@
  */
 
 #include <sblib/print.h>
-#include <sblib/math.h>
-
+#include <algorithm>
+#include <cmath>
 #include <cstring>
 
 // The size of the internal buffer in print()
@@ -68,7 +68,7 @@ uint32_t Print::print(const char* str, const uintmax_t value, const Base base, c
 uint32_t Print::print(const float value, uint8_t precision)
 {
     const auto number = static_cast<intmax_t>(value);
-    float fraction = abs((float)(value - number));
+    float fraction = std::abs(value - static_cast<float>(number));
     uint32_t wlen = print(number);
 
     if (precision < 1)
@@ -76,7 +76,7 @@ uint32_t Print::print(const float value, uint8_t precision)
         return wlen;
     }
 
-    precision = min(7, precision);
+    precision = std::min<uint8_t>(7, precision);
 
     wlen += print(".");
     for (uint8_t i = 0; i < precision; i++)
