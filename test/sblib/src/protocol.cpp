@@ -9,12 +9,14 @@
  */
 
 #include "protocol.h"
-#include <catch.hpp>
 #include <sblib/main.h>
 #include <sblib/eib/knx_npdu.h>
 #include <sblib/internal/iap.h>
 #include <sblib/eib/bus_const.h>
 #include <sblib/bits.h>
+
+///\todo Check why catch.hpp must stay in protocol.h. More details in protocol.h
+#include <catch.hpp>
 
 extern unsigned int wfiSystemTimeInc;
 

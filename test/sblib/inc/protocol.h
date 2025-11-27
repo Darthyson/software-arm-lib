@@ -12,6 +12,12 @@
 #ifndef PROTOCOL_H_
 #define PROTOCOL_H_
 
+///\todo Check why catch.hpp must stay in this header. Maybe it´s related to below #define #undef of private and protected
+///      otherwise we get compiler error: expected primary-expression before 'volatile'   core_cm0.h  /sblib-test/cpu-emu line 163
+///      from core_cm0.h line 162:
+///                   #ifdef __cplusplus
+///                     #define   __I     volatile             /*!< Defines 'read only' permissions                 */
+#include <catch.hpp>
 
 #define private   public
 #define protected public
@@ -27,6 +33,7 @@
 
 #include <string.h>
 #include <stdio.h>
+
 
 extern BcuDefault* bcuUnderTest;
 extern const uint8_t dummyMaskVersionHigh;
