@@ -1,0 +1,82 @@
+{
+    "version": 8,
+    "cmakeMinimumRequired": {
+        "major": 3,
+        "minor": 28,
+        "patch": 3
+    },
+    "configurePresets": [
+        {
+            "name": "x86",
+            "displayName": "x86 Target",
+            "description": "Sets architecture x86, build directory and Ninja Multi Config generator",
+            "generator": "Ninja Multi-Config",
+            "binaryDir": "${sourceDir}/cmake-build/${presetName}",
+            "hidden": false,
+            "cacheVariables": {
+                "SBLIB_ARCHITECTURE": "x86"
+            }
+        },
+        {
+            "name": "x64",
+            "displayName": "x64 Target",
+            "description": "Sets architecture x64, build directory and Ninja Multi Config generator",
+            "generator": "Ninja Multi-Config",
+            "binaryDir": "${sourceDir}/cmake-build/${presetName}",
+            "hidden": false,
+            "cacheVariables": {
+                "SBLIB_ARCHITECTURE": "x64"
+            }
+        }
+    ],
+    "buildPresets": [
+                {
+            "name": "debug-x86",
+            "configurePreset": "x86",
+            "configuration": "Debug",
+            "displayName": "x86 Target Debug Build",
+            "description": "Build x86 target in Debug configuration",
+            "hidden": false,
+            "verbose": true,
+            "targets": [
+                "sblib-test_x86"
+            ]
+        },
+        {
+            "name": "release-x86",
+            "configurePreset": "x86",
+            "configuration": "Release",
+            "displayName": "x86 Target Release Build",
+            "description": "Build x86 target in Release configuration",
+            "hidden": false,
+            "verbose": true,
+            "targets": [
+                "sblib-test_x86"
+            ]
+        },
+        {
+            "name": "debug-x64",
+            "configurePreset": "x64",
+            "configuration": "Debug",
+            "displayName": "x64 Target Debug Build",
+            "description": "Build x64 target in Debug configuration",
+            "hidden": false,
+            "verbose": true,
+            "targets": [
+                "sblib-test_x64"
+            ]
+        },
+        {
+            "name": "release-x64",
+            "configurePreset": "x64",
+            "configuration": "Release",
+            "displayName": "x64 Target Release Build",
+            "description": "Build x64 target in Release configuration",
+            "hidden": false,
+            "verbose": true,
+            "targets": [
+                "sblib-test_x64"
+            ]
+        }
+    ]
+}
