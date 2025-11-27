@@ -22,6 +22,13 @@
 #ifndef TC_STEPFUNCTION_H_
 #define TC_STEPFUNCTION_H_
 
+///\todo These #define/#undef are bad and need a fix, see also /sblib-test/protocol.h
+#define private   public
+#define protected public
+#   include <sblib/eib/knx_tlayer4.h>
+#undef private
+#undef protected
+
 typedef struct
 {
     unsigned char  state;

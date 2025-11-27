@@ -23,6 +23,7 @@
 #define TC_TELEGRAM_H_
 
 #include "tc_tlayer4_stepfunction.h"
+#include <protocol.h>
 
 static Telegram testCaseTelegrams_01[] =
 {
