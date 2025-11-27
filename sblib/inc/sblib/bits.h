@@ -10,7 +10,6 @@
 #ifndef SBLIB_BITS_H_
 #define SBLIB_BITS_H_
 
-#include <sblib/platform.h>
 #include <sblib/types.h>
 #include <cstdint>
 

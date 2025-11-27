@@ -9,7 +9,7 @@
 #define SBLIB_KNX_USEREEPROM_H_
 
 #include <sblib/eib/memory.h>
-#include <sblib/bits.h>
+#include <sblib/platform.h>
 
 /** number of interface objects supported */
 #define INTERFACE_OBJECT_COUNT 8

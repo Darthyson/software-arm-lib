@@ -10,6 +10,7 @@
 #include <sblib/internal/iap.h>
 #include <sblib/interrupt.h>
 #include <sblib/timer.h>
+#include <sblib/bits.h>
 
 uint32_t UserEeprom::flashSize() const
 {
