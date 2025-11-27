@@ -285,12 +285,12 @@ inline int Print::print(const char* str)
 
 inline int Print::print(const void* ptr)
 {
-    return print((uintptr_t)ptr, HEX, sizeof(void*));
+    return print((uintptr_t)ptr, HEX, 2 * sizeof(void*));
 }
 
 inline int Print::print(const char* str, const void* ptr)
 {
-    return print(str, (uintptr_t)ptr, HEX, sizeof(void*));
+    return print(str, (uintptr_t)ptr, HEX, 2 * sizeof(void*));
 }
 
 inline int Print::println(const char* str)
