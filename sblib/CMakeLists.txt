@@ -21,13 +21,26 @@ set(TARGET_ARM ${PROJECT_NAME})
 set(TARGET_X86 ${PROJECT_NAME}_x86)
 set(TARGET_X64 ${PROJECT_NAME}_x64)
 
-set(LOGGING OFF CACHE BOOL "Whether to through the serial port")
+set(SBLIB_LOGGING OFF CACHE BOOL "Whether to through the serial port")
 
-
-# todo create options for all defines/symbols
-option(DEBUG_BUS "Enable dumping of state machine interrupt data e.g timer values" OFF)
-option(DEBUG_BUS_BITLEVEL "Extension used with DEBUG_BUS to dump interrupt of each bit -
-                           Use with care due to easy overflow of the trace buffer" OFF)
+set(SBLIB_ARCHITECTURE "arm" CACHE STRING "Architecture to build for (arm, x86, x64).")
+set_property(CACHE SBLIB_ARCHITECTURE PROPERTY STRINGS arm x86 x64)
+option(SBLIB_DEBUG_BUS "Enable dumping of state machine interrupt data e.g timer values." OFF)
+option(SBLIB_DEBUG_BUS_BITLEVEL "Extension used with DEBUG_BUS to dump interrupt of each bit -
+                                 Use with care due to easy overflow of the trace buffer." OFF)
+option(SBLIB_INCLUDE_SERIAL "sblib should open serial port." OFF)
+set(SBLIB_SERIAL_SPEED "OFF" CACHE STRING "Serial port speed for debugging (OFF, 57600, 115200, 230400, 576000, 1500000).")
+set_property(CACHE SBLIB_SERIAL_SPEED PROPERTY STRINGS OFF 57600 115200 230400 576000 1500000)
+option(SBLIB_DUMP_TELEGRAMS "Dump rx and tx telegrams, incl. received ack and timing info over serial interface." OFF)
+set(SBLIB_PIO_FOR_TEL_END_IND "OFF" CACHE STRING "Toggles defined PIOx_y pin at the end of a received telegram.")
+option(SBLIB_DUMP_COM_OBJ "Dump object handling information on app-server level over serial interface." OFF)
+option(SBLIB_DUMP_MEM_OPS "Dump APCI_MEMORY_WRITE_PDU and APCI_MEMORY_READ_PDU over serial interface." OFF)
+option(SBLIB_DUMP_PROPERTIES "Dump interface object and property handling over serial interface." OFF)
+option(SBLIB_DUMP_TL4 "Dump transport layer 4 protocol handling over serial interface." OFF)
+set(SBLIB_SERIAL_RX_PIN "OFF" CACHE STRING "Serial receive pin to use (PIOx_y).")
+set(SBLIB_SERIAL_TX_PIN "OFF" CACHE STRING "Serial transmit pin to use (PIOx_y).")
+option(SBLIB_ROUTER "Enable to build a ROUTER." OFF)
+option(SBLIB_BUSMONITOR "Enables bus monitoring: dump of all bus traffic incl. timing info (no sending, no processing of rx-telegrams)." OFF)
 
 # definitions for all targets and builds
 add_compile_definitions(
@@ -40,21 +53,51 @@ add_compile_definitions(
 # debug definitions for all targets and debug builds
 set(DEBUG_DEFINES
     DEBUG
-    INCLUDE_SERIAL
-    SERIAL_SPEED=1500000
-    DEBUG_BUS
-    DEBUG_BUS_BITLEVEL
-    DUMP_TELEGRAMS
-    PIO_FOR_TEL_END_IND=PIO1_4
-    DUMP_COM_OBJ
-    DUMP_MEM_OPS
-    DUMP_PROPERTIES
-    DUMP_TL4
-#    SERIAL_RX_PIN=PIO2_7
-#    SERIAL_TX_PIN=PIO2_8
-#    ROUTER
-#    BUSMONITOR
 )
+
+# Conditionally add debug options based on CMake options
+if(SBLIB_DEBUG_BUS)
+    list(APPEND DEBUG_DEFINES DEBUG_BUS)
+endif()
+if(SBLIB_DEBUG_BUS_BITLEVEL)
+    list(APPEND DEBUG_DEFINES DEBUG_BUS_BITLEVEL)
+endif()
+if(SBLIB_INCLUDE_SERIAL)
+    list(APPEND DEBUG_DEFINES INCLUDE_SERIAL)
+endif()
+if(NOT SBLIB_SERIAL_SPEED STREQUAL "OFF")
+    list(APPEND DEBUG_DEFINES SERIAL_SPEED=${SBLIB_SERIAL_SPEED})
+endif()
+if(SBLIB_DUMP_TELEGRAMS)
+    list(APPEND DEBUG_DEFINES DUMP_TELEGRAMS)
+endif()
+if(NOT SBLIB_PIO_FOR_TEL_END_IND STREQUAL "OFF")
+    list(APPEND DEBUG_DEFINES PIO_FOR_TEL_END_IND=${SBLIB_PIO_FOR_TEL_END_IND})
+endif()
+if(SBLIB_DUMP_COM_OBJ)
+    list(APPEND DEBUG_DEFINES DUMP_COM_OBJ)
+endif()
+if(SBLIB_DUMP_MEM_OPS)
+    list(APPEND DEBUG_DEFINES DUMP_MEM_OPS)
+endif()
+if(SBLIB_DUMP_PROPERTIES)
+    list(APPEND DEBUG_DEFINES DUMP_PROPERTIES)
+endif()
+if(SBLIB_DUMP_TL4)
+    list(APPEND DEBUG_DEFINES DUMP_TL4)
+endif()
+if(NOT SBLIB_SERIAL_RX_PIN STREQUAL "OFF")
+    list(APPEND DEBUG_DEFINES SERIAL_RX_PIN=${SBLIB_SERIAL_RX_PIN})
+endif()
+if(NOT SBLIB_SERIAL_TX_PIN STREQUAL "OFF")
+    list(APPEND DEBUG_DEFINES SERIAL_TX_PIN=${SBLIB_SERIAL_TX_PIN})
+endif()
+if(SBLIB_ROUTER)
+    list(APPEND DEBUG_DEFINES ROUTER)
+endif()
+if(SBLIB_BUSMONITOR)
+    list(APPEND DEBUG_DEFINES BUSMONITOR)
+endif()
 
 # common compile options for all targets and builds
 add_compile_options(
@@ -74,10 +117,10 @@ include_directories(inc) # sblib/inc directory
 include(sblib.cmake)     # list of all sblib source code files (*.h, *.cpp, ...)
 
 # include potential logging source code
-# todo LOGGING is broken
-if (LOGGING AND CMAKE_CROSSCOMPILING)
+# todo SBLIB_LOGGING is broken
+if (SBLIB_LOGGING AND CMAKE_CROSSCOMPILING)
     if(NOT DEFINED SBLOG_DIR)
-        message(FATAL_ERROR "LOGGING enabled but SBLOG_DIR is not defined. Set -DSBLOG_DIR=<path> or unset LOGGING.")
+        message(FATAL_ERROR "SBLIB_LOGGING enabled but SBLOG_DIR is not defined. Set -DSBLOG_DIR=<path> or unset SBLIB_LOGGING.")
     endif()
     add_subdirectory(${SBLOG_DIR} sblog)
     target_include_directories(${TARGET_ARM} PUBLIC ${SBLOG_DIR})
@@ -128,5 +171,5 @@ elseif(SBLIB_ARCHITECTURE STREQUAL "x64")
         $<$<CONFIG:Release>: -Os>
     )    
 else()
-    message(FATAL_ERROR "Unknown architecture. (project ${PROJECT_NAME})")
+    message(FATAL_ERROR "Unknown architecture ${SBLIB_ARCHITECTURE}. (project ${PROJECT_NAME})")
 endif()
