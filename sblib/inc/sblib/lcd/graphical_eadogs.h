@@ -77,7 +77,7 @@ public:
      *
      * @return 1 if the character was written, 0 if not.
      */
-    int write(byte ch) override;
+    uint32_t write(byte ch) override;
 
     using Print::write; // Pull in write(const char* str) and write(const byte* data, int count) from Print
 

@@ -154,7 +154,7 @@ void LcdGraphicalEADOGS::pos(const int x, const int y)
     spi.transfer(CMD_PAGE_ADDR | (y & 7));
 }
 
-int LcdGraphicalEADOGS::write(const byte ch)
+uint32_t LcdGraphicalEADOGS::write(const byte ch)
 {
     int idx = ch - fnt->firstChar;
     if (idx < 0 || idx >= fnt->numChars)

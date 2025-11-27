@@ -113,7 +113,7 @@ void Serial::end()
     enabled_ = false;
 }
 
-int Serial::write(byte ch)
+uint32_t Serial::write(byte ch)
 {
     if (!enabled_)
     {

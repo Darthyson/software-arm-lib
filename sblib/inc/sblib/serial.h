@@ -140,7 +140,7 @@ public:
      * @param ch - the byte to write.
      * @return 1 if the byte was written, 0 if not.
      */
-    int write(byte ch) override;
+    uint32_t write(byte ch) override;
 
     /**
      * Wait until all bytes are written.

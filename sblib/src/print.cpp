@@ -14,12 +14,12 @@
 #include <cstring>
 
 // The size of the internal buffer in print()
-#define PRINTBUF_SIZE (8 * sizeof(int) + 1)
+#define PRINT_BUFFER_SIZE (8 * sizeof(intmax_t) + 1)
 
 
-int Print::print(int value, const Base base, int digits)
+uint32_t Print::print(intmax_t value, const Base base, int8_t digits)
 {
-    int wlen = 0;
+    uint32_t wlen = 0;
     if (value < 0)
     {
         wlen += write('-');
@@ -27,25 +27,25 @@ int Print::print(int value, const Base base, int digits)
         --digits;
     }
 
-    return print((uintptr_t) value, base, digits) + wlen;
+    return print(static_cast<uintmax_t>(value), base, digits) + wlen;
 }
 
-int Print::print(const char* str, const int value, const Base base, const int digits)
+uint32_t Print::print(const char* str, const intmax_t value, const Base base, const int8_t digits)
 {
-    int wlen = print(str);
+    uint32_t wlen = print(str);
     wlen += print(value, base, digits);
     return wlen;
 }
 
-int Print::print(uintptr_t value, const Base base, int digits)
+uint32_t Print::print(uintmax_t value, const Base base, int8_t digits)
 {
-    byte buf[PRINTBUF_SIZE]; // need the maximum size for binary printing
+    byte buf[PRINT_BUFFER_SIZE]; // need the maximum size for binary printing
 
-    auto b = (short) base;
+    auto b = static_cast<uint8_t>(base);
     if (b < 2)
         b = 2;
 
-    byte* pos = buf + PRINTBUF_SIZE;
+    byte* pos = buf + PRINT_BUFFER_SIZE;
     do
     {
         const byte ch = value % b;
@@ -55,25 +55,25 @@ int Print::print(uintptr_t value, const Base base, int digits)
     }
     while (--digits > 0 || value);
 
-    return write((byte*) pos, buf + PRINTBUF_SIZE - pos);
+    return write(pos, buf + PRINT_BUFFER_SIZE - pos);
 }
 
-int Print::print(const char* str, const uintptr_t value, const Base base, const int digits)
+uint32_t Print::print(const char* str, const uintmax_t value, const Base base, const int8_t digits)
 {
-    int wlen = print(str);
+    uint32_t wlen = print(str);
     wlen += print(value, base, digits);
     return wlen;
 }
 
-int Print::print(const float value, int precision)
+uint32_t Print::print(const float value, uint8_t precision)
 {
-    const int number = (int)value;
+    const auto number = static_cast<intmax_t>(value);
     float fraction = abs((float)(value - number));
-    int wlen = print(number);
+    uint32_t wlen = print(number);
 
     if (precision < 1)
     {
-        return (wlen);
+        return wlen;
     }
 
     precision = min(7, precision);
@@ -83,25 +83,25 @@ int Print::print(const float value, int precision)
     {
         fraction *= 10.0f;
     }
-    wlen += print((int)fraction, DEC, precision);
+    wlen += print(static_cast<uintmax_t>(fraction), DEC, static_cast<int8_t>(precision));
     return wlen;
 }
 
-int Print::print(const char* str, const float value, const int precision)
+uint32_t Print::print(const char* str, const float value, const uint8_t precision)
 {
-    int wlen = print(str);
+    uint32_t wlen = print(str);
     wlen += print(value, precision);
     return wlen;
 }
 
-int Print::println()
+uint32_t Print::println()
 {
     return write('\r') + write('\n');
 }
 
-int Print::write(const byte* data, int count)
+uint32_t Print::write(const byte* data, uint32_t count)
 {
-    int wlen = 0;
+    uint32_t wlen = 0;
     while (count--)
     {
         wlen += write(*data++);
@@ -110,37 +110,38 @@ int Print::write(const byte* data, int count)
     return wlen;
 }
 
-int Print::write(const char* str)
+uint32_t Print::write(const char* str)
 {
-    if (str)
-        return write((const byte*) str, strlen(str));
-    return 0;
+    if (str == nullptr)
+        return 0;
+
+    return write(reinterpret_cast<const byte*>(str), strlen(str));
 }
 
-int Print::println(const char* str, const uintptr_t value, const Base base, const int digits)
+uint32_t Print::println(const char* str, const uintmax_t value, const Base base, const int8_t digits)
 {
-    int wlen = print(str, value, base, digits);
+    uint32_t wlen = print(str, value, base, digits);
     wlen += println();
     return wlen;
 }
 
-int Print::println(const char* str, const int value, const Base base, const int digits)
+uint32_t Print::println(const char* str, const intmax_t value, const Base base, const int8_t digits)
 {
-    int wlen = print(str, value, base, digits);
+    uint32_t wlen = print(str, value, base, digits);
     wlen += println();
     return wlen;
 }
 
-int Print::println(const float value, const int precision)
+uint32_t Print::println(const float value, const uint8_t precision)
 {
-    int wlen = print(value, precision);
+    uint32_t wlen = print(value, precision);
     wlen += println();
     return wlen;
 }
 
-int Print::println(const char* str, const float value, const int precision)
+uint32_t Print::println(const char* str, const float value, const uint8_t precision)
 {
-    int wlen = print(str, value, precision);
+    uint32_t wlen = print(str, value, precision);
     wlen += println();
     return wlen;
 }
