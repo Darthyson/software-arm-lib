@@ -425,10 +425,10 @@ static void GasIndexAlgorithm__mean_variance_estimator__process(
             additional_scaling = ((c / 1440.f) * (c / 1440.f));
         }
         params->m_Mean_Variance_Estimator___Std =
-            (std::sqrtf((additional_scaling *
+            (sqrtf((additional_scaling *
                     (GasIndexAlgorithm_MEAN_VARIANCE_ESTIMATOR__GAMMA_SCALING -
                      params->m_Mean_Variance_Estimator__Gamma_Variance))) *
-             std::sqrtf(
+             sqrtf(
                  ((params->m_Mean_Variance_Estimator___Std *
                    (params->m_Mean_Variance_Estimator___Std /
                     (GasIndexAlgorithm_MEAN_VARIANCE_ESTIMATOR__GAMMA_SCALING *
@@ -464,7 +464,7 @@ static float GasIndexAlgorithm__mean_variance_estimator___sigmoid__process(
     } else if ((x > 50.f)) {
         return 0.f;
     } else {
-        return (1.f / (1.f + std::expf(x)));
+        return (1.f / (1.f + expf(x)));
     }
 }
 
@@ -521,12 +521,12 @@ GasIndexAlgorithm__sigmoid_scaled__process(GasIndexAlgorithmParams* params,
                           (5.f * params->mIndex_Offset)) /
                          4.f);
             }
-            return (((GasIndexAlgorithm_SIGMOID_L + shift) / (1.f + std::expf(x))) -
+            return (((GasIndexAlgorithm_SIGMOID_L + shift) / (1.f + expf(x))) -
                     shift);
         } else {
             return ((params->mIndex_Offset /
                      params->m_Sigmoid_Scaled__Offset_Default) *
-                    (GasIndexAlgorithm_SIGMOID_L / (1.f + std::expf(x))));
+                    (GasIndexAlgorithm_SIGMOID_L / (1.f + expf(x))));
         }
     }
 }
@@ -571,7 +571,7 @@ GasIndexAlgorithm__adaptive_lowpass__process(GasIndexAlgorithmParams* params,
     if ((abs_delta < 0.f)) {
         abs_delta = (-1.f * abs_delta);
     }
-    F1 = std::expf((GasIndexAlgorithm_LP_ALPHA * abs_delta));
+    F1 = expf((GasIndexAlgorithm_LP_ALPHA * abs_delta));
     tau_a = (((GasIndexAlgorithm_LP_TAU_SLOW - GasIndexAlgorithm_LP_TAU_FAST) *
               F1) +
              GasIndexAlgorithm_LP_TAU_FAST);
