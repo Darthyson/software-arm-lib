@@ -119,7 +119,7 @@ float SHT4xClass::getDewPoint()
     float temperature = getTemperature();
 
     // Calculate the intermediate value 'gamma'
-    float gamma = log(humidity / 100.0f) + WATER_VAPOR * temperature / (BAROMETRIC_PRESSURE + temperature);
+    float gamma = logf(humidity / 100.0f) + WATER_VAPOR * temperature / (BAROMETRIC_PRESSURE + temperature);
     // Calculate dew point in Celsius
     float dewPoint = BAROMETRIC_PRESSURE * gamma / (WATER_VAPOR - gamma);
 

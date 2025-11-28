@@ -68,7 +68,7 @@ uint32_t Print::printUnsignedInteger(const char* str, const uintmax_t value, con
 uint32_t Print::print(const float value, uint8_t precision)
 {
     const auto number = static_cast<intmax_t>(value);
-    float fraction = std::abs(value - static_cast<float>(number));
+    float fraction = fabsf(value - static_cast<float>(number));
     uint32_t wlen = print(number);
 
     if (precision < 1)

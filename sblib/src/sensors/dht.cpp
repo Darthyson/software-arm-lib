@@ -249,11 +249,11 @@ float DHT::CalcdewPointFast(const float celsius, const float humidity)
 /*
 float DHT::CalcdewPoint(float celsius, float humidity)
 {
-  float T= ( logf( pow( 10, (( (-7.90298 * (373.15/(273.15 + celsius)-1)) ) +
-           ( 5.02808 * log10( 373.15/(273.15 + celsius)) ) +
-           ( -1.3816e-7 * (pow( 10, (11.344*(1-1/373.15/(273.15 + celsius))))-1) ) +
-           ( 8.1328e-3 * (pow( 10,(-3.49149*(373.15/(273.15 + celsius)-1)))-1) ) +
-           ( log10( 1013.246)) ))-3) * humidity/0.61078); // temp var
-  return (241.88 * T) / (17.558-T);
+  float T= ( logf( powf( 10.f, (( (-7.90298f * (373.15f/(273.15f + celsius)-1.f)) ) +
+           ( 5.02808f * log10f( 373.15f/(273.15f + celsius)) ) +
+           ( -1.3816e-7f * (powf( 10.f, (11.344f*(1.f-1.f/373.15f/(273.15f + celsius))))-1.f) ) +
+           ( 8.1328e-3f * (powf( 10.f,(-3.49149f*(373.15f/(273.15f + celsius)-1.f)))-1.f) ) +
+           ( log10f( 1013.246f)) ))-3.f) * humidity/0.61078f); // temp var
+  return (241.88f * T) / (17.558f - T);
 }
 */

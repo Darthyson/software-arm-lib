@@ -314,7 +314,7 @@ float SHT1x::GetDewPoint()
 #define BAROMETRIC_PRESSURE 243.5f
 
     // Calculate the intermediate value 'gamma'
-    const float gamma = logf(humidity / 100) + (WATER_VAPOR * temperature) / (BAROMETRIC_PRESSURE + temperature);
+    const float gamma = logf(humidity / 100.f) + (WATER_VAPOR * temperature) / (BAROMETRIC_PRESSURE + temperature);
     // Calculate dew point in Celsius
     const float dewPoint = BAROMETRIC_PRESSURE * gamma / (WATER_VAPOR - gamma);
 

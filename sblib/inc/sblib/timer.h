@@ -115,7 +115,7 @@ unsigned int elapsed(unsigned int ref);
  *      !! THIS FEATURE IS EXPERIMENTAL !!
  *      from: https://www.mikrocontroller.net/topic/378584#4302525
  */
-#define DELAY_USEC_HIGH_PRECISION(usec) delay_cycles((double)F_CPU * (usec) / 1E6 / 6.0+1)
+#define DELAY_USEC_HIGH_PRECISION(usec) delay_cycles(static_cast<float>(F_CPU) * (usec) / 1E6f / 6.f+1)
 
 /**
  * The 16bit timer #0.
