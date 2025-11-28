@@ -31,6 +31,7 @@ class Print
 {
 public:
     virtual ~Print() = default;
+
     /**
      * Print a character.
      *
@@ -48,16 +49,6 @@ public:
     uint32_t print(const char* str);
 
     /**
-     * Print a number.
-     *
-     * @param value     The number to print
-     * @param base      The base of the number, default: DEC
-     * @param digits    Output at least this number of digits (optional)
-     * @return The number of bytes that were written.
-     */
-    uint32_t print(intmax_t value, Base base = DEC, int8_t digits = -1);
-
-    /**
      * Print a float with given precision.
      * 
      * @param value         The float to print
@@ -68,30 +59,9 @@ public:
     uint32_t print(float value, uint8_t precision = 2);
 
     /**
-     * Print a zero-terminated string followed by a number.
-     *
-     * @param str       The string to print
-     * @param value     The number to print
-     * @param base      The base of the number, default: DEC
-     * @param digits    Output at least this number of digits (optional)
-     * @return The number of bytes that were written.
-     */
-    uint32_t print(const char* str, intmax_t value, Base base = DEC, int8_t digits = -1);
-
-    /**
-     * Print an unsigned number.
-     *
-     * @param value     The number to print
-     * @param base      The base of the number, default: DEC
-     * @param digits    Output at least this number of digits (optional)
-     * @return The number of bytes that were written.
-     */
-    uint32_t print(uintmax_t value, Base base = DEC, int8_t digits = -1);
-
-    /**
      * Print any integer type (template overload).
-     * Handles uint8_t, int8_t, uint16_t, int16_t, uint32_t, int32_t, unsigned int, etc.
-     * automatically without explicit overloads.
+     * Handles all integer types including uint8_t, int8_t, uint16_t, int16_t, 
+     * uint32_t, int32_t, uint64_t, int64_t, int, long, etc.
      *
      * @param value     The number to print
      * @param base      The base of the number, default: DEC
@@ -101,16 +71,14 @@ public:
     template<typename T>
     std::enable_if_t<
         std::is_integral_v<T> &&
-        !std::is_same_v<T, intmax_t> &&
-        !std::is_same_v<T, char> &&
-        !std::is_same_v<T, uintmax_t>,
+        !std::is_same_v<T, char>,
     uint32_t>
     print(T value, const Base base = DEC, const int8_t digits = -1)
     {
         if (std::is_signed_v<T>)
-            return print(static_cast<intmax_t>(value), base, digits);
+            return printInteger(static_cast<intmax_t>(value), base, digits);
 
-        return print(static_cast<uintmax_t>(value), base, digits);
+        return printUnsignedInteger(static_cast<uintmax_t>(value), base, digits);
     }
 
     /**
@@ -122,20 +90,9 @@ public:
     uint32_t print(const void* ptr);
 
     /**
-     * Print a zero terminated string followed by an unsigned number.
-     *
-     * @param str       The string to print
-     * @param value     The number to print
-     * @param base      The base of the number, default: DEC
-     * @param digits    Output at least this number of digits (optional)
-     * @return The number of bytes that were written.
-     */
-    uint32_t print(const char* str, uintmax_t value, Base base = DEC, int8_t digits = -1);
-
-    /**
      * Print a zero-terminated string followed by any integer type (template overload).
-     * Handles uint8_t, int8_t, uint16_t, int16_t, uint32_t, int32_t, unsigned int, etc.
-     * automatically without explicit overloads.
+     * Handles all integer types including uint8_t, int8_t, uint16_t, int16_t,
+     * uint32_t, int32_t, uint64_t, int64_t, int, long, etc.
      *
      * @param str       The string to print
      * @param value     The number to print
@@ -146,9 +103,7 @@ public:
     template<typename T>
     std::enable_if_t<
         std::is_integral_v<T> &&
-        !std::is_same_v<T, intmax_t> &&
-        !std::is_same_v<T, char> &&
-        !std::is_same_v<T, uintmax_t>,
+        !std::is_same_v<T, char>,
     uint32_t>
     print(const char* str, T value, Base base = DEC, int8_t digits = -1)
     {
@@ -192,40 +147,9 @@ public:
     uint32_t println(const char* str);
 
     /**
-     * Print a number followed by a new line.
-     *
-     * @param value     The number to print
-     * @param base      The base of the number, default: DEC
-     * @param digits    Output at least this number of digits (optional)
-     * @return The number of bytes that were written.
-     */
-    uint32_t println(intmax_t value, Base base = DEC, int8_t digits = -1);
-
-    /**
-     * Print a zero-terminated string followed by a number and a new line.
-     *
-     * @param str       The string to print
-     * @param value     The number to print
-     * @param base      The base of the number, default: DEC
-     * @param digits    Output at least this number of digits (optional)
-     * @return The number of bytes that were written.
-     */
-    uint32_t println(const char* str, intmax_t value, Base base = DEC, int8_t digits = -1);
-
-    /**
-     * Print an unsigned number followed by a new line.
-     *
-     * @param value     The number to print
-     * @param base      The base of the number, default: DEC
-     * @param digits    Output at least this number of digits (optional)
-     * @return The number of bytes that were written.
-     */
-    uint32_t println(uintmax_t value, Base base = DEC, int8_t digits = -1);
-
-    /**
      * Print any integer type followed by a new line (template overload).
-     * Handles uint8_t, int8_t, uint16_t, int16_t, uint32_t, int32_t, unsigned int, etc.
-     * automatically without explicit overloads.
+     * Handles all integer types including uint8_t, int8_t, uint16_t, int16_t,
+     * uint32_t, int32_t, uint64_t, int64_t, int, long, etc.
      * 
      * @param value     The number to print
      * @param base      The base of the number, default: DEC
@@ -235,9 +159,7 @@ public:
     template<typename T>
     std::enable_if_t<
         std::is_integral_v<T> &&
-        !std::is_same_v<T, intmax_t> &&
-        !std::is_same_v<T, char> &&
-        !std::is_same_v<T, uintmax_t>,
+        !std::is_same_v<T, char>,
     int32_t>
     println(T value, Base base = DEC, int8_t digits = -1)
     {
@@ -263,20 +185,9 @@ public:
     uint32_t println(float value, uint8_t precision = 2);
 
     /**
-     * Print a zero-terminated string followed by an unsigned number and a new line.
-     *
-     * @param str       The string to print
-     * @param value     The number to print
-     * @param base      The base of the number, default: DEC
-     * @param digits    Output at least this number of digits (optional)
-     * @return The number of bytes that were written.
-     */
-    uint32_t println(const char* str, uintmax_t value, Base base = DEC, int8_t digits = -1);
-
-    /**
      * Print a zero-terminated string followed by any integer type and a new line (template overload).
-     * Handles uint8_t, int8_t, uint16_t, int16_t, uint32_t, int32_t, unsigned int, etc.
-     * automatically without explicit overloads.
+     * Handles all integer types including uint8_t, int8_t, uint16_t, int16_t,
+     * uint32_t, int32_t, uint64_t, int64_t, int, long, etc.
      * 
      * @param str       The string to print
      * @param value     The number to print
@@ -287,9 +198,7 @@ public:
     template<typename T>
     std::enable_if_t<
         std::is_integral_v<T> &&
-        !std::is_same_v<T, intmax_t> &&
-        !std::is_same_v<T, char> &&
-        !std::is_same_v<T, uintmax_t>,
+        !std::is_same_v<T, char>,
     uint32_t>
     println(const char* str, T value, Base base = DEC, int8_t digits = -1)
     {
@@ -341,6 +250,91 @@ public:
      * @return 1 if the byte was written, 0 if not.
      */
     virtual uint32_t write(byte ch) = 0;
+
+private:
+    /**
+     * Print a number.
+     *
+     * @param value     The number to print
+     * @param base      The base of the number, default: DEC
+     * @param digits    Output at least this number of digits (optional)
+     * @return The number of bytes that were written.
+     */
+    uint32_t printInteger(intmax_t value, Base base = DEC, int8_t digits = -1);
+
+    /**
+     * Print an unsigned number.
+     *
+     * @param value     The number to print
+     * @param base      The base of the number, default: DEC
+     * @param digits    Output at least this number of digits (optional)
+     * @return The number of bytes that were written.
+     */
+    uint32_t printUnsignedInteger(uintmax_t value, Base base = DEC, int8_t digits = -1);
+
+    /**
+     * Print a zero-terminated string followed by a number.
+     *
+     * @param str       The string to print
+     * @param value     The number to print
+     * @param base      The base of the number, default: DEC
+     * @param digits    Output at least this number of digits (optional)
+     * @return The number of bytes that were written.
+     */
+    uint32_t printInteger(const char* str, intmax_t value, Base base = DEC, int8_t digits = -1);
+
+    /**
+     * Print a zero terminated string followed by an unsigned number.
+     *
+     * @param str       The string to print
+     * @param value     The number to print
+     * @param base      The base of the number, default: DEC
+     * @param digits    Output at least this number of digits (optional)
+     * @return The number of bytes that were written.
+     */
+    uint32_t printUnsignedInteger(const char* str, uintmax_t value, Base base = DEC, int8_t digits = -1);
+
+    /**
+     * Print a number followed by a new line.
+     *
+     * @param value     The number to print
+     * @param base      The base of the number, default: DEC
+     * @param digits    Output at least this number of digits (optional)
+     * @return The number of bytes that were written.
+     */
+    uint32_t printIntegerLn(intmax_t value, Base base = DEC, int8_t digits = -1);
+
+    /**
+     * Print a zero-terminated string followed by a number and a new line.
+     *
+     * @param str       The string to print
+     * @param value     The number to print
+     * @param base      The base of the number, default: DEC
+     * @param digits    Output at least this number of digits (optional)
+     * @return The number of bytes that were written.
+     */
+    uint32_t printIntegerLn(const char* str, intmax_t value, Base base = DEC, int8_t digits = -1);
+
+    /**
+     * Print an unsigned number followed by a new line.
+     *
+     * @param value     The number to print
+     * @param base      The base of the number, default: DEC
+     * @param digits    Output at least this number of digits (optional)
+     * @return The number of bytes that were written.
+     */
+    uint32_t printUnsignedIntegerLn(uintmax_t value, Base base = DEC, int8_t digits = -1);
+
+    /**
+     * Print a zero-terminated string followed by an unsigned number and a new line.
+     *
+     * @param str       The string to print
+     * @param value     The number to print
+     * @param base      The base of the number, default: DEC
+     * @param digits    Output at least this number of digits (optional)
+     * @return The number of bytes that were written.
+     */
+    uint32_t printUnsignedIntegerLn(const char* str, uintmax_t value, Base base = DEC, int8_t digits = -1);
 };
 
 
@@ -373,14 +367,14 @@ inline uint32_t Print::println(const char* str)
     return this->write(str) + println();
 }
 
-inline uint32_t Print::println(const intmax_t value, const Base base, const int8_t digits)
+inline uint32_t Print::printIntegerLn(const intmax_t value, const Base base, const int8_t digits)
 {
-    return print(value, base, digits) + println();
+    return printInteger(value, base, digits) + println();
 }
 
-inline uint32_t Print::println(const uintmax_t value, const Base base, const int8_t digits)
+inline uint32_t Print::printUnsignedIntegerLn(const uintmax_t value, const Base base, const int8_t digits)
 {
-    return print(value, base, digits) + println();
+    return printUnsignedInteger(value, base, digits) + println();
 }
 
 inline uint32_t Print::println(const void* ptr)

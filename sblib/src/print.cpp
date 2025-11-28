@@ -17,7 +17,7 @@
 #define PRINT_BUFFER_SIZE (8 * sizeof(intmax_t) + 1)
 
 
-uint32_t Print::print(intmax_t value, const Base base, int8_t digits)
+uint32_t Print::printInteger(intmax_t value, const Base base, int8_t digits)
 {
     uint32_t wlen = 0;
     if (value < 0)
@@ -27,17 +27,17 @@ uint32_t Print::print(intmax_t value, const Base base, int8_t digits)
         --digits;
     }
 
-    return print(static_cast<uintmax_t>(value), base, digits) + wlen;
+    return printUnsignedInteger(static_cast<uintmax_t>(value), base, digits) + wlen;
 }
 
-uint32_t Print::print(const char* str, const intmax_t value, const Base base, const int8_t digits)
+uint32_t Print::printInteger(const char* str, const intmax_t value, const Base base, const int8_t digits)
 {
     uint32_t wlen = print(str);
-    wlen += print(value, base, digits);
+    wlen += printInteger(value, base, digits);
     return wlen;
 }
 
-uint32_t Print::print(uintmax_t value, const Base base, int8_t digits)
+uint32_t Print::printUnsignedInteger(uintmax_t value, const Base base, int8_t digits)
 {
     byte buf[PRINT_BUFFER_SIZE]; // need the maximum size for binary printing
 
@@ -58,10 +58,10 @@ uint32_t Print::print(uintmax_t value, const Base base, int8_t digits)
     return write(pos, buf + PRINT_BUFFER_SIZE - pos);
 }
 
-uint32_t Print::print(const char* str, const uintmax_t value, const Base base, const int8_t digits)
+uint32_t Print::printUnsignedInteger(const char* str, const uintmax_t value, const Base base, const int8_t digits)
 {
     uint32_t wlen = print(str);
-    wlen += print(value, base, digits);
+    wlen += printUnsignedInteger(value, base, digits);
     return wlen;
 }
 
@@ -118,16 +118,16 @@ uint32_t Print::write(const char* str)
     return write(reinterpret_cast<const byte*>(str), strlen(str));
 }
 
-uint32_t Print::println(const char* str, const uintmax_t value, const Base base, const int8_t digits)
+uint32_t Print::printUnsignedIntegerLn(const char* str, const uintmax_t value, const Base base, const int8_t digits)
 {
-    uint32_t wlen = print(str, value, base, digits);
+    uint32_t wlen = printUnsignedInteger(str, value, base, digits);
     wlen += println();
     return wlen;
 }
 
-uint32_t Print::println(const char* str, const intmax_t value, const Base base, const int8_t digits)
+uint32_t Print::printIntegerLn(const char* str, const intmax_t value, const Base base, const int8_t digits)
 {
-    uint32_t wlen = print(str, value, base, digits);
+    uint32_t wlen = printInteger(str, value, base, digits);
     wlen += println();
     return wlen;
 }

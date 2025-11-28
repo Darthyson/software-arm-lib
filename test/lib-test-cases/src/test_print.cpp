@@ -104,97 +104,109 @@ TEST_CASE("Print::", "[print]") {
         }
     }
 
-    SECTION("print(intmax_t) - signed integers")
+    SECTION("print<T> - signed integers")
     {
         MockPrint mock;
 
         SECTION("Print zero")
         {
-            mock.print(static_cast<intmax_t>(0));
+            mock.print(static_cast<int8_t>(0));
             REQUIRE(mock.getString() == "0");
         }
 
         SECTION("Print positive number")
         {
-            mock.print(static_cast<intmax_t>(123));
+            mock.print(static_cast<int16_t>(123));
             REQUIRE(mock.getString() == "123");
         }
 
         SECTION("Print negative number")
         {
-            mock.print(static_cast<intmax_t>(-456));
+            mock.print(static_cast<int32_t>(-456));
             REQUIRE(mock.getString() == "-456");
         }
 
         SECTION("Print with minimum digits padding")
         {
-            mock.print(static_cast<intmax_t>(42), DEC, 5);
-            REQUIRE(mock.getString() == "00042");
+            mock.print(static_cast<int32_t>(42), DEC, 0);
+            REQUIRE(mock.getString() == "42");
         }
 
         SECTION("Print negative with minimum digits")
         {
-            mock.print(static_cast<intmax_t>(-42), DEC, 6);
-            REQUIRE(mock.getString() == "-00042");
+            mock.print(static_cast<int16_t>(-42), DEC, 0);
+            REQUIRE(mock.getString() == "-42");
+        }
+
+        SECTION("Print with more digits padding")
+        {
+            mock.print(static_cast<int32_t>(1234542), DEC, 20);
+            REQUIRE(mock.getString() == "00000000000001234542");
+        }
+
+        SECTION("Print negative with more digits padding")
+        {
+            mock.print(static_cast<int16_t>(-42), DEC, 12);
+            REQUIRE(mock.getString() == "-00000000042");
         }
     }
 
-    SECTION("print(uintmax_t) - unsigned integers")
+    SECTION("print<T> - unsigned integers")
     {
         MockPrint mock;
 
         SECTION("Print decimal")
         {
-            mock.print(static_cast<uintmax_t>(12345), DEC);
+            mock.print(static_cast<uint32_t>(12345), DEC);
             REQUIRE(mock.getString() == "12345");
         }
 
         SECTION("Print hexadecimal")
         {
-            mock.print(static_cast<uintmax_t>(255), HEX);
+            mock.print(static_cast<uint32_t>(255), HEX);
             REQUIRE(mock.getString() == "FF");
         }
 
         SECTION("Print hexadecimal with padding")
         {
-            mock.print(static_cast<uintmax_t>(15), HEX, 4);
+            mock.print(static_cast<uint16_t>(15), HEX, 4);
             REQUIRE(mock.getString() == "000F");
         }
 
         SECTION("Print octal")
         {
-            mock.print(static_cast<uintmax_t>(64), OCT);
+            mock.print(static_cast<uint8_t>(64), OCT);
             REQUIRE(mock.getString() == "100");
         }
 
         SECTION("Print binary")
         {
-            mock.print(static_cast<uintmax_t>(5), BIN);
+            mock.print(static_cast<uint8_t>(5), BIN);
             REQUIRE(mock.getString() == "101");
         }
 
         SECTION("Print binary with padding")
         {
-            mock.print(static_cast<uintmax_t>(5), BIN, 8);
+            mock.print(static_cast<uint16_t>(5), BIN, 8);
             REQUIRE(mock.getString() == "00000101");
         }
 
         SECTION("Print zero in different bases")
         {
-            mock.print(static_cast<uintmax_t>(0), DEC);
+            mock.print(static_cast<uint32_t>(0), DEC);
             REQUIRE(mock.getString() == "0");
             mock.clear();
 
-            mock.print(static_cast<uintmax_t>(0), HEX);
+            mock.print(static_cast<uint16_t>(0), HEX);
             REQUIRE(mock.getString() == "0");
             mock.clear();
 
-            mock.print(static_cast<uintmax_t>(0), BIN);
+            mock.print(static_cast<uint8_t>(0), BIN);
             REQUIRE(mock.getString() == "0");
         }
     }
 
-    SECTION("print(T) - template integer types")
+    SECTION("print<T> - template integer types")
     {
         MockPrint mock;
 
@@ -240,19 +252,18 @@ TEST_CASE("Print::", "[print]") {
             mock.print(static_cast<int32_t>(-2147483647));
             REQUIRE(mock.getString() == "-2147483647");
         }
-#if INTPTR_MAX == INT64_MAX
-        SECTION("Print uint64_t")
+
+        SECTION("Print uintmax_t")
         {
-            mock.print(static_cast<uint64_t>(4294967295));
+            mock.print(static_cast<uintmax_t>(4294967295));
             REQUIRE(mock.getString() == "4294967295");
         }
 
-        SECTION("Print int64_t")
+        SECTION("Print intmax_t")
         {
-            mock.print(static_cast<int64_t>(-2147483647));
+            mock.print(static_cast<intmax_t>(-2147483647));
             REQUIRE(mock.getString() == "-2147483647");
         }
-#endif
     }
 
     SECTION("print(float)")
@@ -316,13 +327,13 @@ TEST_CASE("Print::", "[print]") {
 
         SECTION("String + signed integer")
         {
-            mock.print("Value: ", static_cast<intmax_t>(42));
+            mock.print("Value: ", static_cast<int8_t>(42));
             REQUIRE(mock.getString() == "Value: 42");
         }
 
         SECTION("String + unsigned integer")
         {
-            mock.print("Hex: ", static_cast<uintmax_t>(255), HEX);
+            mock.print("Hex: ", static_cast<uint16_t>(255), HEX);
             REQUIRE(mock.getString() == "Hex: FF");
         }
 
@@ -403,13 +414,13 @@ TEST_CASE("Print::", "[print]") {
 
         SECTION("Print integer with newline")
         {
-            mock.println(static_cast<intmax_t>(42));
+            mock.println(static_cast<int8_t>(42));
             REQUIRE(mock.getString() == "42\r\n");
         }
 
         SECTION("Print unsigned with newline")
         {
-            mock.println(static_cast<uintmax_t>(100), HEX);
+            mock.println(static_cast<uint16_t>(100), HEX);
             REQUIRE(mock.getString() == "64\r\n");
         }
 
@@ -427,13 +438,13 @@ TEST_CASE("Print::", "[print]") {
 
         SECTION("Print string + value with newline")
         {
-            mock.println("Result: ", static_cast<intmax_t>(123));
+            mock.println("Result: ", static_cast<int32_t>(123));
             REQUIRE(mock.getString() == "Result: 123\r\n");
         }
 
         SECTION("Print string + unsigned with newline")
         {
-            mock.println("Hex: ", static_cast<uintmax_t>(255), HEX);
+            mock.println("Hex: ", static_cast<uint16_t>(255), HEX);
             REQUIRE(mock.getString() == "Hex: FF\r\n");
         }
 
@@ -531,9 +542,9 @@ TEST_CASE("Print::", "[print]") {
         SECTION("Mixed print calls")
         {
             mock.print("Count: ");
-            mock.print(static_cast<intmax_t>(10));
+            mock.print(static_cast<int32_t>(10));
             mock.print(", Hex: ");
-            mock.print(static_cast<uintmax_t>(255), HEX);
+            mock.print(static_cast<uint16_t>(255), HEX);
             mock.println();
             REQUIRE(mock.getString() == "Count: 10, Hex: FF\r\n");
         }
@@ -548,13 +559,13 @@ TEST_CASE("Print::", "[print]") {
 
         SECTION("Large number formatting")
         {
-            mock.print(static_cast<uintmax_t>(0xFFFFFFFF), HEX);
+            mock.print(static_cast<uint32_t>(0xFFFFFFFF), HEX);
             REQUIRE(mock.getString() == "FFFFFFFF");
         }
 
         SECTION("Binary representation of byte")
         {
-            mock.print(static_cast<uintmax_t>(0b10101010), BIN, 8);
+            mock.print(static_cast<uint8_t>(0b10101010), BIN, 8);
             REQUIRE(mock.getString() == "10101010");
         }
     }
@@ -579,25 +590,25 @@ TEST_CASE("Print::", "[print]") {
 
         SECTION("Large negative number")
         {
-            mock.print(static_cast<intmax_t>(-999999));
+            mock.print(static_cast<int32_t>(-999999));
             REQUIRE(mock.getString() == "-999999");
         }
 
         SECTION("Zero padding with various bases")
         {
-            mock.print(static_cast<uintmax_t>(8), DEC, 3);
+            mock.print(static_cast<uint16_t>(8), DEC, 3);
             REQUIRE(mock.getString() == "008");
             mock.clear();
 
-            mock.print(static_cast<uintmax_t>(8), HEX, 3);
+            mock.print(static_cast<uint32_t>(8), HEX, 3);
             REQUIRE(mock.getString() == "008");
             mock.clear();
 
-            mock.print(static_cast<uintmax_t>(8), OCT, 3);
+            mock.print(static_cast<uint8_t>(8), OCT, 3);
             REQUIRE(mock.getString() == "010");
             mock.clear();
 
-            mock.print(static_cast<uintmax_t>(8), BIN, 8);
+            mock.print(static_cast<uint8_t>(8), BIN, 8);
             REQUIRE(mock.getString() == "00001000");
         }
     }
@@ -620,6 +631,24 @@ TEST_CASE("Print::", "[print]") {
             mock.clear();
 
             REQUIRE(mock.print(255, HEX) == 2); // "FF"
+        }
+    }
+
+    SECTION("Bugs found during development")
+    {
+        SECTION("call of overloaded 'print(long int, Base)' is ambiguous")
+        {
+            MockPrint mock;
+            int32_t value = 42;
+            mock.print(value / 100, DEC);
+            REQUIRE(mock.getString() == "0");
+        }
+        SECTION("call of overloaded 'print(long int, Base, int)' is ambiguous")
+        {
+            MockPrint mock;
+            int32_t value = 42;
+            mock.print(std::abs(value % 100), DEC, 2);
+            REQUIRE(mock.getString() == "42");
         }
     }
 }
