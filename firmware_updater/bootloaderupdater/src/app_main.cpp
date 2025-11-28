@@ -96,7 +96,7 @@ int main()
 			checksum = -checksum;
 			*(int*)&buf[28] = checksum;
 		    d(
-		        serial.println("checksum: 0x", (int) checksum, HEX, 4);
+		        serial.println("checksum: 0x", checksum, HEX, 4);
 		    )
 		}
 	    d(

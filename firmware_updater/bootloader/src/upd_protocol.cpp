@@ -112,7 +112,7 @@ void updCommand2Serial(UPD_Command cmd)
             case UPD_RESPONSE_BL_IDENTITY: d1("RESPONSE_BL_IDENTITY"); break;
             case UPD_RESPONSE_BL_VERSION_MISMATCH: d1("RESPONSE_BL_VERSION_MISMATCH"); break;
             case UPD_SET_EMULATION: d1("SET_EMULATION"); break;
-            default: serial.print("Command unknown", (unsigned int)cmd.code); break;
+            default: serial.print("Command unknown", cmd.code); break;
         }
         d1(" ");
     );
@@ -156,7 +156,7 @@ void updResult2Serial(UDP_State result)
             case UDP_ADDRESS_RANGE_NOT_ALLOWED_TO_ERASE: d1("ADDRESS_RANGE_NOT_ALLOWED_TO_ERASE"); break;
             case UDP_NOT_IMPLEMENTED: d1("NOT_IMPLEMENTED"); break;
             case UDP_INVALID: d1("UDP_INVALID"); break;
-            default: serial.print("State unknown ", (unsigned int)result); break;
+            default: serial.print("State unknown ", result); break;
         }
     );
 }

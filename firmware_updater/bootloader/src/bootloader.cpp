@@ -205,7 +205,7 @@ static void jumpToApplication(uint8_t * start)
     // copy the first 192 bytes (vector table) of the "application"
     // into the RAM and than remap the vector table inside the RAM
 
-    d3(serial.println("Vectortable Size: ", (unsigned int) (BL_DEFAULT_VECTOR_TABLE_SIZE * sizeof(uint32_t)), HEX, 4););
+    d3(serial.println("Vectortable Size: ", BL_DEFAULT_VECTOR_TABLE_SIZE * sizeof(uint32_t), HEX, 4););
 
     for (i = 0; i < BL_DEFAULT_VECTOR_TABLE_SIZE; i++, rom++, ram++)
     {

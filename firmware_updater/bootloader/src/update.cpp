@@ -448,7 +448,7 @@ static bool updSendData(uint8_t * data, uint32_t nCount)
         d1(" ");
     }
     d3(serial.print("at: ", getRAMBufferPosition(), DEC, 4));
-    d3(serial.println(" #", (unsigned int) nCount, DEC, 2));
+    d3(serial.println(" #", nCount, DEC, 2));
     return (true);
 }
 
@@ -502,9 +502,9 @@ static bool updProgram(uint8_t * data)
         return (true);
     }
 
-    d3(serial.print("to write ", (int)flash_count));
+    d3(serial.print("to write ", flash_count));
     d3(serial.print(" bytes @ 0x", address));
-    d3(serial.println(" crc 0x", (uintptr_t)crcRamBuffer, HEX, 8));
+    d3(serial.println(" crc 0x", crcRamBuffer, HEX, 8));
 
     totalBytesFlashed += flash_count;
     UDP_State error = UDP_IAP_SUCCESS;
@@ -609,7 +609,7 @@ static bool updRequestBootloaderIdentity(uint8_t * data)
     ptrToStream(retTelegram + offset, appFirstAddress);
     d3(serial.print("BL v", BOOTLOADER_MAJOR_VERSION, DEC));
     d3(serial.print(".", BOOTLOADER_MINOR_VERSION, DEC, 2));
-    d3(serial.print("    BL feature 0x", (unsigned int)bootloaderFeatures, HEX, 8));
+    d3(serial.print("    BL feature 0x", bootloaderFeatures, HEX, 8));
     d3(serial.println("    FW start   0x", (uintptr_t)appFirstAddress, HEX, 8));
     return (true);
 }
@@ -662,7 +662,7 @@ static bool udpRequestBootDescriptionBlock()
     d3(serial.print("FW start@ 0x", bootDescr->startAddress));   // Firmware start address
     d3(serial.print(" end@ 0x", bootDescr->endAddress));        // Firmware end address
     d3(serial.print(" Desc.@ 0x", bootDescr->appVersionAddress)); // Firmware App descriptor address (for getAppVersion())
-    d3(serial.println(" CRC : 0x", (uintptr_t)bootDescr->crc, HEX, 8));                // Firmware CRC
+    d3(serial.println(" CRC : 0x", bootDescr->crc, HEX, 8));      // Firmware CRC
     return (true);
 }
 
@@ -757,8 +757,8 @@ static bool updUpdateBootDescriptorBlock(uint8_t * data)
         totalBytesReceived -= count; // subtract bytes received for boot descriptor
         serial.println();
         serial.println("Bytes Rx    ", totalBytesReceived);
-        serial.println("Bytes Flash ", totalBytesFlashed); //
-        serial.println("Diff        ", (int)totalBytesFlashed - (int)totalBytesReceived); // difference here is normal, because flashing is always in multiple of FLASH_PAGE_SIZE
+        serial.println("Bytes Flash ", totalBytesFlashed);
+        serial.println("Diff        ", totalBytesFlashed - totalBytesReceived); // difference here is normal, because flashing is always in multiple of FLASH_PAGE_SIZE
         serial.println();
         serial.println("FW start@ 0x", streamToUIn32(ramBuffer), HEX, 4);    // Firmware start address
         serial.println("FW end  @ 0x", streamToUIn32(ramBuffer+4), HEX, 4);  // Firmware end address
@@ -771,8 +771,8 @@ static bool updUpdateBootDescriptorBlock(uint8_t * data)
     crc = crc32(0xFFFFFFFF, ramBuffer, count);  // checksum on used length only
 
     d3(serial.println("Desc.      @ 0x", address));
-    d3(serial.println("Desc.    CRC 0x", (uintptr_t)crc, HEX, 8));
-    d3(serial.println("Received CRC 0x", (uintptr_t)crcReceived, HEX, 8));
+    d3(serial.println("Desc.    CRC 0x", crc, HEX, 8));
+    d3(serial.println("Received CRC 0x", crcReceived, HEX, 8));
     // compare calculated crc with the one we received for this packet
     if (crc != crcReceived)
     {
@@ -783,7 +783,7 @@ static bool updUpdateBootDescriptorBlock(uint8_t * data)
         return (true);
     }
 
-    d3(serial.println("CRC MATCH, comparing MCUs BootDescriptor: count: ", (unsigned int)count));
+    d3(serial.println("CRC MATCH, comparing MCUs BootDescriptor: count: ", count));
     //If received descriptor is not equal to current one, flash it
     if(memcmp(address, ramBuffer, count) == 0)
     {
@@ -952,7 +952,7 @@ bool handleApciUsermsgManufacturerInternal(uint8_t * data, uint32_t size)
     {
         d3(serial.print(" UDP_INVALID_DATA minCount=", updCommand.minBytes));
         d3(serial.print(" maxCount=", updCommand.maxBytes));
-        d3(serial.println(" length=", (unsigned int)size));
+        d3(serial.println(" length=", size));
         setLastError(UDP_INVALID_DATA);
         return (true);
     }
