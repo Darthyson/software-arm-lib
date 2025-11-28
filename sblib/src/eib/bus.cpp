@@ -96,7 +96,7 @@ void Bus::begin(const uint16_t physicalAddress)
         ttimer.restart();
         // ttimer.prescaler(0);
         ttimer.prescaler(TIMER_PRESCALER);
-        serial.print("Bus begin - Timer prescaler: ", (unsigned int)TIMER_PRESCALER, DEC, 6);
+        serial.print("Bus begin - Timer prescaler: ", TIMER_PRESCALER, DEC, 6);
         serial.print(" ttimer prescaler: ", ttimer.prescaler(), DEC, 6);
         serial.println(" ttimer value: ", ttimer.value(), DEC, 6);
         serial.print("nak retries: ", sendRetriesMax, DEC, 2);

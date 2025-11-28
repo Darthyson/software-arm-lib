@@ -60,16 +60,16 @@ void BcuDefault::_begin()
 #   endif
     if (userRam != nullptr)
     {
-        IF_DEBUG(serial.print("userRam    start: 0x", (unsigned int)userRam->startAddr(), HEX, 4); serial.print(" "););
-        IF_DEBUG(serial.print("end: 0x", (unsigned int)userRam->endAddr(), HEX, 4); serial.print(" "););
-        IF_DEBUG(serial.println("size: 0x", (unsigned int)userRam->size(), HEX, 4));
+        IF_DEBUG(serial.print("userRam    start: 0x", userRam->startAddr(), HEX, 4); serial.print(" "););
+        IF_DEBUG(serial.print("end: 0x", userRam->endAddr(), HEX, 4); serial.print(" "););
+        IF_DEBUG(serial.println("size: 0x", userRam->size(), HEX, 4));
     }
     if (userEeprom != nullptr)
     {
-        IF_DEBUG(serial.print("userEeprom start: 0x", (unsigned int)userEeprom->startAddr(), HEX, 4); serial.print(" "););
-        IF_DEBUG(serial.print("end: 0x", (unsigned int)userEeprom->endAddr(), HEX, 4); serial.print(" "););
-        IF_DEBUG(serial.print("size: 0x", (unsigned int)userEeprom->size(), HEX, 4); serial.print(" "););
-        IF_DEBUG(serial.println("flashSize: 0x", (unsigned int)userEeprom->flashSize(), HEX, 4););
+        IF_DEBUG(serial.print("userEeprom start: 0x", userEeprom->startAddr(), HEX, 4); serial.print(" "););
+        IF_DEBUG(serial.print("end: 0x", userEeprom->endAddr(), HEX, 4); serial.print(" "););
+        IF_DEBUG(serial.print("size: 0x", userEeprom->size(), HEX, 4); serial.print(" "););
+        IF_DEBUG(serial.println("flashSize: 0x", userEeprom->flashSize(), HEX, 4););
     }
     IF_DEBUG(serial.println());
 #endif
@@ -205,7 +205,7 @@ bool BcuDefault::processGroupAddressTelegram(const ApciCommand apciCmd, const ui
 {
     DB_COM_OBJ(
         serial.println();
-        serial.print("BCU grp addr: 0x", (unsigned int)groupAddress, HEX, 4);
+        serial.print("BCU grp addr: 0x", groupAddress, HEX, 4);
         serial.print(" ");
     );
 

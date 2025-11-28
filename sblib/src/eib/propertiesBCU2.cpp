@@ -245,7 +245,7 @@ LoadState PropertiesBCU2::handleAllocAbsDataSegment(const int objectIdx, const b
         serial.print(" end: 0x", absDataSegmentEndAddress, HEX, 4);
         serial.print(" access: 0x", payLoad[4], HEX, 2);
         serial.print(" memtype: 0x", payLoad[5], HEX, 2);
-        serial.print(" checksum: ", ((payLoad[6] & 0x80) >> 7), DEC, 1);
+        serial.print(" checksum: ", (payLoad[6] & 0x80) >> 7, DEC, 1);
         serial.println(" attrib: 0x", (payLoad[6]), HEX, 2);
     );
 
@@ -514,7 +514,7 @@ LoadState PropertiesBCU2::handleDataRelativeAllocation(const int objectIdx, cons
         serial.print(" ");
         printData(payLoad, len);
         serial.println();
-        serial.print("  --> requested memory size: 0x", ((payLoad[0] << 24) | (payLoad[1] << 16) | (payLoad[2] << 8) | payLoad[3]), HEX, 8);
+        serial.print("  --> requested memory size: 0x", (payLoad[0] << 24) | (payLoad[1] << 16) | (payLoad[2] << 8) | payLoad[3], HEX, 8);
         serial.print(" mode: 0x", payLoad[4], HEX, 2);
         serial.println(" fill: 0x", payLoad[5], HEX, 2);
         serial.println();

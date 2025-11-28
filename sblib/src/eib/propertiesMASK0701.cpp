@@ -69,7 +69,7 @@ LoadState PropertiesMASK0701::handleAllocAbsDataSegment(const int objectIdx, con
         serial.print(" end: 0x", absDataSegmentEndAddress, HEX, 4);
         serial.print(" access: 0x", payLoad[4], HEX, 2);
         serial.print(" memtype: 0x", payLoad[5], HEX, 2);
-        serial.print(" checksum: ", ((payLoad[6] & 0x80) >> 7), DEC, 1);
+        serial.print(" checksum: ", (payLoad[6] & 0x80) >> 7, DEC, 1);
         serial.println(" attrib: 0x", (payLoad[6]), HEX, 2);
     );
 

@@ -100,19 +100,19 @@ void dumpTelegrams()
     {
         if (telLastTXEndTime)
         {
-            serial.print("WI-TX:", (telRXWaitInitTime -telLastTXEndTime), DEC, 6);
+            serial.print("WI-TX:", telRXWaitInitTime - telLastTXEndTime, DEC, 6);
             //serial.println("");
             telRXWaitInitTime = 0;
         }
         else if (telLastRXEndTime)
         {
-            serial.print("WI-RX:", (telRXWaitInitTime - telLastRXEndTime), DEC, 6);
+            serial.print("WI-RX:", telRXWaitInitTime - telLastRXEndTime, DEC, 6);
             //serial.println("");
             telRXWaitInitTime = 0;
         }
         else
         {
-            serial.print("WI:", (telRXWaitInitTime ), DEC, 6);
+            serial.print("WI:", telRXWaitInitTime, DEC, 6);
             //serial.print(" ");
         }
         telRXWaitInitTime = 0;
@@ -124,12 +124,12 @@ void dumpTelegrams()
     {
         if (telLastTXEndTime)
         {
-            serial.print("WID-TX:", (telRXWaitIdleTime - telLastTXEndTime), DEC, 6);
+            serial.print("WID-TX:", telRXWaitIdleTime - telLastTXEndTime, DEC, 6);
             serial.print(" ");
         }
         else if (telLastRXEndTime)
         {
-            serial.print("WID-RX:", (telRXWaitIdleTime - telLastRXEndTime), DEC, 6);
+            serial.print("WID-RX:", telRXWaitIdleTime - telLastRXEndTime, DEC, 6);
             serial.print(" ");
         }
         else
@@ -181,13 +181,13 @@ void dumpTXTelegram()
     if (telLastRXEndTime)
     {
         // print time in between last rx-tel and current tx-tel
-        serial.print(" dt RX-TX:", (telTXStartTime - telLastRXEndTime), DEC, 8);
+        serial.print(" dt RX-TX:", telTXStartTime - telLastRXEndTime, DEC, 8);
         telLastRXEndTime = 0;
     }
     else if(telLastTXEndTime)
     {
         // print time in between last tx-tel and current tx-tel
-        serial.print(" dt TX-TX:", (telTXStartTime - telLastTXEndTime), DEC, 8);
+        serial.print(" dt TX-TX:", telTXStartTime - telLastTXEndTime, DEC, 8);
         telLastTXEndTime = 0;
     }
 
@@ -397,16 +397,16 @@ void debugBus()
         if ((s>=8000 && s<=8999) )
         {
             serial.println();
-            serial.print("s", (unsigned int) s, DEC, 3);
-            serial.print(" t", (unsigned int) t, DEC, 6);
-            serial.print(" dt", (unsigned int) t-lt, DEC,4);
-            serial.print(" f", (unsigned int)cf, DEC, 1);
-            serial.print(" c", (unsigned int)cv, DEC, 4);
-            serial.print(" t", (unsigned int)tv, DEC, 4);
-            serial.print(" m", (unsigned int)tmv, DEC,4);
+            serial.print("s", s, DEC, 3);
+            serial.print(" t", t, DEC, 6);
+            serial.print(" dt", t - lt, DEC,4);
+            serial.print(" f", cf, DEC, 1);
+            serial.print(" c", cv, DEC, 4);
+            serial.print(" t", tv, DEC, 4);
+            serial.print(" m", tmv, DEC,4);
             /*
-            serial.print(" i", (unsigned int)tb_in, DEC,3);
-            serial.print(" o", (unsigned int)tb_out, DEC,3);
+            serial.print(" i", tb_in, DEC,3);
+            serial.print(" o", tb_out, DEC,3);
             serial.print("*");
             */
 
@@ -417,48 +417,48 @@ void debugBus()
         else if (s>=9000)
         {
             serial.println();
-            serial.print("s", (unsigned int) s, DEC, 3);
-            serial.print(" c/v", (unsigned int)cf, HEX, 2);
-            serial.print(" L", (unsigned int)tmv, DEC, 2);
-            serial.print(" t", (unsigned int) t, HEX, 8);
-            serial.print(" ", (unsigned int)cv, HEX, 4);
-            serial.print(" ", (unsigned int)tv, HEX, 4);
+            serial.print("s", s, DEC, 3);
+            serial.print(" c/v", cf, HEX, 2);
+            serial.print(" L", tmv, DEC, 2);
+            serial.print(" t", t, HEX, 8);
+            serial.print(" ", cv, HEX, 4);
+            serial.print(" ", tv, HEX, 4);
             //serial.print("*");
         }
         else if (s>=9005)
         {
             serial.println();
             serial.print("s");
-            serial.print( (unsigned int) s, DEC, 3);
+            serial.print(s, DEC, 3);
             serial.print(" ");
-            serial.print((unsigned int)tmv, HEX,4);
+            serial.print(tmv, HEX,4);
             serial.print(" ");
-            serial.print( (unsigned int) t, HEX, 8);
+            serial.print(t, HEX, 8);
             serial.print(" ");
-            serial.print((unsigned int)cv, HEX, 4);
+            serial.print(cv, HEX, 4);
             serial.print(" ");
-            serial.print((unsigned int)tv, HEX, 4);
+            serial.print(tv, HEX, 4);
             serial.print(" d");
-            serial.print((unsigned int)cf, HEX, 4);
+            serial.print(cf, HEX, 4);
             //serial.print("*");
         }
         else if (s < 4000)
         { // one  delta timer
-            serial.print("s", (unsigned int) s -2000, DEC, 3);
-            serial.print(" dt", (unsigned int) t-lt1, DEC, 6);
+            serial.print("s", s - 2000, DEC, 3);
+            serial.print(" dt", t - lt1, DEC, 6);
             lt1 = t;
             l++;
         }
         else if (s < 5000)
         { // one hex
-            serial.print("s", (unsigned int) s- 4000, DEC, 3);
-            serial.print(" h", (unsigned int) t,HEX,4);
+            serial.print("s", s - 4000, DEC, 3);
+            serial.print(" h", t,HEX,4);
             l++;
         }
         else if (s < 6000)
         { // one dec
-            serial.print("s", (unsigned int) s- 5000, DEC, 3);
-            serial.print(" d", (unsigned int) t,DEC,4);
+            serial.print("s", s - 5000, DEC, 3);
+            serial.print(" d", t, DEC,4);
             l++;
         }
 

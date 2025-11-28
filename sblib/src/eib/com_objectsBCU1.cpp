@@ -189,7 +189,7 @@ void ComObjectsBCU1::printObjectConfigTable()
     uint16_t comObjTableAddr = ((BcuDefault*)bcu)->userEeprom->commsTabPtr();
     comObjTableAddr += ((BcuDefault*)bcu)->userEeprom->startAddr(); // for BCU1 add 0x100
     serial.println("ObjectConfigTable:");
-    serial.println("   address      : 0x", (unsigned int)comObjTableAddr, HEX, 4);
+    serial.println("   address      : 0x", comObjTableAddr, HEX, 4);
     if (comObjTableAddr == 0)
     {
         serial.println("invalid address!");
@@ -197,13 +197,13 @@ void ComObjectsBCU1::printObjectConfigTable()
     }
     byte* currentTablePosition = ((BcuDefault*)bcu)->userMemoryPtr(comObjTableAddr);
     byte currentSize = *currentTablePosition;
-    serial.println("   #com objects : ", (unsigned int)currentSize, DEC, 3);
+    serial.println("   #com objects : ", currentSize, DEC, 3);
     currentTablePosition++; // 1 byte #com objects
     uint16_t ramFlagsTablePointer;
     ramFlagsTablePointer = *currentTablePosition;
 
     currentTablePosition++; // 1 byte RAM-Flags-Pointer
-    serial.println("   RAM-Flags-Ptr: 0x", (unsigned int)ramFlagsTablePointer, HEX, 4);
+    serial.println("   RAM-Flags-Ptr: 0x", ramFlagsTablePointer, HEX, 4);
     for (uint8_t i = 0; i < currentSize; i++)
     {
         uint8_t data;

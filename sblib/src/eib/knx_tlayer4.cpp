@@ -121,7 +121,7 @@ void dumpTicks()
         const uint32_t ticks = millis() - lastTick;
         serial.print(telegramCount, DEC, 6);
         serial.print(LOG_SEP);
-        serial.print("t:", (unsigned int)ticks, DEC, 5);
+        serial.print("t:", ticks, DEC, 5);
         serial.print(LOG_SEP);
         if (ticks > LONG_PAUSE_THRESHOLD_MS)
         {
