@@ -109,7 +109,7 @@ void readSHT4readSerial()
         return;
     }
 
-    serial.println("SHT4x serial number: 0x", (unsigned int)serialnumber, HEX, 8);
+    serial.println("SHT4x serial number: 0x", serialnumber, HEX, 8);
 }
 
 /**

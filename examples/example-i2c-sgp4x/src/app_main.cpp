@@ -220,10 +220,10 @@ void measureAndPrintResults(float relHumity, float temperature, bool compensate)
 
     printCompensationValues(relHumity, temperature, compensate);
     serial.println();
-    serial.print("  Ticks: VOC: ", (int)SGP41.getRawVocValue());
-    serial.println(" NOx: ", (int)SGP41.getRawNoxValue());
-    serial.print("  Index: VOC: ", (int)SGP41.getVocIndexValue());
-    serial.println(" NOx: ", (int)SGP41.getNoxIndexValue());
+    serial.print("  Ticks: VOC: ", SGP41.getRawVocValue());
+    serial.println(" NOx: ", SGP41.getRawNoxValue());
+    serial.print("  Index: VOC: ", SGP41.getVocIndexValue());
+    serial.println(" NOx: ", SGP41.getNoxIndexValue());
 }
 
 void readSGP41Sensor()

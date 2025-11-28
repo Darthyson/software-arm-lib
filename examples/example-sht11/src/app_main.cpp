@@ -37,9 +37,7 @@ Timeout readTimeout;
 
 void sendToSerial(int32_t n)
 {
-    serial.print((int)n / 100, DEC);
-    serial.print(".");
-    serial.print((int)abs(n % 100), DEC, 2);
+    serial.print(n / 100.f, 2);
 }
 
 /**

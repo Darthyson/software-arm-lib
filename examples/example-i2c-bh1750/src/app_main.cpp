@@ -89,7 +89,7 @@ void ReadLux() {
     float light = bh.readLightLevel();
     // Switch off the info LED if light is low else on
     digitalWrite(PIN_INFO, (light < 50));
-    serial.println("Lux: ", (int)light);
+    serial.println("Lux: ", light);
   }
 }
 

@@ -181,7 +181,7 @@ void ReadTimeDate()
    serial.print(" - ", rtc_time.hours, DEC, 2);
    serial.print(":", rtc_time.minutes, DEC, 2);
    serial.println(":", rtc_time.seconds, DEC, 2);
-   serial.print("Temp: ",rtc.GetTemperature());
+   serial.print("Temp: ", rtc.GetTemperature());
    serial.println(" C");
 #endif
 
