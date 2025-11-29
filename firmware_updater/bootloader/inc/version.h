@@ -22,7 +22,8 @@
 #ifndef SB_BOOTLOADER_VERSION_H_
 #define SB_BOOTLOADER_VERSION_H_
 
-#include <stdint.h>
+#include <cstdint>
+
 
 // Don't forget to change build-variable sw_version in .cproject file
 constexpr uint8_t BOOTLOADER_MAJOR_VERSION = 1;  //!< Bootloader major version @note change also in BootloaderUpdater's app_main.cpp

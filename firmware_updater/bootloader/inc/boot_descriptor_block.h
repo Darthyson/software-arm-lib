@@ -26,6 +26,7 @@
 #include <sblib/platform.h>
 #include <version.h>
 
+
 #ifdef DEBUG
     #define BL_FEATURES      0x8100             //!< Feature list of bootloader in Debug version
 #else

@@ -23,8 +23,9 @@
 #ifndef SB_BOOTLOADER_BCU_UPDATER_H_
 #define SB_BOOTLOADER_BCU_UPDATER_H_
 
-#include <sblib/eib/bcu_base.h>
 #include "update.h"
+#include <sblib/eib/bcu_base.h>
+
 
 class BcuUpdate: public BcuBase
 {

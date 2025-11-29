@@ -18,10 +18,11 @@
  published by the Free Software Foundation.
  -----------------------------------------------------------------------------*/
 
-#include <sblib/internal/iap.h>
 #include "boot_descriptor_block.h"
 #include "crc.h"
+#include <sblib/internal/iap.h>
 #include <memory>
+
 
 #ifndef IAP_EMULATION
 extern uint8_t __base_Flash[];      //!< marks the beginning of the flash memory (inserted by the linker)

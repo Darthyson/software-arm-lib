@@ -24,6 +24,7 @@
 
 #include "upd_protocol.h"
 
+
 /**
  * Erases if allowed the requested page range, startPage must be lower or equal endPage.
  *

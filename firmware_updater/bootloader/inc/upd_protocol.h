@@ -63,9 +63,10 @@
 #ifndef SB_BOOTLOADER_UPD_PROTOCOL_H_
 #define SB_BOOTLOADER_UPD_PROTOCOL_H_
 
+#include "boot_descriptor_block.h"
 #include <sblib/types.h>
 #include <sblib/internal/iap.h>
-#include "boot_descriptor_block.h"
+
 
 #define UID_LENGTH_USED (12)            //!< Length of the mcu's UID (guid) used by the Selfbus Updater Tool
 

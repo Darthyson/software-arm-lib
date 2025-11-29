@@ -23,9 +23,10 @@
 #ifndef SB_BOOTLOADER_DECOMPRESSOR_H_
 #define SB_BOOTLOADER_DECOMPRESSOR_H_
 
-#include <stdint.h>
 #include "upd_protocol.h"
 #include "boot_descriptor_block.h"
+#include <cstdint>
+
 
 #define REMEMBER_OLD_PAGES_COUNT 2	// There seems to be a RAM leak/overflow somewhere, 2 seems to work for the moment!
 

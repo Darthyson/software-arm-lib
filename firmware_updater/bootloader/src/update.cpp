@@ -20,7 +20,12 @@
  published by the Free Software Foundation.
  -----------------------------------------------------------------------------*/
 
-#include <cstring>
+#include "update.h"
+#include "upd_protocol.h"
+#include "flash.h"
+#include "bcu_updater.h"
+#include "crc.h"
+#include "dump.h"
 #include <sblib/digital_pin.h>
 #include <sblib/bits.h>
 #include <sblib/eib/knx_tpdu.h>
@@ -28,27 +33,21 @@
 #include <sblib/internal/iap.h>
 #include <sblib/io_pin_names.h>
 #include <sblib/version.h>
-
-#include "upd_protocol.h"
-#include "flash.h"
-#include "bcu_updater.h"
-#include "crc.h"
-#include "update.h"
-#include "dump.h"
+#include <cstring>
 
 #if defined(DEBUG)
-#   include <sblib/serial.h>
 #   include "intelhex.h"
+#   include <sblib/serial.h>
 #endif
 
 #ifdef DECOMPRESSOR
 #   include "decompressor.h"
 #endif
 
+
 #ifdef DECOMPRESSOR
     static Decompressor decompressor((AppDescriptionBlock*) bootDescriptorBlockAddress()); //!< get application base address from boot descriptor
 #endif
-
 
 #define DEVICE_LOCKED   ((unsigned int ) 0x5AA55AA5)     //!< magic number for device is locked and can't be flashed
 #define DEVICE_UNLOCKED ((unsigned int ) ~DEVICE_LOCKED) //!< magic number for device is unlocked and flashing is allowed

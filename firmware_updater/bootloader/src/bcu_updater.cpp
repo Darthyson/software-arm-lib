@@ -20,13 +20,14 @@
  published by the Free Software Foundation.
  -----------------------------------------------------------------------------*/
 
+#include "bcu_updater.h"
+#include "dump.h"
 #include <sblib/eib/knx_lpdu.h>
 #include <sblib/eib/knx_tpdu.h>
 #include <sblib/eib/apci.h>
 #include <sblib/digital_pin.h>
 #include <sblib/interrupt.h>
-#include "bcu_updater.h"
-#include "dump.h"
+
 
 #ifdef DEBUG
 #   define DEFAULT_COUNT_TO_FAIL (30)

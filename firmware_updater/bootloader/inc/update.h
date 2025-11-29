@@ -24,6 +24,7 @@
 
 #include "boot_descriptor_block.h"
 
+
 /**
  * Handles KNX @ref APCI_USERMSG_MANUFACTURER_0 which encapsulates our UPD/UDP protocol
  *

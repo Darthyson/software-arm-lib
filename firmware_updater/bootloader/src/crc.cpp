@@ -19,6 +19,7 @@
 
 #include "crc.h"
 
+
 unsigned int crc32(unsigned int startCrc32, unsigned char * data, unsigned int count)
 {
     int crc;

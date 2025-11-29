@@ -18,6 +18,7 @@
 
 #include "intelhex.h"
 
+
 #define HEX_STARTCODE ":"
 #define HEX_DATA_RECORD (00)
 #define HEX_END_OF_FILE "00000001FF"

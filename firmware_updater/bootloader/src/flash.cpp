@@ -19,10 +19,11 @@
  published by the Free Software Foundation.
  ---------------------------------------------------------------------------*/
 
-#include <sblib/internal/iap.h>
 #include "flash.h"
 #include "boot_descriptor_block.h"
 #include "dump.h"
+#include <sblib/internal/iap.h>
+
 
 /**
  * @brief Checks if the pointer is aligned.

@@ -18,11 +18,12 @@
  published by the Free Software Foundation.
  -----------------------------------------------------------------------------*/
 
-#include <string.h>
+#include "decompressor.h"
 #include "flash.h"
 #include "crc.h"
-#include "decompressor.h"
 #include "dump.h"
+#include <cstring>
+
 
 #define CMD_RAW 0
 #define CMD_COPY 0b10000000

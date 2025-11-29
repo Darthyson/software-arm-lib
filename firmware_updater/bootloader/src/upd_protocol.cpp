@@ -23,6 +23,7 @@
 #include "upd_protocol.h"
 #include "dump.h"
 
+
 UPD_Command code2UPDCommand(uint8_t code)
 {
     for (uint8_t i = 0; i < sizeof(updCommands) / sizeof(*updCommands); i++)

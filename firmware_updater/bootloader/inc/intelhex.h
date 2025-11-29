@@ -23,6 +23,7 @@
 
 #include <sblib/serial.h>
 
+
 #define HEX_DEFAULT_BYTES_PER_LINE (16) //!< default byte number per line in resulting hex stream
 
 /**

@@ -20,22 +20,24 @@
  published by the Free Software Foundation.
  -----------------------------------------------------------------------------*/
 
+#include "boot_descriptor_block.h"
+#include "bcu_updater.h"
+#include "dump.h"
 #include <sblib/main.h>
 #include <sblib/interrupt.h>
 #include <sblib/io_pin_names.h>
 #include <sblib/digital_pin.h>
 #include <sblib/eib/apci.h>
 #include <sblib/hardware_descriptor.h>
-#include "boot_descriptor_block.h"
-#include "bcu_updater.h"
-#include "dump.h"
+#include <sblib/eib/knx_lpdu.h>
 
 #ifdef DEBUG
+#   include "flash.h"
 #   include <sblib/serial.h>
 #   include <sblib/version.h>
 #   include <sblib/bits.h>
-#   include "flash.h"
 #endif
+
 
 // bootloader specific settings
 #define RUN_MODE_BLINK_CONNECTED (250) //!< while connected, programming and run led blinking time in milliseconds
