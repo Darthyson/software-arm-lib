@@ -34,7 +34,7 @@ public:
     ~BcuUpdate() = default;
     using BcuBase::setProgrammingMode; // make it public so we can use it in bootloader.cpp
     void begin();
-    bool applicationRunning() const override {return (enabled);}
+    bool applicationRunning() const override {return enabled;}
 
 protected:
     bool processApci(ApciCommand apciCmd, unsigned char * telegram, uint8_t telLength, uint8_t * sendBuffer) override;

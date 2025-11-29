@@ -41,11 +41,11 @@ int Decompressor::getLength()
 {
 	if ((cmdBuffer[0] & FLAG_LONG) == FLAG_LONG)
 	{
-		return (((cmdBuffer[0] & 0b111111) << 8) | (cmdBuffer[1] & 0xff));
+		return ((cmdBuffer[0] & 0b111111) << 8) | (cmdBuffer[1] & 0xff);
 	}
 	else
 	{
-		return (cmdBuffer[0] & 0b111111);
+		return cmdBuffer[0] & 0b111111;
 	}
 }
 
@@ -53,11 +53,11 @@ bool Decompressor::isCopyFromRam()
 {
 	if ((cmdBuffer[0] & FLAG_LONG) == FLAG_LONG)
 	{
-		return ((cmdBuffer[2] & ADDR_FROM_RAM) == ADDR_FROM_RAM);
+		return (cmdBuffer[2] & ADDR_FROM_RAM) == ADDR_FROM_RAM;
 	}
 	else
 	{
-		return ((cmdBuffer[1] & ADDR_FROM_RAM) == ADDR_FROM_RAM);
+		return (cmdBuffer[1] & ADDR_FROM_RAM) == ADDR_FROM_RAM;
 	}
 }
 
@@ -65,11 +65,11 @@ int Decompressor::getCopyAddress()
 {
 	if ((cmdBuffer[0] & FLAG_LONG) == FLAG_LONG)
 	{
-		return (((cmdBuffer[2] & 0b1111111) << 16) | ((cmdBuffer[3] & 0xff) << 8) | (cmdBuffer[4] & 0xff));
+		return ((cmdBuffer[2] & 0b1111111) << 16) | ((cmdBuffer[3] & 0xff) << 8) | (cmdBuffer[4] & 0xff);
 	}
 	else
 	{
-		return (((cmdBuffer[1] & 0b1111111) << 16) | ((cmdBuffer[2] & 0xff) << 8) | (cmdBuffer[3] & 0xff));
+		return ((cmdBuffer[1] & 0b1111111) << 16) | ((cmdBuffer[2] & 0xff) << 8) | (cmdBuffer[3] & 0xff);
 	}
 }
 
@@ -122,7 +122,7 @@ UDP_State Decompressor::pageCompletedDoFlash()
 	//d1("result = 0x");
 	//d2(result,HEX,2);
 	//dline("");
-	return (result);
+	return result;
 }
 
 void Decompressor::putByte(uint8_t data)
@@ -254,21 +254,19 @@ uint32_t Decompressor::getCrc32() {
 		//UART_printf("%02X ", scratchpad[i]);
 	}
 	//UART_printf("\n\r");
-
-
-	return (ccrc);
+	return ccrc;
 }
 
 uint8_t * Decompressor::getStartAddrOfPageToBeFlashed() {
-	return (startAddrOfPageToBeFlashed);
+	return startAddrOfPageToBeFlashed;
 }
 
 uint32_t Decompressor::getBytesCountToBeFlashed() {
-	return (bytesToFlash);
+	return bytesToFlash;
 }
 
 uint8_t Decompressor::getFlashPageNumberToBeFlashed() {
-	return ((uint8_t)((uint32_t)startAddrOfPageToBeFlashed / FLASH_PAGE_SIZE));
+	return (uint8_t)((uint32_t)startAddrOfPageToBeFlashed / FLASH_PAGE_SIZE);
 }
 
 /** @}*/

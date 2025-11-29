@@ -45,7 +45,7 @@ unsigned int crc32(unsigned int startCrc32, unsigned char * data, unsigned int c
                 ^ ((crc << 25 >> 31) & g1) ^ ((crc << 24 >> 31) & g0);
         crc = ((unsigned) crc >> 8) ^ c;
     }
-    return (~crc);
+    return ~crc;
 }
 
 /** @}*/

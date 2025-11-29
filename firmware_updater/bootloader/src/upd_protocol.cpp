@@ -30,10 +30,10 @@ UPD_Command code2UPDCommand(uint8_t code)
     {
         if (updCommands[i].code == code)
         {
-            return (updCommands[i]);
+            return updCommands[i];
         }
     }
-    return (updCommands[idxInvalidUPDCommand]); // UPD_INVALID
+    return updCommands[idxInvalidUPDCommand]; // UPD_INVALID
 }
 
 UDP_State iapResult2UDPState(IAP_Status iapState)
@@ -80,7 +80,7 @@ UDP_State iapResult2UDPState(IAP_Status iapState)
         default :
             result = UDP_IAP_UNKNOWN;
     }
-    return (result);
+    return result;
 }
 
 

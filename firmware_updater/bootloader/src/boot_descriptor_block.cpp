@@ -69,22 +69,22 @@ unsigned int checkVectorTable(uint8_t * start)
     for (i = 0; i < 7; i++)				// Checksum is 2's complement of entries 0 through 6
         cs += address[i];
 
-    return (~cs+1);
+    return ~cs + 1;
 }
 
 unsigned int checkApplication(AppDescriptionBlock * block)
 {
     if ((block->startAddress < applicationFirstAddress()) || (block->startAddress > flashLastAddress())) // we have just 64k of Flash
     {
-        return (0);
+        return 0;
     }
     if (block->endAddress > flashLastAddress())	// we have just 64k of Flash
     {
-        return (0);
+        return 0;
     }
     if (block->startAddress >= block->endAddress)
     {
-        return (0);
+        return 0;
     }
 
     unsigned int blockSize = block->endAddress - block->startAddress + 1;
@@ -92,11 +92,11 @@ unsigned int checkApplication(AppDescriptionBlock * block)
 
     if (crc == block->crc)
     {
-        return (1);
+        return 1;
         // see note from checkVectorTable
         // return checkVectorTable(block->startAddress);
     }
-    return (0);
+    return 0;
 }
 
 char* getAppVersion(AppDescriptionBlock * block)
@@ -105,11 +105,11 @@ char* getAppVersion(AppDescriptionBlock * block)
     if ((appVersionAddress >= applicationFirstAddress()) &&
         (appVersionAddress < (flashLastAddress() - BL_ID_STRING_LENGTH)))
     {
-        return (block->appVersionAddress);
+        return block->appVersionAddress;
     }
     else
     {
-        return (bl_id_string); // Bootloader ID is invalid (address out of range)
+        return bl_id_string; // Bootloader ID is invalid (address out of range)
     }
 }
 
@@ -124,46 +124,46 @@ uint8_t * getFirmwareStartAddress(AppDescriptionBlock * block)
 {
     if (checkApplication(block))
     {
-    	return (block->startAddress);
+    	return block->startAddress;
     }
     else
     {
-    	return (applicationFirstAddress());
+    	return applicationFirstAddress();
     }
 }
 
 uint8_t * bootLoaderFirstAddress(void)
 {
-    return (_image_start);
+    return _image_start;
 }
 
 uint8_t * bootLoaderLastAddress(void)
 {
     //linker sets this not correctly, so we need the -1
-    return (_image_end - 1);
+    return _image_end - 1;
 }
 
 unsigned int bootLoaderSize(void)
 {
     // includes .text and .data
-    return ((unsigned int)(uintptr_t)&_image_size);
+    return (unsigned int)(uintptr_t)&_image_size;
 }
 
 uint8_t * flashFirstAddress(void)
 {
-    return (__base_Flash);
+    return __base_Flash;
 }
 
 uint8_t * flashLastAddress(void)
 {
     //linker sets this not correctly, so we need the -1
-    return (__top_Flash - 1);
+    return __top_Flash - 1;
 }
 
 unsigned int flashSize(void)
 {
     // add the -1 from flashLastAddress(void) back to size
-    return ((flashLastAddress() - flashFirstAddress() + 1));
+    return flashLastAddress() - flashFirstAddress() + 1;
 }
 
 uint8_t * applicationFirstAddress(void)
@@ -182,7 +182,7 @@ uint8_t * applicationFirstAddress(void)
 uint8_t * bootDescriptorBlockAddress(void)
 {
     // boot descriptor block is placed in front of the application
-    return (applicationFirstAddress() - BOOT_BLOCK_DESC_SIZE);
+    return applicationFirstAddress() - BOOT_BLOCK_DESC_SIZE;
 }
 
 unsigned int bootDescriptorBlockPage(void)

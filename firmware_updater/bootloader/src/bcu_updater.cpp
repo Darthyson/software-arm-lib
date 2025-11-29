@@ -36,16 +36,16 @@
 
     bool checkCountToFail()
     {
-        return (false); ///\done uncomment on release
+        return false; ///\done uncomment on release
         // ok lets drop connection for debugging
         countToFail--;
         if (countToFail)
         {
-            return (false);
+            return false;
         }
         defaultCountToFail++;
         countToFail = defaultCountToFail;
-        return (true);
+        return true;
     }
 #endif
 
@@ -62,10 +62,10 @@ bool BcuUpdate::processApci(ApciCommand apciCmd, unsigned char * telegram, uint8
     switch(apciCmd)
     {
         case APCI_MEMORY_WRITE_PDU:
-            return (handleDeprecatedApciMemoryWrite(sendBuffer));
+            return handleDeprecatedApciMemoryWrite(sendBuffer);
 
         case APCI_USERMSG_MANUFACTURER_0:
-            return (handleApciUsermsgManufacturer(sendBuffer, &telegram[offset], dataLength));
+            return handleApciUsermsgManufacturer(sendBuffer, &telegram[offset], dataLength);
 
         case APCI_BASIC_RESTART_PDU:
             dump2(serial.println("APCI_BASIC_RESTART_PDU"));
@@ -76,10 +76,10 @@ bool BcuUpdate::processApci(ApciCommand apciCmd, unsigned char * telegram, uint8
                 serial.println();serial.println();serial.println();
                 serial.flush(); // give time to send serial data
             );
-            return (BcuBase::processApci(apciCmd, telegram, telLength, sendBuffer));
+            return BcuBase::processApci(apciCmd, telegram, telLength, sendBuffer);
 
         default:
-            return (false);
+            return false;
     }
 }
 
@@ -94,12 +94,12 @@ bool BcuUpdate::processBroadCastTelegram(ApciCommand apciCmd, unsigned char *tel
     {
         sendApciIndividualAddressReadResponse();
     }
-    return (true);
+    return true;
 }
 
 bool BcuUpdate::processGroupAddressTelegram(ApciCommand apciCmd, uint16_t groupAddress, unsigned char *telegram, uint8_t telLength)
 {
-    return (true);
+    return true;
 }
 
 uint8_t& BcuUpdate::layerStatus()

@@ -123,7 +123,7 @@ void dumpFlashContent(uint8_t * startAddress, uint8_t * endAddress)
  */
 unsigned int streamToUIn32(uint8_t * buffer)
 {
-    return ((unsigned int)(buffer[3] << 24 | buffer[2] << 16 | buffer[1] << 8 | buffer[0]));
+    return (unsigned int)(buffer[3] << 24 | buffer[2] << 16 | buffer[1] << 8 | buffer[0]);
 }
 
 /**
@@ -168,7 +168,7 @@ void uShort16ToStream(uint8_t * buffer, unsigned int val)
 
 uint16_t streamToUShort16(uint8_t * buffer)
 {
-    return ((uint16_t)(buffer[1] << 8 | buffer[0]));
+    return (uint16_t)(buffer[1] << 8 | buffer[0]);
 }
 
 /**
@@ -208,7 +208,7 @@ static bool getDeviceUnlocked()
             d3(serial.print("-->DEVICE_LOCKED"));
         }
     );
-    return (deviceLocked == DEVICE_UNLOCKED);
+    return deviceLocked == DEVICE_UNLOCKED;
 }
 
 /**
@@ -289,7 +289,7 @@ static bool updUnlockDevice(uint8_t * data, uint32_t size)
     {
         setLastError(UDP_UID_MISMATCH);
         dline(" size mismatch");
-        return (true);
+        return true;
     }
 
     byte uid[IAP_UID_LENGTH];
@@ -299,7 +299,7 @@ static bool updUnlockDevice(uint8_t * data, uint32_t size)
         // could not read UID of mcu
         setLastError(error);
         dline(" iapReadUID failed");
-        return (true);
+        return true;
     }
 
     if (memcmp(uid, data, size) != 0)
@@ -320,7 +320,7 @@ static bool updUnlockDevice(uint8_t * data, uint32_t size)
             // uid is still not correct, finally decline access
             setLastError(UDP_UID_MISMATCH);
             dline(" uid mismatch");
-            return (true);
+            return true;
         }
     }
 
@@ -328,7 +328,7 @@ static bool updUnlockDevice(uint8_t * data, uint32_t size)
     setDeviceLockState(DEVICE_UNLOCKED);
     setLastError(UDP_IAP_SUCCESS);
     resetUPDProtocol();
-    return (true);
+    return true;
 }
 
 /**
@@ -359,7 +359,7 @@ static bool updAppVersionRequest()
         }
         serial.println();
     );
-    return (true);
+    return true;
 }
 
 /**
@@ -380,7 +380,7 @@ static bool updDumpFlashRange(uint8_t * data)
 #else
     setLastError(UDP_NOT_IMPLEMENTED);
 #endif
-    return (true);
+    return true;
 }
 
 
@@ -400,7 +400,7 @@ static bool updEraseAddressRange(uint8_t * data)
     setLastError(eraseAddressRange(startAddress, endAddress));
     bcu.bus->resume();
     resetUPDProtocol();
-    return (true);
+    return true;
 }
 
 /**
@@ -416,7 +416,7 @@ static bool updEraseFullFlash()
     setLastError(eraseFullFlash());
     bcu.bus->resume();
     resetUPDProtocol();
-    return (true);
+    return true;
 }
 
 /**
@@ -434,7 +434,7 @@ static bool updSendData(uint8_t * data, uint32_t nCount)
     {
         setLastError(UDP_RAM_BUFFER_OVERFLOW);
         dline("ramBuffer Full");
-        return (true);
+        return true;
     }
 
     memcpy(&ramBuffer[getRAMBufferPosition()], data, nCount);
@@ -448,7 +448,7 @@ static bool updSendData(uint8_t * data, uint32_t nCount)
     }
     d3(serial.print("at: ", getRAMBufferPosition(), DEC, 4));
     d3(serial.println(" #", nCount, DEC, 2));
-    return (true);
+    return true;
 }
 
 /**
@@ -470,27 +470,27 @@ static bool updProgram(uint8_t * data)
     {
         // invalid address
         setLastError(UDP_ADDRESS_NOT_ALLOWED_TO_FLASH);
-        return (true);
+        return true;
     }
 
     if (flash_count > static_cast<int32_t>(getRAMBufferSize())) // Selfbus Updater has a too big Mcu.UPD_PROGRAM_SIZE set. (see Mcu.java)
     {
         setLastError(UDP_RAM_BUFFER_OVERFLOW);
-        return (true);
+        return true;
     }
 
     if (getRAMBufferPosition() > flash_count)
     {
         setLastError(UDP_BYTECOUNT_RECEIVED_TOO_HIGH);
         resetRAMBuffer();
-        return (true);
+        return true;
     }
 
     if (getRAMBufferPosition() < flash_count)
     {
         setLastError(UDP_BYTECOUNT_RECEIVED_TOO_LOW);
         resetRAMBuffer();
-        return (true);
+        return true;
     }
 
     uint32_t crcRamBuffer = crc32(0xFFFFFFFF, ramBuffer, flash_count);
@@ -498,7 +498,7 @@ static bool updProgram(uint8_t * data)
     {
         // invalid crcRamBuffer
         setLastError(UDP_CRC_ERROR);
-        return (true);
+        return true;
     }
 
     d3(serial.print("to write ", flash_count));
@@ -551,7 +551,7 @@ static bool updProgram(uint8_t * data)
     resetRAMBuffer();
     bcu.bus->resume();
     setLastError(error);
-    return (true);
+    return true;
 }
 
 /**
@@ -580,7 +580,7 @@ static bool updRequestBootloaderIdentity(uint8_t * data)
         d3(serial.print(".", UPDATER_MIN_MINOR_VERSION));
         d3(serial.print(" received: ", majorVersionUpdater));
         d3(serial.println(".", minorVersionUpdater));
-        return (true);
+        return true;
     }
 
     uint16_t bootloaderFeatures = BL_FEATURES;
@@ -610,7 +610,7 @@ static bool updRequestBootloaderIdentity(uint8_t * data)
     d3(serial.print(".", BOOTLOADER_MINOR_VERSION, DEC, 2));
     d3(serial.print("    BL feature 0x", bootloaderFeatures, HEX, 8));
     d3(serial.println("    FW start   0x", (uintptr_t)appFirstAddress, HEX, 8));
-    return (true);
+    return true;
 }
 
 /**
@@ -627,7 +627,7 @@ static bool updRequestStatistic()
     uShort16ToStream(retTelegram + 9 + sizeof(disconnectCount), repeatedT_ACKcount);
     d3(serial.print(" #DC ", disconnectCount));
     d3(serial.print(" #repT_ACK ", repeatedT_ACKcount));
-    return (true);
+    return true;
 }
 
 /**
@@ -662,7 +662,7 @@ static bool udpRequestBootDescriptionBlock()
     d3(serial.print(" end@ 0x", bootDescr->endAddress));        // Firmware end address
     d3(serial.print(" Desc.@ 0x", bootDescr->appVersionAddress)); // Firmware App descriptor address (for getAppVersion())
     d3(serial.println(" CRC : 0x", bootDescr->crc, HEX, 8));      // Firmware CRC
-    return (true);
+    return true;
 }
 
 /**
@@ -683,7 +683,7 @@ static bool updRequestData()
      retTelegram[8] = UPD_SEND_DATA;
      */
     setLastError(UDP_NOT_IMPLEMENTED);
-    return (true);
+    return true;
 }
 
 /**
@@ -702,12 +702,12 @@ static bool updRequestUID()
     {
         dline("iapReadUID error");
         setLastError(result);
-        return (true);
+        return true;
     }
     prepareReturnTelegram(UID_LENGTH_USED, UPD_RESPONSE_UID);
     memcpy(retTelegram + 9, uid, UID_LENGTH_USED);
     dline(" OK");
-    return (true);
+    return true;
 }
 
 /**
@@ -719,7 +719,7 @@ static bool updRequestUID()
 static bool updUnkownCommand()
 {
     setLastError(UDP_UNKNOWN_COMMAND); // set to unknown error
-    return (true);
+    return true;
 }
 
 /**
@@ -750,7 +750,7 @@ static bool updUpdateBootDescriptorBlock(uint8_t * data)
     {
         setLastError(UDP_RAM_BUFFER_OVERFLOW);
         dline("ramBuffer Full");
-        return (true);
+        return true;
     }
     d3(
         totalBytesReceived -= count; // subtract bytes received for boot descriptor
@@ -779,7 +779,7 @@ static bool updUpdateBootDescriptorBlock(uint8_t * data)
         d3(serial.print(" data[3-0]:", streamToUIn32(data), HEX, 8));
         d3(serial.print(" data[7-4]:", streamToUIn32(data+4), HEX, 8));
         setLastError(UDP_CRC_ERROR);
-        return (true);
+        return true;
     }
 
     d3(serial.println("CRC MATCH, comparing MCUs BootDescriptor: count: ", count));
@@ -799,7 +799,7 @@ static bool updUpdateBootDescriptorBlock(uint8_t * data)
         if (result != UDP_IAP_SUCCESS)
         {
             setLastError(result);
-            return (true);
+            return true;
         }
 
         d3(serial.print("Flash Page:"));
@@ -817,7 +817,7 @@ static bool updUpdateBootDescriptorBlock(uint8_t * data)
             setLastError(result);
             if (result == UDP_ADDRESS_NOT_ALLOWED_TO_FLASH)
             {
-                return (true);
+                return true;
             }
         }
     }
@@ -828,11 +828,11 @@ static bool updUpdateBootDescriptorBlock(uint8_t * data)
             serial.println("-->UDP_APPLICATION_NOT_STARTABLE");
         );
         setLastError(UDP_APPLICATION_NOT_STARTABLE);
-        return (true);
+        return true;
     }
 
     setLastError(result);
-    return (true);
+    return true;
 }
 
 /**
@@ -858,7 +858,7 @@ static bool updSendDataToDecompress(uint8_t * data, uint32_t nCount)
     }
     setLastError(UDP_IAP_SUCCESS);
 #endif
-    return (true);
+    return true;
 }
 
 /**
@@ -892,7 +892,7 @@ static bool updProgramDecompressedDataToFlash(uint8_t * data)
     {
         dline(" Address protected!");
         setLastError(UDP_ADDRESS_NOT_ALLOWED_TO_FLASH);
-        return (true);
+        return true;
     }
 
     d1(" Address valid, ");
@@ -901,7 +901,7 @@ static bool updProgramDecompressedDataToFlash(uint8_t * data)
     {
         dline("CRC Error!");
         setLastError(UDP_CRC_ERROR);
-        return (true);
+        return true;
     }
 
     dline("CRC OK");
@@ -910,7 +910,7 @@ static bool updProgramDecompressedDataToFlash(uint8_t * data)
     bcu.bus->resume();
     resetUPDProtocol(); // we need this, otherwise updSendDataToDecompress will run into a buffer overflow
 #endif
-    return (true);
+    return true;
 }
 
 bool handleDeprecatedApciMemoryWrite(uint8_t * sendBuffer)
@@ -924,7 +924,7 @@ bool handleDeprecatedApciMemoryWrite(uint8_t * sendBuffer)
     sendBuffer[11] = 0xff;
     sendBuffer[12] = 0x00;
     sendBuffer[13] = 0x00;
-    return (true);
+    return true;
 }
 
 bool handleApciUsermsgManufacturerInternal(uint8_t * data, uint32_t size)
@@ -933,7 +933,7 @@ bool handleApciUsermsgManufacturerInternal(uint8_t * data, uint32_t size)
     {
         d3(serial.println("UDP_NO_DATA"));
         setLastError(UDP_NO_DATA);
-        return (true);
+        return true;
     }
 
     UPD_Command updCommand = code2UPDCommand(data[0]);
@@ -941,7 +941,7 @@ bool handleApciUsermsgManufacturerInternal(uint8_t * data, uint32_t size)
     {
         d3(serial.println("updCommand.code invalid"));
         setLastError(UDP_INVALID);
-        return (true);
+        return true;
     }
 
     data++;
@@ -953,7 +953,7 @@ bool handleApciUsermsgManufacturerInternal(uint8_t * data, uint32_t size)
         d3(serial.print(" maxCount=", updCommand.maxBytes));
         d3(serial.println(" length=", size));
         setLastError(UDP_INVALID_DATA);
-        return (true);
+        return true;
     }
 
 #if defined(DEBUG) && (!(defined(TS_ARM)))
@@ -973,7 +973,7 @@ bool handleApciUsermsgManufacturerInternal(uint8_t * data, uint32_t size)
             default:
                 // device is locked -> command not allowed, send lastError and return
                 setLastError(UDP_DEVICE_LOCKED);
-                return (true);
+                return true;
         }
     }
 
@@ -981,54 +981,54 @@ bool handleApciUsermsgManufacturerInternal(uint8_t * data, uint32_t size)
     switch (updCommand.code)
     {
         case UPD_UNLOCK_DEVICE:
-            return (updUnlockDevice(data, size));
+            return updUnlockDevice(data, size);
 
         case UPD_REQUEST_UID:
-            return (updRequestUID());
+            return updRequestUID();
 
         case UPD_APP_VERSION_REQUEST:
-            return (updAppVersionRequest());
+            return updAppVersionRequest();
 
         case UPD_SEND_DATA:
-            return (updSendData(data, size));
+            return updSendData(data, size);
 
         case UPD_PROGRAM:
-            return (updProgram(data));
+            return updProgram(data);
 
         case UPD_SEND_DATA_TO_DECOMPRESS:
-            return (updSendDataToDecompress(data, size));
+            return updSendDataToDecompress(data, size);
 
         case UPD_PROGRAM_DECOMPRESSED_DATA:
-            return (updProgramDecompressedDataToFlash(data));
+            return updProgramDecompressedDataToFlash(data);
 
         case UPD_ERASE_COMPLETE_FLASH:
-            return (updEraseFullFlash());
+            return updEraseFullFlash();
 
         case UPD_ERASE_ADDRESSRANGE:
-            return (updEraseAddressRange(data));
+            return updEraseAddressRange(data);
 
         case UPD_DUMP_FLASH:
-            return (updDumpFlashRange(data));
+            return updDumpFlashRange(data);
 
         case UPD_REQUEST_STATISTIC:
-            return (updRequestStatistic());
+            return updRequestStatistic();
 
         case UPD_UPDATE_BOOT_DESC:
-            return (updUpdateBootDescriptorBlock(data));
+            return updUpdateBootDescriptorBlock(data);
 
 		case UPD_REQUEST_BOOT_DESC:
-            return (udpRequestBootDescriptionBlock());
+            return udpRequestBootDescriptionBlock();
 
 		case UPD_REQUEST_BL_IDENTITY:
-		    return (updRequestBootloaderIdentity(data));
+		    return updRequestBootloaderIdentity(data);
 
 		case UPD_REQ_DATA:
-		    return (updRequestData());
+		    return updRequestData();
 
         default:
-            return (updUnkownCommand());
+            return updUnkownCommand();
     }
-    return (false); //we should never land here
+    return false; //we should never land here
 }
 
 bool handleApciUsermsgManufacturer(uint8_t * sendBuffer, uint8_t * data, uint32_t size)

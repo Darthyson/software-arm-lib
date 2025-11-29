@@ -46,7 +46,7 @@ static inline bool is_aligned(const uint8_t * ptr, const uint32_t alignment)
 /*
 static UDP_State eraseSector(unsigned int sector)
 {
-    return (eraseSectorRange(sector, sector));
+    return eraseSectorRange(sector, sector);
 }
 */
 
@@ -54,16 +54,16 @@ bool addressAllowedToProgram(uint8_t * start, unsigned int length, bool isBootDe
 {
     if (!is_aligned(start, FLASH_PAGE_SIZE) || !length) // not aligned to page or 0 length
     {
-        return (0);
+        return false;
     }
     uint8_t * end = start + length - 1;
     if (isBootDescriptor)
     {
-        return ((start >= bootDescriptorBlockAddress()) && (end < applicationFirstAddress()));
+        return (start >= bootDescriptorBlockAddress()) && (end < applicationFirstAddress());
     }
     else
     {
-        return ((start >= applicationFirstAddress()) && (end <= flashLastAddress()));
+        return (start >= applicationFirstAddress()) && (end <= flashLastAddress());
     }
 }
 
@@ -75,8 +75,8 @@ bool addressAllowedToProgram(uint8_t * start, unsigned int length, bool isBootDe
  */
 static bool pageAllowedToErase(const unsigned int pageNumber)
 {
-    return ((pageNumber > iapPageOfAddress(bootLoaderLastAddress())) &&
-            ( pageNumber <= iapPageOfAddress(flashLastAddress())));
+    return (pageNumber > iapPageOfAddress(bootLoaderLastAddress())) &&
+           ( pageNumber <= iapPageOfAddress(flashLastAddress()));
 }
 
 /**
@@ -87,8 +87,8 @@ static bool pageAllowedToErase(const unsigned int pageNumber)
  */
 static bool sectorAllowedToErase(const unsigned int sectorNumber)
 {
-    return ((sectorNumber > iapSectorOfAddress(bootLoaderLastAddress())) &&
-            ( sectorNumber <= iapSectorOfAddress(flashLastAddress())));
+    return (sectorNumber > iapSectorOfAddress(bootLoaderLastAddress())) &&
+           ( sectorNumber <= iapSectorOfAddress(flashLastAddress()));
 }
 
 UDP_State erasePageRange(unsigned int startPage, unsigned int endPage)
@@ -100,7 +100,7 @@ UDP_State erasePageRange(unsigned int startPage, unsigned int endPage)
     if ((!pageAllowedToErase(startPage)) || (!pageAllowedToErase(endPage)))
     {
         dline("not allowed!");
-        return (UDP_PAGE_NOT_ALLOWED_TO_ERASE);
+        return UDP_PAGE_NOT_ALLOWED_TO_ERASE;
     }
 
     result = iapResult2UDPState(iapErasePageRange(startPage, endPage));
@@ -115,7 +115,7 @@ UDP_State erasePageRange(unsigned int startPage, unsigned int endPage)
             dline("OK");
         }
     );
-    return (result);
+    return result;
 }
 
 /**
@@ -148,7 +148,7 @@ static UDP_State eraseSectorRange(unsigned int startSector, unsigned int endSect
             dline(" OK");
         }
     );
-    return (result);
+    return result;
 }
 
 UDP_State eraseAddressRange(uint8_t * startAddress, const uint8_t * endAddress, const bool rangeCheck)
@@ -180,7 +180,7 @@ UDP_State eraseAddressRange(uint8_t * startAddress, const uint8_t * endAddress, 
     if (lessThenOneSector)
     {
         result = erasePageRange(startPage, endPage); // this is slow and can take up to 15*100ms = ~1,5s
-        return (result);
+        return result;
     }
 
     if (!is_aligned(startAddress, FLASH_SECTOR_SIZE))
@@ -194,7 +194,7 @@ UDP_State eraseAddressRange(uint8_t * startAddress, const uint8_t * endAddress, 
         result = erasePageRange(start, end); // this is slow and can take up to 15*100ms = ~1,5s
         if (result != UDP_IAP_SUCCESS)
         {
-            return (result);
+            return result;
         }
         startAddress = nextSectorStartAddress; // set new startAddress
     }
@@ -211,7 +211,7 @@ UDP_State eraseAddressRange(uint8_t * startAddress, const uint8_t * endAddress, 
         result = erasePageRange(start, end); //  this is slow and can take up to 15*100ms = ~1,5s
         if (result != UDP_IAP_SUCCESS)
         {
-            return (result);
+            return result;
         }
         endSector--;
     }
@@ -221,7 +221,7 @@ UDP_State eraseAddressRange(uint8_t * startAddress, const uint8_t * endAddress, 
         result = eraseSectorRange(startSector, endSector); // this is fast and should always take ~100ms
     }
 
-    return (result);
+    return result;
 }
 
 UDP_State eraseFullFlash()
@@ -236,11 +236,11 @@ UDP_State executeProgramFlash(uint8_t * address, const uint8_t * ram, unsigned i
     UDP_State result = UDP_ADDRESS_NOT_ALLOWED_TO_FLASH;
     if (!addressAllowedToProgram(address, size, isBootDescriptor))
     {
-        return (UDP_ADDRESS_NOT_ALLOWED_TO_FLASH);
+        return UDP_ADDRESS_NOT_ALLOWED_TO_FLASH;
     }
 
     result = iapResult2UDPState(iapProgram(address, ram, size));
-    return (result);
+    return result;
 }
 
 
