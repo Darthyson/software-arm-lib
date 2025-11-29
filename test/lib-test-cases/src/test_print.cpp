@@ -650,5 +650,17 @@ TEST_CASE("Print::", "[print]") {
             mock.print(std::abs(value % 100), DEC, 2);
             REQUIRE(mock.getString() == "42");
         }
+
+        SECTION("call with enum")
+        {
+            enum TestEnum : uint8_t
+            {
+                VALUE1 = 1,
+                VALUE2 = 2
+            };
+            MockPrint mock;
+            TestEnum value = VALUE1;
+            REQUIRE(mock.print(value));
+        }
     }
 }
