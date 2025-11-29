@@ -20,8 +20,8 @@
  published by the Free Software Foundation.
  -----------------------------------------------------------------------------*/
 
-#ifndef _DECOMPRESSOR_H_
-#define _DECOMPRESSOR_H_
+#ifndef SB_BOOTLOADER_DECOMPRESSOR_H_
+#define SB_BOOTLOADER_DECOMPRESSOR_H_
 
 #include <stdint.h>
 #include "upd_protocol.h"
@@ -90,6 +90,6 @@ class Decompressor
 
 };
 
-#endif
+#endif /* SB_BOOTLOADER_DECOMPRESSOR_H_ */
 
 /** @}*/

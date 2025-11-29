@@ -18,8 +18,8 @@
  published by the Free Software Foundation.
  ---------------------------------------------------------------------------*/
 
-#ifndef INTELHEX_H_
-#define INTELHEX_H_
+#ifndef SB_BOOTLOADER_INTELHEX_H_
+#define SB_BOOTLOADER_INTELHEX_H_
 
 #include <sblib/serial.h>
 
@@ -37,6 +37,6 @@
 void dumpToSerialinIntelHex(Serial* serialPort, unsigned char* data, unsigned int count, unsigned int bytesPerLine = HEX_DEFAULT_BYTES_PER_LINE);
 
 
-#endif /* INTELHEX_H_ */
+#endif /* SB_BOOTLOADER_INTELHEX_H_ */
 
 /** @}*/

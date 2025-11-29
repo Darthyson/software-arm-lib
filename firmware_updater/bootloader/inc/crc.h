@@ -19,8 +19,8 @@
  published by the Free Software Foundation.
  -----------------------------------------------------------------------------*/
 
-#ifndef _CRC32_H_
-#define _CRC32_H_
+#ifndef SB_BOOTLOADER_CRC32_H_
+#define SB_BOOTLOADER_CRC32_H_
 
 /**
  * Calculates the crc32 of provided buffer data
@@ -32,6 +32,6 @@
  */
 unsigned int crc32 (unsigned int startCrc32, unsigned char * data, unsigned int count);
 
-#endif
+#endif /* SB_BOOTLOADER_CRC32_H_ */
 
 /** @}*/

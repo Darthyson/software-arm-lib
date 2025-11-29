@@ -19,8 +19,8 @@
  published by the Free Software Foundation.
  ---------------------------------------------------------------------------*/
 
-#ifndef UPDATE_H_
-#define UPDATE_H_
+#ifndef SB_BOOTLOADER_UPDATE_H_
+#define SB_BOOTLOADER_UPDATE_H_
 
 #include "boot_descriptor_block.h"
 
@@ -47,5 +47,5 @@ void resetUPDProtocol(void);
  */
 bool handleDeprecatedApciMemoryWrite(uint8_t * sendBuffer);
 
-#endif /* UPDATE_H_ */
+#endif /* SB_BOOTLOADER_UPDATE_H_ */
 /** @}*/

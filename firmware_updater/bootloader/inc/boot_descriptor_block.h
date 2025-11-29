@@ -20,8 +20,8 @@
  published by the Free Software Foundation.
  -----------------------------------------------------------------------------*/
 
-#ifndef BOOT_DESCRIPTOR_BLOCK_H_
-#define BOOT_DESCRIPTOR_BLOCK_H_
+#ifndef SB_BOOTLOADER_BOOT_DESCRIPTOR_BLOCK_H_
+#define SB_BOOTLOADER_BOOT_DESCRIPTOR_BLOCK_H_
 
 #include <sblib/platform.h>
 #include <version.h>
@@ -150,6 +150,6 @@ uint8_t * bootDescriptorBlockAddress(void);
  */
 unsigned int bootDescriptorBlockPage(void);
 
-#endif /* BOOT_DESCRIPTOR_BLOCK_H_ */
+#endif /* SB_BOOTLOADER_BOOT_DESCRIPTOR_BLOCK_H_ */
 
 /** @}*/

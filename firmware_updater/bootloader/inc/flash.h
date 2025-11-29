@@ -19,8 +19,8 @@
  published by the Free Software Foundation.
  ---------------------------------------------------------------------------*/
 
-#ifndef FLASH_H_
-#define FLASH_H_
+#ifndef SB_BOOTLOADER_FLASH_H_
+#define SB_BOOTLOADER_FLASH_H_
 
 #include "upd_protocol.h"
 
@@ -82,5 +82,5 @@ UDP_State executeProgramFlash(uint8_t * address, const uint8_t * ram, unsigned i
 
 
 
-#endif /* FLASH_H_ */
+#endif /* SB_BOOTLOADER_FLASH_H_ */
 /** @}*/

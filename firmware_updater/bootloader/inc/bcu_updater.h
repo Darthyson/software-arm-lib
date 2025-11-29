@@ -20,8 +20,8 @@
  published by the Free Software Foundation.
  -----------------------------------------------------------------------------*/
 
-#ifndef BCU_UPDATER_H_
-#define BCU_UPDATER_H_
+#ifndef SB_BOOTLOADER_BCU_UPDATER_H_
+#define SB_BOOTLOADER_BCU_UPDATER_H_
 
 #include <sblib/eib/bcu_base.h>
 #include "update.h"
@@ -45,6 +45,6 @@ private:
     uint8_t bcuStatus = BCU_STATUS_LINK_LAYER | BCU_STATUS_TRANSPORT_LAYER | BCU_STATUS_APPLICATION_LAYER | BCU_STATUS_USER_MODE;
 };
 
-#endif /* BCU_UPDATER_H_ */
+#endif /* SB_BOOTLOADER_BCU_UPDATER_H_ */
 
 /** @}*/

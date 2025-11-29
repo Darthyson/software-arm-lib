@@ -60,8 +60,8 @@
  published by the Free Software Foundation.
  ---------------------------------------------------------------------------*/
 
-#ifndef UPD_PROTOCOL_H_
-#define UPD_PROTOCOL_H_
+#ifndef SB_BOOTLOADER_UPD_PROTOCOL_H_
+#define SB_BOOTLOADER_UPD_PROTOCOL_H_
 
 #include <sblib/types.h>
 #include <sblib/internal/iap.h>
@@ -221,5 +221,5 @@ void updResult2Serial(UDP_State result);
 
 
 
-#endif /* UPD_PROTOCOL_H_ */
+#endif /* SB_BOOTLOADER_UPD_PROTOCOL_H_ */
 /** @}*/

@@ -19,8 +19,8 @@
  published by the Free Software Foundation.
  ---------------------------------------------------------------------------*/
 
-#ifndef DUMP_H_
-#define DUMP_H_
+#ifndef SB_BOOTLOADER_DUMP_H_
+#define SB_BOOTLOADER_DUMP_H_
 
 #if (defined(DUMP_TELEGRAMS_LVL1) || defined(DUMP_TELEGRAMS_LVL2))
 #   include <sblib/serial.h>
@@ -54,5 +54,5 @@
 #   define dump2(x)
 #endif
 
-#endif /* DUMP_H_ */
+#endif /* SB_BOOTLOADER_DUMP_H_ */
 /** @}*/
