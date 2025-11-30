@@ -12,6 +12,7 @@
 #define SBLIB_I2C_DS3231_H_
 
 #include <time.h>
+#include <cstdint>
 
 
 #define DS3231_I2C_ADRS 0x68 << 1    // (DS3231_I2C_ADRS << 1)

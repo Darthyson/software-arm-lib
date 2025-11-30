@@ -8,11 +8,9 @@
  *  published by the Free Software Foundation.
  */
 
-#include <sblib/core.h>
-#include <sblib/types.h>
+#include <sblib/i2c/ds3231.h>
 #include <sblib/i2c.h>
 
-#include <sblib/i2c/ds3231.h>
 
 /*****************************************************************************
 ** Function name:  Ds3231Init
@@ -32,7 +30,7 @@ void Ds3231::Ds3231Init()
 /*****************************************************************************
 ** Function name:  SetTime
 **
-** Descriptions:   Sets the time on DS3231 Struct data is in integrer format,
+** Descriptions:   Sets the time on DS3231 Struct data is in integer format,
 **                 not BCD. Fx will convert
 **
 ** parameters:     time - struct containing time data;
@@ -702,15 +700,16 @@ bool Ds3231::EnableOscillator(const bool TF, const bool bBattery, const uint8_t 
 *****************************************************************************/
 float Ds3231::GetTemperature()
 {
-    float fRet = -999;
+    float fRet = -999.f;
     uint8_t data[2];
     data[0] = MSB_TEMP;
     if (Chip_I2C_MasterSend(I2C0, DS3231_I2C_ADRS, (const uint8_t*)data, 1) == 1 &&
         Chip_I2C_MasterRead(I2C0, DS3231_I2C_ADRS, data, 4) == 4)
     {
         //iRet= int(data[0] << 8); iRet |= int(data[1]);  //HEX
-        //iRet= int(data[0]+data[1]/256.0);                 //approx.
-        fRet = (float)((data[0]) + 0.25 * (data[1] >> 6));
+        //iRet= int(data[0]+data[1]/256.0);               //approx.
+        fRet = static_cast<float>(data[0]) +
+               0.25f * static_cast<float>(data[1] >> 6);
     }
     return fRet;
 }
