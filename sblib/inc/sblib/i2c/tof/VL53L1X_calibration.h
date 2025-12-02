@@ -67,6 +67,8 @@
 #ifndef _CALIBRATION_H_
 #define _CALIBRATION_H_
 
+#include <cstdint>
+
 /**
  * @brief This function performs the offset calibration.\n
  * The function returns the offset value found and programs the offset compensation into the device.

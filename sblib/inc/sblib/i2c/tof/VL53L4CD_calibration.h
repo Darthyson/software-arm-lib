@@ -34,6 +34,7 @@
 #ifndef VL53L4CD_CALIBRATION_H_
 #define VL53L4CD_CALIBRATION_H_
 
+#include <sblib/i2c/tof/VL53L4CD_api.h>
 #include <sblib/i2c/tof/VL53L4CD_i2c.h>
 
 /**

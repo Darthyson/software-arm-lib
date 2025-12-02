@@ -31,9 +31,10 @@
  * @brief Calibration functions implementation
  */
 
-#include <math.h>
-#include <sblib/i2c/tof/VL53L4CD_api.h>
 #include <sblib/i2c/tof/VL53L4CD_calibration.h>
+#include <sblib/i2c/tof/VL53L4CD_api.h>
+#include <cmath>  // for float_t and roundf(..)
+
 
 VL53L4CD_Error VL53L4CD_CalibrateOffset(
         Dev_t dev,

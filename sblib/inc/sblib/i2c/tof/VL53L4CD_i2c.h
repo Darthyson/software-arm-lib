@@ -9,8 +9,8 @@
 #ifndef SB_LIB_VL53L4CD_I2C_H_
 #define SB_LIB_VL53L4CD_I2C_H_
 
-#include <cstdint>
 #include <sblib/i2c/tof/VL53Lx_i2c.h>
+#include <cstdint>
 
 /**
  * @def VL53L4CD_I2C_FAST_MODE_PLUS

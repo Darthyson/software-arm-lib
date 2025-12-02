@@ -63,7 +63,7 @@
  */
 
 #include <sblib/i2c/tof/VL53L1X_api.h>
-#include <string.h>
+#include <cstring>
 
 #if 0
 uint8_t VL51L1X_NVM_CONFIGURATION[] = {

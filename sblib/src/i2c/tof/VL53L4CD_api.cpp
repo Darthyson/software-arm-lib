@@ -31,9 +31,10 @@
  * @brief Functions implementation
  */
 
-#include <string.h>
-#include <math.h>
 #include <sblib/i2c/tof/VL53L4CD_api.h>
+#include <cstring>
+#include <cmath> // for float_t and roundf(..)
+
 
 static const uint8_t VL53L4CD_DEFAULT_CONFIGURATION[] = {
     #ifdef VL53L4CD_I2C_FAST_MODE_PLUS
