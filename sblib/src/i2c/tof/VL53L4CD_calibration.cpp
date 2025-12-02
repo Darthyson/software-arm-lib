@@ -244,7 +244,7 @@ VL53L4CD_Error VL53L4CD_CalibrateXtalk(
             }
             else
             {
-                *p_measured_xtalk_kcps = (uint16_t)(round(tmp_xtalk));
+                *p_measured_xtalk_kcps = (uint16_t)(roundf(tmp_xtalk));
 
                 /* Send data to firmware */
                 calXtalk = (uint16_t)(tmp_xtalk * (float_t)512.0);

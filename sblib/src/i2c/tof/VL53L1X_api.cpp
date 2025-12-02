@@ -504,7 +504,7 @@ VL53L1X_ERROR VL53L1X_SetInterMeasurementInMs(uint16_t dev, uint32_t InterMeasMs
 	status |= VL53L1_RdWord(dev, VL53L1_RESULT__OSC_CALIBRATE_VAL, &ClockPLL);
 	ClockPLL = ClockPLL&0x3FF;
 	VL53L1_WrDWord(dev, VL53L1_SYSTEM__INTERMEASUREMENT_PERIOD,
-			(uint32_t)(ClockPLL * InterMeasMs * 1.075));
+			(uint32_t)(ClockPLL * InterMeasMs * 1.075f));
 	return status;
 
 }
@@ -519,7 +519,7 @@ VL53L1X_ERROR VL53L1X_GetInterMeasurementInMs(uint16_t dev, uint16_t *pIM)
 	*pIM = (uint16_t)tmp;
 	status |= VL53L1_RdWord(dev, VL53L1_RESULT__OSC_CALIBRATE_VAL, &ClockPLL);
 	ClockPLL = ClockPLL&0x3FF;
-	*pIM= (uint16_t)(*pIM/(ClockPLL*1.065));
+	*pIM= (uint16_t)(*pIM/(ClockPLL*1.065f));
 	return status;
 }
 
@@ -563,7 +563,7 @@ VL53L1X_ERROR VL53L1X_GetSignalPerSpad(uint16_t dev, uint16_t *signalRate)
 		VL53L1_RESULT__PEAK_SIGNAL_COUNT_RATE_CROSSTALK_CORRECTED_MCPS_SD0, &signal);
 	status |= VL53L1_RdWord(dev,
 		VL53L1_RESULT__DSS_ACTUAL_EFFECTIVE_SPADS_SD0, &SpNb);
-	*signalRate = (uint16_t) (200.0*signal/SpNb);
+	*signalRate = (uint16_t) (200.0f*signal/SpNb);
 	return status;
 }
 
@@ -574,7 +574,7 @@ VL53L1X_ERROR VL53L1X_GetAmbientPerSpad(uint16_t dev, uint16_t *ambPerSp)
 
 	status |= VL53L1_RdWord(dev, RESULT__AMBIENT_COUNT_RATE_MCPS_SD, &AmbientRate);
 	status |= VL53L1_RdWord(dev, VL53L1_RESULT__DSS_ACTUAL_EFFECTIVE_SPADS_SD0, &SpNb);
-	*ambPerSp=(uint16_t) (200.0 * AmbientRate / SpNb);
+	*ambPerSp=(uint16_t) (200.0f * AmbientRate / SpNb);
 	return status;
 }
 

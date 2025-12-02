@@ -584,7 +584,7 @@ VL53L4CD_Error VL53L4CD_GetXtalk(
         VL53L4CD_XTALK_PLANE_OFFSET_KCPS, p_xtalk_kcps);
         
     tmp_xtalk = (float_t)*p_xtalk_kcps / (float_t)512.0;
-    *p_xtalk_kcps = (uint16_t)(round(tmp_xtalk));
+    *p_xtalk_kcps = (uint16_t)(roundf(tmp_xtalk));
 
     return status;
 }
