@@ -12,11 +12,13 @@
 
 #include <sblib/types.h>
 #include <type_traits>
+#include <cstdint>
+
 
 /**
  * Base for printing numbers.
  */
-enum Base
+enum Base : uint8_t
 {
     DEC = 10,   //!< A decimal number.
     HEX = 16,   //!< A hexadecimal number.
@@ -32,13 +34,19 @@ class Print
 public:
     virtual ~Print() = default;
 
+    /** Default precision for floating point printing */
+    static constexpr uint8_t PRINT_FLOAT_PRECISION_DEFAULT = 2;
+
+    /** Maximum precision supported for floating point printing */
+    static constexpr uint8_t PRINT_FLOAT_MAX_PRECISION = 7;
+
     /**
      * Print a character.
      *
      * @param ch    The character to print.
      * @return The number of bytes that were written.
      */
-    uint32_t print(const char ch);
+    uint32_t print(char ch);
 
     /**
      * Print a zero-terminated string.
@@ -49,14 +57,14 @@ public:
     uint32_t print(const char* str);
 
     /**
-     * Print a float with given precision.
+     * Print an IEEE 754 single precision float with given precision.
      * 
      * @param value         The float to print
-     * @param precision     The precision to print, default 2
+     * @param precision     The precision to print, default @ref PRINT_FLOAT_PRECISION_DEFAULT
      * @return The number of bytes that were written.
-     * @note Maximum precision supported is 7
+     * @note The maximum precision supported is @ref PRINT_FLOAT_MAX_PRECISION
      */
-    uint32_t print(float value, uint8_t precision = 2);
+    uint32_t print(float value, uint8_t precision = PRINT_FLOAT_PRECISION_DEFAULT);
 
     /**
      * Print any integer type (template overload).
@@ -76,7 +84,7 @@ public:
     {
         if constexpr (std::is_enum_v<T>)
         {
-            // Check if enum is signed
+            // Check if the enum is signed
             typedef std::underlying_type_t<T> underlying_t;
             if constexpr (std::is_signed_v<underlying_t>)
                 return printInteger(static_cast<intmax_t>(value), base, digits);
@@ -130,15 +138,15 @@ public:
     uint32_t print(const char* str, const void* ptr);
 
     /**
-     * Print a zero-terminated string followed by a float with given precision.
+     * Print a zero-terminated string followed by an IEEE 754 single precision float with given precision.
      * 
      * @param str           The string to print
      * @param value         The float to print
-     * @param precision     The precision to print, default 2
+     * @param precision     The precision to print, default @ref PRINT_FLOAT_PRECISION_DEFAULT
      * @return The number of bytes that were written.
-     * @note Maximum precision supported is 7
+     * @note The maximum precision supported is @ref PRINT_FLOAT_MAX_PRECISION
      */
-    uint32_t print(const char* str, float value, uint8_t precision = 2);
+    uint32_t print(const char* str, float value, uint8_t precision = PRINT_FLOAT_PRECISION_DEFAULT);
 
     /**
      * Print a new line by sending a carriage return '\r' (ASCII 13) followed
@@ -184,15 +192,14 @@ public:
     uint32_t println(const void* ptr);
 
     /**
-     * Print a float with given precision followed by a new line.
+     * Print an IEEE 754 single precision float with given precision followed by a new line.
      * 
      * @param value         The float to print
-     * @param precision     The precision to print, default 2
+     * @param precision     The precision to print, default @ref PRINT_FLOAT_PRECISION_DEFAULT
      * @return The number of bytes that were written.
-     * @note Maximum precision supported is 7
+     * @note The maximum precision supported is @ref PRINT_MAX_FLOAT_PRECISION
      */
-    uint32_t println(float value, uint8_t precision = 2);
-
+    uint32_t println(float value, uint8_t precision = PRINT_FLOAT_PRECISION_DEFAULT);
     /**
      * Print a zero-terminated string followed by any integer type and a new line.
      * Handles all integer types and enums.
@@ -223,16 +230,15 @@ public:
     uint32_t println(const char* str, const void* ptr);
 
     /**
-     * Print a zero-terminated string followed by a float with a given precision and a new line.
+     * Print a zero-terminated string followed by an IEEE 754 single precision float with a given precision and a new line.
      * 
      * @param str           The string to print
      * @param value         The float to print
-     * @param precision     The precision to print, default is 2
+     * @param precision     The precision to print, default is @ref PRINT_FLOAT_PRECISION_DEFAULT
      * @return The number of bytes that were written.
-     * @note Maximum precision supported is 7
+     * @note The maximum precision supported is @ref PRINT_FLOAT_MAX_PRECISION
      */
-    uint32_t println(const char* str, float value, uint8_t precision = 2);
-
+    uint32_t println(const char* str, float value, uint8_t precision = PRINT_FLOAT_PRECISION_DEFAULT);
     /**
      * Write a zero-terminated string.
      *
@@ -345,7 +351,7 @@ private:
 };
 
 /**
- * I´m only here for static_asserts of the template
+ * I'm only here for static_asserts of the template
  */
 namespace test_print
 {

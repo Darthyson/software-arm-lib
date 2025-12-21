@@ -10,6 +10,7 @@
 #include <string>
 #include <vector>
 #include <cstring>
+#include <limits>
 
 #include <catch.hpp> ///\todo replace with catch2/catch_test_macros.hpp
 
@@ -44,6 +45,12 @@ public:
     {
         return buffer.size();
     }
+};
+
+struct PrintFloatTestCase {
+    float value;
+    const char* expected;
+    uint8_t precision;
 };
 
 TEST_CASE("Print::", "[print]") {
@@ -148,6 +155,18 @@ TEST_CASE("Print::", "[print]") {
         {
             mock.print(static_cast<int16_t>(-42), DEC, 12);
             REQUIRE(mock.getString() == "-00000000042");
+        }
+
+        SECTION("Print minimum negative")
+        {
+            mock.print(INT_MIN, DEC);
+            REQUIRE(mock.getString() == "-2147483648");
+        }
+
+        SECTION("Print minimum negative binary")
+        {
+            mock.print(INT_MIN, BIN);
+            REQUIRE(mock.getString() == "-10000000000000000000000000000000");
         }
     }
 
@@ -270,6 +289,42 @@ TEST_CASE("Print::", "[print]") {
     {
         MockPrint mock;
 
+        SECTION("Print zero")
+        {
+            mock.print(0.0f);
+            REQUIRE(mock.getString() == "0.00");
+        }
+
+        SECTION("Print negative zero")
+        {
+            mock.print(-0.0f);
+            REQUIRE(mock.getString() == "-0.00");
+        }
+
+        SECTION("Check precision sanitation ")
+        {
+            mock.print(0.0f, Print::PRINT_FLOAT_MAX_PRECISION + 1);
+            REQUIRE(mock.getString() == "0.0000000");
+        }
+
+        SECTION("Print NaN")
+        {
+            mock.print(std::numeric_limits<float>::quiet_NaN());
+            REQUIRE(mock.getString() == "NaN");
+        }
+
+        SECTION("Print infinity")
+        {
+            mock.print(std::numeric_limits<float>::infinity());
+            REQUIRE(mock.getString() == "inf");
+        }
+
+        SECTION("Print negative infinity")
+        {
+            mock.print(-std::numeric_limits<float>::infinity());
+            REQUIRE(mock.getString() == "-inf");
+        }
+
         SECTION("Print positive float default precision")
         {
             mock.print(3.14f);
@@ -284,28 +339,56 @@ TEST_CASE("Print::", "[print]") {
 
         SECTION("Print float with precision 0")
         {
-            mock.print(3.14f, 0);
+            mock.print(3.14159265f, 0);
             REQUIRE(mock.getString() == "3");
         }
 
         SECTION("Print float with precision 1")
         {
-            mock.print(3.14159f, 1);
+            mock.print(3.14159265f, 1);
             REQUIRE(mock.getString() == "3.1");
+        }
+
+        SECTION("Print float with precision 2")
+        {
+            mock.print(3.14159265f, 2);
+            REQUIRE(mock.getString() == "3.14");
+        }
+
+        SECTION("Print float with precision 3")
+        {
+            mock.print(3.14159265f, 3);
+            REQUIRE(mock.getString() == "3.141");
         }
 
         SECTION("Print float with precision 4")
         {
-            mock.print(3.14159f, 4);
+            mock.print(3.14159265f, 4);
             REQUIRE(mock.getString() == "3.1415");
+        }
+
+        SECTION("Print float with precision 5")
+        {
+            mock.print(3.14159265f, 5);
+            REQUIRE(mock.getString() == "3.14159");
+        }
+
+        SECTION("Print float with precision 6")
+        {
+            mock.print(3.14159265f, 6);
+            REQUIRE(mock.getString() == "3.141592");
         }
 
         SECTION("Print float with maximum precision 7")
         {
-            mock.print(3.14159265f, 7);
-            // Note: actual precision depends on float representation
-            REQUIRE(mock.getString().find("3.") == 0);
-            REQUIRE(mock.getString().length() == 9); // "3." + 7 digits
+            mock.print(3.14159265f, 7); // actual float is 3.14159274
+            REQUIRE(mock.getString() == "3.1415927");
+        }
+
+        SECTION("Print negative float with maximum precision 7")
+        {
+            mock.print(-3.14159265f, 7); // actual float is 3.14159274
+            REQUIRE(mock.getString() == "-3.1415927");
         }
 
         SECTION("Print zero float")
@@ -318,6 +401,179 @@ TEST_CASE("Print::", "[print]") {
         {
             mock.print(5.0f);
             REQUIRE(mock.getString() == "5.00");
+        }
+
+        SECTION("Print small positive float")
+        {
+            mock.print(0.0000001f, 7);
+            REQUIRE(mock.getString() == "0.0000001");
+        }
+
+        SECTION("Print small positive float with default precision")
+        {
+            mock.print(0.0000001f);
+            REQUIRE(mock.getString() == "0.00");
+        }
+
+        SECTION("Print small negative float")
+        {
+            mock.print(-0.0000004f, 7);
+            REQUIRE(mock.getString() == "-0.0000004");
+        }
+
+        SECTION("Print large float")
+        {
+            mock.print(123456.789f, 3);
+            REQUIRE(mock.getString() == "123456.789");
+        }
+
+        SECTION("Print large float with default precision")
+        {
+            mock.print(999999.5f);
+            REQUIRE(mock.getString() == "999999.50");
+        }
+
+        SECTION("Print large negative float")
+        {
+            mock.print(-987654.312f, 3);
+            REQUIRE(mock.getString() == "-987654.312");
+        }
+
+        SECTION("Print max float value without overflow")
+        {
+            mock.print(4.5E18f);
+            REQUIRE(mock.getString() == "4500000101179064320.00");
+        }
+
+        SECTION("Print max float value")
+        {
+            float maxFloat = std::numeric_limits<float>::max();
+            // maxFloat is here actually 3.40282347e+38
+            mock.print(maxFloat, 2);
+            REQUIRE(mock.getString() == "overflow");
+        }
+
+        SECTION("Print min float value")
+        {
+            float minFloat = std::numeric_limits<float>::min();
+            mock.print(minFloat, 7);
+            REQUIRE(mock.getString() == "0.0000000");
+        }
+
+        SECTION("Print scientific notation float")
+        {
+            mock.print(1.2E3f, 2);
+            REQUIRE(mock.getString() == "1200.00");
+            mock.clear();
+            mock.print(1.5E-3f, 4);
+            REQUIRE(mock.getString() == "0.0015");
+            mock.clear();
+            mock.print(3.14E2f, 1);
+            REQUIRE(mock.getString() == "314.0");
+            mock.clear();
+            mock.print(2.5E-4f, 5);
+            REQUIRE(mock.getString() == "0.00025");
+            mock.clear();
+            mock.print(1.0E6f);
+            REQUIRE(mock.getString() == "1000000.00");
+            mock.clear();
+            mock.print(5.5E-6f, 7);
+            REQUIRE(mock.getString() == "0.0000055");
+            mock.clear();
+            mock.print(-1.23E4f, 1);
+            REQUIRE(mock.getString() == "-12300.0");
+            mock.clear();
+            mock.print(-7.89E-5f, 6);
+            REQUIRE(mock.getString() == "-0.000078");
+        }
+
+        SECTION("Print supported scientific notation float")
+        {
+            constexpr auto maxPrecision = Print::PRINT_FLOAT_MAX_PRECISION;
+            constexpr uint8_t noPrecision = 0;
+            PrintFloatTestCase testCases[] = {
+                // "Large" floats
+                {1.2E0f, "1.2000000", maxPrecision},
+                {1.23E1f, "12.3000001", maxPrecision},
+                {1.234E2f, "123.4000015", maxPrecision},
+                {1.2345E3f, "1234.5000000", maxPrecision},
+                {1.23456E4f, "12345.5996093", maxPrecision},
+                {1.234567E5f, "123456.7031250", maxPrecision},
+                {1.2345678E6f, "1234567.7500000", maxPrecision},
+                {1.23456789E7f, "12345679.0000000", maxPrecision},
+                {1.234567891E8f, "123456792.0000000", maxPrecision},
+                {2.2345678912E9f, "2234567936", noPrecision},
+                {3.23456789123E10f, "32345679872", noPrecision},
+                {4.234567891234E11f, "423456800768", noPrecision},
+                {5.2345678912345E12f, "5234567938048", noPrecision},
+                {6.23456789123456E13f, "62345678159872", noPrecision},
+                {7.234567891234567E14f, "723456773586944", noPrecision},
+                {8.2345678912345678E15f, "8234567924187136", noPrecision},
+                {9.23456789123456789E16f, "92345679514435584", noPrecision},
+                {1.234567891234567891E17f, "123456790519087104", noPrecision},
+                {1.2345678912345678912E18f, "1234567939550609408", noPrecision},
+                {1.23456789123456789123E19f, "12345679395506094080", noPrecision},
+                {1.234567891234567891234E20f, "overflow", maxPrecision},
+
+                // "Small" floats
+                {0.12E0f, "0.1199999", maxPrecision},
+                {0.123E-1f, "0.0122999", maxPrecision},
+                {0.1234E-2f, "0.0012339", maxPrecision},
+                {0.12345E-3f, "0.0001234", maxPrecision},
+                {0.123456E-4f, "0.0000123", maxPrecision},
+                {0.1234567E-5f, "0.0000012", maxPrecision},
+                {0.12345678E-6f, "0.0000001", maxPrecision},
+                {0.123456789E-7f, "0.0000000", maxPrecision},
+                {0.1234567891E-8f, "0.0000000", maxPrecision},
+                {0.1234567891E-38f, "0.0000000", maxPrecision},
+
+                // Denormalized floats
+                {1.40129846e-39f, "0.0000000", maxPrecision},
+                {1.40129846e-45f, "0.0000000", maxPrecision},
+            };
+            for (const auto&[value, expected, precision] : testCases)
+            {
+                mock.print(value, precision);
+                REQUIRE(mock.getString() == expected);
+                mock.clear();
+            }
+        }
+
+        SECTION("Print small positive/negative scientific notation float")
+        {
+            mock.print(1.2E-37f, 2);
+            REQUIRE(mock.getString() == "0.00");
+            mock.clear();
+            mock.print(-1.2E-37f, 2);
+            REQUIRE(mock.getString() == "-0.00");
+
+            mock.clear();
+            mock.print(1.5E-37f, 4);
+            REQUIRE(mock.getString() == "0.0000");
+            mock.clear();
+            mock.print(-1.5E-37f, 4);
+            REQUIRE(mock.getString() == "-0.0000");
+
+            mock.clear();
+            mock.print(3.14E-37f, 1);
+            REQUIRE(mock.getString() == "0.0");
+            mock.clear();
+            mock.print(-3.14E-37f, 1);
+            REQUIRE(mock.getString() == "-0.0");
+
+            mock.clear();
+            mock.print(2.5E-36f, 5);
+            REQUIRE(mock.getString() == "0.00000");
+            mock.clear();
+            mock.print(-2.5E-36f, 5);
+            REQUIRE(mock.getString() == "-0.00000");
+
+            mock.clear();
+            mock.print(2.5E-35f, 7);
+            REQUIRE(mock.getString() == "0.0000000");
+            mock.clear();
+            mock.print(-2.5E-35f, 7);
+            REQUIRE(mock.getString() == "-0.0000000");
         }
     }
 
