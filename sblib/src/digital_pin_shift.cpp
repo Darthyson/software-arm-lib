@@ -11,24 +11,27 @@
 
 constexpr static uint8_t BitsPerByte = 8;
 
-uint8_t shiftIn(const uint32_t dataPin, const uint32_t clockPin, const BitOrder bitOrder)
+// No optimization, otherwise the clock pulses are to short in release builds
+__attribute__((optimize("O0"))) uint8_t shiftIn(const uint32_t dataPin, const uint32_t clockPin, const BitOrder bitOrder)
 {
     uint8_t value = 0;
     for (uint8_t i = 0; i < BitsPerByte; i++)
     {
         digitalWrite(clockPin, true);
-
+        __NOP();
         if (bitOrder == LSBFIRST)
             value |= static_cast<uint8_t>(digitalRead(dataPin)) << i;
         else
             value |= static_cast<uint8_t>(digitalRead(dataPin)) << (BitsPerByte - i - 1);
 
         digitalWrite(clockPin, false);
+        __NOP();
     }
     return value;
 }
 
-void shiftOut(const uint32_t dataPin, const uint32_t clockPin, const BitOrder bitOrder, const uint8_t val)
+// No optimization, otherwise the clock pulses are to short in release builds
+__attribute__((optimize("O0"))) void shiftOut(const uint32_t dataPin, const uint32_t clockPin, const BitOrder bitOrder, const uint8_t val)
 {
     for (uint8_t i = 0; i < BitsPerByte; i++)
     {
@@ -40,5 +43,6 @@ void shiftOut(const uint32_t dataPin, const uint32_t clockPin, const BitOrder bi
         digitalWrite(clockPin, true);
         __NOP();
         digitalWrite(clockPin, false);
+        __NOP();
     }
 }
