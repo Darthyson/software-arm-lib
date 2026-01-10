@@ -25,20 +25,18 @@
 #include <sblib/timeout.h>
 
 MASK0701 bcu;
-SHT1x sensor(PIO0_9, PIO2_2); // don't use i2c (SDA, SCL) pins, they have worse edge steepness.
+//   TS_ARM: IO3   , IO2
+SHT1x sensor(PIO0_9, PIO2_2); // don't use i2c (SDA, SCL) pins. They have worse edge steepness.
 
 Timeout readTimeout;
 #define READ_TIMER_MS (500)
 
-#define GET_SHT1x_MEASUREMENT
-// #define GET_SHT1x_STATUS
-// #define SET_SHT1x_STATUS
-// #define SOFTRESET_SHT1x
+constexpr uint8_t SensorStatusToSet = 0b00000000; // heater off
+//constexpr uint8_t SensorStatusToSet = 0b00000100; // heater on
+//constexpr uint8_t SensorStatusToSet = 0b00000111; // heater on, reload from OTP, 8bit RH / 12bit Temp
 
-void sendToSerial(int32_t n)
-{
-    serial.print(n / 100.f, 2);
-}
+//#define SOFTRESET_SHT1x
+
 
 /**
  * This function is called by the Selfbus's library main
@@ -48,11 +46,24 @@ void sendToSerial(int32_t n)
  */
 BcuBase* setup()
 {
-    serial.setTxPin(PIO3_0);
-    serial.setRxPin(PIO3_1);
+    serial.setTxPin(PIO1_7);
+    serial.setRxPin(PIO1_6);
     serial.begin(115200);
-    serial.println("example-sht11 started.");
     bcu.begin(0,0,0);
+    serial.println("example-sht11 started.");
+    serial.flush();
+
+    serial.print("SHT1x sensor ");
+    if (sensor.init())
+    {
+        serial.println("initialized.");
+    }
+    else
+    {
+        serial.println("initialization FAILED!");
+    }
+    serial.flush();
+
     readTimeout.start(READ_TIMER_MS);
     return &bcu;
 }
@@ -60,84 +71,86 @@ BcuBase* setup()
 /**
  * The main processing loop while a KNX-application is loaded.
  */
-void loop(void)
+void loop()
 {
     if (!readTimeout.expired())
     {
         return;
     }
-#ifdef GET_SHT1x_MEASUREMENT
-    float dewPoint = sensor.GetDewPoint(); // this also triggers temperature and humidity measurement
+
+    float dewPoint = sensor.getDewPoint(); // this triggers temperature and humidity measurement
 
     int16_t temperature = sensor.getLastTemperature();
     if (temperature != INVALID_TEMPERATURE)
     {
-        sendToSerial(temperature);
+        serial.print(temperature / 100.f, 2);
         serial.print("C ");
     }
     else
     {
-        serial.println("Reading temperature failed.");
+        serial.println("Reading temperature FAILED!");
     }
 
     uint16_t humidity = sensor.getLastHumidity();
     if (humidity != INVALID_HUMIDITY)
     {
-        sendToSerial(humidity);
+        serial.print(humidity / 100.f, 2);
         serial.print("%rH ");
     }
     else
     {
-        serial.println("Reading relative humidity failed.");
+        serial.println("Reading relative humidity FAILED!");
     }
 
     if (dewPoint > INVALID_DEW_POINT)
     {
-        sendToSerial(dewPoint*100);
-        serial.print("TD ");
+        serial.print(dewPoint);
+        serial.print("Td ");
     }
     else
     {
-        serial.println("Reading dew point failed.");
+        serial.println("Reading dew point FAILED!");
     }
-#endif
 
-#ifdef GET_SHT1x_STATUS
-    uint16_t statusReceived;
+    float temperatureFahrenheit;
+    if (sensor.readTemperatureF(&temperatureFahrenheit))
+    {
+        serial.print(temperatureFahrenheit, 2);
+        serial.print("F ");
+    }
+    else
+    {
+        serial.println("Reading temperature in Fahrenheit FAILED!");
+    }
 
+    uint8_t statusReceived;
     if (sensor.getStatusRegister(&statusReceived))
     {
-        serial.print("current status 0x", statusReceived, HEX, 4);
+        serial.print("status 0b", statusReceived, BIN, 8);
     }
     else
     {
-        serial.println("Reading status register failed.");
+        serial.println("Reading status register FAILED!");
     }
-#endif
 
-#ifdef SET_SHT1x_STATUS
-    uint16_t newStatus;
-    //newStatus = 0b00000000; // heater off
-    newStatus = 0b00000100; // heater on
-    // newStatus = 0b00000111; // heater on, reload from OTP, 8bit RH / 12bit Temp
-    if (sensor.setStatusRegister(newStatus))
+    if (sensor.setStatusRegister(SensorStatusToSet))
     {
-        serial.print("status set to 0x", newStatus, HEX, 4);
+        serial.print(" status set to 0b", SensorStatusToSet, BIN, 8);
     }
     else
     {
-        serial.println("Writing status register failed.");
+        serial.println(" Writing status register FAILED!");
     }
-#endif
+
 
 #ifdef SOFTRESET_SHT1x
     if (sensor.softReset())
     {
-        serial.print("sensor reset successful");
+        serial.print(" sensor reset successful");
     }
     else
     {
-        serial.println("Softreset failed.");
+        serial.println(" softReset FAILED!");
     }
 #endif
 
@@ -148,7 +161,7 @@ void loop(void)
 /**
  * The processing loop while no KNX-application is loaded.
  */
-void loop_noapp(void)
+void loop_noapp()
 {
     loop();
 }
