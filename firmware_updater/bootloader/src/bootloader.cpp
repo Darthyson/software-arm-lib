@@ -208,7 +208,7 @@ static void jumpToApplication(uint8_t * start)
     // copy the first 192 bytes (vector table) of the "application"
     // into the RAM and then remap the vector table inside the RAM
 
-    dump_lvl_1(
+    dump(
         serial.print("Vectortable size: ", BL_DEFAULT_VECTOR_TABLE_SIZE_IN_BYTES);
         serial.println(" bytes, Vector count: ", BL_DEFAULT_VECTOR_TABLE_COUNT);
         serial.flush();

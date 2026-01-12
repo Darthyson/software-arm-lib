@@ -68,7 +68,7 @@ bool BcuUpdate::processApci(ApciCommand apciCmd, unsigned char * telegram, uint8
             return handleApciUsermsgManufacturer(sendBuffer, &telegram[offset], dataLength);
 
         case APCI_BASIC_RESTART_PDU:
-            dump_lvl_1(
+            dump(
                 serial.println("APCI_BASIC_RESTART_PDU");
                 serial.println();serial.println();serial.println();
                 serial.println("disconnectCount ", disconnectCount);

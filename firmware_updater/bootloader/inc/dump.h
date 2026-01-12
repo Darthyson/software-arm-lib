@@ -28,9 +28,9 @@
 
 
 #ifdef DUMP_TELEGRAMS_LVL1
-#   define dump_lvl_1(x) {x;}
+#   define dump(x) {x;}
 #else
-#   define dump_lvl_1(x)
+#   define dump(x)
 #endif
 
 #endif /* SB_BOOTLOADER_DUMP_H_ */

@@ -86,7 +86,7 @@ UDP_State iapResult2UDPState(IAP_Status iapState)
 
 void updCommand2Serial(UPD_Command cmd)
 {
-    dump_lvl_1(
+    dump(
         serial.print("UPD_");
         switch (cmd.code)
         {
@@ -121,7 +121,7 @@ void updCommand2Serial(UPD_Command cmd)
 
 void updResult2Serial(UDP_State result)
 {
-    dump_lvl_1(
+    dump(
         serial.print("UPD_");
         switch (result)
         {

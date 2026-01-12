@@ -202,7 +202,7 @@ static void prepareReturnTelegram(unsigned int count, unsigned char cmd)
  */
 static bool getDeviceUnlocked()
 {
-    dump_lvl_1(
+    dump(
         if (deviceLocked != DEVICE_UNLOCKED)
         {
             serial.print(": DEVICE_LOCKED");
@@ -219,7 +219,7 @@ static bool getDeviceUnlocked()
 static void setDeviceLockState(unsigned int newDeviceLockState)
 {
     deviceLocked = newDeviceLockState;
-    dump_lvl_1(
+    dump(
         if (deviceLocked == DEVICE_UNLOCKED)
         {
             serial.println("-->DEVICE_UNLOCKED");
@@ -267,7 +267,7 @@ void resetUPDProtocol(void)
     resetRAMBuffer();
     totalBytesReceived = 0;
     totalBytesFlashed = 0;
-    dump_lvl_1(serial.println("resetUPDProtocol");)
+    dump(serial.println("resetUPDProtocol");)
 }
 
 /**
@@ -288,7 +288,7 @@ static bool updUnlockDevice(uint8_t * data, uint32_t size)
     if ((UID_LENGTH_USED != size))
     {
         setLastError(UDP_UID_MISMATCH);
-        dump_lvl_1(serial.println(" size mismatch");)
+        dump(serial.println(" size mismatch");)
         return true;
     }
 
@@ -298,7 +298,7 @@ static bool updUnlockDevice(uint8_t * data, uint32_t size)
     {
         // could not read UID of mcu
         setLastError(error);
-        dump_lvl_1(serial.println(" iapReadUID failed");)
+        dump(serial.println(" iapReadUID failed");)
         return true;
     }
 
@@ -319,7 +319,7 @@ static bool updUnlockDevice(uint8_t * data, uint32_t size)
         {
             // uid is still not correct, finally decline access
             setLastError(UDP_UID_MISMATCH);
-            dump_lvl_1(serial.println(" uid mismatch");)
+            dump(serial.println(" uid mismatch");)
             return true;
         }
     }
@@ -344,7 +344,7 @@ static bool updAppVersionRequest()
     appversion = getAppVersion((AppDescriptionBlock *) (applicationFirstAddress() - BOOT_BLOCK_DESC_SIZE));
     prepareReturnTelegram(BL_ID_STRING_LENGTH - 1, UPD_APP_VERSION_RESPONSE);
     memcpy(retTelegram + 9, appversion, BL_ID_STRING_LENGTH - 1);
-    dump_lvl_1(
+    dump(
         if (appversion != bl_id_string)
         {
             serial.print("AppVersionRequest OK: ");
@@ -433,7 +433,7 @@ static bool updSendData(uint8_t * data, uint32_t nCount)
     if ((getRAMBufferPosition() + nCount) > getRAMBufferSize()) // enough space left?
     {
         setLastError(UDP_RAM_BUFFER_OVERFLOW);
-        dump_lvl_1(serial.println("ramBuffer Full");)
+        dump(serial.println("ramBuffer Full");)
         return true;
     }
 
@@ -441,7 +441,7 @@ static bool updSendData(uint8_t * data, uint32_t nCount)
     setRAMBufferPosition(getRAMBufferPosition() + nCount);
     totalBytesReceived += nCount;
     setLastError(UDP_IAP_SUCCESS);
-    dump_lvl_1(
+    dump(
         for(unsigned int i=0; i<nCount; i++)
         {
             serial.print(data[i+1], HEX, 2);
@@ -503,7 +503,7 @@ static bool updProgram(uint8_t * data)
         return true;
     }
 
-    dump_lvl_1(
+    dump(
         serial.print("to write ", flash_count);
         serial.print(" bytes @ 0x", address);
         serial.println(" crc 0x", crcRamBuffer, HEX)
@@ -532,7 +532,7 @@ static bool updProgram(uint8_t * data)
                 {
                     break; // exit inner while on error
                 }
-                dump_lvl_1(
+                dump(
                     serial.print("wrote ", IapBlockSize[i]);
                     serial.println(" bytes @ 0x", address);
                 )
@@ -582,7 +582,7 @@ static bool updRequestBootloaderIdentity(uint8_t * data)
         prepareReturnTelegram(sizeof(UPDATER_MIN_MAJOR_VERSION) + sizeof(UPDATER_MIN_MINOR_VERSION), UPD_RESPONSE_BL_VERSION_MISMATCH);
         retTelegram[offset] = UPDATER_MIN_MAJOR_VERSION;
         retTelegram[offset + sizeof(UPDATER_MIN_MAJOR_VERSION)] = UPDATER_MIN_MINOR_VERSION;
-        dump_lvl_1(
+        dump(
             serial.print("Updater version mismatch! Required ", UPDATER_MIN_MAJOR_VERSION);
             serial.print(".", UPDATER_MIN_MINOR_VERSION);
             serial.print(" received: ", majorVersionUpdater);
@@ -614,7 +614,7 @@ static bool updRequestBootloaderIdentity(uint8_t * data)
     retTelegram[offset] = minorSBLibVersion;
     offset += sizeof(minorSBLibVersion);
     ptrToStream(retTelegram + offset, appFirstAddress);
-    dump_lvl_1(
+    dump(
         serial.print("BL v", BOOTLOADER_MAJOR_VERSION, DEC);
         serial.print(".", BOOTLOADER_MINOR_VERSION, DEC);
         serial.print(", Feature 0x", bootloaderFeatures, HEX);
@@ -635,7 +635,7 @@ static bool updRequestStatistic()
     prepareReturnTelegram(sizeTotal, UPD_RESPONSE_STATISTIC);
     uShort16ToStream(retTelegram + 9, disconnectCount);
     uShort16ToStream(retTelegram + 9 + sizeof(disconnectCount), repeatedT_ACKcount);
-    dump_lvl_1(
+    dump(
         serial.print("#DC ", disconnectCount);
         serial.println(" #repT_ACK ", repeatedT_ACKcount);
     )
@@ -670,7 +670,7 @@ static bool udpRequestBootDescriptionBlock()
     prepareReturnTelegram(12, UPD_RESPONSE_BOOT_DESC);
     memcpy(retTelegram + 9, bootDescr, 12); // startAddress, endAddress, crc
 
-    dump_lvl_1(
+    dump(
         serial.print("FW start@ 0x", bootDescr->startAddress); // Firmware start address
         serial.print(" end@ 0x", bootDescr->endAddress);       // Firmware end address
         serial.print(" Desc.@ 0x", bootDescr->appVersionAddress); // Firmware App descriptor address (for getAppVersion())
@@ -714,13 +714,13 @@ static bool updRequestUID()
     UDP_State result = iapResult2UDPState(iapReadUID(uid));
     if (result != UDP_IAP_SUCCESS)
     {
-        dump_lvl_1(serial.println("iapReadUID error");)
+        dump(serial.println("iapReadUID error");)
         setLastError(result);
         return true;
     }
     prepareReturnTelegram(UID_LENGTH_USED, UPD_RESPONSE_UID);
     memcpy(retTelegram + 9, uid, UID_LENGTH_USED);
-    dump_lvl_1(serial.println(" OK");)
+    dump(serial.println(" OK");)
     return true;
 }
 
@@ -763,10 +763,10 @@ static bool updUpdateBootDescriptorBlock(uint8_t * data)
     if (count > sizeof(ramBuffer)/sizeof(ramBuffer[0]))
     {
         setLastError(UDP_RAM_BUFFER_OVERFLOW);
-        dump_lvl_1(serial.println("ramBuffer Full");)
+        dump(serial.println("ramBuffer Full");)
         return true;
     }
-    dump_lvl_1(
+    dump(
         totalBytesReceived -= count; // subtract bytes received for boot descriptor
         serial.println();
         serial.println("Bytes Rx    ", totalBytesReceived);
@@ -783,7 +783,7 @@ static bool updUpdateBootDescriptorBlock(uint8_t * data)
     address = bootDescriptorBlockAddress();     // start address of boot block descriptor
     crc = crc32(0xFFFFFFFF, ramBuffer, count);  // checksum on used length only
 
-    dump_lvl_1(
+    dump(
         serial.println("Desc.      @ 0x", address);
         serial.println("Desc.    CRC 0x", crc, HEX);
         serial.println("Received CRC 0x", crcReceived, HEX);
@@ -791,7 +791,7 @@ static bool updUpdateBootDescriptorBlock(uint8_t * data)
     // compare calculated crc with the one we received for this packet
     if (crc != crcReceived)
     {
-        dump_lvl_1(
+        dump(
             serial.print("-->UDP_CRC_ERROR ");
             serial.print(" data[3-0]:", streamToUIn32(data), HEX, 8);
             serial.print(" data[7-4]:", streamToUIn32(data+4), HEX, 8);
@@ -800,17 +800,17 @@ static bool updUpdateBootDescriptorBlock(uint8_t * data)
         return true;
     }
 
-    dump_lvl_1(serial.println("CRC MATCH, comparing MCUs BootDescriptor: count: ", count);)
+    dump(serial.println("CRC MATCH, comparing MCUs BootDescriptor: count: ", count);)
     //If received descriptor is not equal to current one, flash it
     if(memcmp(address, ramBuffer, count) == 0)
     {
-        dump_lvl_1(serial.println("is equal, skipping");)
+        dump(serial.println("is equal, skipping");)
         result = UDP_IAP_SUCCESS;
         // dont return here, let's also check the AppDescriptionBlock
     }
     else
     {
-        dump_lvl_1(serial.print("it's different, Erase Page: ");)
+        dump(serial.print("it's different, Erase Page: ");)
         bcu.bus->pause();
         result = erasePageRange(bootDescriptorBlockPage(), bootDescriptorBlockPage());
         bcu.bus->resume();
@@ -820,12 +820,12 @@ static bool updUpdateBootDescriptorBlock(uint8_t * data)
             return true;
         }
 
-        dump_lvl_1(serial.print("Flash Page:");)
+        dump(serial.print("Flash Page:");)
 
         bcu.bus->pause();
         result = executeProgramFlash(address, ramBuffer, FLASH_PAGE_SIZE, true); // no less than 256byte can be flashed
         bcu.bus->resume();
-        dump_lvl_1(
+        dump(
            updResult2Serial(result);
            serial.println();
         )
@@ -842,7 +842,7 @@ static bool updUpdateBootDescriptorBlock(uint8_t * data)
 
     if (!checkApplication((AppDescriptionBlock *) ramBuffer))
     {
-        dump_lvl_1(serial.println("-->UDP_APPLICATION_NOT_STARTABLE");)
+        dump(serial.println("-->UDP_APPLICATION_NOT_STARTABLE");)
         setLastError(UDP_APPLICATION_NOT_STARTABLE);
         return true;
     }
@@ -864,10 +864,10 @@ static bool updUpdateBootDescriptorBlock(uint8_t * data)
 static bool updSendDataToDecompress(uint8_t * data, uint32_t nCount)
 {
 #ifndef DECOMPRESSOR
-    dump_lvl_1(serial.println("-->not implemented");)
+    dump(serial.println("-->not implemented");)
     setLastError(UDP_NOT_IMPLEMENTED);
 #else
-    dump_lvl_1(serial.println("-->decompressor");)
+    dump(serial.println("-->decompressor");)
     for (unsigned int i = 0; i < nCount; i++)
     {
         decompressor.putByte(data[i]);
@@ -899,28 +899,28 @@ static bool updProgramDecompressedDataToFlash(uint8_t * data)
     uint8_t * address = decompressor.getStartAddrOfPageToBeFlashed();
     uint32_t crc;
 
-    dump_lvl_1(
+    dump(
         serial.println();
         serial.print("Flash Diff address 0x", address);
         serial.print(" length: ", count, DEC, 3);
     )
     if (!addressAllowedToProgram(address, count))
     {
-        dump_lvl_1(serial.println(" Address protected!");)
+        dump(serial.println(" Address protected!");)
         setLastError(UDP_ADDRESS_NOT_ALLOWED_TO_FLASH);
         return true;
     }
 
-    dump_lvl_1(serial.print(" Address valid, ");)
+    dump(serial.print(" Address valid, ");)
     crc = decompressor.getCrc32();
     if (crc != crcReceived)
     {
-        dump_lvl_1(serial.println("CRC Error!");)
+        dump(serial.println("CRC Error!");)
         setLastError(UDP_CRC_ERROR);
         return true;
     }
 
-    dump_lvl_1(serial.println("CRC OK");)
+    dump(serial.println("CRC OK");)
     bcu.bus->pause();
     setLastError(decompressor.pageCompletedDoFlash());
     bcu.bus->resume();
@@ -947,7 +947,7 @@ bool handleApciUsermsgManufacturerInternal(uint8_t * data, uint32_t size)
 {
     if (size < sizeof(updCommands[idxInvalidUPDCommand].code))
     {
-        dump_lvl_1(serial.println("UDP_NO_DATA"))
+        dump(serial.println("UDP_NO_DATA"))
         setLastError(UDP_NO_DATA);
         return true;
     }
@@ -955,7 +955,7 @@ bool handleApciUsermsgManufacturerInternal(uint8_t * data, uint32_t size)
     UPD_Command updCommand = code2UPDCommand(data[0]);
     if (updCommand.code == UPD_INVALID)
     {
-        dump_lvl_1(serial.println("updCommand.code invalid"))
+        dump(serial.println("updCommand.code invalid"))
         setLastError(UDP_INVALID);
         return true;
     }
@@ -965,7 +965,7 @@ bool handleApciUsermsgManufacturerInternal(uint8_t * data, uint32_t size)
     updCommand2Serial(updCommand); // simple command debugging message
     if ((size < updCommand.minBytes) || (size > updCommand.maxBytes))
     {
-        dump_lvl_1(
+        dump(
             serial.print(" UDP_INVALID_DATA minCount=", updCommand.minBytes);
             serial.print(" maxCount=", updCommand.maxBytes);
             serial.println(" length=", size);

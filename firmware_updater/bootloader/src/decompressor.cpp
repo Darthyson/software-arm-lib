@@ -92,23 +92,23 @@ UDP_State Decompressor::pageCompletedDoFlash()
     memcpy(oldPages + (FLASH_PAGE_SIZE * (REMEMBER_OLD_PAGES_COUNT-1)), startAddrOfPageToBeFlashed, FLASH_PAGE_SIZE);
 
     // Check if flash page is identical or if we need to flash it
-    dump_lvl_1(serial.print("Diff - Compare Page ", getFlashPageNumberToBeFlashed(), DEC, 2);)
+    dump(serial.print("Diff - Compare Page ", getFlashPageNumberToBeFlashed(), DEC, 2);)
     if (memcmp(startAddrOfPageToBeFlashed, scratchpad, bytesToFlash) != 0)
     {
         // erase the page to be flashed
-        dump_lvl_1(serial.print(" different, Erase Page", getFlashPageNumberToBeFlashed(), DEC, 2);)
+        dump(serial.print(" different, Erase Page", getFlashPageNumberToBeFlashed(), DEC, 2);)
 
         result = erasePageRange(getFlashPageNumberToBeFlashed(), getFlashPageNumberToBeFlashed());
         //result = UDP_IAP_SUCCESS; // Dry RUN! for debug
 
         // proceed to flash the decompressed page stored in the scratchpad RAM
-        dump_lvl_1(serial.print("Diff - Program Page at Address 0x", startAddrOfPageToBeFlashed);)
+        dump(serial.print("Diff - Program Page at Address 0x", startAddrOfPageToBeFlashed);)
         result = executeProgramFlash(startAddrOfPageToBeFlashed, scratchpad, FLASH_PAGE_SIZE);
         //result = UDP_IAP_SUCCESS; // Dry RUN! for debug
     }
     else
     {
-        dump_lvl_1(serial.println("  equal, skipping!");)
+        dump(serial.println("  equal, skipping!");)
     }
     // Equal, skip this page and
     // move to next page
@@ -116,7 +116,7 @@ UDP_State Decompressor::pageCompletedDoFlash()
     // reinitialize scratchpad
     bytesToFlash = 0;
     memset(scratchpad, 0, sizeof(scratchpad));
-    //dump_lvl_1(serial.println("result = 0x", result, HEX, 2);)
+    //dump(serial.println("result = 0x", result, HEX, 2);)
     return result;
 }
 
@@ -135,15 +135,15 @@ void Decompressor::putByte(uint8_t data)
             if ((data & CMD_COPY) == CMD_COPY)
             {
                 expectedCmdLength += 3; // 3 more bytes of source address
-                //dump_lvl_1(serial.print(" CMD_COPY");)
+                //dump(serial.print(" CMD_COPY");)
             }
             //else
             //{
-            //    dump_lvl_1(serial.print(" CMD_RAW");)
+            //    dump(serial.print(" CMD_RAW");)
             //}
             if ((data & FLAG_LONG) == FLAG_LONG)
             {
-                //dump_lvl_1(serial.print(" FLAG_LONG");)
+                //dump(serial.print(" FLAG_LONG");)
                 expectedCmdLength += 1; // 1 more byte for longer length
             }
             if (expectedCmdLength > 1)
@@ -157,7 +157,7 @@ void Decompressor::putByte(uint8_t data)
             }
             break;
         case State::EXPECT_COMMAND_PARAMS:
-            //dump_lvl_1(serial.print(" params");)
+            //dump(serial.print(" params");)
             cmdBuffer[cmdBufferLength++] = data;
             if (cmdBufferLength >= expectedCmdLength)
             {
@@ -168,7 +168,7 @@ void Decompressor::putByte(uint8_t data)
                     if (isCopyFromRam())
                     {
                         //UART_printf(" DO COPY FROM RAM l=%d sa=%08X", getLength(), getCopyAddress());
-                        dump_lvl_1(
+                        dump(
                             serial.println();
                             serial.print("Copy from RAM length ", getLength(), DEC, 4);
                             serial.println(", address offset 0x", getCopyAddress(), HEX, 8);
@@ -176,7 +176,7 @@ void Decompressor::putByte(uint8_t data)
                         //System.out.println("COPY FROM RAM index=" + scratchpadIndex + " length=" + getLength() + " from addr=" + getCopyAddress());
                         //System::arraycopy(oldPagesRam->getOldBinData(), getCopyAddress(), scratchpad, scratchpadIndex, getLength());
                         memcpy(scratchpad + bytesToFlash, oldPages + getCopyAddress(), getLength());
-//                        dump_lvl_1(
+//                        dump(
 //                            for (int i = 0; i < getLength(); i++)
 //                            {
 //                                if (i % 16 == 0) {
@@ -191,7 +191,7 @@ void Decompressor::putByte(uint8_t data)
                     else
                     {
                         //UART_printf(" DO COPY FROM ROM l=%d sa=%08X", getLength(), getCopyAddress());
-                        dump_lvl_1(
+                        dump(
                             serial.println();
                             serial.print("Copy from ROM length ", getLength(), DEC, 4);
                             serial.println(", address offset 0x", getCopyAddress(), HEX, 4);
@@ -204,7 +204,7 @@ void Decompressor::putByte(uint8_t data)
 
                         //System::arraycopy(rom->getBinData(), getCopyAddress(), scratchpad, scratchpadIndex, getLength());
                         memcpy(scratchpad + bytesToFlash, startAddrOfFlash + getCopyAddress(), getLength());
-//                        dump_lvl_1(
+//                        dump(
 //                            for (int i = 0; i < getLength(); i++)
 //                            {
 //                                if (i % 16 == 0) {
@@ -229,7 +229,7 @@ void Decompressor::putByte(uint8_t data)
             } // else expect more params of the command
             break;
         case State::EXPECT_RAW_DATA:
-            dump_lvl_1(serial.print(" raw");)
+            dump(serial.print(" raw");)
             // store data read to scratchpad
             scratchpad[bytesToFlash++] = data;
             rawLength++;
@@ -240,7 +240,7 @@ void Decompressor::putByte(uint8_t data)
             }
     }
     //UART_printf("\n\r");
-    //dump_lvl_1(serial.println();)
+    //dump(serial.println();)
 }
 
 uint32_t Decompressor::getCrc32() {
