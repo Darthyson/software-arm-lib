@@ -1415,3 +1415,8 @@ void Bus::setOwnAddress(const uint16_t newAddress)
 {
     ownAddress = newAddress;
 }
+
+void Bus::setAddressTable(AddrTables* newAddressTable)
+{
+    addressTable = newAddressTable;
+}

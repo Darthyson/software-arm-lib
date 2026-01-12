@@ -141,6 +141,8 @@ public:
 
     void setOwnAddress(uint16_t newAddress);
 
+    void setAddressTable(AddrTables* newAddressTable);
+
     /**
      * The received telegram.
      * The higher layer process should not change the telegram data in the buffer!

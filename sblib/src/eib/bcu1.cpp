@@ -13,6 +13,7 @@
 BCU1::BCU1() : BcuDefault(new UserRamBCU1(), new UserEepromBCU1(), new ComObjectsBCU1(this), nullptr)
 {
     addrTables = new AddrTablesBCU1(this->userEeprom);
+    this->bus->setAddressTable(addrTables);
 }
 
 BCU1::BCU1(UserRamBCU1* userRam, UserEepromBCU1* userEeprom, ComObjectsBCU1* comObjects, AddrTablesBCU1* addrTables) :
