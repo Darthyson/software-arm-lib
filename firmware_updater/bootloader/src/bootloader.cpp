@@ -43,7 +43,8 @@
 #define RUN_MODE_BLINK_CONNECTED (250) //!< while connected, programming and run led blinking time in milliseconds
 #define RUN_MODE_BLINK_IDLE (1000)     //!< while idle/disconnected, programming and run led blinking time in milliseconds
 #define BL_RESERVED_RAM_START (0x10000000) //!< RAM start address for bootloader
-#define BL_DEFAULT_VECTOR_TABLE_SIZE (192 / sizeof(uint32_t)) //!< vectortable size to copy prior application start
+constexpr uint8_t BL_DEFAULT_VECTOR_TABLE_SIZE_IN_BYTES = 192; //!< vectortable size in bytes
+constexpr uint8_t BL_DEFAULT_VECTOR_TABLE_COUNT = BL_DEFAULT_VECTOR_TABLE_SIZE_IN_BYTES / sizeof(uintptr_t); //!< vector count to copy prior application start
 
 #define APP_START_DELAY_MS (250)          //!< Time in milliseconds the programming led will light before the app is started
 
@@ -108,29 +109,29 @@ BcuBase* setup()
     int physicalAddress = bcu.ownAddress();
     serial.println("=========================================================");
     serial.print("Selfbus KNX Bootloader v", BOOTLOADER_MAJOR_VERSION);
-    serial.print(".", BOOTLOADER_MINOR_VERSION, DEC, 2);
+    serial.print(".", BOOTLOADER_MINOR_VERSION, DEC);
     serial.println(" DEBUG MODE :-)");
     serial.print("Build                       : ");
     serial.print(__DATE__);
     serial.print(" ");
     serial.println(__TIME__);
-    serial.print("Library                     : v", highByte((uint16_t)SBLIB_VERSION), HEX, 2);  // lib version is in hexadecimal
-    serial.println(".", lowByte(SBLIB_VERSION), HEX, 2);
-    serial.println("Features                    : 0x", BL_FEATURES, HEX, 6);
+    serial.print("Library                     : v", highByte(static_cast<uint16_t>(SBLIB_VERSION)), HEX); // lib version is in hexadecimal
+    serial.println(".", lowByte(SBLIB_VERSION), HEX);
+    serial.println("Features                    : 0x", BL_FEATURES, HEX);
     serial.print("Flash      (start,end,size) : 0x", flashFirstAddress());
     serial.print(" 0x", flashLastAddress());
-    serial.println(" 0x", flashSize(), HEX, 6);
+    serial.println(" 0x", flashSize(), HEX);
     serial.print("Bootloader (start,end,size) : 0x", bootLoaderFirstAddress());
     serial.print(" 0x", bootLoaderLastAddress());
-    serial.println(" 0x", bootLoaderSize(), HEX, 6);
+    serial.println(" 0x", bootLoaderSize(), HEX);
     serial.println("Firmware (start)            : 0x", applicationFirstAddress());
     serial.println("Boot descriptor (start)     : 0x", bootDescriptorBlockAddress());
-    serial.println("Boot descriptor page        : 0x", bootDescriptorBlockPage(), HEX, 6);
-    serial.println("Boot descriptor size        : 0x", BOOT_BLOCK_DESC_SIZE, HEX, 6);
+    serial.println("Boot descriptor page        : 0x", bootDescriptorBlockPage(), HEX);
+    serial.println("Boot descriptor size        : 0x", BOOT_BLOCK_DESC_SIZE, HEX);
     serial.print("physical address            : ");
-    serial.print(knx_area(physicalAddress));
-    serial.print(".", knx_line(physicalAddress));
-    serial.print(".", knx_device(physicalAddress));
+    serial.print(PHY_ADDR_AREA(physicalAddress));
+    serial.print(".", PHY_ADDR_LINE(physicalAddress));
+    serial.print(".", PHY_ADDR_DEVICE(physicalAddress));
     serial.println();
     serial.println("=================================================== by sh");
 #endif
@@ -205,11 +206,15 @@ static void jumpToApplication(uint8_t * start)
     unsigned int * ram = (unsigned int *) BL_RESERVED_RAM_START;
     unsigned int i;
     // copy the first 192 bytes (vector table) of the "application"
-    // into the RAM and than remap the vector table inside the RAM
+    // into the RAM and then remap the vector table inside the RAM
 
-    d3(serial.println("Vectortable Size: ", BL_DEFAULT_VECTOR_TABLE_SIZE * sizeof(uint32_t), HEX, 4););
+    dump_lvl_1(
+        serial.print("Vectortable size: ", BL_DEFAULT_VECTOR_TABLE_SIZE_IN_BYTES);
+        serial.println(" bytes, Vector count: ", BL_DEFAULT_VECTOR_TABLE_COUNT);
+        serial.flush();
+    );
 
-    for (i = 0; i < BL_DEFAULT_VECTOR_TABLE_SIZE; i++, rom++, ram++)
+    for (i = 0; i < BL_DEFAULT_VECTOR_TABLE_COUNT; i++, rom++, ram++)
     {
         *ram = *rom;
     }

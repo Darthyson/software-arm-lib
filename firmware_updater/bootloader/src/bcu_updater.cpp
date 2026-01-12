@@ -68,14 +68,14 @@ bool BcuUpdate::processApci(ApciCommand apciCmd, unsigned char * telegram, uint8
             return handleApciUsermsgManufacturer(sendBuffer, &telegram[offset], dataLength);
 
         case APCI_BASIC_RESTART_PDU:
-            dump2(serial.println("APCI_BASIC_RESTART_PDU"));
-            d3(
+            dump_lvl_1(
+                serial.println("APCI_BASIC_RESTART_PDU");
                 serial.println();serial.println();serial.println();
                 serial.println("disconnectCount ", disconnectCount);
                 serial.println("repeated T_ACK  ", repeatedT_ACKcount);
                 serial.println();serial.println();serial.println();
                 serial.flush(); // give time to send serial data
-            );
+            )
             return BcuBase::processApci(apciCmd, telegram, telLength, sendBuffer);
 
         default:

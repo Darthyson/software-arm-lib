@@ -28,9 +28,9 @@
 
 
 #ifdef DEBUG
-    #define BL_FEATURES      0x8100             //!< Feature list of bootloader in Debug version
+    constexpr uint16_t BL_FEATURES = 0x8100; //!< Feature list of bootloader in Debug version
 #else
-    #define BL_FEATURES      0x0100             //!< Feature list of bootloader in Release version
+    constexpr uint16_t BL_FEATURES = 0x0100; //!< Feature list of bootloader in Release version
 #endif
 
 /**
@@ -44,7 +44,7 @@
 #define BL_ID_STRING         "[SB KNX BL ]"     //!< boot loader identity string for getAppVersion()
 #define BL_ID_STRING_LENGTH  13                 //!< length of boot loader identity string
 
-#define BOOT_BLOCK_DESC_SIZE FLASH_PAGE_SIZE    //!< 1 flash page
+constexpr uint16_t BOOT_BLOCK_DESC_SIZE = FLASH_PAGE_SIZE; //!< 1 flash page, any changes must also be done in the BLU´s app_main.cpp
 
 extern char bl_id_string[BL_ID_STRING_LENGTH]; //!< default bootloader identity "string" used in @ref getAppVersion()
 

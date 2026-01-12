@@ -94,25 +94,25 @@ static bool sectorAllowedToErase(const unsigned int sectorNumber)
 UDP_State erasePageRange(unsigned int startPage, unsigned int endPage)
 {
     UDP_State result = UDP_PAGE_NOT_ALLOWED_TO_ERASE;
-    d3(serial.print("page   0x", startPage, HEX, 2));
-    d3(serial.print(" - 0x", endPage, HEX, 2));
-    d3(serial.print(" "));
+    dump_lvl_1(serial.print("page   0x", startPage, HEX, 2));
+    dump_lvl_1(serial.print(" - 0x", endPage, HEX, 2));
+    dump_lvl_1(serial.print(" "));
     if ((!pageAllowedToErase(startPage)) || (!pageAllowedToErase(endPage)))
     {
-        dline("not allowed!");
+        dump_lvl_1(serial.println("not allowed!");)
         return UDP_PAGE_NOT_ALLOWED_TO_ERASE;
     }
 
     result = iapResult2UDPState(iapErasePageRange(startPage, endPage));
-    d3(
+    dump_lvl_1(
         if (result != UDP_IAP_SUCCESS)
         {
             updResult2Serial(result);
-            dline(" iapErasePageRange failed!");
+            serial.println(" iapErasePageRange failed!");
         }
         else
         {
-            dline("OK");
+            serial.println("OK");
         }
     );
     return result;
@@ -128,24 +128,24 @@ UDP_State erasePageRange(unsigned int startPage, unsigned int endPage)
 static UDP_State eraseSectorRange(unsigned int startSector, unsigned int endSector)
 {
     UDP_State result = UDP_SECTOR_NOT_ALLOWED_TO_ERASE;
-    d3(serial.print("sector 0x", startSector, HEX, 2));
-    d3(serial.print(" - 0x", endSector, HEX, 2));
+    dump_lvl_1(serial.print("sector 0x", startSector, HEX, 2));
+    dump_lvl_1(serial.print(" - 0x", endSector, HEX, 2));
     if ((!sectorAllowedToErase(startSector)) || (!sectorAllowedToErase(endSector)))
     {
-        dline(" not allowed!");
+        dump_lvl_1(serial.println(" not allowed!");)
         return (UDP_SECTOR_NOT_ALLOWED_TO_ERASE);
     }
 
     result = iapResult2UDPState(iapEraseSectorRange(startSector, endSector));
-    d3(
+    dump_lvl_1(
         if (result != UDP_IAP_SUCCESS)
         {
             updResult2Serial(result);
-            dline(" iapEraseSectorRange failed!");
+            serial.println(" iapEraseSectorRange failed!");
         }
         else
         {
-            dline(" OK");
+            serial.println(" OK");
         }
     );
     return result;
@@ -154,15 +154,15 @@ static UDP_State eraseSectorRange(unsigned int startSector, unsigned int endSect
 UDP_State eraseAddressRange(uint8_t * startAddress, const uint8_t * endAddress, const bool rangeCheck)
 {
     UDP_State result = UDP_ADDRESS_RANGE_NOT_ALLOWED_TO_ERASE;
-    d3(
+    dump_lvl_1(
         serial.print(" eraseAddressRange 0x", startAddress);
         serial.println("-0x", endAddress);
     );
 
     if (rangeCheck && (!addressAllowedToProgram(startAddress, endAddress - startAddress + 1, false)))
     {
-        dline(" not allowed!");
-        return (UDP_ADDRESS_RANGE_NOT_ALLOWED_TO_ERASE);
+        dump_lvl_1(serial.println(" not allowed!");)
+        return UDP_ADDRESS_RANGE_NOT_ALLOWED_TO_ERASE;
     }
 
     unsigned int start;
