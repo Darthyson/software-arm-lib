@@ -25,16 +25,16 @@
 
 
 #ifndef IAP_EMULATION
-extern uint8_t __base_Flash[];      //!< marks the beginning of the flash memory (inserted by the linker)
-                                    //!< used to protect the updater from killing itself with a new application downloaded over the bus
-extern uint8_t __top_Flash[];       //!< marks the end of the flash memory (inserted by the linker)
-                                    //!< used to protect the updater from killing itself with a new application downloaded over the bus
-extern uint8_t _image_start[];      //!< marks the beginning of the bootloader firmware (inserted by the linker)
-                                    //!< used to protect the updater from killing itself with a new application downloaded over the bus
-extern uint8_t _image_end[];        //!< marks the end of the bootloader firmware (inserted by the linker)
-                                    //!< used to protect the updater from killing itself with a new application downloaded over the bus
-extern unsigned int _image_size;    //!< marks the size of the bootloader firmware (inserted by the linker)
-                                    //!< used to protect the updater from killing itself with a new application downloaded over the bus
+    extern uint8_t __base_Flash[];      //!< marks the beginning of the flash memory (inserted by the linker)
+                                        //!< used to protect the updater from killing itself with a new application downloaded over the bus
+    extern uint8_t __top_Flash[];       //!< marks the end of the flash memory (inserted by the linker)
+                                        //!< used to protect the updater from killing itself with a new application downloaded over the bus
+    extern uint8_t _image_start[];      //!< marks the beginning of the bootloader firmware (inserted by the linker)
+                                        //!< used to protect the updater from killing itself with a new application downloaded over the bus
+    extern uint8_t _image_end[];        //!< marks the end of the bootloader firmware (inserted by the linker)
+                                        //!< used to protect the updater from killing itself with a new application downloaded over the bus
+    extern unsigned int _image_size;    //!< marks the size of the bootloader firmware (inserted by the linker)
+                                        //!< used to protect the updater from killing itself with a new application downloaded over the bus
 #else
     // for catch unit tests ///\todo move this to cpu-emulation
     uint8_t * __base_Flash = &FLASH[0x0000];
@@ -64,9 +64,9 @@ unsigned int checkVectorTable(uint8_t * start)
     unsigned int i;
     unsigned int * address;
     unsigned int cs = 0;
-    address = (unsigned int *) start;	// Vector table start always at base address, each entry is 4 byte
+    address = (unsigned int *) start;    // Vector table start always at base address, each entry is 4 byte
 
-    for (i = 0; i < 7; i++)				// Checksum is 2's complement of entries 0 through 6
+    for (i = 0; i < 7; i++)                // Checksum is 2's complement of entries 0 through 6
         cs += address[i];
 
     return ~cs + 1;
@@ -78,7 +78,7 @@ unsigned int checkApplication(AppDescriptionBlock * block)
     {
         return 0;
     }
-    if (block->endAddress > flashLastAddress())	// we have just 64k of Flash
+    if (block->endAddress > flashLastAddress()) // we have just 64k of Flash
     {
         return 0;
     }
@@ -124,11 +124,11 @@ uint8_t * getFirmwareStartAddress(AppDescriptionBlock * block)
 {
     if (checkApplication(block))
     {
-    	return block->startAddress;
+        return block->startAddress;
     }
     else
     {
-    	return applicationFirstAddress();
+        return applicationFirstAddress();
     }
 }
 

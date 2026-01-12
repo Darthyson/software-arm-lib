@@ -1034,14 +1034,14 @@ bool handleApciUsermsgManufacturerInternal(uint8_t * data, uint32_t size)
         case UPD_UPDATE_BOOT_DESC:
             return updUpdateBootDescriptorBlock(data);
 
-		case UPD_REQUEST_BOOT_DESC:
+        case UPD_REQUEST_BOOT_DESC:
             return udpRequestBootDescriptionBlock();
 
-		case UPD_REQUEST_BL_IDENTITY:
-		    return updRequestBootloaderIdentity(data);
+        case UPD_REQUEST_BL_IDENTITY:
+            return updRequestBootloaderIdentity(data);
 
-		case UPD_REQ_DATA:
-		    return updRequestData();
+        case UPD_REQ_DATA:
+            return updRequestData();
 
         default:
             return updUnkownCommand();
