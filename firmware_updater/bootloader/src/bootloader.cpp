@@ -87,8 +87,8 @@ BcuBase* setup()
         serial.setRxPin(PIO3_1);
         serial.setTxPin(PIO3_0);
 #   else
-        serial.setRxPin(PIO2_7);
-        serial.setTxPin(PIO2_8);
+        serial.setRxPin(PIO1_6);
+        serial.setTxPin(PIO1_7);
 #   endif
     if (!serial.enabled())
     {
