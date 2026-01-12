@@ -112,7 +112,7 @@ int main()
             }
             checksum = -checksum;
             *(int*)&buf[28] = checksum;
-            d(serial.println("checksum: 0x", (int) checksum, HEX);)
+            d(serial.println("checksum: 0x", checksum, HEX);)
         }
         d(serial.print("flashing 0x", flash);)
         if (iapProgram(flash, buf, FLASH_SECTOR_SIZE) != IAP_SUCCESS)
@@ -127,7 +127,7 @@ int main()
     // Make sure that the current boot descriptor of the BLU is erased,
     // otherwise the BL will restart the BLU in an endless loop.
     const uint32_t bootDescriptorBlockPage = iapPageOfAddress(newBlEndAddress + BOOT_BLOCK_DESC_SIZE);
-    d(serial.println("Erasing BootDescriptorPage: 0x", (unsigned int)bootDescriptorBlockPage, HEX);)
+    d(serial.println("Erasing BootDescriptorPage: 0x", bootDescriptorBlockPage, HEX);)
     if (iapErasePageRange(bootDescriptorBlockPage, bootDescriptorBlockPage) != IAP_SUCCESS)
     {
         d(serial.println(" --> FAILED");)
