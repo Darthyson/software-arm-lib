@@ -206,7 +206,7 @@ UDP_State iapResult2UDPState(IAP_Status iapState);
 /**
  * Converts a @ref UPD_Command into "string" and sends it to the serial port
  *
- * @note Needs preprocessor macro @ref DUMP_TELEGRAMS_LVL1
+ * @note Needs preprocessor macro @ref SERIAL_LOGGING
  * @warning This function is only for debugging purposes.
  * @param cmd Command to send to the serial port.
  */
@@ -215,7 +215,7 @@ void updCommand2Serial(UPD_Command cmd);
 /**
  * Converts a @ref UDP_State into "string" and sends it to the serial port
  * @param result
- * @note Needs preprocessor macro @ref DUMP_TELEGRAMS_LVL1
+ * @note Needs preprocessor macro @ref SERIAL_LOGGING
  * @warning This function is only for debugging purposes.
  */
 void updResult2Serial(UDP_State result);

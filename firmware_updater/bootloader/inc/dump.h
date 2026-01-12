@@ -22,12 +22,12 @@
 #ifndef SB_BOOTLOADER_DUMP_H_
 #define SB_BOOTLOADER_DUMP_H_
 
-#ifdef DUMP_TELEGRAMS_LVL1
+#ifdef SERIAL_LOGGING
 #   include <sblib/serial.h>
 #endif
 
 
-#ifdef DUMP_TELEGRAMS_LVL1
+#ifdef SERIAL_LOGGING
 #   define dump(x) {x;}
 #else
 #   define dump(x)
