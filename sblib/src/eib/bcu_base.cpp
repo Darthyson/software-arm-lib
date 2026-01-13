@@ -41,6 +41,13 @@ BcuBase::BcuBase(UserRam* userRam, AddrTables* addrTables) :
 
 void BcuBase::_begin()
 {
+#ifndef ROUTER
+    if (ownAddress() == PHY_ADDR_BROADCAST) // 0.0.0 is not allowed for normal devices, only routers
+    {
+        setOwnAddress(PHY_ADDR_DEFAULT); //set default address 15.15.255
+    }
+#endif
+
     TLayer4::_begin();
     bus->begin(ownAddress());
     progButtonDebouncer.init(1);

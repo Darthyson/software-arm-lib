@@ -31,12 +31,6 @@ BcuDefault::BcuDefault(UserRam* userRam, UserEeprom* userEeprom, ComObjects* com
 
 void BcuDefault::_begin()
 {
-#ifndef ROUTER
-    if (ownAddress() == 0) // 0.0.0 is not allowed for normal devices, only routers
-    {
-        setOwnAddress(PHY_ADDR_DEFAULT); //set default address 15.15.255
-    }
-#endif
     BcuBase::_begin();
 
 #ifdef DUMP_PROPERTIES ///\todo move to BCU2::begin(...)
