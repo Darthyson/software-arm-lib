@@ -15,6 +15,32 @@
 #include <cstdint>
 
 
+// Automatically inserted macro by VS Code 1.108.0
+// Compatibility for embedded toolchains that don't provide C++14/17 type trait aliases
+#ifndef __cpp_lib_type_trait_variable_templates
+namespace std {
+    // C++14 type trait aliases (_t suffix)
+    template<bool B, typename T = void>
+    using enable_if_t = typename enable_if<B, T>::type;
+    
+    template<typename T>
+    using underlying_type_t = typename underlying_type<T>::type;
+    
+    // C++17 type trait variable templates (_v suffix)
+    template<typename T>
+    constexpr bool is_integral_v = is_integral<T>::value;
+    
+    template<typename T>
+    constexpr bool is_enum_v = is_enum<T>::value;
+    
+    template<typename T, typename U>
+    constexpr bool is_same_v = is_same<T, U>::value;
+    
+    template<typename T>
+    constexpr bool is_signed_v = is_signed<T>::value;
+}
+#endif
+
 /**
  * Base for printing numbers.
  */
