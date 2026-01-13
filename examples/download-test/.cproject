@@ -42,6 +42,7 @@
 								<option id="com.crt.advproject.cpp.specs.1155136906" name="Specs" superClass="com.crt.advproject.cpp.specs" useByScannerDiscovery="false" value="com.crt.advproject.cpp.specs.newlibnano" valueType="enumerated"/>
 								<option id="com.crt.advproject.cpp.lto.473088264" name="Enable Link-time optimization (-flto)" superClass="com.crt.advproject.cpp.lto" useByScannerDiscovery="false" value="true" valueType="boolean"/>
 								<option id="com.crt.advproject.cpp.exe.release.option.debugging.level.647791390" name="Debug Level" superClass="com.crt.advproject.cpp.exe.release.option.debugging.level" useByScannerDiscovery="false" value="gnu.cpp.compiler.debugging.level.none" valueType="enumerated"/>
+								<option id="com.crt.advproject.cpp.exe.release.option.optimization.level.1763667249" superClass="com.crt.advproject.cpp.exe.release.option.optimization.level" useByScannerDiscovery="true"/>
 								<inputType id="com.crt.advproject.compiler.cpp.input.1624871309" superClass="com.crt.advproject.compiler.cpp.input"/>
 							</tool>
 							<tool id="com.crt.advproject.gcc.exe.release.1078143678" name="MCU C Compiler" superClass="com.crt.advproject.gcc.exe.release">
@@ -158,6 +159,7 @@
 								</option>
 								<option id="com.crt.advproject.cpp.fpu.1268204322" name="Floating point" superClass="com.crt.advproject.cpp.fpu" useByScannerDiscovery="true"/>
 								<option id="com.crt.advproject.cpp.specs.683725928" name="Specs" superClass="com.crt.advproject.cpp.specs" useByScannerDiscovery="false" value="com.crt.advproject.cpp.specs.newlibnano" valueType="enumerated"/>
+								<option id="com.crt.advproject.cpp.exe.debug.option.optimization.level.1957518674" superClass="com.crt.advproject.cpp.exe.debug.option.optimization.level" useByScannerDiscovery="true"/>
 								<inputType id="com.crt.advproject.compiler.cpp.input.149372993" superClass="com.crt.advproject.compiler.cpp.input"/>
 							</tool>
 							<tool id="com.crt.advproject.gcc.exe.debug.1660577683" name="MCU C Compiler" superClass="com.crt.advproject.gcc.exe.debug">
