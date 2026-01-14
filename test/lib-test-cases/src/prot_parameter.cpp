@@ -160,7 +160,7 @@ static Telegram testCaseTelegrams[] =
 , {TEL_RX,  7, 0, 0, NULL                , {0xB0, 0x00, 0x01, 0x11, 0x12, 0x60, 0xEE}} //  73
 , {TEL_RX,  8, 0, 0, NULL                , {0xB0, 0x00, 0x01, 0x11, 0x12, 0x61, 0x47, 0x80}} //  74
 , {TEL_RX,  7, 0, 0, disconnect          , {0xB0, 0x00, 0x01, 0x11, 0x12, 0x60, 0x81}} //  75
-, {END}
+, {END, 0, 0, 0, nullptr, {0}}
 };
 
 static void gatherProtocolState(ProtocolTestState * state, ProtocolTestState * refState)

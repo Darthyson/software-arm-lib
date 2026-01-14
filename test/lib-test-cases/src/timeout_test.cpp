@@ -51,7 +51,7 @@ static Telegram testCaseTelegrams[] =
     {TIMER_TICK,  18, 0, 0, _check_expired_no,  {}},
     {TIMER_TICK,   1, 0, 0, _check_time_wrap,   {}},
     {TIMER_TICK,   1, 0, 0, _check_expired_yes, {}},
-    {END},
+    {END, 0, 0, 0, nullptr, {0}},
 };
 
 static void tc_setup(Telegram* tel, uint16_t telCount)

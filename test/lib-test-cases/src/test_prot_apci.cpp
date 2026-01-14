@@ -48,7 +48,7 @@ static Telegram apciAdcReadPduTelegrams[] =
     {TEL_TX, 7, 1, 0, NULL, {0xB0, 0xA0, 0x00, 0xA0, 0x01, 0x60, 0xC2}},
     // 4. APCI_ADC_RESPONSE_PDU
     {TEL_TX, 11, 0, 0, NULL, {0xB0, 0xA0, 0x00, 0xA0, 0x01, 0x64, 0x41, 0xC0, 0x89, 0x00, 0x00}},
-    {END}
+    {END, 0, 0, 0, nullptr, {0}}
 };
 
 static Telegram apciMemoryReadTelegrams[] =
@@ -61,7 +61,7 @@ static Telegram apciMemoryReadTelegrams[] =
     {TEL_TX,  7, 1, 0, NULL, {0xB0, 0xA0, 0x00, 0xA0, 0x01, 0x60, 0xC2}},
     // 4. APCI_MEMORY_RESPONSE_PDU count = 2, address = (BCU1: 0x105, BIM112: 0x3F05), value = DEVICE = 0x2060
     {TEL_TX, 12, 0, 0, NULL, {0xB0, 0xA0, 0x00, 0xA0, 0x01, 0x65, 0x42, 0x42, 0x01, 0x05, 0x20, 0x60}},
-    {END}
+    {END, 0, 0, 0, nullptr, {0}}
 };
 
 static Telegram apciMemoryWriteTelegrams[] =
@@ -78,7 +78,7 @@ static Telegram apciMemoryWriteTelegrams[] =
     {TEL_TX,  7, 1, 0, NULL, {0xB0, 0xA0, 0x00, 0xA0, 0x01, 0x60, 0xC6}},
     // 6. APCI_MEMORY_RESPONSE_PDU count = 2, address = (BCU1: 0x105, BIM112: 0x3F05), value = 0xCDEF
     {TEL_TX, 12, 0, 0, NULL, {0xB0, 0xA0, 0x00, 0xA0, 0x01, 0x65, 0x42, 0x42, 0x01, 0x05, 0xCD, 0xEF}},
-    {END}
+    {END, 0, 0, 0, nullptr, {0}}
 };
 
 static Telegram apciDeviceDescriptorReadTelegrams[] =
@@ -87,7 +87,7 @@ static Telegram apciDeviceDescriptorReadTelegrams[] =
     {TEL_RX,  8, 0, 0, NULL, {0xB0, 0xA0, 0x01, 0xA0, 0x00, 0x61, 0x03, 0x00}},
     // 2. DeviceDescriptorResponse
     {TEL_TX, 10, 0, 0, NULL, {0xB0, 0xA0, 0x00, 0xA0, 0x01, 0x63, 0x03, 0x40, dummyMaskVersionHigh, dummyMaskVersionLow}},
-    {END}
+    {END, 0, 0, 0, nullptr, {0}}
 };
 
 static Telegram apciDeviceDescriptorReadConnectedTelegrams[] =
@@ -100,7 +100,7 @@ static Telegram apciDeviceDescriptorReadConnectedTelegrams[] =
     {TEL_TX,  7, 1, 0, NULL, {0xB0, 0xA0, 0x00, 0xA0, 0x01, 0x60, 0xC2}},
     // 4. DeviceDescriptorResponse
     {TEL_TX, 10, 0, 0, NULL, {0xB0, 0xA0, 0x00, 0xA0, 0x01, 0x63, 0x43, 0x40, dummyMaskVersionHigh, dummyMaskVersionLow}},
-    {END}
+    {END, 0, 0, 0, nullptr, {0}}
 };
 
 static Telegram apciBasicRestartTelegrams[] =
@@ -113,7 +113,7 @@ static Telegram apciBasicRestartTelegrams[] =
     {TEL_TX,  7, 0, 0, NULL, {0xB0, 0xA0, 0x00, 0xA0, 0x01, 0x60, 0xC2}},
     // 4. T_DISCONNECT_PDU
     {TEL_RX,  7, 0, 0, NULL, {0xB0, 0xA0, 0x01, 0xA0, 0x00, 0x60, 0x81}},
-    {END}
+    {END, 0, 0, 0, nullptr, {0}}
 };
 
 static Telegram apciMasterResetTelegrams[] =
@@ -128,7 +128,7 @@ static Telegram apciMasterResetTelegrams[] =
     {TEL_TX, 11, 1, 0, NULL, {0xB0, 0xA0, 0x00, 0xA0, 0x01, 0x64, 0x43, 0xA1, 0x00, 0x00, 0x01}},
     // 5. T_DISCONNECT_PDU
     {TEL_RX, 7, 0, 0, NULL, {0xB0, 0xA0, 0x01, 0xA0, 0x00, 0x60, 0x81}},
-    {END}
+    {END, 0, 0, 0, nullptr, {0}}
 };
 
 static Telegram apciAuthorizeRequestTelegrams[] =
@@ -141,7 +141,7 @@ static Telegram apciAuthorizeRequestTelegrams[] =
     {TEL_TX, 7, 1, 0, NULL, {0xB0, 0xA0, 0x00, 0xA0, 0x01, 0x60, 0xC2}},
     // 4. APCI_AUTHORIZE_RESPONSE_PDU
     {TEL_TX, 9, 0, 0, NULL, {0xB0, 0xA0, 0x00, 0xA0, 0x01, 0x62, 0x43, 0xD2, 0x00}},
-    {END}
+    {END, 0, 0, 0, nullptr, {0}}
 };
 
 static Telegram apciPropertyDescriptionReadTelegrams_BCU1[] =
@@ -156,7 +156,7 @@ static Telegram apciPropertyDescriptionReadTelegrams_BCU1[] =
     // 4. Check for empty TX-Response
     {CHECK_TX_BUFFER, 0, 0, 0, NULL, {}},
     // 5.
-    {END}
+    {END, 0, 0, 0, nullptr, {0}}
 };
 
 static Telegram apciPropertyDescriptionReadTelegrams[] =
@@ -180,7 +180,7 @@ static Telegram apciPropertyDescriptionReadTelegrams[] =
     // 9. T_ACK for APCI_PROPERTY_DESCRIPTION_RESPONSE_PDU
     {TEL_RX,  7, 0, 0, NULL, {0xB0, 0xA0, 0x01, 0xA0, 0x00, 0x60, 0xC6}},
     // 10.
-    {END}
+    {END, 0, 0, 0, nullptr, {0}}
 };
 
 static Telegram apciPropertyValueReadTelegrams_BCU1[] =
@@ -194,7 +194,7 @@ static Telegram apciPropertyValueReadTelegrams_BCU1[] =
     // 4. Check for empty TX-Response
     {CHECK_TX_BUFFER, 0, 0, 0, NULL, {}},
     // 5.
-    {END}
+    {END, 0, 0, 0, nullptr, {0}}
 };
 
 static Telegram apciPropertyValueReadTelegrams[] =
@@ -219,7 +219,7 @@ static Telegram apciPropertyValueReadTelegrams[] =
     // 9. T_ACK for APCI_PROPERTY_VALUE_RESPONSE_PDU
     {TEL_RX,  7, 0, 0, NULL, {0xB0, 0xA0, 0x01, 0xA0, 0x00, 0x60, 0xC6}},
     // 10.
-    {END}
+    {END, 0, 0, 0, nullptr, {0}}
 };
 
 static Telegram apciPropertyValueWriteTelegrams_BCU1[] =
@@ -233,7 +233,7 @@ static Telegram apciPropertyValueWriteTelegrams_BCU1[] =
     // 4. Check for empty TX-Response
     {CHECK_TX_BUFFER, 0, 0, 0, NULL, {}},
     // 5.
-    {END}
+    {END, 0, 0, 0, nullptr, {0}}
 };
 
 static Telegram apciPropertyValueWriteTelegrams[] =
@@ -257,7 +257,7 @@ static Telegram apciPropertyValueWriteTelegrams[] =
     // 9. T_ACK for APCI_PROPERTY_VALUE_RESPONSE_PDU
     {TEL_RX,  7, 0, 0, NULL, {0xB0, 0xA0, 0x01, 0xA0, 0x00, 0x60, 0xC6}},
     // 10.
-    {END}
+    {END, 0, 0, 0, nullptr, {0}}
 };
 
 static Test_Case testCaseApciAdcReadPdu =

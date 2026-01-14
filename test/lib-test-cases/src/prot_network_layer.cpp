@@ -191,7 +191,7 @@ static Telegram testCaseTelegrams_GroupOriented[] =
     {TEL_RX, 8, 0, 0, NULL, {0xBC, 0xAF, 0xFE, 0x10, 0x01, 0xF1, 0x00, 0x00}},
     // 16. Check for routing count 6 in GroupvalueResponse routing count
     {TEL_TX, 8, 0, 0, NULL, {0xBC, 0x10, 0x01, 0x10, 0x01, 0xE1, 0x00, 0x40}},
-    {END}
+    {END, 0, 0, 0, nullptr, {0}}
 };
 
 static Telegram testCaseTelegrams_ConnectionOriented[] =
@@ -224,7 +224,7 @@ static Telegram testCaseTelegrams_ConnectionOriented[] =
 
     // . disconnect
     {TEL_RX,  7, 0, 0, NULL, {0xBC, 0xAF, 0xFE, 0x10, 0x01, 0x60, 0x81}}, //T_DISCONNECT
-    {END}
+    {END, 0, 0, 0, nullptr, {0}}
 };
 
 static Telegram testCaseTelegrams_ConnectionLess[] =
@@ -243,7 +243,7 @@ static Telegram testCaseTelegrams_ConnectionLess[] =
     {TEL_RX, 12, 0, 0, NULL, {0xBC, 0xAF, 0xFE, 0x10, 0x01, 0x75, 0x03, 0xD5, 0x00, 0x01, 0x10, 0x01}},
     // x. Check for routing count 6 in PropertyResponse(Obj=00, Prop=01, Count=1, Start=001, Data=00 00 )
     {TEL_TX, 14, 0, 0, NULL, {0xBC, 0x10, 0x01, 0xAF, 0xFE, 0x77, 0x03, 0xD6, 0x00, 0x01, 0x10, 0x01, 0x00, 0x00}},
-    {END}
+    {END, 0, 0, 0, nullptr, {0}}
 };
 
 static void tc_setup(Telegram* tel, uint16_t telCount)

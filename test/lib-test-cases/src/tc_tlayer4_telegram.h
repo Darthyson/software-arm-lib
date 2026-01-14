@@ -33,7 +33,7 @@ static Telegram testCaseTelegrams_01[] =
     {TEL_RX,  7, 1, 0xA001, connect, {0xB0, 0xA0, 0x01, 0xA0, 0x00, 0x60, 0x80}},
     // 2. Check for empty TX-Response
     {CHECK_TX_BUFFER, 0, 0, 0, NULL, {}},
-    {END}
+    {END, 0, 0, 0, nullptr, {0}}
 };
 
 static Telegram testCaseTelegrams_02[] =
@@ -46,7 +46,7 @@ static Telegram testCaseTelegrams_02[] =
     {TEL_RX,  7, 0, 0xA001, connectedOpenIdle, {0xB0, 0xA0, 0x01, 0xA0, 0x00, 0x60, 0x80}},
     // 3. Check for empty TX-Response
     {CHECK_TX_BUFFER, 0, 0, 0, NULL, {}},
-    {END}
+    {END, 0, 0, 0, nullptr, {0}}
 };
 
 static Telegram testCaseTelegrams_03[] =
@@ -61,7 +61,7 @@ static Telegram testCaseTelegrams_03[] =
     {TEL_RX,  7, 0, 0xA001, connectedOpenWait, {0xB0, 0xA0, 0x01, 0xA0, 0x00, 0x60, 0x80}},
     // 2. Check for empty TX-Response
     {CHECK_TX_BUFFER,  0, 0, 0, NULL, {}},
-    {END}
+    {END, 0, 0, 0, nullptr, {0}}
 };
 
 static Telegram testCaseTelegrams_04[] =
@@ -73,7 +73,7 @@ static Telegram testCaseTelegrams_04[] =
     {TEL_RX,  7, 0, 0xA007, connectedOpenIdle, {0xB0, 0xA0, 0x01, 0xA0, 0x00, 0x60, 0x80}},
     // 3. Check TX-Response for a T_DISCONNECT_PDU (0x81) to 10.0.1. The BDUT persists in State 'OPEN_IDLE'.
     {TEL_TX,  7, 0, 0xA007, connectedOpenIdle, {0xB0, 0xA0, 0x00, 0xA0, 0x01, 0x60, 0x81}},
-    {END}
+    {END, 0, 0, 0, nullptr, {0}}
 };
 
 static Telegram testCaseTelegrams_05[] =
@@ -87,7 +87,7 @@ static Telegram testCaseTelegrams_05[] =
     {TEL_RX, 7, 0, 0xA007, connectedOpenWait, {0xB0, 0xA0, 0x01, 0xA0, 0x00, 0x60, 0x80}},
     // 2. Check TX-Response for a T_DISCONNECT_PDU (0x81) to 10.0.1. The BDUT persists in State 'OPEN_WAIT'.
     {TEL_TX, 7, 0, 0xA007, connectedOpenWait, {0xB0, 0xA0, 0x00, 0xA0, 0x01, 0x60, 0x81}},
-    {END}
+    {END, 0, 0, 0, nullptr, {0}}
 };
 
 static Telegram testCaseTelegrams_06[] =
@@ -97,7 +97,7 @@ static Telegram testCaseTelegrams_06[] =
     {TEL_RX, 7, 0, 0, disconnectClosed, {0xB0, 0xA0, 0x01, 0xA0, 0x00, 0x60, 0x81}},
     // 2. Check for empty TX-Response
     {CHECK_TX_BUFFER, 0, 0, 0, NULL, {}},
-    {END}
+    {END, 0, 0, 0, nullptr, {0}}
 };
 
 static Telegram testCaseTelegrams_07[] =
@@ -109,7 +109,7 @@ static Telegram testCaseTelegrams_07[] =
     {TEL_RX, 7, 0, 0, disconnectClosed, {0xB0, 0xA0, 0x01, 0xA0, 0x00, 0x60, 0x81}},
     // 3. Check for empty TX-Response
     {CHECK_TX_BUFFER, 0, 0, 0, NULL, {}},
-    {END}
+    {END, 0, 0, 0, nullptr, {0}}
 };
 
 static Telegram testCaseTelegrams_08[] =
@@ -123,7 +123,7 @@ static Telegram testCaseTelegrams_08[] =
     {TEL_RX, 7, 0, 0, disconnectClosed, {0xB0, 0xA0, 0x01, 0xA0, 0x00, 0x60, 0x81}},
     // 2. Check for empty TX-Response
     {CHECK_TX_BUFFER, 0, 0, 0, NULL, {}},
-    {END}
+    {END, 0, 0, 0, nullptr, {0}}
 };
 
 static Telegram testCaseTelegrams_09[] =
@@ -135,7 +135,7 @@ static Telegram testCaseTelegrams_09[] =
     {TEL_RX, 7, 0, 0xA001, disconnectWhileConnectedOpenIdle, {0xB0, 0xA0, 0x07, 0xA0, 0x00, 0x60, 0x81}},
     // 3. Check for empty TX-Response
     {CHECK_TX_BUFFER, 0, 0, 0, NULL, {}},
-    {END}
+    {END, 0, 0, 0, nullptr, {0}}
 };
 
 static Telegram testCaseTelegrams_10[] =
@@ -149,7 +149,7 @@ static Telegram testCaseTelegrams_10[] =
     {TEL_RX, 7, 0, 0xA007, disconnectWhileConnectedOpenWait, {0xB0, 0xA0, 0x01, 0xA0, 0x00, 0x60, 0x81}},
     // 2. Check for empty TX-Response
     {CHECK_TX_BUFFER, 0, 0, 0, NULL, {}},
-    {END}
+    {END, 0, 0, 0, nullptr, {0}}
 };
 
 static Telegram testCaseTelegrams_18[] =
@@ -163,7 +163,7 @@ static Telegram testCaseTelegrams_18[] =
     {TEL_TX, 7, 0, 0, disconnectClosed, {0xB0, 0xA0, 0x00, 0xA0, 0x01, 0x60, 0x81}},
     // 4. Check for empty TX-Response
     {CHECK_TX_BUFFER, 0, 0, 0, NULL, {}},
-    {END}
+    {END, 0, 0, 0, nullptr, {0}}
 };
 
 static Telegram testCaseTelegrams_19[] =
@@ -193,7 +193,7 @@ static Telegram testCaseTelegrams_19[] =
     {TEL_TX, 7, 0, 0, disconnectClosed, {0xB0, 0xA0, 0x00, 0xA0, 0x01, 0x60, 0x81}},
     // 9. Check for empty TX-Response
     {CHECK_TX_BUFFER, 0, 0, 0, NULL, {}},
-    {END}
+    {END, 0, 0, 0, nullptr, {0}}
 };
 
 static Telegram testCaseTelegrams_20a[] =
@@ -205,7 +205,7 @@ static Telegram testCaseTelegrams_20a[] =
     {TEL_RX, 8, 0, 0xA001, connectedOpenIdle, {0xB0, 0xA0, 0x01, 0xA0, 0x00, 0x61, 0x43, 0x00}}, // MaskVersionRead()
     // 3. Check T_ACK response for the T_DATA_CONNECTED_REQ
     {TEL_TX, 7, 1, 0xA001, connectedOpenIdle, {0xB0, 0xA0, 0x00, 0xA0, 0x01, 0x60, 0xC2}}, // T_ACK_PDU
-    {END}
+    {END, 0, 0, 0, nullptr, {0}}
 };
 
 static Telegram testCaseTelegrams_20b[] =
@@ -249,7 +249,7 @@ static Telegram testCaseTelegrams_20b[] =
     {TIMER_TICK, 3500, 1, 0, connectedOpenWait, {}},
     // 19. Check TX-Response for a T_DISCONNECT_PDU (0x81) to 10.0.1
     {TEL_TX, 7, 0, 0, disconnectClosed, {0xB0, 0x10, 0x01, 0xAF, 0xFE, 0x60, 0x81}},
-    {END}
+    {END, 0, 0, 0, nullptr, {0}}
 };
 
 static Telegram testCaseTelegrams_21[] =
@@ -267,7 +267,7 @@ static Telegram testCaseTelegrams_21[] =
     {TEL_TX, 7, 0, 0, disconnectClosed, {0xB0, 0x10, 0x01, 0xAF, 0xFE, 0x60, 0x81}},
     // 6. Check for empty TX-Response
     {CHECK_TX_BUFFER, 0, 0, 0, NULL, {}},
-    {END}
+    {END, 0, 0, 0, nullptr, {0}}
 };
 
 static Telegram testCaseTelegrams_22[] =
@@ -285,7 +285,7 @@ static Telegram testCaseTelegrams_22[] =
     {TEL_RX,  8, 0, 0xA001, connectedOpenWait, {0xB0, 0xA0, 0x01, 0xA0, 0x00, 0x61, 0x43, 0x00}},
     // 4. Check T_ACK response for the second DeviceDescriptorRead
     {TEL_TX,  7, 0, 0xA001, connectedOpenWait, {0xB0, 0xA0, 0x00, 0xA0, 0x01, 0x60, 0xC2}}, // T_ACK_PDU Seq=0
-    {END}
+    {END, 0, 0, 0, nullptr, {0}}
 };
 
 static Telegram testCaseTelegrams_23[] =
@@ -299,7 +299,7 @@ static Telegram testCaseTelegrams_23[] =
     {TEL_TX, 7, 0, 0xA001, connectedOpenIdle, {0xB0, 0xA0, 0x00, 0xA0, 0x01, 0x60, 0xD7}},
     // 4. Check for empty TX-Response
     {CHECK_TX_BUFFER, 0, 0, 0, NULL, {}},
-    {END}
+    {END, 0, 0, 0, nullptr, {0}}
 };
 
 static Telegram testCaseTelegrams_24[] =
@@ -315,7 +315,7 @@ static Telegram testCaseTelegrams_24[] =
     {TEL_TX, 7, 0, 0xA001, connectedOpenWait, {0xB0, 0xA0, 0x00, 0xA0, 0x01, 0x60, 0xD7}},
     // 3. Check for empty TX-Response
     {CHECK_TX_BUFFER, 0, 0, 0, NULL, {}},
-    {END}
+    {END, 0, 0, 0, nullptr, {0}}
 };
 
 static Telegram testCaseTelegrams_25[] =
@@ -328,7 +328,7 @@ static Telegram testCaseTelegrams_25[] =
     // Style 2/3 - BDUT sends no Disconnect on the bus.
     // 3. Check for empty TX-Response
     {CHECK_TX_BUFFER, 0, 0, 0, NULL, {}},
-    {END}
+    {END, 0, 0, 0, nullptr, {0}}
 };
 
 static Telegram testCaseTelegrams_26[] =
@@ -343,7 +343,7 @@ static Telegram testCaseTelegrams_26[] =
     // Style 2/3 - BDUT sends no Disconnect on the bus.
     // 2. Check for empty TX-Response
     {CHECK_TX_BUFFER, 0, 0, 0, NULL, {}},
-    {END}
+    {END, 0, 0, 0, nullptr, {0}}
 };
 
 static Telegram testCaseTelegrams_30[] =
@@ -356,7 +356,7 @@ static Telegram testCaseTelegrams_30[] =
     // Style 3 - BDUT remains in OPEN_IDLE, BDUT sends no T_Disconnect.ind and no Disconnect on the bus.
     // 3. Check for empty TX-Response
     {CHECK_TX_BUFFER, 0, 0, 0, NULL, {}},
-    {END}
+    {END, 0, 0, 0, nullptr, {0}}
 };
 
 static Telegram testCaseTelegrams_31[] =
@@ -369,7 +369,7 @@ static Telegram testCaseTelegrams_31[] =
     // Style 3 - BDUT remains in OPEN_IDLE, BDUT sends no T_Disconnect.ind and no Disconnect on the bus.
     // 3. Check for empty TX-Response
     {CHECK_TX_BUFFER, 0, 0, 0, NULL, {}},
-    {END}
+    {END, 0, 0, 0, nullptr, {0}}
 };
 
 static Telegram testCaseTelegrams_32[] =
@@ -385,7 +385,7 @@ static Telegram testCaseTelegrams_32[] =
     {TEL_TX, 7, 0, 0, disconnectClosed, {0xB0, 0xA0, 0x00, 0xA0, 0x01, 0x60, 0x81}},
     // 3. Check for empty TX-Response
     {CHECK_TX_BUFFER, 0, 0, 0, NULL, {}},
-    {END}
+    {END, 0, 0, 0, nullptr, {0}}
 };
 
 static Telegram testCaseTelegrams_33[] =
@@ -398,7 +398,7 @@ static Telegram testCaseTelegrams_33[] =
     // Style 2/3 - BDUT sends no Disconnect on the bus.
     // 3. Check for empty TX-Response
     {CHECK_TX_BUFFER, 0, 0, 0, NULL, {}},
-    {END}
+    {END, 0, 0, 0, nullptr, {0}}
 };
 
 static Telegram testCaseTelegrams_34[] =
@@ -413,7 +413,7 @@ static Telegram testCaseTelegrams_34[] =
     // Style 2/3 - BDUT sends no Disconnect on the bus.
     // 2. Check for empty TX-Response
     {CHECK_TX_BUFFER, 0, 0, 0, NULL, {}},
-    {END}
+    {END, 0, 0, 0, nullptr, {0}}
 };
 
 static Telegram testCaseTelegrams_35[] =
@@ -426,7 +426,7 @@ static Telegram testCaseTelegrams_35[] =
     // Style 3 - BDUT remains in OPEN_IDLE, BDUT sends no T_Disconnect.ind and no Disconnect on	the bus.
     // 3. Check for empty TX-Response
     {CHECK_TX_BUFFER, 0, 0, 0, NULL, {}},
-    {END}
+    {END, 0, 0, 0, nullptr, {0}}
 };
 
 static Telegram testCaseTelegrams_36[] =
@@ -443,7 +443,7 @@ static Telegram testCaseTelegrams_36[] =
     // According to 3/3/4 5.4.3, event E11 it stays in OPEN_WAIT and does nothing.
     // 2. Check for empty TX-Response
     {CHECK_TX_BUFFER, 0, 0, 0, NULL, {}},
-    {END}
+    {END, 0, 0, 0, nullptr, {0}}
 };
 
 static Telegram testCaseTelegrams_37[] =
@@ -457,7 +457,7 @@ static Telegram testCaseTelegrams_37[] =
     {TEL_TX, 7, 0, 0, disconnectClosed, {0xB0, 0xA0, 0x00, 0xA0, 0x01, 0x60, 0x81}},
     // 4. Check for empty TX-Response
     {CHECK_TX_BUFFER, 0, 0, 0, NULL, {}},
-    {END}
+    {END, 0, 0, 0, nullptr, {0}}
 };
 
 static Telegram testCaseTelegrams_38[] =
@@ -473,7 +473,7 @@ static Telegram testCaseTelegrams_38[] =
     {TEL_RX, 8, 0, 0xA001, connectedOpenWait, {0xB0, 0xA0, 0x01, 0xA0, 0x00, 0x60, 0xC3}}, // T-Nack(Seq=0)
     // 2. The BDUT sends a telegram with NSDU=T_DATA_CONNECTED.req (stored message).
     {TEL_TX,  10, 0, 0xA001, connectedOpenWait, {0xB0, 0xA0, 0x00, 0xA0, 0x01, 0x63, 0x43, 0x40, dummyMaskVersionHigh, dummyMaskVersionLow}},
-    {END}
+    {END, 0, 0, 0, nullptr, {0}}
 };
 
 static Telegram testCaseTelegrams_39[] =
@@ -503,7 +503,7 @@ static Telegram testCaseTelegrams_39[] =
     {TEL_TX, 7, 0, 0, disconnectClosed, {0xB0, 0xA0, 0x00, 0xA0, 0x01, 0x60, 0x81}},
     // 3. Check for empty TX-Response
     {CHECK_TX_BUFFER, 0, 0, 0, NULL, {}},
-    {END}
+    {END, 0, 0, 0, nullptr, {0}}
 };
 
 static Telegram testCaseTelegrams_40[] =
@@ -516,7 +516,7 @@ static Telegram testCaseTelegrams_40[] =
     // Style 2/3 - BDUT sends no Disconnect on the bus.
     // 3. Check for empty TX-Response
     {CHECK_TX_BUFFER, 0, 0, 0, NULL, {}},
-    {END}
+    {END, 0, 0, 0, nullptr, {0}}
 };
 
 static Telegram testCaseTelegrams_41[] =
@@ -531,7 +531,7 @@ static Telegram testCaseTelegrams_41[] =
     // Style 2/3 - BDUT sends no Disconnect on the bus.
     // 2. Check for empty TX-Response
     {CHECK_TX_BUFFER, 0, 0, 0, NULL, {}},
-    {END}
+    {END, 0, 0, 0, nullptr, {0}}
 };
 
 static Telegram testCaseTelegrams_42[] =
@@ -549,7 +549,7 @@ static Telegram testCaseTelegrams_42[] =
     {TEL_RX, 8, 0, 0, disconnectClosed, {0xB0, 0xA0, 0x01, 0xA0, 0x00, 0x60, 0xC3}}, // T-Nack(Seq=0)
     // 6. Style 2/3 - BDUT sends no Disconnect on the bus.
     {CHECK_TX_BUFFER, 0, 0, 0, NULL, {}},
-    {END}
+    {END, 0, 0, 0, nullptr, {0}}
 };
 
 #endif /* TC_TELEGRAM_H_ */

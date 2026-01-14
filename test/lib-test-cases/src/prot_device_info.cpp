@@ -74,7 +74,7 @@ static Telegram testCaseTelegrams[] =
     {TEL_TX, 11, 0, 0, NULL                , {0xB0, 0x11, 0x7E, 0x00, 0x01, 0x64, 0x62, 0x41, 0x01, 0x09, 0x00}}, // 36. MemoryReadResponse 1.1.126->0.0.1 count=1 address=0x109
     {TEL_RX,  7, 0, 0, NULL                , {0xB0, 0x00, 0x01, 0x11, 0x7E, 0x60, 0xE2}}, //  37. T_ACK
     {TEL_RX,  7, 0, 0, disconnect          , {0xB0, 0x00, 0x01, 0x11, 0x7E, 0x60, 0x81}}, //  38. T_DISCONNECT
-    {END}, //  39.
+    {END, 0, 0, 0, nullptr, {0}}, //  39.
 };
 
 static void tc_eepromSetup(void)
