@@ -318,7 +318,7 @@ typedef struct
     struct {
          uint32_t RESERVED0[4095];
     __IO uint32_t DATA;                 /*!< Offset: 0x3FFC Port data Register (R/W) */
-    };
+    } LPC_GPIO_DATA_ACCESS; // named to avoid anonymous struct warning
   };
        uint32_t RESERVED1[4096];
   __IO uint32_t DIR;                    /*!< Offset: 0x8000 Data direction Register (R/W) */
