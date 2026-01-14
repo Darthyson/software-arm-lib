@@ -107,8 +107,8 @@ add_compile_options(
     -Wlogical-op 
     -Woverloaded-virtual
     -Wextra
+    -pedantic
     # todo warnings to enable in future
-    # -pedantic
     # -Wconversion
     -fmessage-length=0
     -g3
