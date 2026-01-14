@@ -155,17 +155,17 @@ TEST_CASE("LPDU initialization","[SBLIB][KNX][LPDU]")
     REQUIRE(testTelegram[0] ==  0xbc);
 }
 
-TEST_CASE("KNX address parsing","[SBLIB][KNX][LPDU]")
+TEST_CASE("KNX physical address parsing","[SBLIB][KNX][LPDU]")
 {
     // Test default KNX address
-    REQUIRE(knxAddressToArea(PHY_ADDR_DEFAULT) == 15);
-    REQUIRE(knxAddressToLine(PHY_ADDR_DEFAULT) == 15);
-    REQUIRE(knxAddressToDevice(PHY_ADDR_DEFAULT) == 255);
+    REQUIRE(physAddressToArea(PHY_ADDR_DEFAULT) == 15);
+    REQUIRE(physAddressToLine(PHY_ADDR_DEFAULT) == 15);
+    REQUIRE(physAddressToDevice(PHY_ADDR_DEFAULT) == 255);
     
     // Test broadcast address
-    REQUIRE(knxAddressToArea(PHY_ADDR_BROADCAST) == 0);
-    REQUIRE(knxAddressToLine(PHY_ADDR_BROADCAST) == 0);
-    REQUIRE(knxAddressToDevice(PHY_ADDR_BROADCAST) == 0);
+    REQUIRE(physAddressToArea(PHY_ADDR_BROADCAST) == 0);
+    REQUIRE(physAddressToLine(PHY_ADDR_BROADCAST) == 0);
+    REQUIRE(physAddressToDevice(PHY_ADDR_BROADCAST) == 0);
 
     // Test all possible values for Area, Line, and Device
     // Area: 4 bits (0-15), Line: 4 bits (0-15), Device: 8 bits (0-255)
@@ -180,13 +180,35 @@ TEST_CASE("KNX address parsing","[SBLIB][KNX][LPDU]")
                 uint16_t address = (area << 12) | (line << 8) | device;
                 
                 // Verify each function extracts the correct component
-                REQUIRE(knxAddressToArea(address) == area);
-                REQUIRE(knxAddressToLine(address) == line);
-                REQUIRE(knxAddressToDevice(address) == device);
+                REQUIRE(physAddressToArea(address) == area);
+                REQUIRE(physAddressToLine(address) == line);
+                REQUIRE(physAddressToDevice(address) == device);
             }
         }
     }
 }
 
+TEST_CASE("KNX group address parsing","[SBLIB][KNX][LPDU]")
+{
+    // Test all possible values for main, middle, and low
+    // Main: 5 bits (0-31), Middle: 3 bits (0-7), Low: 8 bits (0-255)
+    for (uint8_t mainGroup = 0; mainGroup <= 31; mainGroup++)
+    {
+        for (uint8_t middleGroup = 0; middleGroup <= 7; middleGroup++)
+        {
+            for (uint16_t lowGroup = 0; lowGroup <= 255; lowGroup++)
+            {
+                // Construct KNX group address: main/middle/low
+                // Main: bits 11-15, Line: bits 8-10, Device: bits 0-7
+                uint16_t address = (mainGroup << 11) | (middleGroup << 8) | lowGroup;
+
+                // Verify each function extracts the correct component
+                REQUIRE(mainGroupAddress(address) == mainGroup);
+                REQUIRE(middleGroupAddress(address) == middleGroup);
+                REQUIRE(lowGroupAddress(address) == lowGroup);
+            }
+        }
+    }
+}
 
 /** @}*/
