@@ -64,37 +64,21 @@ struct HardwareDescriptor
 __attribute__((used, section (".selfbus"), )) constexpr HardwareDescriptor
 selfbusHardwareDescriptor =
 {
-    .guid = 0xFEAFDEBA,
-    .size = sizeof(selfbusHardwareDescriptor),
-    .version = 0x0001,
-    .hardwareID = 0xBA55,
-    .hardwareVersion = 0x0000,
-    .options = 0x12345678,
-    .eib = {.pinTx = PIN_EIB_TX, .pinRx = PIN_EIB_RX, .pinProgButton = PIN_PROG, .pinBusVoltage = PIN_VBUS, .invertProgButton = 0},
-    .pinInfo = PIN_INFO,
-    .pinRun = PIN_RUN,
-    .eEpromI2C = {.pinData = PIO_SDA, .pinClock = PIO_SCL, .address = 0},
-    .eEpromSPI = {.pinClock = PIN_SCK0, .pinMISO = PIN_MISO0, .pinMOSI = PIN_MOSI0, .pinChipSelect = PIN_SSEL0},
-    .reserved = {0x30, 0x31},
+    0xFEAFDEBA,                        // guid
+    sizeof(selfbusHardwareDescriptor), // size
+    0x0001,     // version
+    0xBA55,     // hardwareID
+    0x0000,     // hardwareVersion
+    0x12345678, // options
+    {PIN_EIB_TX, PIN_EIB_RX, PIN_PROG, PIN_VBUS, 0}, // eib Struct: pinTx, pinRx, pinProgButton, pinBusVoltage, invertProgButton
+    PIN_INFO,   // pinInfo
+    PIN_RUN,    // pinRun
+    {PIO_SDA, PIO_SCL, 0}, // eEpromI2C Struct: pinData, pinClock, address
+    {PIN_SCK0, PIN_MISO0, PIN_MOSI0, PIN_SSEL0}, // eEpromSPI Struct: pinClock, pinMISO, pinMOSI, pinChipSelect
+    {0x30, 0x31}, //reserved
+    0xDEADBEEF  // crc32
 };
-/*
-        selfbusHardwareDescriptor =
-        {
-            .guid = 0xBADEAFFE,
-            .size = sizeof(selfbusHardwareDescriptor),
-            .version = 0xD00F,
-            .hardwareID = 0xBA55,
-            .options = 0x12345678,
-            .pinEibTx = 0xCAFEBABE,
-            .pinEibRx = 0xDEADC0DE,
-            .pinProgButton = 0xABAD1DEA,
-            .pinBusVoltage = 0xBADA55,
-            .pinInfo = 0xDEADBEAF,
-            .pinRun  = 0xBADCAB1E,
-            .invertProgButton = 0x29,
-            .reserved  = {0x30, 0x31},
-        };
-*/
+
 uint32_t hwGuid()
 {
     return (selfbusHardwareDescriptor.guid);
