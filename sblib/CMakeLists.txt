@@ -103,11 +103,7 @@ endif()
 
 # common compile options for all targets and builds
 add_compile_options(
-    -Wall 
-    -Wlogical-op 
-    -Woverloaded-virtual
-    -Wextra
-    -pedantic
+    -Wall -Wlogical-op -Woverloaded-virtual -Wextra -pedantic
     # todo warnings to enable in future
     # -Wconversion
     -fmessage-length=0

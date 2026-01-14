@@ -49,7 +49,9 @@ add_compile_definitions(
 )
 
 add_compile_options(
-    # -Wall -Wlogical-op -Woverloaded-virtual
+    -Wall -Wlogical-op -Woverloaded-virtual -Wextra -pedantic
+    # todo Warnings to enable in future
+    # -Wconversion
     -g3
     -fmessage-length=0
     $<$<CONFIG:Release>:-Os>

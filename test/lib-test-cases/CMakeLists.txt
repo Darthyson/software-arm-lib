@@ -67,11 +67,9 @@ add_compile_definitions(
 )
 
 add_compile_options(
-    #  todo Warnings to enable in future
-    # -Wextra
-    # -pedantic
+    -Wall -Wlogical-op -Woverloaded-virtual -Wextra -pedantic
+    # todo Warnings to enable in future
     # -Wconversion
-    -Wall -Wlogical-op -Woverloaded-virtual
     -fmessage-length=0
     $<$<CONFIG:Release>:-Os>
     $<$<CONFIG:Debug>:-O0>
