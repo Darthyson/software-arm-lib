@@ -27,7 +27,14 @@
 #include <sblib/eib/apci.h>
 #include <sblib/digital_pin.h>
 #include <sblib/interrupt.h>
+#include <sblib/internal/bootloader_commands.h>
+#include <sblib/bits.h>
 
+
+/**
+ * The Maskversion of the Bootloader (BCU1 1.2)
+ */
+constexpr uint16_t BootloaderMaskVersion = 0x0012;
 
 #ifdef DEBUG
 #   define DEFAULT_COUNT_TO_FAIL (30)
@@ -57,7 +64,7 @@ BcuUpdate::BcuUpdate() :
 bool BcuUpdate::processApci(ApciCommand apciCmd, unsigned char * telegram, uint8_t telLength, uint8_t * sendBuffer)
 {
     uint32_t offset = 8;
-    uint32_t dataLength = telLength - offset - 1; // -1 exclude knx checksum
+    uint32_t dataLength = telLength - offset - 1; // -1 exclude KNX checksum
 
     switch(apciCmd)
     {
@@ -78,6 +85,24 @@ bool BcuUpdate::processApci(ApciCommand apciCmd, unsigned char * telegram, uint8
             )
             return BcuBase::processApci(apciCmd, telegram, telLength, sendBuffer);
 
+        case APCI_DEVICEDESCRIPTOR_READ_PDU:
+        {
+            // We need to process the A_DeviceDescriptor_Read to support
+            // the management procedure NM_IndividualAddress_Write.
+            // Check KNX Spec. 3.0 3/5/2 2.3 NM_IndividualAddress_Write for more details.
+            // It´s here, and not in BcuBase to reduce the size of the BL a little bit.
+            const uint8_t id = telegram[7] & 0x3f;
+            if (id != 0)
+            {
+                return false; // unknown device descriptor
+            }
+
+            sendBuffer[5] = 0x60 + 3; // routing count in high nibble + response length in low nibble
+            setApciCommand(sendBuffer, APCI_DEVICEDESCRIPTOR_RESPONSE_PDU, 0);
+            sendBuffer[8] = HIGH_BYTE(BootloaderMaskVersion);
+            sendBuffer[9] = lowByte(BootloaderMaskVersion);
+            return true;
+        }
         default:
             return false;
     }
@@ -90,11 +115,47 @@ void BcuUpdate::begin()
 
 bool BcuUpdate::processBroadCastTelegram(ApciCommand apciCmd, unsigned char *telegram, uint8_t telLength)
 {
-    if (apciCmd == APCI_INDIVIDUAL_ADDRESS_READ_PDU)
+    if (directConnection() && (apciCmd == APCI_INDIVIDUAL_ADDRESS_WRITE_PDU))
     {
-        sendApciIndividualAddressReadResponse();
+        // Don´t handle address write while we have an open TL4 connection
+        dump(serial.println("ADDRESS_WRITE ignored (TL4 active)");)
+        return false;
     }
-    return true;
+
+    dump(
+        switch(apciCmd)
+        {
+            case APCI_INDIVIDUAL_ADDRESS_READ_PDU:
+                serial.print("ADDRESS_READ ");
+                break;
+            case APCI_INDIVIDUAL_ADDRESS_WRITE_PDU:
+                serial.print("ADDRESS_WRITE");
+                break;
+            default:
+                break;
+        }
+    )
+
+    const bool handled = handleIndividualAddressBroadcast(apciCmd, telegram, telLength);
+    if (handled)
+    {
+        dump(
+            serial.print(" ", knxAddressToArea(ownAddress()));
+            serial.print(".", knxAddressToLine(ownAddress()));
+            serial.println(".", knxAddressToDevice(ownAddress()));
+            serial.flush();
+        )
+
+        if (apciCmd == APCI_INDIVIDUAL_ADDRESS_WRITE_PDU)
+        {
+            // Cache current physical address in RAM.
+            // Next telegram will be an APCI_BASIC_RESTART_PDU
+            // See KNX Spec. 3.0 3/5/2 2.3 NM_IndividualAddress_Write
+            prepareRestartIntoBootloader(this->ownAddress());
+        }
+    }
+
+    return handled;
 }
 
 bool BcuUpdate::processGroupAddressTelegram(ApciCommand apciCmd, uint16_t groupAddress, unsigned char *telegram, uint8_t telLength)
