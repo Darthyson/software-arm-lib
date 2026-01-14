@@ -101,9 +101,9 @@ void Bus::begin(const uint16_t physicalAddress)
         serial.println(" ttimer value: ", ttimer.value(), DEC, 6);
         serial.print("nak retries: ", sendRetriesMax, DEC, 2);
         serial.print(" busy retries: ", sendBusyRetriesMax, DEC, 2);
-        serial.print(" phy addr: ", PHY_ADDR_AREA(ownAddress), DEC);
-        serial.print(".", PHY_ADDR_LINE(ownAddress), DEC);
-        serial.print(".", PHY_ADDR_DEVICE(ownAddress), DEC);
+        serial.print(" phy addr: ", physAddressToArea(ownAddress), DEC);
+        serial.print(".", physAddressToLine(ownAddress), DEC);
+        serial.print(".", physAddressToDevice(ownAddress), DEC);
         serial.print(" (0x", ownAddress, HEX, 4);
         serial.println(")");
     ); // DB_BUS

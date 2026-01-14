@@ -19,9 +19,10 @@
  published by the Free Software Foundation.
  ---------------------------------------------------------------------------*/
 
-#include <sblib/eib/bus_debug.h>
-#include <sblib/eib/bus_const.h>
-#include <sblib/eib/knx_lpdu.h>
+#include "sblib/eib/bus_debug.h"
+#include "sblib/eib/bus_const.h"
+#include "sblib/eib/knx_lpdu.h"
+#include "sblib/bits.h"
 
 #if defined(DEBUG_BUS) || defined(DEBUG_BUS_BITLEVEL) || defined (DUMP_TELEGRAMS)
     Timer& ttimer = timer32_0;
@@ -29,9 +30,9 @@
 
 #define dumpKNXAddress(addr) \
          {\
-             serial.print(PHY_ADDR_AREA(addr)); \
-             serial.print(".", PHY_ADDR_LINE(addr)); \
-             serial.print(".", PHY_ADDR_DEVICE(addr)); \
+             serial.print(physAddressToArea(addr)); \
+             serial.print(".", physAddressToLine(addr)); \
+             serial.print(".", physAddressToDevice(addr)); \
          }
 
 #ifdef DUMP_TELEGRAMS

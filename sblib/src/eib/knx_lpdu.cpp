@@ -107,17 +107,32 @@ void setFrameType(uint8_t* telegram, const KNXFrameType newFrameType)
     }
 }
 
-uint8_t knxAddressToArea(const uint16_t address)
+uint8_t physAddressToArea(const uint16_t address)
 {
     return address >> 12 & 0x0f;
 }
 
-uint8_t knxAddressToLine(const uint16_t address)
+uint8_t physAddressToLine(const uint16_t address)
 {
     return address >> 8 & 0x0f;
 }
 
-uint8_t knxAddressToDevice(const uint16_t address)
+uint8_t physAddressToDevice(const uint16_t address)
 {
     return address & 0xff;
+}
+
+uint8_t mainGroupAddress(const uint16_t address)
+{
+    return highByte(address) >> 3;
+}
+
+uint8_t middleGroupAddress(const uint16_t address)
+{
+    return highByte(address) & 0x07;
+}
+
+uint8_t lowGroupAddress(const uint16_t address)
+{
+    return lowByte(address);
 }

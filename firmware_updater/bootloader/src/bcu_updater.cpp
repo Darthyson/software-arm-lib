@@ -140,9 +140,9 @@ bool BcuUpdate::processBroadCastTelegram(ApciCommand apciCmd, unsigned char *tel
     if (handled)
     {
         dump(
-            serial.print(" ", knxAddressToArea(ownAddress()));
-            serial.print(".", knxAddressToLine(ownAddress()));
-            serial.println(".", knxAddressToDevice(ownAddress()));
+            serial.print(" ", physAddressToArea(ownAddress()));
+            serial.print(".", physAddressToLine(ownAddress()));
+            serial.println(".", physAddressToDevice(ownAddress()));
             serial.flush();
         )
 

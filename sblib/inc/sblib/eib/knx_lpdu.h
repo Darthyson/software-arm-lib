@@ -147,21 +147,42 @@ void setFrameType(uint8_t* telegram, KNXFrameType newFrameType);
  * @param address Individual KNX address
  * @return The area number of the individual address
  */
-uint8_t knxAddressToArea(uint16_t address);
+uint8_t physAddressToArea(uint16_t address);
 
 /**
  * Return the line number of a given physical KNX address
  * @param address Individual KNX address
  * @return The line number of the individual address
  */
-uint8_t knxAddressToLine(uint16_t address);
+uint8_t physAddressToLine(uint16_t address);
 
 /**
  * Return the device number of a given physical KNX address
  * @param address Individual KNX address
  * @return The device number of the individual address
  */
-uint8_t knxAddressToDevice(uint16_t address);
+uint8_t physAddressToDevice(uint16_t address);
+
+/**
+ * Return the main group of a given KNX group address
+ * @param address Group KNX address
+ * @return The main group of the group address
+ */ 
+uint8_t mainGroupAddress(const uint16_t address);
+
+/**
+ * Return the middle group of a given KNX group address
+ * @param address Group KNX address
+ * @return The middle group of the group address
+ */
+uint8_t middleGroupAddress(const uint16_t address);
+
+/**
+ * Return the low group of a given KNX group address
+ * @param address Group KNX address
+ * @return The low group of the group address
+ */
+uint8_t lowGroupAddress(const uint16_t address);
 
 #endif /* SBLIB_KNX_LPDU_H_ */
 /** @}*/

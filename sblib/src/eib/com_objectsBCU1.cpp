@@ -5,13 +5,14 @@
  *      Author: dridders
  */
 
-#include <sblib/eib/com_objectsBCU1.h>
-#include <sblib/eib/bcu1.h>
-#include <sblib/eib/apci.h>
-#include <sblib/utils.h>
+#include "sblib/eib/com_objectsBCU1.h"
+#include "sblib/eib/bcu1.h"
+#include "sblib/eib/apci.h"
+#include "sblib/eib/knx_lpdu.h"
+#include "sblib/utils.h"
 
 #if defined(INCLUDE_SERIAL)
-#   include <sblib/serial.h>
+#   include "sblib/serial.h"
 #endif
 
 int ComObjectsBCU1::objectSize(const int objno)
@@ -74,9 +75,9 @@ void ComObjectsBCU1::processGroupTelegram(const uint16_t addr, const int apci, b
     const int endAssoc = 1 + (*assocTab) * 2;
 
     DB_COM_OBJ(
-        serial.print("grpAddr ", mainGroup(addr));
-        serial.print("/", middleGroup(addr));
-        serial.print("/", lowGroup(addr));
+        serial.print("grpAddr ", mainGroupAddress(addr));
+        serial.print("/", middleGroupAddress(addr));
+        serial.print("/", lowGroupAddress(addr));
         serial.print(": gapos ");
     );
     // Convert the group address into the index of the group address table
