@@ -113,7 +113,7 @@ void BcuUpdate::begin()
     BcuBase::_begin();
 }
 
-bool BcuUpdate::processBroadCastTelegram(ApciCommand apciCmd, unsigned char *telegram, uint8_t telLength)
+bool BcuUpdate::processBroadCastTelegram(ApciCommand apciCmd, unsigned char *telegram, [[maybe_unused]] uint8_t telLength)
 {
     if (directConnection() && (apciCmd == APCI_INDIVIDUAL_ADDRESS_WRITE_PDU))
     {
@@ -136,7 +136,7 @@ bool BcuUpdate::processBroadCastTelegram(ApciCommand apciCmd, unsigned char *tel
         }
     )
 
-    const bool handled = handleIndividualAddressBroadcast(apciCmd, telegram, telLength);
+    const bool handled = handleIndividualAddressBroadcast(apciCmd, telegram);
     if (handled)
     {
         dump(

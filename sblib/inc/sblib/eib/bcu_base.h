@@ -127,10 +127,9 @@ protected:
      *
      * @param apciCmd   The APCI command to process (e.g., @ref APCI_INDIVIDUAL_ADDRESS_WRITE_PDU, @ref APCI_INDIVIDUAL_ADDRESS_READ_PDU)
      * @param telegram  Pointer to the received telegram buffer containing the complete KNX frame
-     * @param telLength Length of the telegram in bytes
      * @return True if the APCI command was handled, false if the command is not supported.
      */
-    [[nodiscard]] bool handleIndividualAddressBroadcast(ApciCommand apciCmd, uint8_t* telegram, uint8_t telLength);
+    [[nodiscard]] bool handleIndividualAddressBroadcast(ApciCommand apciCmd, uint8_t* telegram);
 
     void sendApciIndividualAddressReadResponse();
 

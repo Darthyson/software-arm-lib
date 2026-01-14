@@ -197,7 +197,7 @@ void BcuDefault::setGroupTelRateLimit(const unsigned int limit)
 /**
  * todo check for RX status and inform upper layer if needed
  */
-bool BcuDefault::processGroupAddressTelegram(const ApciCommand apciCmd, const uint16_t groupAddress, unsigned char* telegram, uint8_t telLength)
+bool BcuDefault::processGroupAddressTelegram(const ApciCommand apciCmd, const uint16_t groupAddress, unsigned char* telegram, [[maybe_unused]] uint8_t telLength)
 {
     DB_COM_OBJ(
         serial.println();
@@ -209,14 +209,14 @@ bool BcuDefault::processGroupAddressTelegram(const ApciCommand apciCmd, const ui
     return (true);
 }
 
-bool BcuDefault::processBroadCastTelegram(const ApciCommand apciCmd, unsigned char* telegram, uint8_t telLength)
+bool BcuDefault::processBroadCastTelegram(const ApciCommand apciCmd, unsigned char* telegram, [[maybe_unused]] uint8_t telLength)
 {
     if (!programmingMode())
     {
         return true;
     }
     // we are in programming mode
-    return handleIndividualAddressBroadcast(apciCmd, telegram, telLength);
+    return handleIndividualAddressBroadcast(apciCmd, telegram);
 }
 
 bool BcuDefault::processApciMemoryWritePDU(const int addressStart, byte* payLoad, const int lengthPayLoad)

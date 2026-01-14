@@ -153,7 +153,7 @@ bool BcuBase::processApci(const ApciCommand apciCmd, unsigned char* telegram, co
     return (false);
 }
 
-bool BcuBase::handleIndividualAddressBroadcast(const ApciCommand apciCmd, uint8_t* telegram, uint8_t telLength)
+bool BcuBase::handleIndividualAddressBroadcast(const ApciCommand apciCmd, uint8_t* telegram)
 {
     switch (apciCmd)
     {
