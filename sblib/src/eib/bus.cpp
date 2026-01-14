@@ -648,9 +648,13 @@ STATE_SWITCH:
         case Bus::IDLE:
             tb_d(state + 100, ttimer.value(), tb_in);
             DB_TELEGRAM(telRXWaitIdleTime = ttimer.value());
-
+#pragma GCC diagnostic push
+#pragma GCC diagnostic ignored "-Wimplicit-fallthrough=" // disable fallthrough warnings
             if (!isCaptureEvent) // Not a bus-in signal or Tel in the queue: do nothing
                 break;
+
+        // no break here as we have received a capture event - falling edge of the start bit
+        // we continue with initialization for receiving new telegram
 
         // RX process functions
         // initialize the RX process for a new telegram reception.
@@ -679,6 +683,7 @@ STATE_SWITCH:
         //todo if timer was  disabled for power saving and enable in this state
         // no break here as we have received a capture event - falling edge of the start bit
         // we continue with receiving of start bit.
+#pragma GCC diagnostic pop // reenable fallthrough warnings
 
         // A start bit (by cap event) is expected to arrive here. If we have a timeout instead, the
         // transmission of a frame is over.  (after 11 bit plus 2 fill bits :13*104us  + margin (1452us) after start of last char)
@@ -1034,11 +1039,13 @@ STATE_SWITCH:
             else
             {
                 // Timeout: we have a hardware problem as receiving our sent signal does not work. set error and just continue sending bit0
+#pragma GCC diagnostic push
+#pragma GCC diagnostic ignored "-Wimplicit-fallthrough=" // disable fallthrough warnings
                 tb_t(state + 400, ttimer.value(), tb_in);
                 state = Bus::SEND_BIT_0; //   prepare to send bit 0 immediately
                 tx_error |= TX_PWM_STARTBIT_ERROR;
-            } // no break, continue with bit0 as we have a timeout here
-
+            } 
+            // no break, continue with bit0 as we have a timeout here
 
         /* SEND_BIT_0
          *  state is in phase shift with respect to bus timing, entered by match/period interrupt from pwm
@@ -1067,6 +1074,7 @@ STATE_SWITCH:
             bitMask = 1;
             state = Bus::SEND_BITS_OF_BYTE; // set next state, no break here, continue sending first bit/ LSB
             tb_h(SEND_BIT_0 + 200, currentByte, tb_in);
+#pragma GCC diagnostic pop // reenable fallthrough warnings
 
         /* SEND_BITS_OF_BYTE
          * state is in phase shift, entered by cap event or match/period interrupt from pwm
@@ -1234,11 +1242,13 @@ STATE_SWITCH:
                 timer.match(timeChannel, time - 1); // interrupt at end of low/high bit pulse - next raising edge or after stop bit + 2 wait bits
                 break;
             }
-
+#pragma GCC diagnostic push
+#pragma GCC diagnostic ignored "-Wimplicit-fallthrough=" // disable fallthrough warnings
             // Stop bit reached.
             state = Bus::SEND_END_OF_BYTE;
             // Intentionally fall through to SEND_END_OF_BYTE.
         }
+#pragma GCC diagnostic pop // reenable fallthrough warnings
 
         // Completed transmission of parity bit and are in the middle of the stop bit transmission.
         // What do we need to do next?
