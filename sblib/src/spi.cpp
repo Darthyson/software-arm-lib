@@ -121,8 +121,9 @@ void SPI::end() const
     port.CR1 &= ~SSP_CR1_ENABLED;
 }
 
-int SPI::transfer(const int val, SpiTransferMode transferMode) const
+int SPI::transfer(const int val, [[maybe_unused]] SpiTransferMode transferMode) const
 {
+    ///\todo SpiTransferMode transferMode is never set here
     // Clear all remaining data in the receive FIFO
     while (port.SR & SSP_SR_RNE)
         port.DR; // reading is supported without assignment to a temporary variable

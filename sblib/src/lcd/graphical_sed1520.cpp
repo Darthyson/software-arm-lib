@@ -44,5 +44,5 @@ LcdGraphicalSED1520::LcdGraphicalSED1520(const int dataPort, const int pinA0, co
 void LcdGraphicalSED1520::idle()
 {}
 
-void LcdGraphicalSED1520::pos(int x, int y)
+void LcdGraphicalSED1520::pos([[maybe_unused]] int x, [[maybe_unused]] int y)
 {}
