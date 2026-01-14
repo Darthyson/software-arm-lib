@@ -213,24 +213,10 @@ bool BcuDefault::processBroadCastTelegram(const ApciCommand apciCmd, unsigned ch
 {
     if (!programmingMode())
     {
-        return (true);
+        return true;
     }
-
     // we are in programming mode
-    switch (apciCmd)
-    {
-        case APCI_INDIVIDUAL_ADDRESS_WRITE_PDU:
-            setOwnAddress(makeWord(telegram[8], telegram[9]));
-            break;
-
-        case APCI_INDIVIDUAL_ADDRESS_READ_PDU:
-            sendApciIndividualAddressReadResponse();
-            break;
-
-        default:
-            return (false);
-    }
-    return (true);
+    return handleIndividualAddressBroadcast(apciCmd, telegram, telLength);
 }
 
 bool BcuDefault::processApciMemoryWritePDU(const int addressStart, byte* payLoad, const int lengthPayLoad)

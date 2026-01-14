@@ -154,6 +154,24 @@ bool BcuBase::processApci(const ApciCommand apciCmd, unsigned char* telegram, co
     return (false);
 }
 
+bool BcuBase::handleIndividualAddressBroadcast(const ApciCommand apciCmd, uint8_t* telegram, uint8_t telLength)
+{
+    switch (apciCmd)
+    {
+        case APCI_INDIVIDUAL_ADDRESS_WRITE_PDU:
+            setOwnAddress(makeWord(telegram[8], telegram[9]));
+            break;
+
+        case APCI_INDIVIDUAL_ADDRESS_READ_PDU:
+            sendApciIndividualAddressReadResponse();
+            break;
+
+        default:
+            return false;
+    }
+    return true;
+}
+
 void BcuBase::sendApciIndividualAddressReadResponse()
 {
     const auto sendBuffer = acquireSendBuffer();
