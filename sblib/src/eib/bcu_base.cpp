@@ -14,6 +14,7 @@
 #include "sblib/eib/knx_lpdu.h"
 #include "sblib/eib/bcu_const.h"
 #include "sblib/bits.h"
+#include "sblib/eib/callback_bcu.h"
 
 
 static Bus* timerBusObj;
@@ -201,10 +202,7 @@ void BcuBase::softSystemReset()
     if (restartType == RestartType::MasterIntoBootloader)
     {
         noInterrupts();
-#ifndef IAP_EMULATION
-        unsigned int* magicWord = BOOTLOADER_MAGIC_ADDRESS;
-        *magicWord = BOOTLOADER_MAGIC_WORD;
-#endif
+        prepareRestartIntoBootloader(this->ownAddress());
     }
 
     NVIC_SystemReset();

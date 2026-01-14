@@ -44,11 +44,4 @@ void setApciCommand(unsigned char* telegram, const ApciCommand newApciCommand, c
     telegram[APCI_LOW_BYTE] |= additionalData;
 }
 
-bool checkApciForMagicWord(const byte eraseCode, const byte channelNumber)
-{
-    // special version of APCI_MASTER_RESET_PDU used by Selfbus bootloader
-    // restart with parameters, special meaning of erase=7 and channel=255 for bootloader mode
-    return ((eraseCode == BOOTLOADER_MAGIC_ERASE) && (channelNumber == BOOTLOADER_MAGIC_CHANNEL));
-}
-
 /** @}*/

@@ -131,26 +131,6 @@ enum RestartPDUErrorcode
     T_RESTART_INVALID_CHANNEL_NUMBER = 0x03
 };
 
-#define BOOTLOADER_MAGIC_WORD (0x5E1FB055)      //!< magic word which will be checked on startup of the bootloader
-                                                //!< weather or not to go into bootloader mode
-#define BOOTLOADER_MAGIC_ADDRESS ((unsigned int *) 0x10000000) //!< magic address for the magic word to be checked on startup of the bootloader
-                                                               //!< weather or not to go into bootloader mode
-#define BOOTLOADER_MAGIC_ERASE T_MASTERRESET_FACTORY_WO_IA     //!< bootloader magic erase = FactoryResetWithoutIndividualAddress in calimero-core
-#define BOOTLOADER_MAGIC_CHANNEL 255                           //!< bootloader magic channel
-
-/**
- * @brief   Checks a APCI for the bus-updater Magic word
- * @details This is a bus-updater/bootloader and BCU special function
- *          used for the flashing process to boot into bootloader mode
- *
- * @param eraseCode     eraseCode of the @ref APCI_MASTER_RESET_PDU telegram
- * @param channelNumber channelNumber of the @ref APCI_MASTER_RESET_PDU telegram
- *
- * @return true if apci is a APCI_RESTART_TYPE1_PDU with magic word<br/>
- *         otherwise false
- */
-bool checkApciForMagicWord(byte eraseCode, byte channelNumber);
-
 ApciCommand apciCommand(unsigned char* telegram);
 void setApciCommand(unsigned char* telegram, ApciCommand newApciCommand, byte additionalData);
 

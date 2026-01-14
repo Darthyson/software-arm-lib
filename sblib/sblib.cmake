@@ -2,6 +2,7 @@ set(SBLIB_CORE_SRC
         inc/sblib/hardware/gpio_lpc11xx.h
 #        inc/sblib/hardware/gpio_lpc11xx_fused_io.h
 #        inc/sblib/hardware/gpio_lpc11xx_gnax.h
+        inc/sblib/internal/bootloader_commands.h
         inc/sblib/internal/iap.h
         inc/sblib/analog_pin.h
         inc/sblib/arrays.h
@@ -35,6 +36,7 @@ set(SBLIB_CORE_SRC
 #        src/lpc11uxx/digital_pin_port.cpp
 #        src/lpc11uxx/digital_pin_pulse.cpp
 #        src/lpc11uxx/platform.cpp
+        src/internal/bootloader_commands.cpp
         src/lpc11xx/digital_pin.cpp
         src/lpc11xx/digital_pin_port.cpp
         src/lpc11xx/digital_pin_pulse.cpp

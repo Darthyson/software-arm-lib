@@ -238,7 +238,7 @@ static void jumpToApplication(uint8_t * start)
 void startup()
 {
     // Updater request from application by setting magicWord
-    unsigned int * magicWord = BOOTLOADER_MAGIC_ADDRESS;
+    uint32_t* magicWord = BOOTLOADER_MAGIC_ADDRESS;
     if (*magicWord == BOOTLOADER_MAGIC_WORD)
     {
         *magicWord = 0; // avoid restarting BL after flashing

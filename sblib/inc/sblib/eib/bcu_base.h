@@ -9,13 +9,15 @@
 #ifndef SBLIB_KNX_BCUBASE_H_
 #define SBLIB_KNX_BCUBASE_H_
 
-#include <sblib/eib/com_objects.h>
-#include <sblib/timeout.h>
-#include <sblib/debounce.h>
-#include <sblib/eib/knx_tlayer4.h>
-#include <sblib/eib/bus.h>
-#include <sblib/eib/userRam.h>
-#include <sblib/eib/callback_bcu.h>
+
+#include "sblib/eib/com_objects.h"
+#include "sblib/timeout.h"
+#include "sblib/debounce.h"
+#include "sblib/eib/knx_tlayer4.h"
+#include "sblib/eib/bus.h"
+#include "sblib/eib/userRam.h"
+#include "sblib/internal/bootloader_commands.h"
+
 
 class CallbackBcu;
 
@@ -125,14 +127,6 @@ protected:
 
     void discardReceivedTelegram() override;
     void send(unsigned char* telegram, unsigned short length) override;
-
-    enum class RestartType : uint8_t
-    {
-        None,
-        Basic,
-        Master,
-        MasterIntoBootloader
-    };
 
     void scheduleRestart(RestartType type);
 
