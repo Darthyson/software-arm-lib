@@ -21,7 +21,7 @@ set(TARGET_ARM ${PROJECT_NAME})
 set(TARGET_X86 ${PROJECT_NAME}_x86)
 set(TARGET_X64 ${PROJECT_NAME}_x64)
 
-set(SBLIB_LOGGING OFF CACHE BOOL "Whether to through the serial port")
+set(SBLIB_LOGGING OFF CACHE BOOL "Whether to log through the serial port")
 
 set(SBLIB_ARCHITECTURE "arm" CACHE STRING "Architecture to build for (arm, x86, x64).")
 set_property(CACHE SBLIB_ARCHITECTURE PROPERTY STRINGS arm x86 x64)
@@ -41,6 +41,7 @@ set(SBLIB_SERIAL_RX_PIN "OFF" CACHE STRING "Serial receive pin to use (PIOx_y)."
 set(SBLIB_SERIAL_TX_PIN "OFF" CACHE STRING "Serial transmit pin to use (PIOx_y).")
 option(SBLIB_ROUTER "Enable to build a ROUTER." OFF)
 option(SBLIB_BUSMONITOR "Enables bus monitoring: dump of all bus traffic incl. timing info (no sending, no processing of rx-telegrams)." OFF)
+
 
 # definitions for all targets and builds
 add_compile_definitions(
