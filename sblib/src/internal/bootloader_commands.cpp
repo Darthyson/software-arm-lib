@@ -6,7 +6,7 @@
 
 #include "sblib/internal/bootloader_commands.h"
 
-void prepareRestartIntoBootloader(const uint16_t physicalAddressToUse)
+void prepareRestartIntoBootloader([[maybe_unused]] const uint16_t physicalAddressToUse)
 {
 #ifndef IAP_EMULATION
     uint32_t* magicWord = BOOTLOADER_MAGIC_ADDRESS;
