@@ -9,6 +9,7 @@ set(CMAKE_CXX_STANDARD 17)
 set(CMAKE_CXX_STANDARD_REQUIRED ON)
 
 set(SBLPC_DIR ${CMAKE_SOURCE_DIR}/../../CMSIS_CORE_LPC11xx CACHE PATH "Where the CMSIS_CORE_LPC11xx lib is")
+set(SBLIB_CPU_EMULATION_DIR ${CMAKE_CURRENT_SOURCE_DIR}/../test/sblib/cpu-emu)
 # Toolchain file is set in CMakePresets.json or on command line
 if(CMAKE_CROSSCOMPILING AND NOT DEFINED CMAKE_TOOLCHAIN_FILE)
     message(FATAL_ERROR "Cross-compiling but CMAKE_TOOLCHAIN_FILE not set. Set in CMakePresets.json or configure with -DCMAKE_TOOLCHAIN_FILE=<path to>/arm-none-eabi_mcuxpresso.cmake")
@@ -147,7 +148,7 @@ if(CMAKE_CROSSCOMPILING)
 elseif(SBLIB_ARCHITECTURE STREQUAL "x86")
     message(NOTICE "Compiling ${PROJECT_NAME} for 32bit architecture.")
     add_library(${TARGET_X86} STATIC ${SBLIB_SRC}) # 32bit sblib
-    target_include_directories(${TARGET_X86} PUBLIC ${CMAKE_CURRENT_SOURCE_DIR}/../test/sblib/cpu-emu)
+    target_include_directories(${TARGET_X86} PUBLIC ${SBLIB_CPU_EMULATION_DIR})
     target_compile_definitions(${TARGET_X86} PRIVATE
         IAP_EMULATION
         $<$<CONFIG:Debug>:${DEBUG_DEFINES}>
@@ -161,7 +162,7 @@ elseif(SBLIB_ARCHITECTURE STREQUAL "x86")
 elseif(SBLIB_ARCHITECTURE STREQUAL "x64")
     message(NOTICE "Compiling ${PROJECT_NAME} for 64bit architecture.")
     add_library(${TARGET_X64} STATIC ${SBLIB_SRC}) # 64bit sblib
-    target_include_directories(${TARGET_X64} PUBLIC ${CMAKE_CURRENT_SOURCE_DIR}/../test/sblib/cpu-emu)
+    target_include_directories(${TARGET_X64} PUBLIC ${SBLIB_CPU_EMULATION_DIR})
     target_compile_definitions(${TARGET_X64} PRIVATE
         IAP_EMULATION
         $<$<CONFIG:Debug>:${DEBUG_DEFINES}>
