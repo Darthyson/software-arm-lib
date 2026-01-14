@@ -57,7 +57,9 @@ LoadState PropertiesBCU2::handleLoadStateMachine(const int objectIdx, const byte
     // userEeprom->loadState[OT_ADDR_TABLE]
     // userEeprom->loadState[OT_ASSOC_TABLE]
     // userEeprom->loadState[OT_APPLICATION]
-
+    if (len < PID_LOAD_STATE_CONTROL_LENGTH)
+        return LS_ERROR;
+        
     LoadState newLoadState = LS_ERROR;
 
     auto loadcontrol = LoadControl(data[0] & 7);

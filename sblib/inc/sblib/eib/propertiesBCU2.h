@@ -24,6 +24,12 @@
 // see KNX 6/6 Profiles, p. 94+
 // see KNX 3/7/3 Standardized Identifier Tables, p. 11+
 
+/** 
+ * Length of load state control data.
+ * @note KNX Spec 3.0 3/5/1 4.2.5 p.30
+ */
+constexpr uint8_t PID_LOAD_STATE_CONTROL_LENGTH = 10;
+
 #define DMP_LOADSTATE_MACHINE_WRITE_RCO_IO_LENGTH  10           //!> Data length of a valid DMP_LoadStateMachineWrite_RCo_IO telegram
 #define DMP_LOADSTATE_MACHINE_WRITE_RCO_MEM_LENGTH  11          //!> Data length of a valid DMP_LoadStateMachineWrite_RCo_Mem telegram (deprecated)
 
