@@ -194,9 +194,6 @@ void BcuDefault::setGroupTelRateLimit(const unsigned int limit)
         groupTelWaitMillis = DEFAULT_GROUP_TEL_WAIT_MILLIS;
 }
 
-/**
- * todo check for RX status and inform upper layer if needed
- */
 bool BcuDefault::processGroupAddressTelegram(const ApciCommand apciCmd, const uint16_t groupAddress, unsigned char* telegram, [[maybe_unused]] uint8_t telLength)
 {
     DB_COM_OBJ(
@@ -205,6 +202,7 @@ bool BcuDefault::processGroupAddressTelegram(const ApciCommand apciCmd, const ui
         serial.print(" ");
     );
 
+    ///\todo check for RX status and inform upper layer if needed
     comObjects->processGroupTelegram(groupAddress, apciCmd & APCI_GROUP_MASK, telegram);
     return (true);
 }
