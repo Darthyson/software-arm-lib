@@ -1,3 +1,7 @@
+#pragma GCC diagnostic push
+#pragma GCC diagnostic ignored "-Wmissing-field-initializers"
+#pragma GCC diagnostic ignored "-Wimplicit-fallthrough="
+
 /*
  * @brief LPC11xx I2C driver
  *
@@ -683,3 +687,5 @@ int Chip_I2C_IsStateChanged(I2C_ID_T id)
 }
 
 #endif /* !defined(CHIP_LPC110X) */
+
+#pragma GCC diagnostic pop

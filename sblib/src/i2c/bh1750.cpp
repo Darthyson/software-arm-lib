@@ -1,3 +1,5 @@
+#pragma GCC diagnostic push
+#pragma GCC diagnostic ignored "-Wmissing-field-initializers"
 /*
 
   This is a library for the BH1750FVI Digital Light Sensor breakout board.
@@ -98,7 +100,7 @@ bool BH1750::configure(Mode mode)
             {
                 // FIXME i wonder whether a timeout condition might be of use here
             }
-        // Wait a few moments to wake up
+            // Wait a few moments to wake up
             delay(10);
             break;
 
@@ -278,3 +280,5 @@ float BH1750::readLightLevel()
 
     return level;
 }
+
+#pragma GCC diagnostic pop
