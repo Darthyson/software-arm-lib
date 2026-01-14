@@ -7,9 +7,9 @@
 #ifndef SBLIB_KNX_CALLBACK_BCU_H_
 #define SBLIB_KNX_CALLBACK_BCU_H_
 
-#include <cstdint>
-#include <sblib/eib/callback_bus.h>
-#include <sblib/eib/bcu_base.h>
+#include "sblib/eib/callback_bus.h"
+#include "sblib/eib/bcu_base.h"
+
 
 class BcuBase;
 

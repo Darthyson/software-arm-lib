@@ -154,8 +154,5 @@ bool checkApciForMagicWord(byte eraseCode, byte channelNumber);
 ApciCommand apciCommand(unsigned char* telegram);
 void setApciCommand(unsigned char* telegram, ApciCommand newApciCommand, byte additionalData);
 
-uint8_t mainGroup(uint16_t address);
-uint8_t middleGroup(uint16_t address);
-uint8_t lowGroup(uint16_t address);
 
 #endif /* SBLIB_KNX_APCI_H_ */

@@ -128,9 +128,9 @@ BcuBase* setup()
     serial.println("Boot descriptor page        : 0x", bootDescriptorBlockPage(), HEX);
     serial.println("Boot descriptor size        : 0x", BOOT_BLOCK_DESC_SIZE, HEX);
     serial.print("physical address            : ");
-    serial.print(PHY_ADDR_AREA(physicalAddress));
-    serial.print(".", PHY_ADDR_LINE(physicalAddress));
-    serial.println(".", PHY_ADDR_DEVICE(physicalAddress));
+    serial.print(knxAddressToArea(physicalAddress));
+    serial.print(".", knxAddressToLine(physicalAddress));
+    serial.println(".", knxAddressToDevice(physicalAddress));
     serial.println();
 #endif
 

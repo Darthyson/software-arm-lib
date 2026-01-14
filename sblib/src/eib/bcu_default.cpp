@@ -8,10 +8,12 @@
  *  published by the Free Software Foundation.
  */
 
-#include <sblib/eib/knx_lpdu.h>
-#include <sblib/eib/bcu_default.h>
+#include "sblib/eib/bcu_default.h"
+#include "sblib/eib/knx_lpdu.h"
+#include "sblib/eib/bus.h"
+#include "sblib/bits.h"
 #include <cstring>
-#include <sblib/eib/bus.h>
+
 
 #if defined(INCLUDE_SERIAL)
 #   include <sblib/serial.h>

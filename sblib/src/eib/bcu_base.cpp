@@ -7,12 +7,14 @@
  *  published by the Free Software Foundation.
  */
 
-#include <sblib/eib/bcu_base.h>
-#include <sblib/interrupt.h>
-#include <sblib/digital_pin.h>
-#include <sblib/io_pin_names.h>
-#include <sblib/eib/knx_lpdu.h>
-#include <sblib/eib/bcu_const.h>
+#include "sblib/eib/bcu_base.h"
+#include "sblib/interrupt.h"
+#include "sblib/digital_pin.h"
+#include "sblib/io_pin_names.h"
+#include "sblib/eib/knx_lpdu.h"
+#include "sblib/eib/bcu_const.h"
+#include "sblib/bits.h"
+
 
 static Bus* timerBusObj;
 // The interrupt handler for the EIB bus access object

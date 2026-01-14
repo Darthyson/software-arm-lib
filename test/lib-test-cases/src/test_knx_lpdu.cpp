@@ -31,7 +31,6 @@ unsigned char testTelegram[testTelLength];
 
 TEST_CASE("LPDU processing","[SBLIB][KNX][LPDU]")
 {
-
     byte testByte;
     char msg[200];
 
@@ -154,6 +153,39 @@ TEST_CASE("LPDU initialization","[SBLIB][KNX][LPDU]")
     memset(testTelegram, 0, sizeof(testTelegram));
     initLpdu(testTelegram, PRIORITY_LOW, false, FRAME_STANDARD);
     REQUIRE(testTelegram[0] ==  0xbc);
+}
+
+TEST_CASE("KNX address parsing","[SBLIB][KNX][LPDU]")
+{
+    // Test default KNX address
+    REQUIRE(knxAddressToArea(PHY_ADDR_DEFAULT) == 15);
+    REQUIRE(knxAddressToLine(PHY_ADDR_DEFAULT) == 15);
+    REQUIRE(knxAddressToDevice(PHY_ADDR_DEFAULT) == 255);
+    
+    // Test broadcast address
+    REQUIRE(knxAddressToArea(PHY_ADDR_BROADCAST) == 0);
+    REQUIRE(knxAddressToLine(PHY_ADDR_BROADCAST) == 0);
+    REQUIRE(knxAddressToDevice(PHY_ADDR_BROADCAST) == 0);
+
+    // Test all possible values for Area, Line, and Device
+    // Area: 4 bits (0-15), Line: 4 bits (0-15), Device: 8 bits (0-255)
+    for (uint8_t area = 0; area <= 15; area++)
+    {
+        for (uint8_t line = 0; line <= 15; line++)
+        {
+            for (uint16_t device = 0; device <= 255; device++)
+            {
+                // Construct KNX physical address: Area.Line.Device
+                // Area: bits 12-15, Line: bits 8-11, Device: bits 0-7
+                uint16_t address = (area << 12) | (line << 8) | device;
+                
+                // Verify each function extracts the correct component
+                REQUIRE(knxAddressToArea(address) == area);
+                REQUIRE(knxAddressToLine(address) == line);
+                REQUIRE(knxAddressToDevice(address) == device);
+            }
+        }
+    }
 }
 
 

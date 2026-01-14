@@ -8,10 +8,12 @@
  *  published by the Free Software Foundation.
  */
 
+#include "sblib/eib/bcu2.h"
+#include "sblib/eib/knx_lpdu.h"
+#include "sblib/internal/iap.h"
+#include "sblib/bits.h"
 #include <cstring>
-#include <sblib/eib/bcu2.h>
-#include <sblib/eib/knx_lpdu.h>
-#include <sblib/internal/iap.h>
+
 
 void BCU2::setOwnAddress(const uint16_t addr)
 {
