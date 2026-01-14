@@ -17,7 +17,7 @@ void CallbackBcu::finishedSendingTelegram(const bool successful)
     bcu->finishedSendingTelegram(successful);
 }
 
-const uint8_t CallbackBcu::getLayerStatus() const
+uint8_t CallbackBcu::getLayerStatus() const
 {
     return bcu->layerStatus();
 }

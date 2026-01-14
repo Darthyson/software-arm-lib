@@ -20,7 +20,7 @@ public:
     CallbackBcu() = delete;
 
     void finishedSendingTelegram(bool successful) override;
-    const uint8_t getLayerStatus() const override;
+    [[nodiscard]] uint8_t getLayerStatus() const override;
 
 private:
     BcuBase* bcu;

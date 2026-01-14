@@ -14,7 +14,7 @@ class CallbackBus
 public:
     virtual ~CallbackBus() = default;
     virtual void finishedSendingTelegram(bool successful) = 0;
-    const virtual uint8_t getLayerStatus() const = 0;
+    [[nodiscard]] virtual uint8_t getLayerStatus() const = 0;
 };
 
 
