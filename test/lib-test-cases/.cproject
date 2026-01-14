@@ -69,7 +69,7 @@
 					<fileInfo id="cdt.managedbuild.config.gnu.exe.debug.706358466.61576633" name="tc_tlayer4_stepfunction.h" rcbsApplicability="disable" resourcePath="src/tc_tlayer4_stepfunction.h" toolsToInvoke=""/>
 					<fileInfo id="cdt.managedbuild.config.gnu.exe.debug.706358466.1721844663" name="tc_tlayer4_telegram.h" rcbsApplicability="disable" resourcePath="src/tc_tlayer4_telegram.h" toolsToInvoke=""/>
 					<sourceEntries>
-						<entry flags="VALUE_WORKSPACE_PATH|RESOLVED" kind="sourcePath" name=""/>
+						<entry excluding="cmake-build" flags="VALUE_WORKSPACE_PATH|RESOLVED" kind="sourcePath" name=""/>
 					</sourceEntries>
 				</configuration>
 			</storageModule>
@@ -143,7 +143,7 @@
 					<fileInfo id="cdt.managedbuild.config.gnu.exe.debug.706358466.1372501258.src/tc_tlayer4_stepfunction.h" name="tc_tlayer4_stepfunction.h" rcbsApplicability="disable" resourcePath="src/tc_tlayer4_stepfunction.h" toolsToInvoke=""/>
 					<fileInfo id="cdt.managedbuild.config.gnu.exe.debug.706358466.1372501258.src/tc_tlayer4_telegram.h" name="tc_tlayer4_telegram.h" rcbsApplicability="disable" resourcePath="src/tc_tlayer4_telegram.h" toolsToInvoke=""/>
 					<sourceEntries>
-						<entry flags="VALUE_WORKSPACE_PATH|RESOLVED" kind="sourcePath" name=""/>
+						<entry excluding="cmake-build" flags="VALUE_WORKSPACE_PATH|RESOLVED" kind="sourcePath" name=""/>
 					</sourceEntries>
 				</configuration>
 			</storageModule>
@@ -217,7 +217,7 @@
 					<fileInfo id="cdt.managedbuild.config.gnu.exe.debug.706358466.341568115.src/tc_tlayer4_stepfunction.h" name="tc_tlayer4_stepfunction.h" rcbsApplicability="disable" resourcePath="src/tc_tlayer4_stepfunction.h" toolsToInvoke=""/>
 					<fileInfo id="cdt.managedbuild.config.gnu.exe.debug.706358466.341568115.src/tc_tlayer4_telegram.h" name="tc_tlayer4_telegram.h" rcbsApplicability="disable" resourcePath="src/tc_tlayer4_telegram.h" toolsToInvoke=""/>
 					<sourceEntries>
-						<entry flags="VALUE_WORKSPACE_PATH|RESOLVED" kind="sourcePath" name=""/>
+						<entry excluding="cmake-build" flags="VALUE_WORKSPACE_PATH|RESOLVED" kind="sourcePath" name=""/>
 					</sourceEntries>
 				</configuration>
 			</storageModule>
