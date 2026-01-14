@@ -33,7 +33,6 @@ BcuBase::BcuBase(UserRam* userRam, AddrTables* addrTables) :
     userRam(userRam),
     addrTables(addrTables),
     comObjects(nullptr),
-    progButtonDebouncer(),
     restartType(RestartType::None),
     restartSendDisconnect(false),
     restartTimeout(Timeout())

@@ -80,9 +80,8 @@ protected:
     virtual uint32_t statusOffset() const = 0;
     virtual uint32_t runStateOffset() const = 0;
 
-    uint8_t _status = 0;   //!< some BCU 1 & 2 (e.g. out8-bcu1) override we real status @ 0x060 with comObjects in RAM, so we place it outside of the real RAM
-    uint8_t _runState = 0; //!< some BCU 1 & 2 (e.g. out8-bcu1) override we real runState @ 0x061 with comObjects in RAM, so we place it outside of the real RAM
-    // static const uint32_t _runStateOffset = 0;
+    uint8_t _status;   //!< some BCU 1 & 2 (e.g. out8-bcu1) override the real status @ 0x060 with comObjects in RAM, so we place it outside of the real RAM
+    uint8_t _runState; //!< some BCU 1 & 2 (e.g. out8-bcu1) override the real runState @ 0x061 with comObjects in RAM, so we place it outside of the real RAM
 
 private:
     uint32_t shadowSize;
