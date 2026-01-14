@@ -63,7 +63,8 @@ dump2(
 uint16_t disconnectCount = 0; //!< number of disconnects since system reset
 uint16_t repeatedT_ACKcount = 0;
 
-void dumpTelegramBytes(const bool tx, const unsigned char* telegram, const uint8_t length, const bool newLine = true)
+void dumpTelegramBytes([[maybe_unused]] const bool tx, [[maybe_unused]] const unsigned char* telegram,
+    [[maybe_unused]] const uint8_t length, [[maybe_unused]] const bool newLine = true)
 {
     dump2(
         serial.print(LOG_SEP);
@@ -92,7 +93,7 @@ void dumpTelegramBytes(const bool tx, const unsigned char* telegram, const uint8
     );
 }
 
-void dumpState(const TLayer4::TL4State dumpState)
+void dumpState([[maybe_unused]] const TLayer4::TL4State dumpState)
 {
     dump2(
         switch (dumpState)
@@ -134,7 +135,7 @@ void dumpTicks()
     );
 }
 
-void dumpSequenceNumber(unsigned char* telegram, const uint8_t tpci)
+void dumpSequenceNumber([[maybe_unused]] unsigned char* telegram, [[maybe_unused]] const uint8_t tpci)
 {
     dump2(
         serial.print("#");
@@ -150,8 +151,9 @@ void dumpSequenceNumber(unsigned char* telegram, const uint8_t tpci)
     );
 }
 
-void dumpTelegramInfo(unsigned char* telegram, const uint16_t address, const uint8_t tpci, const bool isTX,
-    const TLayer4::TL4State state)
+void dumpTelegramInfo([[maybe_unused]] unsigned char* telegram, [[maybe_unused]] const uint16_t address,
+    [[maybe_unused]] const uint8_t tpci, [[maybe_unused]] const bool isTX,
+    [[maybe_unused]] const TLayer4::TL4State state)
 {
     dump2(
         dumpTicks();
@@ -714,7 +716,8 @@ void TLayer4::processDirectTelegram(const ApciCommand apciCmd, unsigned char* te
     dumpTelegramBytes(false, telegram, telLength);
 }
 
-bool TLayer4::processApci(ApciCommand apciCmd, unsigned char* telegram, uint8_t telLength, uint8_t* sendBuffer)
+bool TLayer4::processApci([[maybe_unused]] ApciCommand apciCmd, [[maybe_unused]] unsigned char* telegram,
+     [[maybe_unused]] uint8_t telLength, [[maybe_unused]] uint8_t* sendBuffer)
 {
     dump2(
         serial.print("TLayer4::processApci");

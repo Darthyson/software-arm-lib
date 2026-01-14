@@ -12,7 +12,7 @@
 #include <sblib/eib/com_objects_debug.h>
 #include <sblib/eib/types.h>
 
-void printComObjectConfig(uint8_t config)
+void printComObjectConfig([[maybe_unused]]uint8_t config)
 {
     DB_COM_OBJ(
         // C - communicate
@@ -99,7 +99,7 @@ void printComObjectConfig(uint8_t config)
     );
 }
 
-void printComObjectType(uint8_t type)
+void printComObjectType([[maybe_unused]]uint8_t type)
 {
     DB_COM_OBJ(
         if ((type >= BIT_1) && (type <= BIT_7))
