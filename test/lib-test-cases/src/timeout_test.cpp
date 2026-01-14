@@ -16,7 +16,7 @@
 
 Timeout to;
 
-static void _check_expired_no(void * refState, unsigned int param)
+static void _check_expired_no([[maybe_unused]] void * refState, [[maybe_unused]] unsigned int param)
 {
 	REQUIRE(to.expired() == false);
 	REQUIRE(to.started() == true);
@@ -28,7 +28,7 @@ static void _start_to_20(void * refState, unsigned int param)
 	_check_expired_no(refState, param);
 }
 
-static void _check_expired_yes(void * refState, unsigned int param)
+static void _check_expired_yes([[maybe_unused]] void * refState, [[maybe_unused]] unsigned int param)
 {
 	REQUIRE(to.expired() == true);
 	REQUIRE(to.started() == false);
@@ -54,7 +54,7 @@ static Telegram testCaseTelegrams[] =
     {END, 0, 0, 0, nullptr, {0}},
 };
 
-static void tc_setup(Telegram* tel, uint16_t telCount)
+static void tc_setup([[maybe_unused]] Telegram* tel, [[maybe_unused]] uint16_t telCount)
 {
     REQUIRE(to.started() == false);
 }

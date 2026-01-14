@@ -67,7 +67,7 @@ static void connectedOpenWait(void * state, unsigned int param)
     VaS(state)->machineState = TLayer4::OPEN_WAIT;
 }
 
-static void disconnectClosed(void * state, unsigned int param)
+static void disconnectClosed(void * state, [[maybe_unused]] unsigned int param)
 {
     VaS(state)->machineState = TLayer4::CLOSED;
 }

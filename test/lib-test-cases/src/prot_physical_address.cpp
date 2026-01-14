@@ -47,22 +47,22 @@ static void tc_setupWithSerialNumber(Telegram* tel, uint16_t telCount)
    eeprom->serial()[5] = 0x98;
 }
 
-static void connect(void * state, unsigned int param)
+static void connect(void * state, [[maybe_unused]] unsigned int param)
 {
     VaS(state)->connected = true;
 }
 
-static void disconnect(void * state, unsigned int param)
+static void disconnect(void * state, [[maybe_unused]] unsigned int param)
 {
     VaS(state)->connected = false;
 }
 
-static void phy_addr_changed(void * state, unsigned int param)
+static void phy_addr_changed(void * state, [[maybe_unused]] unsigned int param)
 {
     VaS(state)->ownAddress = bcuUnderTest->userEeprom->addrTab()[0] << 8 | bcuUnderTest->userEeprom->addrTab()[1];
 }
 
-static void clearProgMode(void * state, unsigned int param)
+static void clearProgMode(void * state, [[maybe_unused]] unsigned int param)
 {
     if (bcuUnderTest->userRam->status() & BCU_STATUS_PROGRAMMING_MODE)
     {

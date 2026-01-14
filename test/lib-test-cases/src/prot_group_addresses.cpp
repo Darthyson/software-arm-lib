@@ -79,12 +79,12 @@ static void tc_setup(Telegram* tel, uint16_t telCount)
     telegramPreparation(bcuUnderTest, tel, telCount);
 }
 
-static void connect(void * state, unsigned int param)
+static void connect(void * state, [[maybe_unused]] unsigned int param)
 {
     VaS(state)->connected = true;
 }
 
-static void disconnect(void * state, unsigned int param)
+static void disconnect(void * state, [[maybe_unused]] unsigned int param)
 {
     VaS(state)->connected = false;
 }

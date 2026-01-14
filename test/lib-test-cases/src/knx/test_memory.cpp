@@ -18,7 +18,7 @@ struct TestRange
 };
 
 static std::vector<TestRange> testRanges = {
-    { 0,1 },               // lower limit
+    { 0, 1 },              // lower limit
     { 0, UINT32_MAX },     // upper limit size
     { UINT32_MAX - 1, 1 }, // upper limit address
     { 0x100, 256 },        // BCU 1

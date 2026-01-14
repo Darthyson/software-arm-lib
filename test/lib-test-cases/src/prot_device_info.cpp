@@ -24,12 +24,12 @@ static ProtocolTestState protoState[2];
 
 #define VaS(s) ((ProtocolTestState *) (s))
 
-static void connect(void * state, unsigned int param)
+static void connect(void * state, [[maybe_unused]] unsigned int param)
 {
     VaS(state)->connected = true;
 }
 
-static void disconnect(void * state, unsigned int param)
+static void disconnect(void * state, [[maybe_unused]] unsigned int param)
 {
     VaS(state)->connected = false;
 }

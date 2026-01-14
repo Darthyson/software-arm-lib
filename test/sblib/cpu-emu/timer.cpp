@@ -8,7 +8,7 @@
  *  published by the Free Software Foundation.
  */
 
-void delayMicroseconds(unsigned int usec)
+void delayMicroseconds([[maybe_unused]] unsigned int usec)
 {
 
 }

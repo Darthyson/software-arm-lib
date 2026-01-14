@@ -132,7 +132,7 @@ static void addChecksum(unsigned char * telegram, unsigned int telLength)
     telegram[telLength-1] = checksum;
 }
 
-static void _handleRx(BcuDefault* currentBcu, Test_Case * tc, Telegram * tel, unsigned int testStep)
+static void _handleRx(BcuDefault* currentBcu, [[maybe_unused]] Test_Case * tc, Telegram * tel, [[maybe_unused]] unsigned int testStep)
 {
     tel->length++; // add one byte for checksum
     addChecksum(tel->bytes, tel->length);
@@ -208,7 +208,7 @@ static void _handleTx(BcuDefault* currentBcu, Test_Case * tc, Telegram * tel, un
     REQUIRE(currentBcu->bus->sendCurTelegram == nullptr);
 }
 
-static void _handleCheckTx(BcuDefault* currentBcu, Test_Case * tc, Telegram * tel, unsigned int tn)
+static void _handleCheckTx(BcuDefault* currentBcu, [[maybe_unused]] Test_Case * tc, Telegram * tel, [[maybe_unused]] unsigned int tn)
 {
     unsigned int s = 0;
     if (currentBcu->bus->sendCurTelegram != nullptr) s++;
@@ -216,7 +216,7 @@ static void _handleCheckTx(BcuDefault* currentBcu, Test_Case * tc, Telegram * te
     REQUIRE(s == tel->variable);
 }
 
-static void _handleTime(BcuDefault* currentBcu, Test_Case * tc, Telegram * tel, unsigned int testStep)
+static void _handleTime(BcuDefault* currentBcu, [[maybe_unused]] Test_Case * tc, Telegram * tel, [[maybe_unused]] unsigned int testStep)
 {
 	unsigned int s = 0;
     if (currentBcu->bus->sendCurTelegram != nullptr) s++;
@@ -245,7 +245,7 @@ static void _handleTime(BcuDefault* currentBcu, Test_Case * tc, Telegram * tel, 
     setMillis(millis() + tel->length);
 }
 
-static unsigned int _handleBreak (Test_Case * tc, Telegram * tel, unsigned int testStep)
+static unsigned int _handleBreak ([[maybe_unused]] Test_Case * tc, Telegram * tel, unsigned int testStep)
 {
     if (tel->variable)
         return testStep;
@@ -260,7 +260,7 @@ static void _loop(BcuDefault* currentBcu, const int loopCount)
     }
 }
 
-static void _handleLoop (BcuDefault* currentBcu, Test_Case * tc, Telegram * tel, unsigned int testStep)
+static void _handleLoop (BcuDefault* currentBcu, [[maybe_unused]] Test_Case * tc, Telegram * tel, [[maybe_unused]] unsigned int testStep)
 {
     _loop(currentBcu, tel->loopCount);
 }
@@ -274,7 +274,7 @@ static void checkBcuInitialisation(BcuDefault* currentBcu, Test_Case* tc)
     REQUIRE(tc->version == currentBcu->userEeprom->version());
 }
 
-static void checkBcuEepromSettings(BcuDefault* currentBcu, Test_Case * tc)
+static void checkBcuEepromSettings(BcuDefault* currentBcu, [[maybe_unused]] Test_Case * tc)
 {
     switch (currentBcu->getMaskVersion())
     {
