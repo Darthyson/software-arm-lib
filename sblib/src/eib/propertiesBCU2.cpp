@@ -51,7 +51,7 @@ const PropertyDef* PropertiesBCU2::propertyDef(const int objectIdx, const Proper
     return findProperty(propertyId, propertiesTab()[objectIdx]);
 }
 
-LoadState PropertiesBCU2::handleLoadStateMachine(const int objectIdx, const byte* data, const int len)
+LoadState PropertiesBCU2::handleLoadStateMachine([[maybe_unused]] const int objectIdx, const byte* data, const int len)
 {
     // FIXME at least these "interface objects" should support their load states.
     // userEeprom->loadState[OT_ADDR_TABLE]
@@ -159,7 +159,7 @@ LoadState PropertiesBCU2::handleAllocAbsTaskSegment(const int objectIdx, const b
     return LS_LOADING;
 }
 
-LoadState PropertiesBCU2::handleAllocAbsDataSegment(const int objectIdx, const byte* payLoad, const int len)
+LoadState PropertiesBCU2::handleAllocAbsDataSegment([[maybe_unused]] const int objectIdx, const byte* payLoad, [[maybe_unused]] const int len)
 {
     /*
      *  from KNX Spec. 06 Profiles 4.2.9 RAM cleared
@@ -254,7 +254,8 @@ LoadState PropertiesBCU2::handleAllocAbsDataSegment(const int objectIdx, const b
     return newLoadState;
 }
 
-LoadState PropertiesBCU2::handleAllocAbsStackSeg(const int objectIdx, const byte* payLoad, const int len)
+LoadState PropertiesBCU2::handleAllocAbsStackSeg([[maybe_unused]] const int objectIdx,
+     [[maybe_unused]] const byte* payLoad, [[maybe_unused]] const int len)
 {
     // payLoad[0..1] : start address        (SSSS)
     // payLoad[2..3] : length               (EEEE-SSSS+1)
@@ -278,7 +279,7 @@ LoadState PropertiesBCU2::handleAllocAbsStackSeg(const int objectIdx, const byte
     return LS_LOADING;
 }
 
-LoadState PropertiesBCU2::handleTaskPtr(const int objectIdx, const byte* payLoad, const int len)
+LoadState PropertiesBCU2::handleTaskPtr([[maybe_unused]] const int objectIdx, [[maybe_unused]] const byte* payLoad, [[maybe_unused]] const int len)
 {
     // payLoad[0..1] : app init address           (IIII)
     // payLoad[2..3] : app save address           (SSSS)
@@ -298,7 +299,7 @@ LoadState PropertiesBCU2::handleTaskPtr(const int objectIdx, const byte* payLoad
     return LS_LOADING;
 }
 
-LoadState PropertiesBCU2::handleTaskCtrl1(const int objectIdx, const byte* payLoad, const int len)
+LoadState PropertiesBCU2::handleTaskCtrl1([[maybe_unused]] const int objectIdx, const byte* payLoad, [[maybe_unused]] const int len)
 {
     // payLoad[0..1] : interface object address
     // payLoad[2]    : nr. of interface objects
@@ -318,7 +319,7 @@ LoadState PropertiesBCU2::handleTaskCtrl1(const int objectIdx, const byte* payLo
     return LS_LOADING;
 }
 
-LoadState PropertiesBCU2::handleTaskCtrl2(const int objectIdx, const byte* payLoad, const int len)
+LoadState PropertiesBCU2::handleTaskCtrl2([[maybe_unused]] const int objectIdx, const byte* payLoad, [[maybe_unused]] const int len)
 {
     // payLoad[0..1] : app callbackAddr (CCCC)
     // payLoad[2..3] : CommObjPtr (OOOO)
@@ -359,7 +360,8 @@ LoadState PropertiesBCU2::handleTaskCtrl2(const int objectIdx, const byte* payLo
     return LS_LOADING;
 }
 
-LoadState PropertiesBCU2::handleRelativeAllocation(const int objectIdx, const byte* payLoad, const int len)
+LoadState PropertiesBCU2::handleRelativeAllocation([[maybe_unused]] const int objectIdx,
+     [[maybe_unused]] const byte* payLoad, [[maybe_unused]] const int len)
 {
     // payLoad[0..1] : data
     // payLoad[2..7] : fill octects (0x00)
@@ -375,7 +377,8 @@ LoadState PropertiesBCU2::handleRelativeAllocation(const int objectIdx, const by
     return LS_LOADING;
 }
 
-LoadState PropertiesBCU2::handleDataRelativeAllocation(const int objectIdx, const byte* payLoad, const int len)
+LoadState PropertiesBCU2::handleDataRelativeAllocation([[maybe_unused]] const int objectIdx,
+    [[maybe_unused]] const byte* payLoad, [[maybe_unused]] const int len)
 {
     // payLoad[0..3] : requested memory size
     // payLoad[4]    : mode (0x00)

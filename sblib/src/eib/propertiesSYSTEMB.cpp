@@ -30,7 +30,7 @@
  *
  * @return new LoadState of the interface object objectIdx
  */
-LoadState PropertiesSYSTEMB::handleAllocAbsDataSegment(const int objectIdx, const byte* payLoad, const int len)
+LoadState PropertiesSYSTEMB::handleAllocAbsDataSegment([[maybe_unused]] const int objectIdx, const byte* payLoad, [[maybe_unused]] const int len)
 {
     /*
      *  from KNX Spec. 06 Profiles 4.2.9 RAM cleared
@@ -133,7 +133,7 @@ LoadState PropertiesSYSTEMB::handleAllocAbsDataSegment(const int objectIdx, cons
  *
  * @return new LoadState of the interface object objectIdx
  */
-LoadState PropertiesSYSTEMB::handleDataRelativeAllocation(const int objectIdx, const byte* payLoad, const int len)
+LoadState PropertiesSYSTEMB::handleDataRelativeAllocation(const int objectIdx, const byte* payLoad, [[maybe_unused]] const int len)
 {
     // payLoad[0..3] : requested memory size
     // payLoad[4]    : mode (0x00)

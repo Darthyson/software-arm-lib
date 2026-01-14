@@ -30,7 +30,7 @@
  *
  * @return new LoadState of the interface object objectIdx
  */
-LoadState PropertiesMASK0701::handleAllocAbsDataSegment(const int objectIdx, const byte* payLoad, const int len)
+LoadState PropertiesMASK0701::handleAllocAbsDataSegment([[maybe_unused]] const int objectIdx, const byte* payLoad, [[maybe_unused]] const int len)
 {
     /*
      *  from KNX Spec. 06 Profiles 4.2.9 RAM cleared
