@@ -20,6 +20,10 @@
 #   include <sblib/serial.h>
 #endif
 
+// Documentation:
+// see KNX 6/6 Profiles, p. 94+
+// see KNX 3/7/3 Standardized Identifier Tables, p. 11+
+
 #define DMP_LOADSTATE_MACHINE_WRITE_RCO_IO_LENGTH  10           //!> Data length of a valid DMP_LoadStateMachineWrite_RCo_IO telegram
 #define DMP_LOADSTATE_MACHINE_WRITE_RCO_MEM_LENGTH  11          //!> Data length of a valid DMP_LoadStateMachineWrite_RCo_Mem telegram (deprecated)
 
@@ -235,24 +239,149 @@ public:
      */
     virtual const PropertyDef* findProperty(PropertyID propertyId, const PropertyDef* table);
 
+    /**
+     * Get a property definition of an interface object.
+     *
+     * @param objectIdx - the index of the interface object.
+     * @param propertyId - the property ID.
+     *
+     * @return The property definition, or 0 if not found.
+     */
     virtual const PropertyDef* propertyDef(int objectIdx, PropertyID propertyId);
 
+    /**
+     * handles load controls for a interface object (not really implemented)
+     *
+     * DM_LoadStateMachineWrite KNX Spec. 3/5/2 3.28 p.108
+     * also See KNX 6/6 Profiles, p. 101 for load states
+     * See BCU2 help System Architecture > Load Procedure
+     *
+     * @param objectIdx - interface object index (ObjectType)
+     * @param data - the telegram data bytes
+     * @param len - the length of the data
+     * @return the new LoadState of the interface object
+     */
     virtual LoadState handleLoadStateMachine(const int objectIdx, const byte* data, const int len);
 
+    /**
+     * handles Additional Load Control: LoadEvent: AllocAbsTaskSeg (segment type 2) of a
+     *
+     * DMP_LoadStateMachineWrite_RCo_Mem (APCI_MEMORY_WRITE_PDU) See KNX Spec. 3/5/2 3.28.2 p.109  (deprecated) or
+     * DMP_LoadStateMachineWrite_RCo_IO (ApciPropertyValueWrite) See KNX Spec. 3/5/2 3.28.3.4 p.115
+     *
+     * @param objectIdx - interface object index (ObjectType)
+     * @param payLoad - the telegram data bytes
+     * @param len - the length of the payLoad
+     *
+     * @return new LoadState of the interface object objectIdx
+     */
     virtual LoadState handleAllocAbsTaskSegment(const int objectIdx, const byte* payLoad, const int len);
 
+    /**
+     * NOT IMPLEMENTED!
+     * should handle Additional Load Control: LoadEvent: AllocAbsDataSeg (segment type 0) <LdCtrlAbsSegment>
+     *
+     * DMP_LoadStateMachineWrite_RCo_Mem (APCI_MEMORY_WRITE_PDU) See KNX Spec. 3/5/2 3.28.2 p.109  (deprecated) or
+     * DMP_LoadStateMachineWrite_RCo_IO (ApciPropertyValueWrite) See KNX Spec. 3/5/2 3.28.3.4 p.114
+     *
+     * @param objectIdx - interface object index (ObjectType)
+     * @param payLoad - the telegram data bytes
+     * @param len - the length of the payLoad
+     *
+     * @return new LoadState of the interface object objectIdx
+     */
     virtual LoadState handleAllocAbsDataSegment(const int objectIdx, const byte* payLoad, const int len);
 
+    /**
+     * NOT IMPLEMENTED!
+     * should handle Additional Load Control: LoadEvent: AllocAbsStackSeg (segment type 1) of a
+     *
+     * DMP_LoadStateMachineWrite_RCo_Mem (APCI_MEMORY_WRITE_PDU) See KNX Spec. 3/5/2 3.28.2 p.109  (deprecated) or
+     * DMP_LoadStateMachineWrite_RCo_IO (ApciPropertyValueWrite) See KNX Spec. 3/5/2 3.28.3.4 p.115
+     *
+     * @param objectIdx - interface object index (ObjectType)
+     * @param payLoad - the telegram data bytes
+     * @param len - the length of the payLoad
+     *
+     * @return new LoadState of the interface object objectIdx
+     */
     virtual LoadState handleAllocAbsStackSeg(const int objectIdx, const byte* payLoad, const int len);
 
+    /**
+     * NOT IMPLEMENTED!
+     * should handle Additional Load Control: LoadEvent: TaskPtr (segment type 3)
+     *
+     * DMP_LoadStateMachineWrite_RCo_Mem (APCI_MEMORY_WRITE_PDU) See KNX Spec. 3/5/2 3.28.2 p.109  (deprecated) or
+     * DMP_LoadStateMachineWrite_RCo_IO (ApciPropertyValueWrite) See KNX Spec. 3/5/2 3.28.3.4 p.116
+     *
+     * @param objectIdx - interface object index (ObjectType)
+     * @param payLoad - the telegram data bytes
+     * @param len - the length of the payLoad
+     *
+     * @return new LoadState of the interface object objectIdx
+     */
     virtual LoadState handleTaskPtr(const int objectIdx, const byte* payLoad, const int len);
 
+    /**
+     * NOT IMPLEMENTED!
+     * for more information https://www.auto.tuwien.ac.at/~mkoegler/eib/doc/Bcu2Help_v12.chm
+     * "System Architecture->Interface Objects->User Interface Objects->BCU2 User EIB Objects"
+     *
+     * should handle Additional Load Control: LoadEvent: TaskCtrl1 (segment type 4)
+     * DMP_LoadStateMachineWrite_RCo_Mem (APCI_MEMORY_WRITE_PDU) See KNX Spec. 3/5/2 3.28.2 p.109  (deprecated) or
+     * DMP_LoadStateMachineWrite_RCo_IO (ApciPropertyValueWrite) See KNX Spec. 3/5/2 3.28.3.4 p.116
+     *
+     * @param objectIdx - interface object index (ObjectType)
+     * @param payLoad - the telegram data bytes
+     * @param len - the length of the payLoad
+     *
+     * @return new LoadState of the interface object objectIdx
+     */
     virtual LoadState handleTaskCtrl1(const int objectIdx, const byte* payLoad, const int len);
 
+    /**
+     * ONLY PARTLY IMPLEMENTED!
+     * should handle Additional Load Control: LoadEvent: TaskCtrl2 (segment type 5)
+     *
+     * DMP_LoadStateMachineWrite_RCo_Mem (APCI_MEMORY_WRITE_PDU) See KNX Spec. 3/5/2 3.28.2 p.109  (deprecated) or
+     * DMP_LoadStateMachineWrite_RCo_IO (ApciPropertyValueWrite) See KNX Spec. 3/5/2 3.28.3.4 p.116
+     *
+     * @param objectIdx - interface object index (ObjectType)
+     * @param payLoad - the telegram data bytes
+     * @param len - the length of the payLoad
+     *
+     * @return new LoadState of the interface object objectIdx
+     */
     virtual LoadState handleTaskCtrl2(const int objectIdx, const byte* payLoad, const int len);
 
+    /**
+     * NOT IMPLEMENTED!
+     * should handle Additional Load Control: LoadEvent: RelativeAllocation (segment type 0x0A)
+     *
+     * DMP_LoadStateMachineWrite_RCo_Mem (APCI_MEMORY_WRITE_PDU) See KNX Spec. 3/5/2 3.28.2 p.109  (deprecated) or
+     * DMP_LoadStateMachineWrite_RCo_IO (ApciPropertyValueWrite) See KNX Spec. 3/5/2 3.28.3.4 p.116
+     *
+     * @param objectIdx - interface object index (ObjectType)
+     * @param payLoad - the telegram data bytes
+     * @param len - the length of the payLoad
+     *
+     * @return new LoadState of the interface object objectIdx
+     */
     virtual LoadState handleRelativeAllocation(const int objectIdx, const byte* payLoad, const int len);
 
+    /**
+     * PARTIALLY IMPLEMENTED for System_B !
+     * should handle Additional Load Control: LoadEvent: DataRelativeAllocation (segment type 0x0B)
+     *
+     * DMP_LoadStateMachineWrite_RCo_Mem (APCI_MEMORY_WRITE_PDU) See KNX Spec. 3/5/2 3.28.2 p.109  (deprecated) or
+     * DMP_LoadStateMachineWrite_RCo_IO (ApciPropertyValueWrite) See KNX Spec. 3/5/2 3.28.3.4 p.116
+     *
+     * @param objectIdx - interface object index (ObjectType)
+     * @param payLoad - the telegram data bytes
+     * @param len - the length of the payLoad
+     *
+     * @return new LoadState of the interface object objectIdx
+     */
     virtual LoadState handleDataRelativeAllocation(const int objectIdx, const byte* payLoad, const int len);
 
     virtual bool propertyValueReadTelegram(int objectIdx, PropertyID propertyId, int count, int start, uint8_t* sendBuffer);

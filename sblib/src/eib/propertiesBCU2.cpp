@@ -20,10 +20,6 @@
 #define HIGH_RAM_START 0x0900
 #define HIGH_RAM_LENGTH 0xBC
 
-// Documentation:
-// see KNX 6/6 Profiles, p. 94+
-// see KNX 3/7/3 Standardized Identifier Tables, p. 11+
-
 const PropertyDef* PropertiesBCU2::findProperty(const PropertyID propertyId, const PropertyDef* table)
 {
     const PropertyDef* defFound = nullptr;
@@ -45,14 +41,6 @@ const PropertyDef* PropertiesBCU2::findProperty(const PropertyID propertyId, con
     return defFound;
 }
 
-/**
- * Get a property definition of an interface object.
- *
- * @param objectIdx - the index of the interface object.
- * @param propertyId - the property ID.
- *
- * @return The property definition, or 0 if not found.
- */
 const PropertyDef* PropertiesBCU2::propertyDef(const int objectIdx, const PropertyID propertyId)
 {
     if (objectIdx >= NUM_PROP_OBJECTS)
@@ -63,18 +51,6 @@ const PropertyDef* PropertiesBCU2::propertyDef(const int objectIdx, const Proper
     return findProperty(propertyId, propertiesTab()[objectIdx]);
 }
 
-/**
- * handles load controls for a interface object (not really implemented)
- *
- * DM_LoadStateMachineWrite KNX Spec. 3/5/2 3.28 p.108
- * also See KNX 6/6 Profiles, p. 101 for load states
- * See BCU2 help System Architecture > Load Procedure
- *
- * @param objectIdx - interface object index (ObjectType)
- * @param data - the telegram data bytes
- * @param len - the length of the data
- * @return the new LoadState of the interface object
- */
 LoadState PropertiesBCU2::handleLoadStateMachine(const int objectIdx, const byte* data, const int len)
 {
     // FIXME at least these "interface objects" should support their load states.
@@ -120,18 +96,6 @@ LoadState PropertiesBCU2::handleLoadStateMachine(const int objectIdx, const byte
     return newLoadState;
 }
 
-/**
- * handles Additional Load Control: LoadEvent: AllocAbsTaskSeg (segment type 2) of a
- *
- * DMP_LoadStateMachineWrite_RCo_Mem (APCI_MEMORY_WRITE_PDU) See KNX Spec. 3/5/2 3.28.2 p.109  (deprecated) or
- * DMP_LoadStateMachineWrite_RCo_IO (ApciPropertyValueWrite) See KNX Spec. 3/5/2 3.28.3.4 p.115
- *
- * @param objectIdx - interface object index (ObjectType)
- * @param payLoad - the telegram data bytes
- * @param len - the length of the payLoad
- *
- * @return new LoadState of the interface object objectIdx
- */
 LoadState PropertiesBCU2::handleAllocAbsTaskSegment(const int objectIdx, const byte* payLoad, const int len)
 {
     // payLoad[0..1] : start address        (SSSS)
@@ -193,19 +157,6 @@ LoadState PropertiesBCU2::handleAllocAbsTaskSegment(const int objectIdx, const b
     return LS_LOADING;
 }
 
-/**
- * NOT IMPLEMENTED!
- * should handle Additional Load Control: LoadEvent: AllocAbsDataSeg (segment type 0) <LdCtrlAbsSegment>
- *
- * DMP_LoadStateMachineWrite_RCo_Mem (APCI_MEMORY_WRITE_PDU) See KNX Spec. 3/5/2 3.28.2 p.109  (deprecated) or
- * DMP_LoadStateMachineWrite_RCo_IO (ApciPropertyValueWrite) See KNX Spec. 3/5/2 3.28.3.4 p.114
- *
- * @param objectIdx - interface object index (ObjectType)
- * @param payLoad - the telegram data bytes
- * @param len - the length of the payLoad
- *
- * @return new LoadState of the interface object objectIdx
- */
 LoadState PropertiesBCU2::handleAllocAbsDataSegment(const int objectIdx, const byte* payLoad, const int len)
 {
     /*
@@ -301,19 +252,6 @@ LoadState PropertiesBCU2::handleAllocAbsDataSegment(const int objectIdx, const b
     return newLoadState;
 }
 
-/**
- * NOT IMPLEMENTED!
- * should handle Additional Load Control: LoadEvent: AllocAbsStackSeg (segment type 1) of a
- *
- * DMP_LoadStateMachineWrite_RCo_Mem (APCI_MEMORY_WRITE_PDU) See KNX Spec. 3/5/2 3.28.2 p.109  (deprecated) or
- * DMP_LoadStateMachineWrite_RCo_IO (ApciPropertyValueWrite) See KNX Spec. 3/5/2 3.28.3.4 p.115
- *
- * @param objectIdx - interface object index (ObjectType)
- * @param payLoad - the telegram data bytes
- * @param len - the length of the payLoad
- *
- * @return new LoadState of the interface object objectIdx
- */
 LoadState PropertiesBCU2::handleAllocAbsStackSeg(const int objectIdx, const byte* payLoad, const int len)
 {
     // payLoad[0..1] : start address        (SSSS)
@@ -338,19 +276,6 @@ LoadState PropertiesBCU2::handleAllocAbsStackSeg(const int objectIdx, const byte
     return LS_LOADING;
 }
 
-/**
- * NOT IMPLEMENTED!
- * should handle Additional Load Control: LoadEvent: TaskPtr (segment type 3)
- *
- * DMP_LoadStateMachineWrite_RCo_Mem (APCI_MEMORY_WRITE_PDU) See KNX Spec. 3/5/2 3.28.2 p.109  (deprecated) or
- * DMP_LoadStateMachineWrite_RCo_IO (ApciPropertyValueWrite) See KNX Spec. 3/5/2 3.28.3.4 p.116
- *
- * @param objectIdx - interface object index (ObjectType)
- * @param payLoad - the telegram data bytes
- * @param len - the length of the payLoad
- *
- * @return new LoadState of the interface object objectIdx
- */
 LoadState PropertiesBCU2::handleTaskPtr(const int objectIdx, const byte* payLoad, const int len)
 {
     // payLoad[0..1] : app init address           (IIII)
@@ -371,21 +296,6 @@ LoadState PropertiesBCU2::handleTaskPtr(const int objectIdx, const byte* payLoad
     return LS_LOADING;
 }
 
-/**
- * NOT IMPLEMENTED!
- * for more information https://www.auto.tuwien.ac.at/~mkoegler/eib/doc/Bcu2Help_v12.chm
- * "System Architecture->Interface Objects->User Interface Objects->BCU2 User EIB Objects"
- *
- * should handle Additional Load Control: LoadEvent: TaskCtrl1 (segment type 4)
- * DMP_LoadStateMachineWrite_RCo_Mem (APCI_MEMORY_WRITE_PDU) See KNX Spec. 3/5/2 3.28.2 p.109  (deprecated) or
- * DMP_LoadStateMachineWrite_RCo_IO (ApciPropertyValueWrite) See KNX Spec. 3/5/2 3.28.3.4 p.116
- *
- * @param objectIdx - interface object index (ObjectType)
- * @param payLoad - the telegram data bytes
- * @param len - the length of the payLoad
- *
- * @return new LoadState of the interface object objectIdx
- */
 LoadState PropertiesBCU2::handleTaskCtrl1(const int objectIdx, const byte* payLoad, const int len)
 {
     // payLoad[0..1] : interface object address
@@ -406,19 +316,6 @@ LoadState PropertiesBCU2::handleTaskCtrl1(const int objectIdx, const byte* payLo
     return LS_LOADING;
 }
 
-/**
- * ONLY PARTLY IMPLEMENTED!
- * should handle Additional Load Control: LoadEvent: TaskCtrl2 (segment type 5)
- *
- * DMP_LoadStateMachineWrite_RCo_Mem (APCI_MEMORY_WRITE_PDU) See KNX Spec. 3/5/2 3.28.2 p.109  (deprecated) or
- * DMP_LoadStateMachineWrite_RCo_IO (ApciPropertyValueWrite) See KNX Spec. 3/5/2 3.28.3.4 p.116
- *
- * @param objectIdx - interface object index (ObjectType)
- * @param payLoad - the telegram data bytes
- * @param len - the length of the payLoad
- *
- * @return new LoadState of the interface object objectIdx
- */
 LoadState PropertiesBCU2::handleTaskCtrl2(const int objectIdx, const byte* payLoad, const int len)
 {
     // payLoad[0..1] : app callbackAddr (CCCC)
@@ -460,19 +357,6 @@ LoadState PropertiesBCU2::handleTaskCtrl2(const int objectIdx, const byte* payLo
     return LS_LOADING;
 }
 
-/**
- * NOT IMPLEMENTED!
- * should handle Additional Load Control: LoadEvent: RelativeAllocation (segment type 0x0A)
- *
- * DMP_LoadStateMachineWrite_RCo_Mem (APCI_MEMORY_WRITE_PDU) See KNX Spec. 3/5/2 3.28.2 p.109  (deprecated) or
- * DMP_LoadStateMachineWrite_RCo_IO (ApciPropertyValueWrite) See KNX Spec. 3/5/2 3.28.3.4 p.116
- *
- * @param objectIdx - interface object index (ObjectType)
- * @param payLoad - the telegram data bytes
- * @param len - the length of the payLoad
- *
- * @return new LoadState of the interface object objectIdx
- */
 LoadState PropertiesBCU2::handleRelativeAllocation(const int objectIdx, const byte* payLoad, const int len)
 {
     // payLoad[0..1] : data
@@ -489,19 +373,6 @@ LoadState PropertiesBCU2::handleRelativeAllocation(const int objectIdx, const by
     return LS_LOADING;
 }
 
-/**
- * PARTIALLY IMPLEMENTED for System_B !
- * should handle Additional Load Control: LoadEvent: DataRelativeAllocation (segment type 0x0B)
- *
- * DMP_LoadStateMachineWrite_RCo_Mem (APCI_MEMORY_WRITE_PDU) See KNX Spec. 3/5/2 3.28.2 p.109  (deprecated) or
- * DMP_LoadStateMachineWrite_RCo_IO (ApciPropertyValueWrite) See KNX Spec. 3/5/2 3.28.3.4 p.116
- *
- * @param objectIdx - interface object index (ObjectType)
- * @param payLoad - the telegram data bytes
- * @param len - the length of the payLoad
- *
- * @return new LoadState of the interface object objectIdx
- */
 LoadState PropertiesBCU2::handleDataRelativeAllocation(const int objectIdx, const byte* payLoad, const int len)
 {
     // payLoad[0..3] : requested memory size
