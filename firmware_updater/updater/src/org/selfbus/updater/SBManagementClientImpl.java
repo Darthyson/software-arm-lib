@@ -64,10 +64,10 @@ public class SBManagementClientImpl extends ManagementClientImpl {
                 return;
             }
 
-            final int ctrl = tpdu & 0xc0; // is it connection oriented? (1100 0000)
+            final int ctrl = tpdu & 0xc0; // is it connection-oriented? (1100 0000)
             if (ctrl != 0) {
                 final int conControl = tpdu & 0xc3; // clear sequence number bits (1100 0011)
-                final int sequenceNumber = (tpdu & 0x3c) >> 2; // get sequence number and shift right by 2 (0011 1100)
+                final int sequenceNumber = (tpdu & 0x3c) >> 2; // get the sequence number and shift right by 2 (0011 1100)
                 switch (conControl) {
                     case 0xC2:
                         linkLogger.debug("indication {} -> {} T_Ack #{}", cemilData.getSource(), cemilData.getDestination(), sequenceNumber);
@@ -190,19 +190,19 @@ public class SBManagementClientImpl extends ManagementClientImpl {
         try {
             response = this.sendWait(dst, getPriority(), send, apciResponse, 2, MAX_ASDU_LENGTH, responseTimeout());
         }
-        // We "try catch" here to catch at least once a KNXAckTimeoutException.
-        // It´s thrown on missing/faulty ack at linklayer level, but we never have seen it.
+        // We "try catch" here to catch a KNXAckTimeoutException at least once.
+        // It's thrown on missing/faulty ack at link layer level, but we never have seen it.
         // Check public void send(final CEMI frame, final BlockingMode mode) in ConnectionBase.java
         catch (KNXAckTimeoutException e) {
             logger.error("Unexpected: never seen before {}", e);
-            // Delete logger.error, if you don´t get  in line above IDEA warning "Fewer arguments provided (0) than placeholders specified (1)"
+            // Delete logger.error if you don't get in line above IDEA warning "Fewer arguments provided (0) than placeholders specified (1)"
             logger.error("", e);
             throw e;
         }
         catch (KNXException e) {
             if (e.getCause() instanceof KNXAckTimeoutException) {
                 logger.error("Unexpected: never seen before e.getCause() {}", e.getCause());
-                // Delete logger.error, if you don´t get  in line above IDEA warning "Fewer arguments provided (0) than placeholders specified (1)"
+                // Delete logger.error if you don't get in line above IDEA warning "Fewer arguments provided (0) than placeholders specified (1)"
                 logger.error("", e.getCause());
             }
             throw e;
