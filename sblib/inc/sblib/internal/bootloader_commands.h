@@ -33,14 +33,6 @@ constexpr RestartPDUMasterReset BOOTLOADER_MAGIC_ERASE = T_MASTERRESET_FACTORY_W
  */
 constexpr uint8_t BOOTLOADER_MAGIC_CHANNEL = 255;
 
-enum class RestartType : uint8_t
-{
-    None,
-    Basic,
-    Master,
-    MasterIntoBootloader,
-    IndividualAddressChanged
-};
 
 /**
  * Set magicWord to start in bootloader mode after reset.

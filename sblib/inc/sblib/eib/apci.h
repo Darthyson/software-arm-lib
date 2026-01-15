@@ -131,6 +131,17 @@ enum RestartPDUErrorcode
     T_RESTART_INVALID_CHANNEL_NUMBER = 0x03
 };
 
+/**
+ * Types of restart for Restart Type 1 PDU
+ */
+enum class RestartType : uint8_t
+{
+    None,
+    Basic,
+    Master,
+    MasterIntoBootloader
+};
+
 ApciCommand apciCommand(unsigned char* telegram);
 void setApciCommand(unsigned char* telegram, ApciCommand newApciCommand, byte additionalData);
 
