@@ -60,6 +60,30 @@
             "cacheVariables": {
                 "SBLIB_ARCHITECTURE": "x64"
             }
+        },
+        {
+            "name": "x86_logging",
+            "displayName": "x86 logging Target",
+            "description": "Most of logging enabled",
+            "hidden": false,
+            "inherits": [
+                "x86"
+            ],
+            "cacheVariables": {
+                "SBLIB_LOGGING": "OFF",
+                "SBLIB_DEBUG_BUS": "ON",
+                "SBLIB_DEBUG_BUS_BITLEVEL": "ON",
+                "SBLIB_INCLUDE_SERIAL": "ON",
+                "SBLIB_SERIAL_SPEED": "115200",
+                "SBLIB_DUMP_TELEGRAMS": "ON",
+                "SBLIB_PIO_FOR_TEL_END_IND": "PIO1_8",
+                "SBLIB_DUMP_COM_OBJ": "ON",
+                "SBLIB_DUMP_MEM_OPS": "ON",
+                "SBLIB_DUMP_PROPERTIES": "ON",
+                "SBLIB_DUMP_TL4": "ON",
+                "SBLIB_ROUTER": "OFF",
+                "SBLIB_BUSMONITOR": "OFF"
+            }
         }
     ],
     "buildPresets": [
@@ -134,6 +158,18 @@
             "targets": [
                 "sblib_x64"
             ]
+        },
+        {
+            "name": "debug-x86-logging",
+            "configurePreset": "x86_logging",
+            "configuration": "Debug",
+            "displayName": "x86 Target Debug Build",
+            "description": "Build x86 target with logging in Debug configuration",
+            "hidden": false,
+            "verbose": true,
+            "targets": [
+                "sblib_x86"
+            ]
         }
     ],
     "workflowPresets": [
@@ -191,6 +227,21 @@
                 {
                     "type": "build",
                     "name": "debug-x86"
+                }
+            ]
+        },
+        {
+            "name": "build-x86-logging",
+            "description": "Build x86 logging target in Debug configuration",
+            "displayName": "Build x86 (logging config)",
+            "steps": [
+                {
+                    "type": "configure",
+                    "name": "x86_logging"
+                },
+                {
+                    "type": "build",
+                    "name": "debug-x86-logging"
                 }
             ]
         }
