@@ -34,14 +34,14 @@
  ******************************************************************************/
 
 #if defined (__LPC11XX__)
-// #   define SERIAL_RX_PIN PIO1_6 //!< @ swd/jtag connector
-// #   define SERIAL_TX_PIN PIO1_7 //!< @ swd/jtag connector
+//#    define SERIAL_RX_PIN PIO1_6 //!< @ swd/jtag connector
+//#    define SERIAL_TX_PIN PIO1_7 //!< @ swd/jtag connector
 
-// #   define SERIAL_RX_PIN PIO3_1 //!< on a TS_ARM Controller
-// #   define SERIAL_TX_PIN PIO3_0 //!< on a TS_ARM Controller
+//#    define SERIAL_RX_PIN PIO3_1 //!< on a TS_ARM Controller
+//#    define SERIAL_TX_PIN PIO3_0 //!< on a TS_ARM Controller
 
-#   define SERIAL_RX_PIN PIO2_7 //!< on a 4TE-ARM Controller pin 1 on connector SV3 (ID_SEL)
-#   define SERIAL_TX_PIN PIO2_8 //!< on a 4TE-ARM Controller pin 2 on connector SV3 (ID_SEL)
+#    define SERIAL_RX_PIN PIO2_7 //!< on a 4TE-ARM Controller pin 1 on connector SV3 (ID_SEL)
+#    define SERIAL_TX_PIN PIO2_8 //!< on a 4TE-ARM Controller pin 2 on connector SV3 (ID_SEL)
 #endif
 
 /** @def SERIAL_SPEED baudrate e.g. 115200, 230400, 576000 serial port should run for debugging */
@@ -110,49 +110,51 @@
 
 // remove any debugging and dumping stuff from release versions
 #ifndef DEBUG
-#   undef DEBUG_BUS
-#   undef DEBUG_BUS_BITLEVEL
-#   undef BUSMONITOR
-#   undef DUMP_TELEGRAMS
-#   undef PIO_FOR_TEL_END_IND
-#   undef DUMP_COM_OBJ
-#   undef DUMP_MEM_OPS
-#   undef DUMP_PROPERTIES
-#   undef DUMP_TL4
-#   undef LOGGING
-#   undef BH1750_DEBUG
-#   undef DEBUG_ACTIVE
-#   undef INCLUDE_SERIAL
+#    undef DEBUG_BUS
+#    undef DEBUG_BUS_BITLEVEL
+#    undef BUSMONITOR
+#    undef DUMP_TELEGRAMS
+#    undef PIO_FOR_TEL_END_IND
+#    undef DUMP_COM_OBJ
+#    undef DUMP_MEM_OPS
+#    undef DUMP_PROPERTIES
+#    undef DUMP_TL4
+#    undef LOGGING
+#    undef BH1750_DEBUG
+#    undef DEBUG_ACTIVE
+#    undef INCLUDE_SERIAL
 #endif
 
 // make sure if DEBUG_BUS_BITLEVEL is defined also DEBUG_BUS is defined
 #if defined(DEBUG_BUS_BITLEVEL) && !defined(DEBUG_BUS)
-#  define DEBUG_BUS
-#  warning "DEBUG_BUS_BITLEVEL, can only be used together with DEBUG_BUS"
+#    define DEBUG_BUS
+#    warning "DEBUG_BUS_BITLEVEL, can only be used together with DEBUG_BUS"
 #endif
 
 // make sure if BUSMONITOR is defined also DUMP_TELEGRAMS is defined
 #if defined(BUSMONITOR) && !defined(DUMP_TELEGRAMS)
-#  define DUMP_TELEGRAMS
-#  warning "BUSMONITOR can only be used together with DUMP_TELEGRAMS"
+#    define DUMP_TELEGRAMS
+#    warning "BUSMONITOR can only be used together with DUMP_TELEGRAMS"
 #endif
 
 //to avoid trace buffer overflow DUMP_TELEGRAMS should not be used in parallel with DEBUG_BUS or DEBUG_BUS_BITLEVEL
 #if defined(DUMP_TELEGRAMS) && (defined(DEBUG_BUS) || defined(DEBUG_BUS_BITLEVEL))
-#   warning "DUMP_TELEGRAMS should not be used in parallel with DEBUG_BUS or DEBUG_BUS_BITLEVEL"
+#    if !defined(IAP_EMULATION) // IAP_EMULATION is used for unit tests where multiple debug options are ok
+#        warning "DUMP_TELEGRAMS should not be used in parallel with DEBUG_BUS or DEBUG_BUS_BITLEVEL"
+#    endif
 #endif
 
 // list here all defines which need the serial port
 #if defined(DEBUG_BUS) || defined(DEBUG_BUS_BITLEVEL) || defined(DUMP_TELEGRAMS) || defined(DUMP_COM_OBJ) || \
     defined(DUMP_MEM_OPS) || defined(DUMP_PROPERTIES) || defined(DUMP_TL4)
-#   ifndef INCLUDE_SERIAL
-#       define INCLUDE_SERIAL
-#   endif
+#    ifndef INCLUDE_SERIAL
+#        define INCLUDE_SERIAL
+#    endif
 #endif
 
 #if defined(INCLUDE_SERIAL) && !defined(SERIAL_SPEED)
-#   warning "Default debugging serial port speed set to 115200"
-#   define SERIAL_SPEED 115200
+#    warning "Default debugging serial port speed set to 115200"
+#    define SERIAL_SPEED 115200
 #endif
 
 #endif /* SBLIB_LIBCONFIG_H_ */
