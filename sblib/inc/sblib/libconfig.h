@@ -34,14 +34,17 @@
  ******************************************************************************/
 
 #if defined (__LPC11XX__)
-//#    define SERIAL_RX_PIN PIO1_6 //!< @ swd/jtag connector
-//#    define SERIAL_TX_PIN PIO1_7 //!< @ swd/jtag connector
+#   ifndef SERIAL_RX_PIN
+//#       define SERIAL_RX_PIN PIO1_6 //!< @ swd/jtag connector
+//#       define SERIAL_RX_PIN PIO3_1 //!< on a TS_ARM Controller
+#       define SERIAL_RX_PIN PIO2_7 //!< on a 4TE-ARM Controller pin 1 on connector SV3 (ID_SEL)
+#   endif
 
-//#    define SERIAL_RX_PIN PIO3_1 //!< on a TS_ARM Controller
-//#    define SERIAL_TX_PIN PIO3_0 //!< on a TS_ARM Controller
-
-#    define SERIAL_RX_PIN PIO2_7 //!< on a 4TE-ARM Controller pin 1 on connector SV3 (ID_SEL)
-#    define SERIAL_TX_PIN PIO2_8 //!< on a 4TE-ARM Controller pin 2 on connector SV3 (ID_SEL)
+#   ifndef SERIAL_TX_PIN
+//#       define SERIAL_TX_PIN PIO1_7 //!< @ swd/jtag connector
+//#       define SERIAL_TX_PIN PIO3_0 //!< on a TS_ARM Controller
+#       define SERIAL_TX_PIN PIO2_8 //!< on a 4TE-ARM Controller pin 2 on connector SV3 (ID_SEL)
+#   endif
 #endif
 
 /** @def SERIAL_SPEED baudrate e.g. 115200, 230400, 576000 serial port should run for debugging */
@@ -98,7 +101,6 @@
 // SERIAL_WRITE_DIRECT  /// \todo from serial.cpp
 // BH1750_DEBUG         /// \todo from in bh1750.h
 // LOGGING              /// \todo from in bh1750.h
-// DEBUG_ACTIVE         /// \todo from in debug.cpp
 
 /******************************************************************************
  *
