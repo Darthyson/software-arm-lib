@@ -3,11 +3,13 @@
 // https://community.nxp.com/thread/56035
 // Source: https://www.nxp.com/docs/en/application-note-software/6728_sprintf.c
 //
+
+
+#include "logger.h"
+#include <sblib/serial.h>
+#include <sblib/timer.h>
 #include <ctype.h>
 #include <stdarg.h>
-#include <sblib/serial.h>
-#include <sblib/ioports.h>
-#include <sblib/timer.h>
 
 Serial serial(PIO1_6, PIO1_7);
 
@@ -311,8 +313,11 @@ static int log_vsnprintf(char *buf, size_t size, const char *fmt, va_list args) 
                 break;
 
             case 'X':
+#pragma GCC diagnostic push                              // intentional fallthrough to set base = 16
+#pragma GCC diagnostic ignored "-Wimplicit-fallthrough=" // disable fallthrough warnings
                 flags |= LARGE;
             case 'x':
+#pragma GCC diagnostic pop // enable fallthrough warnings
                 base = 16;
                 break;
 
@@ -368,7 +373,7 @@ static int log_vsnprintf(char *buf, size_t size, const char *fmt, va_list args) 
 
 void serPrintf(const char *fmt, ...) {
     va_list args;
-    size_t len = 256;
+    constexpr size_t len = 256;
     char buf[len];
     va_start(args, fmt);
     log_vsnprintf(&buf[0], len, fmt, args);
@@ -378,9 +383,9 @@ void serPrintf(const char *fmt, ...) {
     serial.println(buf);
 }
 
-void initLogger(int txPin = PIO1_7, int rxPin = PIO1_6) {
-    serial.setRxPin(rxPin);
-    serial.setTxPin(txPin);
+void initLogger(const uint32_t txPin , const uint32_t rxPin) {
+    serial.setRxPin(static_cast<int32_t>(rxPin));
+    serial.setTxPin(static_cast<int32_t>(txPin));
     serial.begin(115200);
     serPrintf("Logging enabled");
 }
