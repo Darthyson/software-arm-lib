@@ -146,14 +146,13 @@ bool BcuBase::processApci(const ApciCommand apciCmd, unsigned char* telegram, co
     {
         case APCI_BASIC_RESTART_PDU:
             scheduleRestart(RestartType::Basic);
-            return (false);
+            return false;
         default:
-            return (TLayer4::processApci(apciCmd, telegram, telLength, sendBuffer));
+            return TLayer4::processApci(apciCmd, telegram, telLength, sendBuffer);
     }
-    return (false);
 }
 
-bool BcuBase::handleIndividualAddressBroadcast(const ApciCommand apciCmd, uint8_t* telegram)
+bool BcuBase::handleIndividualAddressBroadcast(const ApciCommand apciCmd, const uint8_t* telegram)
 {
     switch (apciCmd)
     {

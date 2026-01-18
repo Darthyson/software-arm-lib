@@ -1044,7 +1044,7 @@ STATE_SWITCH:
                 tb_t(state + 400, ttimer.value(), tb_in);
                 state = Bus::SEND_BIT_0; //   prepare to send bit 0 immediately
                 tx_error |= TX_PWM_STARTBIT_ERROR;
-            } 
+            }
             // no break, continue with bit0 as we have a timeout here
 
         /* SEND_BIT_0

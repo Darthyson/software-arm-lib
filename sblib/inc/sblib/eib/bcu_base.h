@@ -129,7 +129,7 @@ protected:
      * @param telegram  Pointer to the received telegram buffer containing the complete KNX frame
      * @return True if the APCI command was handled, false if the command is not supported.
      */
-    [[nodiscard]] bool handleIndividualAddressBroadcast(ApciCommand apciCmd, uint8_t* telegram);
+    [[nodiscard]] bool handleIndividualAddressBroadcast(ApciCommand apciCmd, const uint8_t* telegram);
 
     void sendApciIndividualAddressReadResponse();
 

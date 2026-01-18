@@ -16,7 +16,7 @@ byte* ComObjectsBCU2::objectValuePtr(const int objno)
 
     // TODO Should handle userRam.segment0addr and userRam.segment1addr here
     // if (cfg.config & COMCONF_VALUE_TYPE) // 0 if segment 0, !=0 if segment 1
-    const byte* addr = (const byte*) &cfg->dataPtr;
+    const auto addr = reinterpret_cast<const byte*>(&cfg->dataPtr);
     if (le_ptr == LITTLE_ENDIAN)
         return ((BcuDefault*)bcu)->userMemoryPtr(makeWord(addr[1], addr[0]));
     else
