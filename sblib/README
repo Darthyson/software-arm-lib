@@ -24,7 +24,7 @@ review on
 
 old review to fixe some issues
 in bus.cpp:
-- collision detection, introduction of windows to avoid detection of refelctions of low bit pulse which can extend the bit duration up to
+- collision detection, introduction of windows to avoid detection of reflections of low bit pulse which can extend the bit duration up to
 70us
 - handling of default phy addr.  (e.g. in case of uninitialized SW), set to default 15.15.255 for normal device or allow 0.0.0 for router
 -compiled with ROUTER definition

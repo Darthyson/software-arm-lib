@@ -4,7 +4,7 @@
  * @ingroup SBLIB
  * @brief    set pre-processor symbols which apply to all sblib build-configs
  * @note     for serial debugging output it is recommended to use
- *           PIO2_7 and PIO2_8 at high baud rate e.g 1.5MB
+ *           PIO2_7 and PIO2_8 at high baud rate e.g., 1.5MB
  *           define below SERIAL_RX_PIN and SERIAL_TX_PIN
  *           or set it in your application
  *           serial.setRxPin(PIO2_7);
