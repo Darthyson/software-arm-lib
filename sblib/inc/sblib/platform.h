@@ -66,9 +66,10 @@ uint32_t* ioconPointer(Port port, uint8_t pinNum);
 
 #define FLASH_BASE_ADDRESS   ((uint8_t *)LPC_FLASH_BASE) //!< The base address of the flash
 
-#define FLASH_SECTOR_SIZE    (0x1000)              //!< The size of a flash sector in bytes
-#define FLASH_PAGE_SIZE      (0x100)               //!< The size of a flash page in bytes
-#define FLASH_PAGE_ALIGNMENT (FLASH_PAGE_SIZE - 1) //!< Page alignment which is allowed to flash
-#define FLASH_RAM_BUFFER_ALIGNMENT (4)             //!< MCU's RAM buffer alignment which is allowed to flash
+constexpr uint16_t FLASH_SECTOR_SIZE    = 0x1000;              //!< The size of a flash sector in bytes
+constexpr uint16_t FLASH_PAGE_SIZE      = 0x100;               //!< The size of a flash page in bytes
+constexpr uint16_t FLASH_PAGE_ALIGNMENT = FLASH_PAGE_SIZE - 1; //!< Page alignment which is allowed to flash
+constexpr uint8_t FLASH_RAM_BUFFER_ALIGNMENT = 4;              //!< MCU's RAM buffer alignment, which is allowed to flash
+
 
 #endif /* SBLIB_PLATFORM_H_ */
