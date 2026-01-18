@@ -70,7 +70,6 @@
                 "x86"
             ],
             "cacheVariables": {
-                "SBLIB_LOGGING": "OFF",
                 "SBLIB_DEBUG_BUS": "ON",
                 "SBLIB_DEBUG_BUS_BITLEVEL": "ON",
                 "SBLIB_INCLUDE_SERIAL": "ON",
@@ -82,7 +81,11 @@
                 "SBLIB_DUMP_PROPERTIES": "ON",
                 "SBLIB_DUMP_TL4": "ON",
                 "SBLIB_ROUTER": "OFF",
-                "SBLIB_BUSMONITOR": "OFF"
+                "SBLIB_BUSMONITOR": "OFF",
+                "SBLIB_SERIAL_RX_PIN": "PIO1_6",
+                "SBLIB_SERIAL_TX_PIN": "PIO1_7",
+                "SBLIB_LOGGING": "OFF",
+                "SBLIB_LOGGING_DIR": "${sourceDir}/../logging"
             }
         }
     ],
@@ -96,7 +99,7 @@
             "hidden": false,
             "verbose": true,
             "targets": [
-                "sblib"
+                "sblib_arm"
             ]
         },
         {
@@ -108,7 +111,7 @@
             "hidden": false,
             "verbose": true,
             "targets": [
-                "sblib"
+                "sblib_arm"
             ]
         },
         {

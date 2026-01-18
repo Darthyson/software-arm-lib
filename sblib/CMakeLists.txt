@@ -8,8 +8,10 @@ set(CMAKE_C_STANDARD_REQUIRED ON)
 set(CMAKE_CXX_STANDARD 17)
 set(CMAKE_CXX_STANDARD_REQUIRED ON)
 
-set(SBLPC_DIR ${CMAKE_SOURCE_DIR}/../../CMSIS_CORE_LPC11xx CACHE PATH "Where the CMSIS_CORE_LPC11xx lib is")
-set(SBLIB_CPU_EMULATION_DIR ${CMAKE_CURRENT_SOURCE_DIR}/../test/sblib/cpu-emu)
+set(SBLPC_DIR ${CMAKE_CURRENT_SOURCE_DIR}/../../CMSIS_CORE_LPC11xx CACHE PATH "Path to the 'CMSIS_CORE_LPC11xx' directory")
+set(SBLIB_CPU_EMULATION_DIR ${CMAKE_CURRENT_SOURCE_DIR}/../test/sblib/cpu-emu CACHE PATH "Path to the sblib 'cpu-emu' directory")
+set(SBLIB_LOGGING_DIR ${CMAKE_CURRENT_SOURCE_DIR}/../logging CACHE PATH "UNTESTED! Path to the sblib 'logging' source directory")
+
 # Toolchain file is set in CMakePresets.json or on command line
 if(CMAKE_CROSSCOMPILING AND NOT DEFINED CMAKE_TOOLCHAIN_FILE)
     message(FATAL_ERROR "Cross-compiling but CMAKE_TOOLCHAIN_FILE not set. Set in CMakePresets.json or configure with -DCMAKE_TOOLCHAIN_FILE=<path to>/arm-none-eabi_mcuxpresso.cmake")
@@ -17,13 +19,14 @@ endif()
 if(CMAKE_CROSSCOMPILING AND DEFINED CMAKE_TOOLCHAIN_FILE AND NOT EXISTS "${CMAKE_TOOLCHAIN_FILE}")
     message(FATAL_ERROR "Toolchain file does not exist: ${CMAKE_TOOLCHAIN_FILE}")
 endif()
+if (NOT EXISTS "${SBLPC_DIR}")
+    message(FATAL_ERROR "CMSIS_CORE_LPC11xx project not found. Check setting of SBLPC_DIR (${SBLPC_DIR})")
+endif()
+if (NOT EXISTS "${SBLIB_CPU_EMULATION_DIR}")
+    message(FATAL_ERROR "cpu-emu directory not found. Check setting of SBLIB_CPU_EMULATION_DIR (${SBLIB_CPU_EMULATION_DIR})")
+endif()
 
-set(TARGET_ARM ${PROJECT_NAME})
-set(TARGET_X86 ${PROJECT_NAME}_x86)
-set(TARGET_X64 ${PROJECT_NAME}_x64)
-
-set(SBLIB_LOGGING OFF CACHE BOOL "Whether to log through the serial port")
-
+# Create options
 set(SBLIB_ARCHITECTURE "arm" CACHE STRING "Architecture to build for (arm, x86, x64).")
 set_property(CACHE SBLIB_ARCHITECTURE PROPERTY STRINGS arm x86 x64)
 option(SBLIB_DEBUG_BUS "Enable dumping of state machine interrupt data e.g timer values." OFF)
@@ -42,132 +45,122 @@ set(SBLIB_SERIAL_RX_PIN "OFF" CACHE STRING "Serial receive pin to use (PIOx_y)."
 set(SBLIB_SERIAL_TX_PIN "OFF" CACHE STRING "Serial transmit pin to use (PIOx_y).")
 option(SBLIB_ROUTER "Enable to build a ROUTER." OFF)
 option(SBLIB_BUSMONITOR "Enables bus monitoring: dump of all bus traffic incl. timing info (no sending, no processing of rx-telegrams)." OFF)
+option(SBLIB_LOGGING "UNTESTED! Whether to log through the serial port" OFF)
 
+# sblib source code
+include(sblib.cmake) # list of all sblib source code files (*.h, *.cpp, ...)
 
-# definitions for all targets and builds
+# Targets
+set(TARGET_ARM ${PROJECT_NAME}_arm)
+set(TARGET_X86 ${PROJECT_NAME}_x86)
+set(TARGET_X64 ${PROJECT_NAME}_x64)
+add_library(${TARGET_ARM} STATIC ${SBLIB_SRC}) # ARM sblib
+add_library(${TARGET_X86} STATIC ${SBLIB_SRC}) # 32bit sblib
+add_library(${TARGET_X64} STATIC ${SBLIB_SRC}) # 64bit sblib
+
+# common includes
+foreach(target ${TARGET_ARM} ${TARGET_X86} ${TARGET_X64})
+    # sblib
+    target_include_directories(${target} PUBLIC ${CMAKE_CURRENT_SOURCE_DIR}/inc)
+endforeach()
+
+# ARM includes
+foreach(target ${TARGET_ARM})
+    message(NOTICE "CMSIS directory ${SBLPC_DIR}")
+    target_include_directories(${target} PUBLIC ${SBLPC_DIR}/inc) # CMSIS_CORE_LPC11xx/inc
+endforeach()
+
+# x86, x64 includes
+foreach(target ${TARGET_X86} ${TARGET_X64})
+    target_include_directories(${target} PUBLIC ${SBLIB_CPU_EMULATION_DIR}) # ../test/sblib/cpu-emu
+endforeach()
+
+# common definitions
 add_compile_definitions(
-    __USE_CMSIS=CMSIS_CORE_LPC11xx
     __LPC11XX__
+    $<$<CONFIG:Release>:NDEBUG>
+    $<$<CONFIG:Debug>:DEBUG>
+    $<$<AND:$<CONFIG:Debug>,$<BOOL:${SBLIB_DEBUG_BUS}>>:DEBUG_BUS>
+    $<$<AND:$<CONFIG:Debug>,$<BOOL:${SBLIB_DEBUG_BUS_BITLEVEL}>>:DEBUG_BUS_BITLEVEL>
+    $<$<AND:$<CONFIG:Debug>,$<BOOL:${SBLIB_INCLUDE_SERIAL}>>:INCLUDE_SERIAL>
+    $<$<AND:$<CONFIG:Debug>,$<BOOL:${SBLIB_DUMP_TELEGRAMS}>>:DUMP_TELEGRAMS>
+    $<$<AND:$<CONFIG:Debug>,$<BOOL:${SBLIB_DUMP_COM_OBJ}>>:DUMP_COM_OBJ>
+    $<$<AND:$<CONFIG:Debug>,$<BOOL:${SBLIB_DUMP_MEM_OPS}>>:DUMP_MEM_OPS>
+    $<$<AND:$<CONFIG:Debug>,$<BOOL:${SBLIB_DUMP_PROPERTIES}>>:DUMP_PROPERTIES>
+    $<$<AND:$<CONFIG:Debug>,$<BOOL:${SBLIB_DUMP_TL4}>>:DUMP_TL4>
+    $<$<AND:$<CONFIG:Debug>,$<BOOL:${SBLIB_ROUTER}>>:ROUTER>
+    $<$<AND:$<CONFIG:Debug>,$<BOOL:${SBLIB_BUSMONITOR}>>:BUSMONITOR>
+)
+
+# Conditionally add common compile definitions which have values e.g., SERIAL_SPEED=115200
+if(DEFINED SBLIB_PIO_FOR_TEL_END_IND AND NOT SBLIB_PIO_FOR_TEL_END_IND STREQUAL "" AND NOT SBLIB_PIO_FOR_TEL_END_IND STREQUAL "OFF")
+    add_compile_definitions($<$<CONFIG:Debug>:PIO_FOR_TEL_END_IND=${SBLIB_PIO_FOR_TEL_END_IND}>)
+endif()
+if(DEFINED SBLIB_SERIAL_SPEED AND NOT SBLIB_SERIAL_SPEED STREQUAL "" AND NOT SBLIB_SERIAL_SPEED STREQUAL "OFF")
+    add_compile_definitions($<$<CONFIG:Debug>:SERIAL_SPEED=${SBLIB_SERIAL_SPEED}>)
+endif()
+if(DEFINED SBLIB_SERIAL_RX_PIN AND NOT SBLIB_SERIAL_RX_PIN STREQUAL "" AND NOT SBLIB_SERIAL_RX_PIN STREQUAL "OFF")
+    add_compile_definitions($<$<CONFIG:Debug>:SERIAL_RX_PIN=${SBLIB_SERIAL_RX_PIN}>)
+endif()
+if(DEFINED SBLIB_SERIAL_TX_PIN AND NOT SBLIB_SERIAL_TX_PIN STREQUAL "" AND NOT SBLIB_SERIAL_TX_PIN STREQUAL "OFF")
+    add_compile_definitions($<$<CONFIG:Debug>:SERIAL_TX_PIN=${SBLIB_SERIAL_TX_PIN}>)
+endif()
+if(DEFINED SBLIB_LOGGING AND NOT SBLIB_LOGGING STREQUAL "" AND NOT SBLIB_LOGGING STREQUAL "OFF")
+    if (NOT EXISTS "${SBLIB_LOGGING_DIR}")
+        message(FATAL_ERROR "logging directory not found. Check setting of SBLIB_LOGGING_DIR (${SBLIB_LOGGING_DIR})")
+    endif()
+    set(SBLIB_INCLUDE_LOGGING ON)
+endif()
+
+# ARM specific compile definitions
+target_compile_definitions(${TARGET_ARM} PUBLIC
+    __USE_CMSIS=CMSIS_CORE_LPC11xx
     __NEWLIB__
     CORE_M0
 )
 
-# debug definitions for all targets and debug builds
-set(DEBUG_DEFINES
-    DEBUG
-)
+# x86, x64 specific compile definitions
+foreach(target ${TARGET_X86} ${TARGET_X64})
+    target_compile_definitions(${target} PUBLIC IAP_EMULATION)
+endforeach()
 
-# Conditionally add debug options based on CMake options
-if(SBLIB_DEBUG_BUS)
-    list(APPEND DEBUG_DEFINES DEBUG_BUS)
-endif()
-if(SBLIB_DEBUG_BUS_BITLEVEL)
-    list(APPEND DEBUG_DEFINES DEBUG_BUS_BITLEVEL)
-endif()
-if(SBLIB_INCLUDE_SERIAL)
-    list(APPEND DEBUG_DEFINES INCLUDE_SERIAL)
-endif()
-if(NOT SBLIB_SERIAL_SPEED STREQUAL "OFF")
-    list(APPEND DEBUG_DEFINES SERIAL_SPEED=${SBLIB_SERIAL_SPEED})
-endif()
-if(SBLIB_DUMP_TELEGRAMS)
-    list(APPEND DEBUG_DEFINES DUMP_TELEGRAMS)
-endif()
-if(NOT SBLIB_PIO_FOR_TEL_END_IND STREQUAL "OFF")
-    list(APPEND DEBUG_DEFINES PIO_FOR_TEL_END_IND=${SBLIB_PIO_FOR_TEL_END_IND})
-endif()
-if(SBLIB_DUMP_COM_OBJ)
-    list(APPEND DEBUG_DEFINES DUMP_COM_OBJ)
-endif()
-if(SBLIB_DUMP_MEM_OPS)
-    list(APPEND DEBUG_DEFINES DUMP_MEM_OPS)
-endif()
-if(SBLIB_DUMP_PROPERTIES)
-    list(APPEND DEBUG_DEFINES DUMP_PROPERTIES)
-endif()
-if(SBLIB_DUMP_TL4)
-    list(APPEND DEBUG_DEFINES DUMP_TL4)
-endif()
-if(NOT SBLIB_SERIAL_RX_PIN STREQUAL "OFF")
-    list(APPEND DEBUG_DEFINES SERIAL_RX_PIN=${SBLIB_SERIAL_RX_PIN})
-endif()
-if(NOT SBLIB_SERIAL_TX_PIN STREQUAL "OFF")
-    list(APPEND DEBUG_DEFINES SERIAL_TX_PIN=${SBLIB_SERIAL_TX_PIN})
-endif()
-if(SBLIB_ROUTER)
-    list(APPEND DEBUG_DEFINES ROUTER)
-endif()
-if(SBLIB_BUSMONITOR)
-    list(APPEND DEBUG_DEFINES BUSMONITOR)
-endif()
+# common compile options
+foreach(target ${TARGET_ARM} ${TARGET_X86} ${TARGET_X64})
+    target_compile_options(${target} PRIVATE
+        -Wall -Wlogical-op -Woverloaded-virtual -Wextra -pedantic
+        # todo warnings to enable in future
+        # -Wconversion
+        -fmessage-length=0
+        -g3
+        $<$<CONFIG:Debug>: -O0>
+        $<$<CONFIG:Release>: -Os>
+    )
+endforeach()
 
-# common compile options for all targets and builds
-add_compile_options(
-    -Wall -Wlogical-op -Woverloaded-virtual -Wextra -pedantic
-    # todo warnings to enable in future
-    # -Wconversion
-    -fmessage-length=0
-    -g3
-)
-
-# include sblib source code
-include_directories(inc) # sblib/inc directory
-include(sblib.cmake)     # list of all sblib source code files (*.h, *.cpp, ...)
-
-# include potential logging source code
-# todo SBLIB_LOGGING is broken
-if (SBLIB_LOGGING AND CMAKE_CROSSCOMPILING)
-    if(NOT DEFINED SBLOG_DIR)
-        message(FATAL_ERROR "SBLIB_LOGGING enabled but SBLOG_DIR is not defined. Set -DSBLOG_DIR=<path> or unset SBLIB_LOGGING.")
-    endif()
-    add_subdirectory(${SBLOG_DIR} sblog)
-    target_include_directories(${TARGET_ARM} PUBLIC ${SBLOG_DIR})
-    file(GLOB LOGSRC ${SBLOG_DIR}/log/*.cpp ${SBLOG_DIR}/log/*.h)
-    list(APPEND SBLIB_SRC ${LOGSRC})
-    add_definitions(-DLOGGING)
+# Logging source
+if(DEFINED SBLIB_INCLUDE_LOGGING)
+    # todo This is untested
+    message(NOTICE "Logging source directory: ${SBLIB_LOGGING_DIR}")
+    include(${SBLIB_LOGGING_DIR}/logging.cmake)
+    foreach(target ${TARGET_ARM} ${TARGET_X86} ${TARGET_X64})
+        foreach(srcFileName ${SBLIB_LOGGING_SRC})
+            target_sources(${target} PUBLIC "${SBLIB_LOGGING_DIR}/${srcFileName}")
+        endforeach()
+        target_include_directories(${target} PUBLIC ${SBLIB_LOGGING_DIR}/inc)
+    endforeach()
 endif()
 
 # Check if cross-compiling for ARM target
 if(CMAKE_CROSSCOMPILING)
-    message(NOTICE "Compiling ${PROJECT_NAME} for ARM architecture.")
-    add_library(${TARGET_ARM} STATIC ${SBLIB_SRC})
-    target_link_libraries(${TARGET_ARM} PUBLIC CMSIS_CORE_LPC11xx_arm) # add CMSIS_CORE_LPC11xx_arm library
-    target_include_directories(${TARGET_ARM} PUBLIC ${SBLPC_DIR}/inc) # add CMSIS_CORE_LPC11xx_arm include directory
-    target_compile_definitions(${TARGET_ARM} PRIVATE
-        $<$<CONFIG:Debug>:${DEBUG_DEFINES}>
-    )
-    target_compile_options(${TARGET_ARM} PRIVATE
-        $<$<CONFIG:Debug>: -O0>
-        $<$<CONFIG:Release>: -Os>
-    )
+    message(NOTICE "Configuring ${PROJECT_NAME} for ARM architecture.")
 # Check if building for 32bit architecture
 elseif(SBLIB_ARCHITECTURE STREQUAL "x86")
-    message(NOTICE "Compiling ${PROJECT_NAME} for 32bit architecture.")
-    add_library(${TARGET_X86} STATIC ${SBLIB_SRC}) # 32bit sblib
-    target_include_directories(${TARGET_X86} PUBLIC ${SBLIB_CPU_EMULATION_DIR})
-    target_compile_definitions(${TARGET_X86} PRIVATE
-        IAP_EMULATION
-        $<$<CONFIG:Debug>:${DEBUG_DEFINES}>
-    )
-    target_compile_options(${TARGET_X86} PRIVATE
-        -m32
-        $<$<CONFIG:Debug>: -O0>
-        $<$<CONFIG:Release>: -Os>
-    )
+    message(NOTICE "Configuring ${PROJECT_NAME} for x86 architecture.")
+    target_compile_options(${TARGET_X86} PRIVATE -m32)
 # Check if building for 64bit architecture
 elseif(SBLIB_ARCHITECTURE STREQUAL "x64")
-    message(NOTICE "Compiling ${PROJECT_NAME} for 64bit architecture.")
-    add_library(${TARGET_X64} STATIC ${SBLIB_SRC}) # 64bit sblib
-    target_include_directories(${TARGET_X64} PUBLIC ${SBLIB_CPU_EMULATION_DIR})
-    target_compile_definitions(${TARGET_X64} PRIVATE
-        IAP_EMULATION
-        $<$<CONFIG:Debug>:${DEBUG_DEFINES}>
-    )
-    target_compile_options(${TARGET_X64} PRIVATE
-        -m64
-        $<$<CONFIG:Debug>: -O0>
-        $<$<CONFIG:Release>: -Os>
-    )    
+    message(NOTICE "Configuring ${PROJECT_NAME} for x64 architecture.")
+    target_compile_options(${TARGET_X64} PRIVATE -m64)
 else()
     message(FATAL_ERROR "Unknown architecture ${SBLIB_ARCHITECTURE}. (project ${PROJECT_NAME})")
 endif()
