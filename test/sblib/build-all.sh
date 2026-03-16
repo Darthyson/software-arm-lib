@@ -44,6 +44,7 @@ declare -A CONFIGURE_PRESETS=(
     ["release-x86"]="x86"
     ["debug-x64"]="x64"
     ["release-x64"]="x64"
+    ["debug-x86-logging"]="x86_logging"
 )
 
 echo "====================================="

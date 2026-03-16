@@ -3,12 +3,12 @@ cmake_minimum_required(VERSION 3.28)
 project(sblib-test LANGUAGES CXX)
 
 set(CMAKE_VERBOSE_MAKEFILE ON CACHE BOOL "Enable verbose output from the build system")
+set(CMAKE_EXPORT_COMPILE_COMMANDS ON) # Creates compile_commands.json file for easier debugging and IDE support
+
 set(CMAKE_C_STANDARD 17)
 set(CMAKE_C_STANDARD_REQUIRED ON)
 set(CMAKE_CXX_STANDARD 17)
 set(CMAKE_CXX_STANDARD_REQUIRED ON)
-
-#set(SBLIB_ARCHITECTURE "x86" CACHE STRING "Architecture to build for (x86, x64).")
 
 set(CATCH_PATH "${CMAKE_CURRENT_SOURCE_DIR}/../../Catch" CACHE PATH "Path to the Catch project")
 set(SBLIB_PATH "${CMAKE_CURRENT_SOURCE_DIR}/../../sblib" CACHE PATH "Path to the sblib")
@@ -24,7 +24,6 @@ include(sblib-test.cmake)
 include(${CATCH_PATH}/catch.cmake)
 set(SBLIB_TEST_FULL_SRC
         ${SBLIB_CATCH_SRC}
-#        ${SBLIB_SRC}
         ${SBLIB_TEST_SRC}
 )
 
