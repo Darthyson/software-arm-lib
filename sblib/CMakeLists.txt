@@ -8,6 +8,8 @@ set(CMAKE_C_STANDARD_REQUIRED ON)
 set(CMAKE_CXX_STANDARD 17)
 set(CMAKE_CXX_STANDARD_REQUIRED ON)
 
+set(CMAKE_EXPORT_COMPILE_COMMANDS ON) # Creates compile_commands.json file for easier debugging and IDE support
+
 set(SBLPC_DIR ${CMAKE_CURRENT_SOURCE_DIR}/../../CMSIS_CORE_LPC11xx CACHE PATH "Path to the 'CMSIS_CORE_LPC11xx' directory")
 set(SBLIB_CPU_EMULATION_DIR ${CMAKE_CURRENT_SOURCE_DIR}/../test/sblib/cpu-emu CACHE PATH "Path to the sblib 'cpu-emu' directory")
 set(SBLIB_LOGGING_DIR ${CMAKE_CURRENT_SOURCE_DIR}/../logging CACHE PATH "UNTESTED! Path to the sblib 'logging' source directory")
@@ -124,11 +126,11 @@ foreach(target ${TARGET_X86} ${TARGET_X64})
     target_compile_definitions(${target} PUBLIC IAP_EMULATION)
 endforeach()
 
-# common compile options
-foreach(target ${TARGET_ARM} ${TARGET_X86} ${TARGET_X64})
+# x86, x64 specific compile options
+foreach(target ${TARGET_X86} ${TARGET_X64})
     target_compile_options(${target} PRIVATE
         -Wall -Wlogical-op -Woverloaded-virtual -Wextra -pedantic
-        # todo warnings to enable in future
+        # TODO warnings to enable in future
         # -Wconversion
         -fmessage-length=0
         -g3
