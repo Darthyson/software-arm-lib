@@ -1,0 +1,34 @@
+message(STATUS "OVERRIDE CMAKE_<LANG>_FLAGS with init flags.")
+
+# Don´t use FORCE option here to avoid overwriting user-defined flags
+# Check out https://stackoverflow.com/questions/72549634/cmake-toolchain-file-setting-cmake-cxx-flags
+
+# Override compiler, linker and assembler flags
+
+# C flags
+set(CMAKE_C_FLAGS ${CMAKE_C_FLAGS_INIT} CACHE STRING "C compiler default flags")
+set(CMAKE_C_FLAGS_DEBUG ${CMAKE_C_FLAGS_DEBUG_INIT} CACHE STRING "C compiler Debug flags")
+set(CMAKE_C_FLAGS_RELEASE ${CMAKE_C_FLAGS_RELEASE_INIT} CACHE STRING "C compiler Release flags")
+set(CMAKE_C_FLAGS_MINSIZEREL ${CMAKE_C_FLAGS_MINSIZEREL_INIT} CACHE STRING "C compiler minimal size Release flags")
+set(CMAKE_C_FLAGS_RELWITHDEBINFO ${CMAKE_C_FLAGS_RELWITHDEBINFO_INIT} CACHE STRING "C compiler Release with debug info flags")
+
+# C++ flags
+set(CMAKE_CXX_FLAGS ${CMAKE_CXX_FLAGS_INIT} CACHE STRING "C++ compiler default flags")
+set(CMAKE_CXX_FLAGS_DEBUG ${CMAKE_CXX_FLAGS_DEBUG_INIT} CACHE STRING "C++ compiler Debug flags")
+set(CMAKE_CXX_FLAGS_RELEASE ${CMAKE_CXX_FLAGS_RELEASE_INIT} CACHE STRING "C++ compiler Release flags")
+set(CMAKE_CXX_FLAGS_MINSIZEREL ${CMAKE_CXX_FLAGS_MINSIZEREL_INIT} CACHE STRING "C++ compiler minimal size Release flags")
+set(CMAKE_CXX_FLAGS_RELWITHDEBINFO ${CMAKE_CXX_FLAGS_RELWITHDEBINFO_INIT} CACHE STRING "C++ compiler Release with debug info flags")
+
+# Linker flags
+set(CMAKE_EXE_LINKER_FLAGS ${CMAKE_EXE_LINKER_FLAGS_INIT} CACHE STRING "Linker default flags")
+set(CMAKE_EXE_LINKER_FLAGS_DEBUG ${CMAKE_EXE_LINKER_FLAGS_DEBUG_INIT} CACHE STRING "Linker Debug flags")
+set(CMAKE_EXE_LINKER_FLAGS_RELEASE ${CMAKE_EXE_LINKER_FLAGS_RELEASE_INIT} CACHE STRING "Linker Release flags")
+set(CMAKE_EXE_LINKER_FLAGS_MINSIZEREL ${CMAKE_EXE_LINKER_FLAGS_MINSIZEREL_INIT} CACHE STRING "Linker minimal size Release flags")
+set(CMAKE_EXE_LINKER_FLAGS_RELWITHDEBINFO ${CMAKE_EXE_LINKER_FLAGS_RELWITHDEBINFO_INIT} CACHE STRING "Linker Release with debug info flags")
+
+# Assembler flags
+set(CMAKE_ASM_FLAGS ${CMAKE_ASM_FLAGS_INIT} CACHE STRING "ASM default flags")
+set(CMAKE_ASM_FLAGS_DEBUG ${CMAKE_ASM_FLAGS_DEBUG_INIT} CACHE STRING "ASM Debug flags")
+set(CMAKE_ASM_FLAGS_RELEASE ${CMAKE_ASM_FLAGS_RELEASE_INIT} CACHE STRING "ASM Release flags")
+set(CMAKE_ASM_FLAGS_MINSIZEREL ${CMAKE_ASM_FLAGS_MINSIZEREL_INIT} CACHE STRING "ASM minimal size Release flags")
+set(CMAKE_ASM_FLAGS_RELWITHDEBINFO ${CMAKE_ASM_FLAGS_RELWITHDEBINFO_INIT} CACHE STRING "ASM Release with debug info flags")

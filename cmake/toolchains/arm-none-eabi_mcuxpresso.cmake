@@ -1,18 +1,26 @@
 cmake_minimum_required(VERSION 3.28)
+
+# Toolchain file for MCUXpresso IDE arm-none-eabi toolchain
+#
+# Minimum supported MCUXpresso version is 11.9.0.
+# Usage: cmake -DCMAKE_TOOLCHAIN_FILE=path/to/arm-none-eabi_mcuxpresso.cmake ...
+
 if(NOT TOOLCHAIN_PREFIX)
     set(TOOLCHAIN_PREFIX $ENV{MCUXPRESSO_TOOLCHAIN_PATH})
-    message(STATUS "No TOOLCHAIN_PREFIX specified. Using environment variable MCUXPRESSO_TOOLCHAIN_PATH=\"${TOOLCHAIN_PREFIX}\"")    
+    message(STATUS "No TOOLCHAIN_PREFIX specified. Using environment variable MCUXPRESSO_TOOLCHAIN_PATH=\"${TOOLCHAIN_PREFIX}\"")
 endif()
 
 if(NOT EXISTS "${TOOLCHAIN_PREFIX}")
     message(FATAL_ERROR "TOOLCHAIN_PREFIX directory \"${TOOLCHAIN_PREFIX}\" does not exist.\
-            Specify path to arm-none-eabi toolchain with --DTOOLCHAIN_PREFIX=\"C:/nxp/MCUXpressoIDE_25.6.136/ide/tools\" (Windows), \
-            --DTOOLCHAIN_PREFIX=\"/usr/local/mcuxpressoide-25.6.136/ide/tools\" (Linux) or set environment variable MCUXPRESSO_TOOLCHAIN_PATH.")
+            Specify path to arm-none-eabi toolchain with -DTOOLCHAIN_PREFIX=\"C:/nxp/MCUXpressoIDE_25.6.136/ide/tools\" (Windows), \
+            -DTOOLCHAIN_PREFIX=\"/usr/local/mcuxpressoide-25.6.136/ide/tools\" (Linux) or set environment variable MCUXPRESSO_TOOLCHAIN_PATH.")
 endif()
 
 set(CMAKE_SYSTEM_NAME Generic)
 set(CMAKE_SYSTEM_VERSION 1)
 set(CMAKE_SYSTEM_PROCESSOR arm)
+set(CMAKE_EXPORT_COMPILE_COMMANDS ON) # Creates compile_commands.json file for easier debugging and IDE support
+set(CMAKE_TRY_COMPILE_TARGET_TYPE STATIC_LIBRARY) # Prevent CMake from trying to link executables during compiler tests
 
 set(MIN_MCUXPRESSO_VERSION_SUPPORTED "11.9.0") # 11.9.0.2144 changed path from ../ide/binaries to ../ide/LinkServer/binaries
 
@@ -35,8 +43,8 @@ else()
     message(NOTICE "Could not find MCUXpresso in ${TOOLCHAIN_PREFIX}. Build may not work correctly.")
 endif()
 
-if(CMAKE_HOST_WIN32) # todo use if(CMAKE_HOST_EXECUTABLE_SUFFIX STREQUAL ".exe") when switching to CMake >=3.31
-    set(EXE_SUFFIX ".exe") # todo replace with CMAKE_HOST_EXECUTABLE_SUFFIX when switching to CMake >=3.31
+if(CMAKE_HOST_WIN32) # TODO use if(CMAKE_HOST_EXECUTABLE_SUFFIX STREQUAL ".exe") when switching to CMake >=3.31
+    set(EXE_SUFFIX ".exe") # TODO replace with CMAKE_HOST_EXECUTABLE_SUFFIX when switching to CMake >=3.31
     set(BATCH_SUFFIX ".cmd")
 else()
     set(EXE_SUFFIX "")
@@ -50,14 +58,15 @@ get_filename_component(LINK_SERVER_BIN ${TOOLCHAIN_PREFIX}/../LinkServer/binarie
 set(BOOT_LINK1 ${LINK_SERVER_BIN}/boot_link1${BATCH_SUFFIX} CACHE FILEPATH "boot_link1 Filename")
 set(BOOT_LINK2 ${LINK_SERVER_BIN}/boot_link2${BATCH_SUFFIX} CACHE FILEPATH "boot_link2 Filename")
 set(REDLINK ${LINK_SERVER_BIN}/crt_emu_cm_redlink${EXE_SUFFIX} CACHE FILEPATH "redlink")
+if(NOT EXISTS "${LINK_SERVER_BIN}")
+    message(FATAL_ERROR "LinkServer binaries directory does not exist: ${LINK_SERVER_BIN}")
+endif()
 if(NOT EXISTS "${BOOT_LINK1}")
     message(FATAL_ERROR "boot_link1 file does not exist: ${BOOT_LINK1}")
 endif()
-
 if(NOT EXISTS "${BOOT_LINK2}")
     message(FATAL_ERROR "boot_link2 file does not exist: ${BOOT_LINK2}")
 endif()
-
 if(NOT EXISTS "${REDLINK}")
     message(FATAL_ERROR "crt_emu_cm_redlink file does not exist: ${REDLINK}")
 endif()
@@ -104,6 +113,7 @@ endif()
 # Adjust the default behaviour of the FIND_XXX() commands:
 # i)    Search headers and libraries in the target environment
 # ii)   Search programs in the host environment
+set(CMAKE_FIND_ROOT_PATH "${TOOLCHAIN_PREFIX}/${TARGET_TRIPLET}")
 set(CMAKE_FIND_ROOT_PATH_MODE_PROGRAM NEVER)
 set(CMAKE_FIND_ROOT_PATH_MODE_LIBRARY ONLY)
 set(CMAKE_FIND_ROOT_PATH_MODE_INCLUDE ONLY)
@@ -118,44 +128,21 @@ set(CMAKE_CXX_COMPILER_ID_RUN   TRUE)
 set(CMAKE_CXX_COMPILER_FORCED   TRUE)
 
 
-set(FLAGS_LIST 
-    -Wall -Wlogical-op -Wextra
-    -g3 -gdwarf-4
-    -fmessage-length=0 -fno-builtin -ffunction-sections -fdata-sections -fno-exceptions
-    -fmerge-constants -mcpu=cortex-m0 -mthumb -fstack-usage -specs=nano.specs
-    -fmacro-prefix-map=\"${CMAKE_SOURCE_DIR}/\"=
-)
-string(JOIN " " FLAGS ${FLAGS_LIST})
+set(TOOLCHAIN_DIR "${CMAKE_CURRENT_LIST_DIR}")
+set(FLAGS_DIR "${TOOLCHAIN_DIR}/arm-none-eabi_mcuxpresso")
 
-set(FLAGS_DEBUG "-O0")
-set(FLAGS_RELEASE "-Os -flto -ffat-lto-objects")
+# Include compiler flags
+include("${FLAGS_DIR}/flags_compiler.cmake")
 
-# Set initial C flags 
-set(CMAKE_C_FLAGS_INIT ${FLAGS} CACHE INTERNAL "C compiler default flags" FORCE)
-set(CMAKE_C_FLAGS_DEBUG_INIT ${FLAGS_DEBUG} CACHE INTERNAL "C compiler Debug flags" FORCE)
-set(CMAKE_C_FLAGS_RELEASE_INIT ${FLAGS_RELEASE} CACHE INTERNAL "C compiler Release flags" FORCE)
+# Include linker flags
+include("${FLAGS_DIR}/flags_linker.cmake")
 
-# Set initial C++ flags
-set(CMAKE_CXX_FLAGS_INIT ${FLAGS} CACHE INTERNAL "C++ compiler default flags" FORCE)
-set(CMAKE_CXX_FLAGS_DEBUG_INIT ${FLAGS_DEBUG} CACHE INTERNAL "C++ compiler Debug flags" FORCE)
-set(CMAKE_CXX_FLAGS_RELEASE_INIT ${FLAGS_RELEASE} CACHE INTERNAL "C++ compiler Release flags" FORCE)
+# Include assembler flags
+include("${FLAGS_DIR}/flags_assembler.cmake")
 
-# todo: Set initial, debug and release ASM flags
-#set(CMAKE_ASM<DIALECT>_FLAGS_INIT.
-#    ""
-#    CACHE INTERNAL "ASM compiler default flags" FORCE
-#)
+# Set all CMAKE_<LANG>_FLAGS_INIT flags
+include("${FLAGS_DIR}/flags_set_init.cmake")
 
-# todo: Set initial linker flags
-#set(CMAKE_EXE_LINKER_FLAGS_INIT
-#    ""
-#    CACHE INTERNAL "Executable linker default flags" FORCE
-#)
-#set(CMAKE_EXE_LINKER_FLAGS_DEBUG_INIT
-#    ""
-#    CACHE INTERNAL "Executable linker default flags" FORCE
-#)
-#set(CMAKE_EXE_LINKER_FLAGS_RELEASE_INIT
-#    ""
-#    CACHE INTERNAL "Executable linker default flags" FORCE
-#)
+# Intentional override all CMAKE_<LANG>_FLAGS with init flags to stay consistent with MCUxpresso
+# Check out https://stackoverflow.com/questions/72549634/cmake-toolchain-file-setting-cmake-cxx-flags
+include("${FLAGS_DIR}/flags_override_with_init.cmake")
