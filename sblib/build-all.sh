@@ -39,6 +39,7 @@ BUILD_PRESETS=(
     "debug-x64"
     "release-x64"
     "debug-x86-logging"
+    "debug-arm-logging"
 )
 
 # Define corresponding configure presets
@@ -50,6 +51,7 @@ declare -A CONFIGURE_PRESETS=(
     ["debug-x64"]="x64"
     ["release-x64"]="x64"
     ["debug-x86-logging"]="x86_logging"
+    ["debug-arm-logging"]="arm_logging"
 )
 
 echo "====================================="

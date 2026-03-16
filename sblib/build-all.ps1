@@ -16,7 +16,8 @@ $buildPresets = @(
     "release-x86",
     "debug-x64",
     "release-x64",
-    "debug-x86-logging"
+    "debug-x86-logging",
+    "debug-arm-logging"
 )
 
 # Define corresponding configure presets
@@ -28,6 +29,7 @@ $configurePresets = @{
     "debug-x64" = "x64"
     "release-x64" = "x64"
     "debug-x86-logging" = "x86_logging"
+    "debug-arm-logging" = "arm_logging"
 }
 
 Write-Host "=====================================" -ForegroundColor Cyan

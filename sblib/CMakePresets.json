@@ -36,6 +36,33 @@
             ]
         },
         {
+            "name": "arm_logging",
+            "displayName": "ARM logging Target",
+            "description": "Most of logging enabled",
+            "hidden": false,
+            "inherits": [
+                "arm"
+            ],
+            "cacheVariables": {
+                "SBLIB_DEBUG_BUS": "ON",
+                "SBLIB_DEBUG_BUS_BITLEVEL": "ON",
+                "SBLIB_INCLUDE_SERIAL": "ON",
+                "SBLIB_SERIAL_SPEED": "115200",
+                "SBLIB_DUMP_TELEGRAMS": "ON",
+                "SBLIB_PIO_FOR_TEL_END_IND": "PIO1_8",
+                "SBLIB_DUMP_COM_OBJ": "ON",
+                "SBLIB_DUMP_MEM_OPS": "ON",
+                "SBLIB_DUMP_PROPERTIES": "ON",
+                "SBLIB_DUMP_TL4": "ON",
+                "SBLIB_ROUTER": "OFF",
+                "SBLIB_BUSMONITOR": "OFF",
+                "SBLIB_SERIAL_RX_PIN": "PIO1_6",
+                "SBLIB_SERIAL_TX_PIN": "PIO1_7",
+                "SBLIB_LOGGING": "OFF",
+                "SBLIB_LOGGING_DIR": "${sourceDir}/../logging"
+            }
+        },
+        {
             "name": "x86",
             "displayName": "x86 Target",
             "description": "Sets architecture x86, build directory and Ninja Multi Config generator",
@@ -108,6 +135,18 @@
             "configuration": "Release",
             "displayName": "ARM Target Release Build",
             "description": "Build ARM target in Release configuration",
+            "hidden": false,
+            "verbose": true,
+            "targets": [
+                "sblib_arm"
+            ]
+        },
+        {
+            "name": "debug-arm-logging",
+            "configurePreset": "arm_logging",
+            "configuration": "Debug",
+            "displayName": "ARM Target Debug Build",
+            "description": "Build ARM target with logging in Debug configuration",
             "hidden": false,
             "verbose": true,
             "targets": [
@@ -245,6 +284,21 @@
                 {
                     "type": "build",
                     "name": "debug-x86-logging"
+                }
+            ]
+        },
+        {
+            "name": "build-arm-logging",
+            "description": "Build ARM logging target in Debug configuration",
+            "displayName": "Build ARM (logging config)",
+            "steps": [
+                {
+                    "type": "configure",
+                    "name": "arm_logging"
+                },
+                {
+                    "type": "build",
+                    "name": "debug-arm-logging"
                 }
             ]
         }
