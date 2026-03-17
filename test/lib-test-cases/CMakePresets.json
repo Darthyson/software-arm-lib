@@ -27,6 +27,60 @@
             "cacheVariables": {
                 "SBLIB_ARCHITECTURE": "x64"
             }
+        },
+        {
+            "name": "x86_logging",
+            "displayName": "x86 logging Target",
+            "description": "Most of logging enabled",
+            "hidden": false,
+            "inherits": [
+                "x86"
+            ],
+            "cacheVariables": {
+                "SBLIB_DEBUG_BUS": "ON",
+                "SBLIB_DEBUG_BUS_BITLEVEL": "ON",
+                "SBLIB_INCLUDE_SERIAL": "ON",
+                "SBLIB_SERIAL_SPEED": "115200",
+                "SBLIB_DUMP_TELEGRAMS": "ON",
+                "SBLIB_PIO_FOR_TEL_END_IND": "PIO1_4",
+                "SBLIB_DUMP_COM_OBJ": "ON",
+                "SBLIB_DUMP_MEM_OPS": "ON",
+                "SBLIB_DUMP_PROPERTIES": "ON",
+                "SBLIB_DUMP_TL4": "ON",
+                "SBLIB_ROUTER": "OFF",
+                "SBLIB_BUSMONITOR": "OFF",
+                "SBLIB_SERIAL_RX_PIN": "PIO1_6",
+                "SBLIB_SERIAL_TX_PIN": "PIO1_7",
+                "SBLIB_LOGGING": "OFF",
+                "SBLIB_LOGGING_DIR": "${sourceDir}/../../logging"
+            }
+        },
+        {
+            "name": "x64_logging",
+            "displayName": "x64 logging Target",
+            "description": "Most of logging enabled",
+            "hidden": false,
+            "inherits": [
+                "x64"
+            ],
+            "cacheVariables": {
+                "SBLIB_DEBUG_BUS": "ON",
+                "SBLIB_DEBUG_BUS_BITLEVEL": "ON",
+                "SBLIB_INCLUDE_SERIAL": "ON",
+                "SBLIB_SERIAL_SPEED": "115200",
+                "SBLIB_DUMP_TELEGRAMS": "ON",
+                "SBLIB_PIO_FOR_TEL_END_IND": "PIO1_4",
+                "SBLIB_DUMP_COM_OBJ": "ON",
+                "SBLIB_DUMP_MEM_OPS": "ON",
+                "SBLIB_DUMP_PROPERTIES": "ON",
+                "SBLIB_DUMP_TL4": "ON",
+                "SBLIB_ROUTER": "OFF",
+                "SBLIB_BUSMONITOR": "OFF",
+                "SBLIB_SERIAL_RX_PIN": "PIO1_6",
+                "SBLIB_SERIAL_TX_PIN": "PIO1_7",
+                "SBLIB_LOGGING": "OFF",
+                "SBLIB_LOGGING_DIR": "${sourceDir}/../../logging"
+            }
         }
     ],
     "buildPresets": [
@@ -77,6 +131,30 @@
             "targets": [
                 "lib-test-cases_x64"
             ]
+        },
+        {
+            "name": "debug-x86-logging",
+            "configurePreset": "x86_logging",
+            "configuration": "Debug",
+            "displayName": "x86 Target Debug Build",
+            "description": "Build x86 target with logging in Debug configuration",
+            "hidden": false,
+            "verbose": true,
+            "targets": [
+                "lib-test-cases_x86"
+            ]
+        },
+        {
+            "name": "debug-x64-logging",
+            "configurePreset": "x64_logging",
+            "configuration": "Debug",
+            "displayName": "x64 Target Debug Build",
+            "description": "Build x64 target with logging in Debug configuration",
+            "hidden": false,
+            "verbose": true,
+            "targets": [
+                "lib-test-cases_x64"
+            ]
         }
     ],
     "testPresets": [
@@ -119,6 +197,26 @@
             "configuration": "Release",
             "displayName": "x64 Target Release Test",
             "description": "Run tests for x64 target in Release configuration",
+            "hidden": false,
+            "output": {
+                "outputOnFailure": true
+            }
+        },        {
+            "name": "test-debug-x86-logging",
+            "configurePreset": "x86_logging",
+            "configuration": "Debug",
+            "displayName": "x86 Target Debug Test with Logging",
+            "description": "Run tests for x86 target with logging in Debug configuration",
+            "hidden": false,
+            "output": {
+                "outputOnFailure": true
+            }
+        },        {
+            "name": "test-debug-x64-logging",
+            "configurePreset": "x64_logging",
+            "configuration": "Debug",
+            "displayName": "x64 Target Debug Test with Logging",
+            "description": "Run tests for x64 target with logging in Debug configuration",
             "hidden": false,
             "output": {
                 "outputOnFailure": true

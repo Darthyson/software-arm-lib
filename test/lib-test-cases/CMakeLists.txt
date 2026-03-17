@@ -3,6 +3,8 @@ cmake_minimum_required(VERSION 3.28)
 project(lib-test-cases LANGUAGES CXX)
 
 set(CMAKE_VERBOSE_MAKEFILE ON CACHE BOOL "Enable verbose output from the build system")
+set(CMAKE_EXPORT_COMPILE_COMMANDS ON) # Creates compile_commands.json file for easier debugging and IDE support
+
 set(CMAKE_C_STANDARD 17)
 set(CMAKE_C_STANDARD_REQUIRED ON)
 set(CMAKE_CXX_STANDARD 17)
@@ -35,61 +37,57 @@ set(SBLIB_TEST_CASE_SRC
     ${SBLIB_LIB_TEST_CASES_SRC}
 )
 
-set(TARGET_X86 ${CMAKE_PROJECT_NAME}_x86)
-set(TARGET_X64 ${CMAKE_PROJECT_NAME}_x64)
+# Create targets
+set(TARGET_X86 ${PROJECT_NAME}_x86)
+set(TARGET_X64 ${PROJECT_NAME}_x64)
+add_executable(${TARGET_X86} ${SBLIB_TEST_CASE_SRC})
+add_executable(${TARGET_X64} ${SBLIB_TEST_CASE_SRC})
 
-set(INCLUDE_DIRECTORIES
-    ${CATCH_PATH}/inc          # catch
-    ${SBLIB_PATH}/inc          # sblib
-    ${SBLIB_TEST_PATH}/inc     # sblib-test
-    ${SBLIB_TEST_PATH}/cpu-emu # sblib-test cpu emulation
-)
+# Add include directories for targets
+foreach(target ${TARGET_X86} ${TARGET_X64})
+    target_include_directories(${target} PUBLIC
+        ${CATCH_PATH}/inc          # catch
+        ${SBLIB_PATH}/inc          # sblib
+        ${SBLIB_TEST_PATH}/inc     # sblib-test
+        ${SBLIB_TEST_PATH}/cpu-emu # sblib-test cpu emulation
+    )
+endforeach()
 
-#todo create options for definitions/symbols
-##add_definitions(-DSERIAL_RX_PIN=PIO2_7)
-##add_definitions(-DSERIAL_TX_PIN=PIO2_8)
-##add_definitions(-DINCLUDE_SERIAL)
-##add_definitions(-DROUTER)
-##add_definitions(-DBUSMONITOR)
+# definitions for all targets
 add_compile_definitions(
     IAP_EMULATION
     __LPC11XX__
+    $<$<CONFIG:Release>:NDEBUG>
     $<$<CONFIG:Debug>:DEBUG>
-    #$<$<CONFIG:Debug>:SERIAL_SPEED=1500000>
-    #$<$<CONFIG:Debug>:DEBUG_BUS>
-    #$<$<CONFIG:Debug>:DEBUG_BUS_BITLEVEL>
-    #$<$<CONFIG:Debug>:DUMP_TELEGRAMS>
-    #$<$<CONFIG:Debug>:PIO_FOR_TEL_END_IND=PIO1_4>
-    #$<$<CONFIG:Debug>:DUMP_COM_OBJ>
-    #$<$<CONFIG:Debug>:DUMP_MEM_OPS>
-    #$<$<CONFIG:Debug>:DUMP_PROPERTIES>
-    #$<$<CONFIG:Debug>:DUMP_TL4>
 )
 
-add_compile_options(
-    -Wall -Wlogical-op -Woverloaded-virtual -Wextra -pedantic
-    # todo Warnings to enable in future
-    # -Wconversion
-    -fmessage-length=0
-    $<$<CONFIG:Release>:-Os>
-    $<$<CONFIG:Debug>:-O0>
-    $<$<CONFIG:Debug>:-g3>
-)
+foreach(target ${TARGET_X86} ${TARGET_X64})
+    target_compile_options(${target} PRIVATE
+        -Wall -Wlogical-op -Woverloaded-virtual -Wextra -pedantic
+        # todo warnings to enable in future
+        # -Wconversion
+        -fmessage-length=0
+        -g3
+        $<$<CONFIG:Debug>: -O0>
+        $<$<CONFIG:Release>: -Os>
+    )
+endforeach()
 
-add_link_options(
-    #-fuse-ld=lld
-    #$<$<CONFIG:Release>:-flto>
-    #$<$<CONFIG:Release>:-ffat-lto-objects>
-    $<$<CONFIG:Release>:-s>
-    #$<$<CONFIG:Debug>: >
-)
+foreach(target ${TARGET_X86} ${TARGET_X64})
+    target_link_options(${target} PRIVATE
+        #-fuse-ld=lld
+#        $<$<CONFIG:Release>:-flto>
+#        $<$<CONFIG:Release>:-ffat-lto-objects>
+        $<$<CONFIG:Release>:-Os>
+        #$<$<CONFIG:Debug>: >
+    )
+endforeach()
 
 # Check if building for 32bit architecture
 if(SBLIB_ARCHITECTURE STREQUAL "x86")
-    add_executable(${TARGET_X86} ${SBLIB_TEST_CASE_SRC})
-    target_include_directories(${TARGET_X86} PRIVATE ${INCLUDE_DIRECTORIES})
+    message(NOTICE "Configuring ${PROJECT_NAME} for x86 architecture.")
     add_subdirectory(${SBLIB_TEST_PATH} sblib-test_x86)
-    target_compile_options(${TARGET_X86} PRIVATE
+    target_compile_options(${TARGET_X86} PUBLIC
         -m32
     )
     target_link_options(${TARGET_X86} PRIVATE
@@ -98,7 +96,7 @@ if(SBLIB_ARCHITECTURE STREQUAL "x86")
     target_link_libraries(${TARGET_X86} sblib-test_x86)
 
     # Register test with Catch2 options for better output
-    add_test(NAME ${TARGET_X86} 
+    add_test(NAME ${TARGET_X86}
         COMMAND ${TARGET_X86} --reporter console --success
         WORKING_DIRECTORY ${CMAKE_BINARY_DIR}
     )
@@ -110,8 +108,8 @@ if(SBLIB_ARCHITECTURE STREQUAL "x86")
 
 # Check if building for 64bit architecture
 elseif(SBLIB_ARCHITECTURE STREQUAL "x64")
-    add_executable(${TARGET_X64} ${SBLIB_TEST_CASE_SRC})
-    target_include_directories(${TARGET_X64} PRIVATE ${INCLUDE_DIRECTORIES})
+    message(NOTICE "Configuring ${PROJECT_NAME} for x64 architecture.")
+#    target_include_directories(${TARGET_X64} PRIVATE ${INCLUDE_DIRECTORIES})
     add_subdirectory(${SBLIB_TEST_PATH} sblib-test_x64)
     target_compile_options(${TARGET_X64} PRIVATE
         -m64
