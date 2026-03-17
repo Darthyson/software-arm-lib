@@ -46,14 +46,26 @@ enum PinFunc : uint8_t
 
 
 /**
+ * Offset of the pin function bits in the pin mode value
+ */
+constexpr uint8_t PinFunctionBitOffset = 18;
+
+/**
  * Select a specific port pin function when setting the pin mode.
  * This is intended to be used in combination with @ref pinMode.
  *
  * Example: pinMode(PIO1_6, INPUT | PinModeFunc(PF_RXD));
  * This enables the UART RXD function on pin PIO1_6.
  */
-constexpr uint32_t PinModeFunc(const PinFunc f) {return (f << 18);}
+constexpr uint32_t PinModeFunc(const PinFunc f) {return f << PinFunctionBitOffset;}
 
+/**
+ * Extract the pin function from a pin mode value.
+ *
+ * @param pinMode - The pin mode value containing an encoded pin function
+ * @return The extracted @ref PinFunc
+ */
+constexpr PinFunc getPinFunction(const uint32_t pinMode) {return static_cast<PinFunc>((pinMode >> PinFunctionBitOffset) & 31);}
 
 // Constants for port pin function manipulation
 enum PortFunctionManipulator : uint32_t

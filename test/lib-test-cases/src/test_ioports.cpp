@@ -102,6 +102,46 @@ TEST_CASE("PinModeFunc", "[ioports]")
     REQUIRE(PinModeFunc(PF_SCLK) == 0x00780000);
 }
 
+TEST_CASE("getPinFunction", "[ioports]")
+{
+    REQUIRE(getPinFunction(0) == PF_NONE);
+    REQUIRE(getPinFunction(PinModeFunc(PF_NONE)) == PF_NONE);
+    REQUIRE(getPinFunction(PinModeFunc(PF_PIO)) == PF_PIO);
+    REQUIRE(getPinFunction(PinModeFunc(PF_AD)) == PF_AD);
+    REQUIRE(getPinFunction(PinModeFunc(PF_RESET)) == PF_RESET);
+    REQUIRE(getPinFunction(PinModeFunc(PF_SWDIO)) == PF_SWDIO);
+    REQUIRE(getPinFunction(PinModeFunc(PF_SWCLK)) == PF_SWCLK);
+    REQUIRE(getPinFunction(PinModeFunc(PF_MAT)) == PF_MAT);
+    REQUIRE(getPinFunction(PinModeFunc(PF_CAP)) == PF_CAP);
+    REQUIRE(getPinFunction(PinModeFunc(PF_CLKOUT)) == PF_CLKOUT);
+    REQUIRE(getPinFunction(PinModeFunc(PF_SDA)) == PF_SDA);
+    REQUIRE(getPinFunction(PinModeFunc(PF_SCL)) == PF_SCL);
+    REQUIRE(getPinFunction(PinModeFunc(PF_SSEL)) == PF_SSEL);
+    REQUIRE(getPinFunction(PinModeFunc(PF_MISO)) == PF_MISO);
+    REQUIRE(getPinFunction(PinModeFunc(PF_MOSI)) == PF_MOSI);
+    REQUIRE(getPinFunction(PinModeFunc(PF_SCK)) == PF_SCK);
+    REQUIRE(getPinFunction(PinModeFunc(PF_RXD)) == PF_RXD);
+    REQUIRE(getPinFunction(PinModeFunc(PF_TXD)) == PF_TXD);
+    REQUIRE(getPinFunction(PinModeFunc(PF_RTS)) == PF_RTS);
+    REQUIRE(getPinFunction(PinModeFunc(PF_DTR)) == PF_DTR);
+    REQUIRE(getPinFunction(PinModeFunc(PF_DSR)) == PF_DSR);
+    REQUIRE(getPinFunction(PinModeFunc(PF_CTS)) == PF_CTS);
+    REQUIRE(getPinFunction(PinModeFunc(PF_DCD)) == PF_DCD);
+    REQUIRE(getPinFunction(PinModeFunc(PF_RI)) == PF_RI);
+    REQUIRE(getPinFunction(PinModeFunc(PF_USBP)) == PF_USBP);
+    REQUIRE(getPinFunction(PinModeFunc(PF_USB_M)) == PF_USB_M);
+    REQUIRE(getPinFunction(PinModeFunc(PF_USB_VBUS)) == PF_USB_VBUS);
+    REQUIRE(getPinFunction(PinModeFunc(PF_USB_CONNECT)) == PF_USB_CONNECT);
+    REQUIRE(getPinFunction(PinModeFunc(PF_USB_FTOGGLE)) == PF_USB_FTOGGLE);
+    REQUIRE(getPinFunction(PinModeFunc(PF_ARM_TRACE_CLK)) == PF_ARM_TRACE_CLK);
+    REQUIRE(getPinFunction(PinModeFunc(PF_ARM_TRACE_SWV)) == PF_ARM_TRACE_SWV);
+    REQUIRE(getPinFunction(PinModeFunc(PF_SCLK)) == PF_SCLK);
+
+    // Verify lower bits don't affect the result
+    REQUIRE(getPinFunction(PinModeFunc(PF_PIO) | 0x0001) == PF_PIO);
+    REQUIRE(getPinFunction(PinModeFunc(PF_MAT) | 0x3FFFF) == PF_MAT);
+}
+
 TEST_CASE("enum PortFunctionManipulator", "[ioports]")
 {
     REQUIRE(PFL_ADMODE == 0x100);

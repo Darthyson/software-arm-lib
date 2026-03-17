@@ -34,9 +34,11 @@ void pinMode(const uint32_t pin, const uint32_t mode)
     const uint16_t type = mode & 0xf000;
     uint32_t iocon = mode & 0xfff;
 
-    auto func = static_cast<uint16_t>((mode >> 18) & 31);
+    auto func = getPinFunction(mode);
     if (func == 0)
+    {
         func = PF_PIO;
+    }
 
     if (type == OUTPUT || type == OUTPUT_MATCH)
     {
