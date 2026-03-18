@@ -37,7 +37,7 @@ bool handleApciUsermsgManufacturer(uint8_t * sendBuffer, uint8_t * data, uint32_
 /**
  * @brief Resets the UPD/UDP protocol ramBuffer and global variables to default
  */
-void resetUPDProtocol(void);
+void resetUPDProtocol();
 
 /**
  * Handles deprecated KNX memory requests by sending the old @ref UPD_SEND_LAST_ERROR with the old value of @ref UDP_NOT_IMPLEMENTED

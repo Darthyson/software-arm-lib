@@ -23,7 +23,6 @@
 #define SB_BOOTLOADER_BOOT_DESCRIPTOR_BLOCK_H_
 
 #include <sblib/platform.h>
-#include <version.h>
 
 
 #ifdef DEBUG
@@ -92,63 +91,63 @@ uint8_t * getFirmwareStartAddress(AppDescriptionBlock * block);
  *
  * @return first address of the bootloader image
  */
-uint8_t * bootLoaderFirstAddress(void);
+uint8_t * bootLoaderFirstAddress();
 
 /**
  * Returns the last address of the bootloader image (__image_end symbol included by the linker)
  *
  * @return last address of the bootloader image
  */
-uint8_t * bootLoaderLastAddress(void);
+uint8_t * bootLoaderLastAddress();
 
 /**
  * Returns the size of the bootloader image in bytes (__image_end - _image_start - 1)
  *
  * @return size of the bootloader image in bytes
  */
-unsigned int bootLoaderSize(void);
+uint32_t bootLoaderSize();
 
 /**
  * Returns the first address of the default flash memory (__base_Flash symbol included by the linker)
  *
  * @return first address of the default flash memory
  */
-uint8_t * flashFirstAddress(void);
+uint8_t * flashFirstAddress();
 
 /**
  * Returns the last address of the default flash memory (__top_Flash symbol included by the linker)
  *
  * @return last address of the default flash memory
  */
-uint8_t * flashLastAddress(void);
+uint8_t * flashLastAddress();
 
 /**
  * Returns the size of the default flash memory in bytes (__top_Flash - __base_Flash - 1)
  *
  * @return size of the default flash memory in bytes
  */
-unsigned int flashSize(void);
+uint32_t flashSize();
 
 /**
  * Returns the first address of the application's firmware
  *
  * @return first address of the application's firmware
  */
-uint8_t * applicationFirstAddress(void);
+uint8_t * applicationFirstAddress();
 
 /**
  * Returns the first address of the boot descriptor block
  *
  * @return first address of the boot descriptor block
  */
-uint8_t * bootDescriptorBlockAddress(void);
+uint8_t * bootDescriptorBlockAddress();
 
 /**
  * Returns the page number of the boot descriptor block
  *
  * @return page number of the boot descriptor block
  */
-unsigned int bootDescriptorBlockPage(void);
+uint32_t bootDescriptorBlockPage();
 
 #endif /* SB_BOOTLOADER_BOOT_DESCRIPTOR_BLOCK_H_ */
 

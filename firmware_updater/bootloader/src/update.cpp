@@ -25,18 +25,18 @@
 #include "bcu_updater.h"
 #include "crc.h"
 #include "dump.h"
+#include "version.h"
 #include <sblib/digital_pin.h>
 #include <sblib/bits.h>
-#include <sblib/eib/knx_tpdu.h>
 #include <sblib/eib/apci.h>
 #include <sblib/internal/iap.h>
-#include <sblib/io_pin_names.h>
 #include <sblib/version.h>
 #include <cstring>
 
 #if defined(DEBUG)
 #   include "intelhex.h"
 #   include <sblib/serial.h>
+#   include <sblib/io_pin_names.h>
 #endif
 
 #ifdef DECOMPRESSOR

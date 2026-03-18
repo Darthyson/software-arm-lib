@@ -23,6 +23,7 @@
 
 #include <cstdint>
 
+
 // Remember to change build-variable sw_version in the .cproject file
 constexpr uint8_t BOOTLOADER_MAJOR_VERSION = 1;  //!< Bootloader major version @note change also in BootloaderUpdater's app_main.cpp
 constexpr uint8_t BOOTLOADER_MINOR_VERSION = 20; //!< Bootloader minor version @note change also in BootloaderUpdater's app_main.cpp

@@ -20,11 +20,10 @@
  -----------------------------------------------------------------------------*/
 
 #include "bcu_updater.h"
+#include "update.h"
 #include "dump.h"
 #include <sblib/eib/knx_lpdu.h>
-#include <sblib/eib/knx_tpdu.h>
 #include <sblib/eib/apci.h>
-#include <sblib/digital_pin.h>
 #include <sblib/interrupt.h>
 #include <sblib/internal/bootloader_commands.h>
 #include <sblib/bits.h>

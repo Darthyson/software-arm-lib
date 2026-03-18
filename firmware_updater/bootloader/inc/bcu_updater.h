@@ -22,7 +22,6 @@
 #ifndef SB_BOOTLOADER_BCU_UPDATER_H_
 #define SB_BOOTLOADER_BCU_UPDATER_H_
 
-#include "update.h"
 #include <sblib/eib/bcu_base.h>
 
 
@@ -30,10 +29,10 @@ class BcuUpdate: public BcuBase
 {
 public:
     BcuUpdate();
-    ~BcuUpdate() = default;
+    ~BcuUpdate() override = default;
     using BcuBase::setProgrammingMode; // make it public so we can use it in bootloader.cpp
     void begin();
-    bool applicationRunning() const override {return enabled;}
+    [[nodiscard]] bool applicationRunning() const override {return enabled;}
 
 protected:
     bool processApci(ApciCommand apciCmd, unsigned char * telegram, uint8_t telLength, uint8_t * sendBuffer) override;

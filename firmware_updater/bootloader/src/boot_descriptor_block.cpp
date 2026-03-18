@@ -131,12 +131,12 @@ uint8_t * getFirmwareStartAddress(AppDescriptionBlock * block)
     }
 }
 
-uint8_t * bootLoaderFirstAddress(void)
+uint8_t * bootLoaderFirstAddress()
 {
     return _image_start;
 }
 
-uint8_t * bootLoaderLastAddress(void)
+uint8_t * bootLoaderLastAddress()
 {
     // The linker sets this not correctly, so we need the -1
     return _image_end - 1;
@@ -148,12 +148,12 @@ unsigned int bootLoaderSize(void)
     return (unsigned int)(uintptr_t)&_image_size;
 }
 
-uint8_t * flashFirstAddress(void)
+uint8_t * flashFirstAddress()
 {
     return __base_Flash;
 }
 
-uint8_t * flashLastAddress(void)
+uint8_t * flashLastAddress()
 {
     //linker sets this not correctly, so we need the -1
     return __top_Flash - 1;
@@ -165,7 +165,7 @@ unsigned int flashSize(void)
     return flashLastAddress() - flashFirstAddress() + 1;
 }
 
-uint8_t * applicationFirstAddress(void)
+uint8_t * applicationFirstAddress()
 {
     uint8_t * appFirstAddress = bootLoaderFirstAddress() + bootLoaderSize();
     // boot descriptor block is placed in front of the application,
@@ -178,13 +178,13 @@ uint8_t * applicationFirstAddress(void)
     return (uint8_t *)ptr;
 }
 
-uint8_t * bootDescriptorBlockAddress(void)
+uint8_t * bootDescriptorBlockAddress()
 {
     // boot descriptor block is placed in front of the application
     return applicationFirstAddress() - BOOT_BLOCK_DESC_SIZE;
 }
 
-unsigned int bootDescriptorBlockPage(void)
+uint32_t bootDescriptorBlockPage()
 {
     // every boot descriptor block is placed in front of the application, so subtract all of them
     return iapPageOfAddress(bootDescriptorBlockAddress());
