@@ -6,8 +6,7 @@
  * @{
  *
  * @file   intelhex.cpp
- * @author Darthyson <darth@maptrack.de> Copyright (c) 2021
- * @bug No known bugs.
+ * @author Darthyson <darth@maptrack.de> Copyright (c) 2026
  ******************************************************************************/
 
 /*
@@ -25,7 +24,7 @@
 #define HEX_START_SEGMENT_RECORD "04000003"
 #define HEX_START_SEGMENT_RECORD_CHKSM (0x07)  // 04 + 00 + 00 + 03
 
-// short example hex file with 16 byte of data (actual hex file has no spaces)
+// A short example hex file with 16 bytes of data (an actual hex file has no spaces)
 // :10 7000 00 001F001049710000CD710000A5C20000 F2
 // :04 000003 0000 7149 3F
 // :00000001FF

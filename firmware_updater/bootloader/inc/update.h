@@ -9,8 +9,7 @@
  *
  * @file   update.h
  * @author Stefan Haller Copyright (c) May 24, 2020
- * @author Darthyson <darth@maptrack.de> Copyright (c) 2021
- * @bug No known bugs.
+ * @author Darthyson <darth@maptrack.de> Copyright (c) 2026
  ******************************************************************************/
 
 /*
@@ -41,7 +40,7 @@ bool handleApciUsermsgManufacturer(uint8_t * sendBuffer, uint8_t * data, uint32_
 void resetUPDProtocol(void);
 
 /**
- * Handles deprecated KNX memory requests by sending the old @ref UPD_SEND_LAST_ERROR with old value of @ref UDP_NOT_IMPLEMENTED
+ * Handles deprecated KNX memory requests by sending the old @ref UPD_SEND_LAST_ERROR with the old value of @ref UDP_NOT_IMPLEMENTED
  *
  * @param sendBuffer The buffer to write the response into
  * @return always true

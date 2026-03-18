@@ -17,14 +17,14 @@
  *      - 9-21  The data which will be copied into a RAM buffer for later use.
  *              The address of the RAM buffer will be automatically incremented.
  *              After a @ref UPD_PROGRAM or @ref UPD_UPDATE_BOOT_DESC the RAM buffer address will be reseted.
- *      .
+ *
 
  *    -@ref UPD_PROGRAM
  *      - 9-12 How many bytes of the RAM Buffer should be programmed. Be aware that the value needs to be one of the following
  *             256, 512, 1024 (required by the IAP of the LPC11xx mcu)
  *      - 13-16 Flash address the data should be programmed to
  *      - 16-19 The CRC of the data downloaded via the UPD_SEND_DATA commands. If the CRC does not match the
- *              programming, error is returned
+ *              programming, an error is returned
  *      .
  *
  *    -@ref UPD_UPDATE_BOOT_DESC
@@ -37,7 +37,7 @@
  *
  *    -Workflow:
  *      -# unlock the device with @ref UPD_UNLOCK_DEVICE
- *      -# erase the address range which needs to be programmed (@ref UPD_ERASE_ADDRESSRANGE)
+ *      -# erase the address range which needs to be programmed (@ref UPD_ERASE_ADDRESS_RANGE)
  *      -# download the data via @ref UPD_SEND_DATA telegrams
  *      -# program the transmitted data into the FLASH  (@ref UPD_PROGRAM)
  *      -# repeat the above steps until the whole application has been downloaded
@@ -50,8 +50,7 @@
  * @{
  *
  * @file   upd_protocol.h
- * @author Darthyson <darth@maptrack.de> Copyright (c) 2023
- * @bug No known bugs.
+ * @author Darthyson <darth@maptrack.de> Copyright (c) 2026
  ******************************************************************************/
 
 /*
@@ -81,23 +80,23 @@ constexpr uint8_t idxInvalidUPDCommand = 0; //!< Array index of the @ref UPD_INV
  */
 enum UPD_Code : uint8_t
 {
-    UPD_INVALID = 0x00,                     //!< Marks a invalid code
+    UPD_INVALID = 0x00,                     //!< Marks an invalid code
     UPD_SEND_DATA = 0xef,                   //!< Copy ((data[0] & 0x0f)-1) bytes to ramBuffer starting from address data[3] @note device must be unlocked
     UPD_PROGRAM = 0xee,                     //!< Copy count (data[3-6]) bytes from ramBuffer to address (data[7-10]) in flash buffer, crc in data[11-14] @note device must be unlocked
     UPD_UPDATE_BOOT_DESC = 0xed,            //!< Flash an application boot descriptor block @note device must be unlocked
-    UPD_SEND_DATA_TO_DECOMPRESS = 0xec,     //!< Copy bytes from telegram (data) to ramBuffer with differential method @note device must be unlocked
-    UPD_PROGRAM_DECOMPRESSED_DATA = 0xeb,   //!< Flash bytes from ramBuffer to flash with differential method @note device must be unlocked
+    UPD_SEND_DATA_TO_DECOMPRESS = 0xec,     //!< Copy bytes from a telegram (data) to ramBuffer with differential method @note device must be unlocked
+    UPD_PROGRAM_DECOMPRESSED_DATA = 0xeb,   //!< Flash bytes from ramBuffer to flash with the differential method @note device must be unlocked
     UPD_ERASE_COMPLETE_FLASH = 0xea,        //!< Erase the entire flash area excluding the bootloader itself @note device must be unlocked
     UPD_ERASE_ADDRESSRANGE = 0xe9,          //!< Erase flash from given start address to end address (start: data[3-6] end: data[7-10]) @note device must be unlocked
-    UPD_REQ_DATA = 0xe8,                    //!< Return bytes from flash at given address? @note device must be unlocked @warning Not implemented
+    UPD_REQ_DATA = 0xe8,                    //!< Return bytes from flash at a given address? @note device must be unlocked @warning Not implemented
     UPD_DUMP_FLASH = 0xe7,                  //!< DUMP the flash of a given address range (data[0-3] - data[4-7]) to serial port of the mcu,
-                                            //!< works only with DEBUG version of bootloader @note device must be unlocked
+                                            //!< works only with in the DEBUG version of bootloader @note device must be unlocked
     UPD_REQUEST_STATISTIC = 0xdf,           //!< Return some statistic data for the active connection
     UPD_RESPONSE_STATISTIC = 0xde,          //!< Response for @ref UPD_STATISTIC_RESPONSE containing the statistic data
     UPD_SEND_LAST_ERROR = 0xdc,             //!< Response containing the last error
 
     UPD_UNLOCK_DEVICE = 0xbf,               //!< Unlock the device for operations, which are only allowed on an unlocked device
-    UPD_REQUEST_UID = 0xbe,                 //!< Return the 12 byte shorten UID (GUID) of the mcu
+    UPD_REQUEST_UID = 0xbe,                 //!< Return the 12 bytes shortened UID (GUID) of the mcu
     UPD_RESPONSE_UID = 0xbd,                //!< Response for @ref UPD_REQUEST_UID containing the first 12 bytes of the UID
     UPD_APP_VERSION_REQUEST = 0xbc,         //!< Return address of AppVersion string
     UPD_APP_VERSION_RESPONSE = 0xbb,        //!< Response for @ref UPD_APP_VERSION_REQUEST containing the application version string
@@ -119,7 +118,7 @@ const struct UPD_Command {
     uint8_t maxBytes;
 } updCommands[] =
 {
-    {UPD_INVALID, 0, 0},     // needs to be always at index 0 because it's used as a invalid return value of code2UPDCommand, see @ref idxInvalidUPDCommand
+    {UPD_INVALID, 0, 0},     // needs to be always at index 0 because it's used as an invalid return value of code2UPDCommand, see @ref idxInvalidUPDCommand
     {UPD_SEND_DATA, 1, 254}, // at least one byte, max. 254 for extended frames support
     {UPD_PROGRAM, 10, 10},
     {UPD_UPDATE_BOOT_DESC, 8, 8},
@@ -127,7 +126,7 @@ const struct UPD_Command {
     {UPD_PROGRAM_DECOMPRESSED_DATA, 4, 4},
     {UPD_ERASE_COMPLETE_FLASH, 0, 0},
     {UPD_ERASE_ADDRESSRANGE, 8, 8},
-    {UPD_REQ_DATA, 3, 3}, // not implemented, maybe flash address (2 bytes ) and count (1 byte)?
+    {UPD_REQ_DATA, 3, 3}, // not implemented, maybe flash address (2 bytes) and count (1 byte)?
     {UPD_DUMP_FLASH, 8, 8},
     {UPD_REQUEST_STATISTIC, 0, 0},
     {UPD_RESPONSE_STATISTIC, 4, 4},
@@ -146,7 +145,7 @@ const struct UPD_Command {
 };
 
 /**
- * Control responses to @ref UPD_Command for flash process with @ref APCI_USERMSG_MANUFACTURER_0 and @ref APCI_USERMSG_MANUFACTURER_6
+ * Control responses to @ref UPD_Command for a flash process with @ref APCI_USERMSG_MANUFACTURER_0 and @ref APCI_USERMSG_MANUFACTURER_6
  */
 enum UDP_State : uint8_t
 {
@@ -162,13 +161,13 @@ enum UDP_State : uint8_t
     UDP_IAP_INVALID_SECTOR = 0x78,                          //!< IAP Sector number is invalid.
     UDP_IAP_SECTOR_NOT_BLANK = 0x77,                        //!< IAP Sector is not blank.
     UDP_IAP_SECTOR_NOT_PREPARED_FOR_WRITE_OPERATION = 0x76, //!< IAP Command to prepare sector for write operation was not executed.
-    UDP_IAP_COMPARE_ERROR = 0x75, //!< IAP Source and destination data is not same. Check that the affected flash sectors/pages are erased prior flashing.
+    UDP_IAP_COMPARE_ERROR = 0x75, //!< IAP Source and destination data is different. Check that the affected flash sectors/pages are erased before flashing.
     UDP_IAP_BUSY = 0x74,                                    //!< IAP Flash programming hardware interface is busy.
     UDP_IAP_UNKNOWN = 0x73,                                 //!< IAP unknown @ref IAP_Status.
 
     UDP_UNKNOWN_COMMAND = 0x5f,              //!< received command is not defined
     UDP_CRC_ERROR = 0x5e,                    //!< CRC calculated on the device and by the Selfbus Updater Tool don't match
-    UDP_ADDRESS_NOT_ALLOWED_TO_FLASH = 0x5d, //!< specifed address cannot be programmed
+    UDP_ADDRESS_NOT_ALLOWED_TO_FLASH = 0x5d, //!< specified address cannot be programmed
     UDP_SECTOR_NOT_ALLOWED_TO_ERASE = 0x5c,  //!< the specified sector cannot be erased
     UDP_RAM_BUFFER_OVERFLOW = 0x5b,          //!< internal buffer for storing the data would overflow
     UDP_WRONG_DESCRIPTOR_BLOCK = 0x5a,       //!< the boot descriptor block does not exist
@@ -177,12 +176,12 @@ enum UDP_State : uint8_t
     UDP_UID_MISMATCH = 0x57,                 //!< UID sent to unlock the device is invalid
     UDP_ERASE_FAILED = 0x56,                 //!< page erase failed
     UDP_INVALID_DATA = 0x55,                 //!< data received is invalid
-    UDP_NO_DATA = 0x54,                      //!< no data received in telegram
+    UDP_NO_DATA = 0x54,                      //!< no data received in the telegram
     UDP_FLASH_ERROR = 0x53,                  //!< page program (flash) failed
-    UDP_PAGE_NOT_ALLOWED_TO_ERASE = 0x52,    //!< page not allowed to erase
-    UDP_ADDRESS_RANGE_NOT_ALLOWED_TO_ERASE = 0x51, //!< address range not allowed to erase
-    UDP_BYTECOUNT_RECEIVED_TOO_LOW = 0x50,   //!< Number of bytes received with @ref UPD_SEND_DATA is lower than number of bytes to program with @ref UPD_PROGRAM
-    UDP_BYTECOUNT_RECEIVED_TOO_HIGH = 0x4f,  //!< Number of bytes received with @ref UPD_SEND_DATA is greater than number of bytes to program with @ref UPD_PROGRAM
+    UDP_PAGE_NOT_ALLOWED_TO_ERASE = 0x52,    //!< page isn't allowed to erase
+    UDP_ADDRESS_RANGE_NOT_ALLOWED_TO_ERASE = 0x51, //!< address range isn't allowed to erase
+    UDP_BYTECOUNT_RECEIVED_TOO_LOW = 0x50,   //!< Number of bytes received with @ref UPD_SEND_DATA is lower than the number of bytes to program with @ref UPD_PROGRAM
+    UDP_BYTECOUNT_RECEIVED_TOO_HIGH = 0x4f,  //!< Number of bytes received with @ref UPD_SEND_DATA is greater than the number of bytes to program with @ref UPD_PROGRAM
 
     UDP_NOT_IMPLEMENTED = 0x02,              //!< this command is not yet implemented
     UDP_INVALID = 0x01                       //!< Unknown error
@@ -197,7 +196,7 @@ enum UDP_State : uint8_t
 UPD_Command code2UPDCommand(uint8_t code);
 
 /**
- * Converts a @ref IAP_Status into a @ref UDP_State
+ * Converts an @ref IAP_Status into a @ref UDP_State
  * @param iapState @ref IAP_Status to convert
  * @return the corresponding @ref UDP_State
  */

@@ -10,8 +10,7 @@
  * @file   bcu_updater.cpp
  * @author Martin Glueck <martin@mangari.org> Copyright (c) 2015
  * @author Stefan Haller Copyright (c) 2021
- * @author Darthyson <darth@maptrack.de> Copyright (c) 2022
- * @bug No known bugs.
+ * @author Darthyson <darth@maptrack.de> Copyright (c) 2026
  ******************************************************************************/
 
 /*
@@ -32,7 +31,7 @@
 
 
 /**
- * The Maskversion of the Bootloader (BCU1 1.2)
+ * The mask version of the Bootloader (BCU1 1.2)
  */
 constexpr uint16_t BootloaderMaskVersion = 0x0012;
 
@@ -90,7 +89,7 @@ bool BcuUpdate::processApci(ApciCommand apciCmd, unsigned char * telegram, uint8
             // We need to process the A_DeviceDescriptor_Read to support
             // the management procedure NM_IndividualAddress_Write.
             // Check KNX Spec. 3.0 3/5/2 2.3 NM_IndividualAddress_Write for more details.
-            // It´s here, and not in BcuBase to reduce the size of the BL a little bit.
+            // It's here and not in BcuBase to reduce the size of the BL a little bit.
             const uint8_t id = telegram[7] & 0x3f;
             if (id != 0)
             {
@@ -117,7 +116,7 @@ bool BcuUpdate::processBroadCastTelegram(ApciCommand apciCmd, unsigned char *tel
 {
     if (directConnection() && (apciCmd == APCI_INDIVIDUAL_ADDRESS_WRITE_PDU))
     {
-        // Don´t handle address write while we have an open TL4 connection
+        // Don't handle address write while we have an open TL4 connection
         dump(serial.println("ADDRESS_WRITE ignored (TL4 active)");)
         return false;
     }
@@ -149,7 +148,7 @@ bool BcuUpdate::processBroadCastTelegram(ApciCommand apciCmd, unsigned char *tel
         if (apciCmd == APCI_INDIVIDUAL_ADDRESS_WRITE_PDU)
         {
             // Cache current physical address in RAM.
-            // Next telegram will be an APCI_BASIC_RESTART_PDU
+            // The next telegram will be an APCI_BASIC_RESTART_PDU
             // See KNX Spec. 3.0 3/5/2 2.3 NM_IndividualAddress_Write
             prepareRestartIntoBootloader(this->ownAddress());
         }

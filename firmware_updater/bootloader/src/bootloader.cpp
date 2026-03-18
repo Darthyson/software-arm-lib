@@ -138,8 +138,7 @@ BcuBase* setup()
 }
 
 /**
- * @brief Handles LED status
- *
+ * Handles LED status.
  */
 void loop()
 {
@@ -167,7 +166,8 @@ void loop()
 }
 
 /**
- * The processing loop while no KNX-application is loaded
+ * The processing loop while no KNX-application is loaded.
+ * @note This function is required by the sblib but not used in the bootloader.
  */
 void loop_noapp()
 {
@@ -219,11 +219,10 @@ static void jumpToApplication(uint8_t * start)
     LPC_SYSCON->SYSMEMREMAP = 0x01;
     // DO NOT use a __DSB here, even if the user manual UM10398 28.4.2.4 states it, otherwise application won't start.
 
-    /* Normally during RESET the stack pointer will be loaded
-     * with the value stored location 0x0. Since the vector
-     * table of the application is not located at 0x0 we have to do this
-     * manually to ensure a correct stack.
-     */
+    // Normally during RESET the stack pointer will be loaded
+    // with the value stored at location 0x0. Since the vector
+    // table of the application is not located at 0x0 we have to do this
+    // manually to ensure a correct stack.
     asm volatile ("mov SP, %0" : : "r" (StackTop));
     /* Once the stack is setup we jump to the application reset vector */
     asm volatile ("bx      %0" : : "r" (ResetVector));

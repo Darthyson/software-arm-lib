@@ -9,8 +9,7 @@
  * @{
  *
  * @file   dump.h
- * @author Darthyson <darth@maptrack.de> Copyright (c) 2021
- * @bug No known bugs.
+ * @author Darthyson <darth@maptrack.de> Copyright (c) 2026
  ******************************************************************************/
 
 /*

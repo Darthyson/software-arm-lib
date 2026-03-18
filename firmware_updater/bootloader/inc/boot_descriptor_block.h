@@ -10,8 +10,7 @@
  * @file   boot_descriptor_block.h
  * @author Martin Glueck <martin@mangari.org> Copyright (c) 2015
  * @author Stefan Haller Copyright (c) 2021
- * @author Darthyson <darth@maptrack.de> Copyright (c) 2022
- * @bug No known bugs.
+ * @author Darthyson <darth@maptrack.de> Copyright (c) 2026
  ******************************************************************************/
 
 /*
@@ -28,9 +27,9 @@
 
 
 #ifdef DEBUG
-    constexpr uint16_t BL_FEATURES = 0x8100; //!< Feature list of bootloader in Debug version
+    constexpr uint16_t BL_FEATURES = 0x8100; //!< Feature list of bootloader in the Debug version
 #else
-    constexpr uint16_t BL_FEATURES = 0x0100; //!< Feature list of bootloader in Release version
+    constexpr uint16_t BL_FEATURES = 0x0100; //!< Feature list of bootloader in the Release version
 #endif
 
 /**
@@ -44,7 +43,7 @@
 #define BL_ID_STRING         "[SB KNX BL ]"     //!< boot loader identity string for getAppVersion()
 #define BL_ID_STRING_LENGTH  13                 //!< length of boot loader identity string
 
-constexpr uint16_t BOOT_BLOCK_DESC_SIZE = FLASH_PAGE_SIZE; //!< 1 flash page, any changes must also be done in the BLU´s app_main.cpp
+constexpr uint16_t BOOT_BLOCK_DESC_SIZE = FLASH_PAGE_SIZE; //!< 1 flash page, any changes must also be done in the BLU's app_main.cpp
 
 extern char bl_id_string[BL_ID_STRING_LENGTH]; //!< default bootloader identity "string" used in @ref getAppVersion()
 
@@ -112,14 +111,14 @@ unsigned int bootLoaderSize(void);
 /**
  * Returns the first address of the default flash memory (__base_Flash symbol included by the linker)
  *
- * @return first address of the the default flash memory
+ * @return first address of the default flash memory
  */
 uint8_t * flashFirstAddress(void);
 
 /**
  * Returns the last address of the default flash memory (__top_Flash symbol included by the linker)
  *
- * @return last address of the the default flash memory
+ * @return last address of the default flash memory
  */
 uint8_t * flashLastAddress(void);
 

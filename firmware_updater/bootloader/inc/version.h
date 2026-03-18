@@ -9,8 +9,7 @@
  * @{
  *
  * @file   version.h
- * @author Darthyson <darth@maptrack.de> Copyright (c) 2022
- * @bug No known bugs.
+ * @author Darthyson <darth@maptrack.de> Copyright (c) 2026
  ******************************************************************************/
 
 /*
@@ -24,8 +23,7 @@
 
 #include <cstdint>
 
-
-// Don't forget to change build-variable sw_version in .cproject file
+// Remember to change build-variable sw_version in the .cproject file
 constexpr uint8_t BOOTLOADER_MAJOR_VERSION = 1;  //!< Bootloader major version @note change also in BootloaderUpdater's app_main.cpp
 constexpr uint8_t BOOTLOADER_MINOR_VERSION = 20; //!< Bootloader minor version @note change also in BootloaderUpdater's app_main.cpp
 

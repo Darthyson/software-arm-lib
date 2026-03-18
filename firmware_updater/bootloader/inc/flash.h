@@ -2,15 +2,14 @@
  * @addtogroup SBLIB_BOOTLOADER Selfbus Bootloader
  * @defgroup SBLIB_UPD_UDP_FLASH_1 Flash access utilities
  * @ingroup SBLIB_BOOTLOADER
- * @brief   Provides several function for accessing and flashing the MCU's flash
+ * @brief   Provides several functions for accessing and flashing the MCU's flash
  * @details 
  *
  *
  * @{
  *
  * @file   flash.h
- * @author Darthyson <darth@maptrack.de> Copyright (c) 2021
- * @bug No known bugs.
+ * @author Darthyson <darth@maptrack.de> Copyright (c) 2026
  ******************************************************************************/
 
 /*
@@ -26,11 +25,12 @@
 
 
 /**
- * Erases if allowed the requested page range, startPage must be lower or equal endPage.
+ * Erases if allowed the requested page range.
+ * StartPage must be smaller or equal to the endPage.
  *
  * @param startPage Start page number to be erased
  * @param endPage   End page number to be erased
- * @return          @ref UDP_IAP_SUCCESS if successful, otherwise @ref UDP_PAGE_NOT_ALLOWED_TO_ERASE or a @ref IAP_Status
+ * @return          @ref UDP_IAP_SUCCESS if successful, otherwise @ref UDP_PAGE_NOT_ALLOWED_TO_ERASE or an @ref IAP_Status
  */
 UDP_State erasePageRange(unsigned int startPage, unsigned int endPage);
 
@@ -50,7 +50,7 @@ UDP_State eraseFullFlash();
  * @param startAddress  start address of flash range to erase
  * @param endAddress    end address of flash range to erase
  * @param rangeCheck    set to true to check if the address range is allowed to be accessed
- * @return              @ref UDP_IAP_SUCCESS if successful, otherwise @ref UDP_SECTOR_NOT_ALLOWED_TO_ERASE or a @ref IAP_Status
+ * @return              @ref UDP_IAP_SUCCESS if successful, otherwise @ref UDP_SECTOR_NOT_ALLOWED_TO_ERASE or an @ref IAP_Status
  * @warning             Function can take up to ~3.5 seconds to return.
  *                      It works on a page and sector base. Page erases are very slow ~100ms for one page
  */
@@ -61,8 +61,8 @@ UDP_State eraseAddressRange(uint8_t * startAddress, const uint8_t * endAddress, 
  *
  * @param start            start of the address range to check
  * @param length           length of the address range
- * @param isBootDescriptor set true to check range of the application boot descriptor
- *                         or false to check range of the application itself
+ * @param isBootDescriptor set true to check the range of the application boot descriptor
+ *                         or false to check the range of the application itself
  * @return                 true if programming is allowed, otherwise false
  */
 bool addressAllowedToProgram(uint8_t * start, unsigned int length, bool isBootDescriptor = false);
@@ -76,8 +76,8 @@ bool addressAllowedToProgram(uint8_t * start, unsigned int length, bool isBootDe
  * @param isBootDescriptor  Set true to program an @ref AppDescriptionBlock, default false
  *
  * @return        UDP_IAP_SUCCESS if successful, otherwise UDP_ADDRESS_NOT_ALLOWED_TO_FLASH
- *                or a @ref IAP_Status
- * @warning       The function calls iap_Program which by itself calls no_interrupts().
+ *                or an @ref IAP_Status
+ * @warning       The function calls @ref iapProgram, which by itself calls noInterrupts().
  */
 UDP_State executeProgramFlash(uint8_t * address, const uint8_t * ram, unsigned int size, bool isBootDescriptor = false);
 

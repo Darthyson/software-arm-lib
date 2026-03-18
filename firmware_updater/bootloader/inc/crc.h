@@ -10,7 +10,6 @@
  * @file   crc.h
  * @author Deti Fliegl <deti@fliegl.de> Copyright (c) 2015
  * @author Martin Glueck <martin@mangari.org> Copyright (c) 2015
- * @bug No known bugs.
  ******************************************************************************/
 
 /*
@@ -23,12 +22,12 @@
 #define SB_BOOTLOADER_CRC32_H_
 
 /**
- * Calculates the crc32 of provided buffer data
+ * Calculates the crc32 of provided buffer data.
  *
  * @param startCrc32 crc to start with (if unsure use 0xFFFFFFFF)
- * @param data       buffer to calculate the crc32 of
- * @param count      length of data
- * @return calculated crc32 of
+ * @param data       Buffer to calculate the crc32 of
+ * @param count      Length of data
+ * @return crc32 of data
  */
 unsigned int crc32 (unsigned int startCrc32, unsigned char * data, unsigned int count);
 

@@ -2,15 +2,14 @@
  * @addtogroup SBLIB_BOOTLOADER Selfbus Bootloader
  * @defgroup SBLIB_UPD_UDP_FLASH_1 Flash access utilities
  * @ingroup SBLIB_BOOTLOADER
- * @brief   Provides several function for accessing and flashing the MCU's flash
+ * @brief   Provides several functions for accessing and flashing the MCU's flash
  * @details 
  *
  *
  * @{
  *
  * @file   flash.cpp
- * @author Darthyson <darth@maptrack.de> Copyright (c) 2021
- * @bug No known bugs.
+ * @author Darthyson <darth@maptrack.de> Copyright (c) 2026
  ******************************************************************************/
 
 /*
@@ -29,8 +28,8 @@
  * @brief Checks if the pointer is aligned.
  *
  * @param  ptr       Pointer to check
- * @param  alignment Expected alignment, needs to be a power of 2
- * @return           true if pointer is aligned to alignment, otherwise false
+ * @param  alignment Expected alignment needs to be a power of 2
+ * @return           true if the pointer is aligned to alignment, otherwise false
  */
 static inline bool is_aligned(const uint8_t * ptr, const uint32_t alignment)
 {
@@ -70,8 +69,8 @@ bool addressAllowedToProgram(uint8_t * start, unsigned int length, bool isBootDe
 /**
  * @brief Checks if the requested page is allowed to be erased.
  *
- * @param  pageNumber Page number to check erase is allowed
- * @return            true if page is allowed to erase, otherwise false
+ * @param  pageNumber Page number to check if erase is allowed
+ * @return            true if the page is allowed to erase, otherwise false
  */
 static bool pageAllowedToErase(const unsigned int pageNumber)
 {
@@ -83,7 +82,7 @@ static bool pageAllowedToErase(const unsigned int pageNumber)
  * @brief Checks if the requested sector is allowed to be erased.
  *
  * @param  sectorNumber Sector number to check erase is allowed
- * @return              true if sector is allowed to erase, otherwise false
+ * @return              true if the sector is allowed to erase, otherwise false
  */
 static bool sectorAllowedToErase(const unsigned int sectorNumber)
 {
@@ -123,7 +122,7 @@ UDP_State erasePageRange(unsigned int startPage, unsigned int endPage)
  *
  * @param startSector Start sector number to be erased
  * @param endSector   End sector number to be erased
- * @return  @ref UDP_IAP_SUCCESS if successful, otherwise @ref UDP_SECTOR_NOT_ALLOWED_TO_ERASE or a @ref IAP_Status
+ * @return  @ref UDP_IAP_SUCCESS if successful, otherwise @ref UDP_SECTOR_NOT_ALLOWED_TO_ERASE or an @ref IAP_Status
  */
 static UDP_State eraseSectorRange(unsigned int startSector, unsigned int endSector)
 {
@@ -185,7 +184,7 @@ UDP_State eraseAddressRange(uint8_t * startAddress, const uint8_t * endAddress, 
 
     if (!is_aligned(startAddress, FLASH_SECTOR_SIZE))
     {
-        // start address is not sector aligned, lets erase on a page level
+        // start address is not sector aligned, let's erase on a page level
         start = startPage;
         startSector++;
         // from start to last page of the sector
@@ -205,7 +204,7 @@ UDP_State eraseAddressRange(uint8_t * startAddress, const uint8_t * endAddress, 
     const bool lastPageInSector = ((endPage - start + 1) ==  ((FLASH_SECTOR_SIZE / FLASH_PAGE_SIZE)));
     if (!(lastPageInSector))
     {
-        // end address is not sector aligned, lets erase on a page level
+        // end address is not sector aligned, let's erase on a page level
         end = iapPageOfAddress(endAddress);
 
         result = erasePageRange(start, end); //  this is slow and can take up to 15*100ms = ~1,5s

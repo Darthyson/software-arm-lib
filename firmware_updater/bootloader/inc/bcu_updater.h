@@ -10,8 +10,7 @@
  * @file   bcu_updater.h
  * @author Martin Glueck <martin@mangari.org> Copyright (c) 2015
  * @author Stefan Haller Copyright (c) 2021
- * @author Darthyson <darth@maptrack.de> Copyright (c) 2022
- * @bug No known bugs.
+ * @author Darthyson <darth@maptrack.de> Copyright (c) 2026
  ******************************************************************************/
 
 /*

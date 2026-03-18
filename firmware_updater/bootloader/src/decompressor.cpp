@@ -8,8 +8,7 @@
  * @file   decompressor.cpp
  * @author Pavel Kriz <https://github.com/pavkriz> Copyright (c) 2019
  * @author Stefan Haller Copyright (c) 2021
- * @author Darthyson <darth@maptrack.de> Copyright (c) 2021
- * @bug No known bugs.
+ * @author Darthyson <darth@maptrack.de> Copyright (c) 2026
  ******************************************************************************/
 
 /*
@@ -80,18 +79,18 @@ void Decompressor::resetStateMachine()
 
 UDP_State Decompressor::pageCompletedDoFlash()
 {
-    // backup old page content, flash new content from scratchpad RAM to flash
+    // Backup old page content, flash new content from scratchpad RAM to flash
     UDP_State result = UDP_IAP_SUCCESS;
 
-    // Keep a copy of the last couple of flash pages in a RAM buffer for the differ
+    // Keep a copy of the last couple of flash pages in a RAM buffer for the difference
     // RAM buffer size is set by REMEMBER_OLD_PAGES_COUNT * FLASH_PAGE_SIZE
     // this is a FIFO buffer, oldest pages gets dropped
-    // shift data one flash page forward to make space for new page at the end
+    // shift data one flash page forward to make space for the new page at the end
     memcpy(oldPages, oldPages + FLASH_PAGE_SIZE, sizeof(oldPages) - FLASH_PAGE_SIZE);
-    // add latest (current) page (this may not be whole page when EOF) at the end
     memcpy(oldPages + (FLASH_PAGE_SIZE * (REMEMBER_OLD_PAGES_COUNT-1)), startAddrOfPageToBeFlashed, FLASH_PAGE_SIZE);
+    // add the latest (current) page (this may not be the whole page when EOF) at the end
 
-    // Check if flash page is identical or if we need to flash it
+    // Check if the flash page is identical or if we need to flash it
     dump(serial.print("Diff - Compare Page ", getFlashPageNumberToBeFlashed(), DEC, 2);)
     if (memcmp(startAddrOfPageToBeFlashed, scratchpad, bytesToFlash) != 0)
     {
@@ -110,8 +109,8 @@ UDP_State Decompressor::pageCompletedDoFlash()
     {
         dump(serial.println("  equal, skipping!");)
     }
-    // Equal, skip this page and
-    // move to next page
+    // Equally, skip this page and
+    // move to the next page
     startAddrOfPageToBeFlashed += FLASH_PAGE_SIZE;
     // reinitialize scratchpad
     bytesToFlash = 0;

@@ -8,8 +8,7 @@
  * @file   boot_descriptor_block.cpp
  * @author Martin Glueck <martin@mangari.org> Copyright (c) 2015
  * @author Stefan Haller Copyright (c) 2020
- * @author Darthyson <darth@maptrack.de> Copyright (c) 2021
- * @bug No known bugs.
+ * @author Darthyson <darth@maptrack.de> Copyright (c) 2026
  ******************************************************************************/
 
 /*
@@ -48,16 +47,16 @@ char bl_id_string[BL_ID_STRING_LENGTH] = BL_ID_STRING;
 
 
 /**
- * @brief This is the sanity check as described in 26.3.3 of the UM10398 user guide
+ * This is the sanity check as described in 26.3.3 of the UM10398 user guide
  *
- * @note However, this shouldn't matter since we boot into the BL anyways and just it's vector table
- *       needs to be correct.
- *       This test get's important if we like to bypass the KNX bootloader.
- *       Note that the LPC device as a build in BL ROM for UART ISP which is always started first.
+ * However, this shouldn't matter since we boot into the BL anyway
+ * and just it's vector table needs to be correct.
+ * This test gets important if we like to bypass the KNX bootloader.
+ * @note The LPC device has a built-in BL ROM for UART ISP, which is always started first.
  *       This ROM BL checks if the vector table is correct to determine if the KNX BL can be started.
  *
- * @param start
- * @return
+ * @param start Start address of the vector table
+ * @return The checksum of the vector table.
  */
 unsigned int checkVectorTable(uint8_t * start)
 {
@@ -139,7 +138,7 @@ uint8_t * bootLoaderFirstAddress(void)
 
 uint8_t * bootLoaderLastAddress(void)
 {
-    //linker sets this not correctly, so we need the -1
+    // The linker sets this not correctly, so we need the -1
     return _image_end - 1;
 }
 

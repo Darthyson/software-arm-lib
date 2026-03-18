@@ -10,8 +10,7 @@
  * @file   update.cpp
  * @author Martin Glueck <martin@mangari.org> Copyright (c) 2015
  * @author Stefan Haller Copyright (c) 2021
- * @author Darthyson <darth@maptrack.de> Copyright (c) 2023
- * @bug No known bugs.
+ * @author Darthyson <darth@maptrack.de> Copyright (c) 2026
  ******************************************************************************/
 
 /*
@@ -72,11 +71,11 @@ extern BcuUpdate bcu;
 
 /**
  * Converts a unsigned int into a 4 byte long provided buffer
- * @details A direct cast does not work due to possible miss aligned addresses.
- *          therefore a good old conversion has to be performed
+ * @details A direct cast does not work due to possible misaligned addresses.
+ *          Therefore, a good old conversion has to be performed
  *
- * @param buffer in the 4 first bytes of buffer the result will be stored
  * @param val    the unsigned int to be converted
+ * @param buffer in the 4 first bytes of the buffer the result will be stored
  * @warning function doesn't perform any sanity-checks on the provided buffer
  */
 void uInt32ToStream(uint8_t * buffer, unsigned int val);
@@ -85,8 +84,8 @@ void uInt32ToStream(uint8_t * buffer, unsigned int val);
  * Send the flash content from startAddress to endAddress
  *        in Intel(R) hex file format over serial port
  *
- * @param startAddress
- * @param endAddress
+ * @param startAddress The start address of the flash content to dump.
+ * @param endAddress   The end address of the flash content to dump.
  */
 #if defined(DEBUG)
 void dumpFlashContent(uint8_t * startAddress, uint8_t * endAddress)
@@ -114,8 +113,8 @@ void dumpFlashContent(uint8_t * startAddress, uint8_t * endAddress)
 
 /**
  * Converts a 4 byte long provided buffer into a unsigned integer
- * @details A direct cast does not work due to possible miss aligned addresses.
- *          therefore a good old conversion has to be performed
+ * @details A direct cast does not work due to possible misaligned addresses.
+ *          Therefore, a good old conversion has to be performed
  *
  * @param buffer data to convert
  * @return to unsigned int converted value of the 4 first bytes of buffer
@@ -127,7 +126,7 @@ unsigned int streamToUIn32(uint8_t * buffer)
 }
 
 /**
- * @brief Converts a 4 byte long provided buffer into a pointer
+ * @brief Converts 4 bytes long provided buffer into a pointer
  *
  * @param buffer data to convert
  * @return first 4 bytes of buffer converted to a pointer
@@ -151,8 +150,8 @@ void uInt32ToStream(uint8_t * buffer, unsigned int val)
 /**
  * @brief Converts a pointer to a 4 byte long and writes it to buffer
  *
- * @param buffer memory area to receive converted value
- * @param val pointer to convert and write
+ * @param buffer memory area to receive the converted value
+ * @param value pointer to convert and write
  * @warning function doesn't perform any sanity-checks on the provided buffer
  */
 inline void ptrToStream(uint8_t * buffer, uint8_t * val)
@@ -172,7 +171,7 @@ uint16_t streamToUShort16(uint8_t * buffer)
 }
 
 /**
- * Prepares a UPD/UDP telegram with command/response and number of bytes
+ * Prepares a UPD/UDP telegram with command/response and the number of bytes
  *        the return telegram will have.
  *
  * @param count Number of bytes the return telegram shall have
@@ -198,7 +197,7 @@ static void prepareReturnTelegram(unsigned int count, unsigned char cmd)
 /**
  * Returns the unlocked status of the device
  *
- * @return true if device is unlocked otherwise false
+ * @return true if the device is unlocked, otherwise false
  */
 static bool getDeviceUnlocked()
 {
@@ -276,8 +275,8 @@ void resetUPDProtocol(void)
  *
  * @param data    buffer for the UID
  * @param size    size of the buffer
- * @post          calls setLastErrror with UDP_IAP_SUCCESS if device is unlocked, otherwise @ref UDP_UID_MISMATCH or a @ref UDP_State.
  * @return        always true
+ * @post          calls setLastError with UDP_IAP_SUCCESS if the device is unlocked, otherwise @ref UDP_UID_MISMATCH or a @ref UDP_State.
  */
 static bool updUnlockDevice(uint8_t * data, uint32_t size)
 {
@@ -332,11 +331,11 @@ static bool updUnlockDevice(uint8_t * data, uint32_t size)
 }
 
 /**
- * Handles the @ref UPD_APP_VERSION_REQUEST command and sends a @ref UPD_APP_VERSION_RESPONSE
- *        The response contains the address of the AppVersion string
  *
  * @post          sets lastError to @ref UDP_IAP_SUCCESS if successful, otherwise to @ref UDP_WRONG_DESCRIPTOR_BLOCK
  * @return        always @ref true
+ * Handles the @ref UPD_APP_VERSION_REQUEST command and sends a @ref UPD_APP_VERSION_RESPONSE.
+ * The response contains the address of the AppVersion string.
  */
 static bool updAppVersionRequest()
 {
@@ -366,8 +365,8 @@ static bool updAppVersionRequest()
  * Handles the @ref UPD_DUMP_FLASH command and dumps the given flash address range to the serial port in intel(R) hex
  *
  * @param data    data[0-3] contains startAddress, data[4-7] contains endAddress
- * @post          calls setLastErrror with UDP_IAP_SUCCESS if successful, otherwise @ref UDP_SECTOR_NOT_ALLOWED_TO_ERASE or a @ref UDP_State.
  * @return        always true
+ * @post          calls setLastError with @ref UDP_IAP_SUCCESS if successful, otherwise @ref UDP_SECTOR_NOT_ALLOWED_TO_ERASE or a @ref UDP_State.
  * @note          device must be unlocked
  */
 static bool updDumpFlashRange(uint8_t * data)
@@ -388,8 +387,8 @@ static bool updDumpFlashRange(uint8_t * data)
  * Handles the @ref UPD_ERASE_ADDRESSRANGE command and erases the requested flash address range
  *
  * @param data    data[0-3] contains startAddress, data[4-7] contains endAddress
- * @post          calls setLastErrror with UDP_IAP_SUCCESS if successful, otherwise @ref UDP_ADDRESS_RANGE_NOT_ALLOWED_TO_ERASE or a @ref UDP_State.
  * @return        always true
+ * @post          calls setLastError with UDP_IAP_SUCCESS if successful, otherwise @ref UDP_ADDRESS_RANGE_NOT_ALLOWED_TO_ERASE or a @ref UDP_State.
  * @note          device must be unlocked
  */
 static bool updEraseAddressRange(uint8_t * data)
@@ -406,8 +405,8 @@ static bool updEraseAddressRange(uint8_t * data)
 /**
  * Handles the @ref UPD_ERASE_COMPLETE_FLASH command and erases the entire flash except from the bootloader itself
  *
- * @post          calls setLastErrror with UDP_IAP_SUCCESS if successful, otherwise @ref UDP_SECTOR_NOT_ALLOWED_TO_ERASE or a @ref UDP_State.
  * @return        always true
+ * @post          calls setLastError with UDP_IAP_SUCCESS if successful, otherwise @ref UDP_SECTOR_NOT_ALLOWED_TO_ERASE or a @ref UDP_State.
  * @note          device must be unlocked
  */
 static bool updEraseFullFlash()
@@ -424,8 +423,8 @@ static bool updEraseFullFlash()
  *
  * @param data    The bytes to copy into @ref ramBuffer
  * @param nCount  Number of bytes to copy
- * @post          calls setLastErrror with UDP_IAP_SUCCESS if successful, otherwise @ref UDP_RAM_BUFFER_OVERFLOW or a @ref UDP_State
  * @return        always true
+ * @post          calls setLastError with UDP_IAP_SUCCESS if successful, otherwise @ref UDP_RAM_BUFFER_OVERFLOW or a @ref UDP_State
  * @note          device must be unlocked
  */
 static bool updSendData(uint8_t * data, uint32_t nCount)
@@ -457,10 +456,10 @@ static bool updSendData(uint8_t * data, uint32_t nCount)
  * Handles the @ref UPD_PROGRAM command and copies the bytes from ramBuffer to flash
  *
  * @param data    the number of bytes to flash is in data[0-1], the flash address to program in data[2-5], and the crc32 in data[6-9]
- * @post          calls setLastErrror with UDP_IAP_SUCCESS if successful, otherwise a @ref UDP_State or a @ref UDP_State
  * @return        true
+ * @post          calls setLastError with UDP_IAP_SUCCESS if successful, otherwise a @ref UDP_State or a @ref UDP_State
  * @note          device must be unlocked
- * @warning       The function calls @ref executeProgramFlash which calls @ref iap_Program which by itself calls @ref no_interrupts().
+ * @warning       The function calls @ref executeProgramFlash, which calls @ref iapProgram, which by itself calls @ref noInterrupts().
  */
 static bool updProgram(uint8_t * data)
 {
@@ -561,12 +560,13 @@ static bool updProgram(uint8_t * data)
 }
 
 /**
- * Handles the @ref UPD_REQUEST_BL_IDENTITY command. Copies bootloader version (@ref BOOTLOADER_MAJOR_VERSION, @ref BOOTLOADER_MINOR_VERSION),
+ * Handles the @ref UPD_REQUEST_BL_IDENTITY command.
+ * Copies bootloader version (@ref BOOTLOADER_MAJOR_VERSION, @ref BOOTLOADER_MINOR_VERSION),
  *        bootloader features (@ref BL_FEATURES) and applications first possible start address (@ref applicationFirstAddress())
  *        to the return telegram.
  *
- * @param data    the major version of Selfbus Updater in data[0-3],  the minor version of Selfbus Updater in data[4-7] *
  * @return always true
+ * @param data  the major version of Selfbus Updater in data[0-3], the minor version of Selfbus Updater in data[4-7]
  */
 static bool updRequestBootloaderIdentity(uint8_t * data)
 {
@@ -643,17 +643,16 @@ static bool updRequestStatistic()
 }
 
 /**
- * Handles the @ref UPD_REQUEST_BOOT_DESC command. Copies the application description block
- *        (@ref AppDescriptionBlock) to the return telegram.
  * @return always true
+ * Copies the application description block (@ref AppDescriptionBlock) to the return telegram.
  */
 static bool udpRequestBootDescriptionBlock()
 {
     AppDescriptionBlock* bootDescr = (AppDescriptionBlock *) bootDescriptorBlockAddress(); // Address of boot block descriptor
 
     bool valid;
-    // check that the start address is not beyond end address
     valid = bootDescr->startAddress <= bootDescr->endAddress;
+    // check that the start address is not beyond the end address
     // addresses not outside the flash
     valid &= (bootDescr->startAddress <= flashLastAddress()) && (bootDescr->endAddress <= flashLastAddress());
     // addresses not smaller then allowed applications first address
@@ -680,11 +679,11 @@ static bool udpRequestBootDescriptionBlock()
 }
 
 /**
- * Function not implemented.
  * \todo Function not implemented
+ * Function isn't implemented.
  *
- * @post          calls setLastErrror with @ref UDP_NOT_IMPLEMENTED
  * @return        always true
+ * @post    calls setLastError with @ref UDP_NOT_IMPLEMENTED
  * @warning function is not implemented, missing parameters address and count
  */
 static bool updRequestData()
@@ -701,12 +700,12 @@ static bool updRequestData()
 }
 
 /**
- * Handles the @ref UPD_REQUEST_UID command. Copies @ref UID_LENGTH_USED bytes
- *        to the return telegram.
+ * Handles the @ref UPD_REQUEST_UID command.
+ * Copies @ref UID_LENGTH_USED bytes to the return telegram.
  *
- * @post          calls setLastErrror with UDP_IAP_SUCCESS if successful, otherwise a @ref IAP_Status
  * @return        always true
- * @note          device must be unlocked
+ * @post    Calls setLastError with @ref UDP_IAP_SUCCESS if successful, otherwise an @ref IAP_Status
+ * @note    Device must be unlocked.
  */
 static bool updRequestUID()
 {
@@ -727,8 +726,8 @@ static bool updRequestUID()
 /**
  * Handles all unknown UPD/UDP commands.
  *
- * @post          calls setLastErrror with @ref UDP_UNKNOWN_COMMAND
  * @return        always true
+ * Calls @ref setLastError with @ref UDP_UNKNOWN_COMMAND
  */
 static bool updUnkownCommand()
 {
@@ -740,15 +739,13 @@ static bool updUnkownCommand()
  * Handles the @ref UPD_UPDATE_BOOT_DESC command.
  *        - checks the received application boot descriptor block for a possible buffer overflow
  *        - checks the crc32 of the received application boot descriptor block
- *        - if the received application boot descriptor block differs from the one already in Flash (@ref BOOT_DSCR_ADDRESS),
- *          checks that the address is allowed to program, erases the flash page and flashes the new one.
+ *        - if the received application boot descriptor block differs from the one already in Flash,
+ *          it checks that the address is allowed to program, erases the flash page, and flashes the new one.
  *
  * @param data    - data[0..3] contains the length of the application boot descriptor block received
  *                - data[4..7] contains the crc32 of the received bytes
- * @post          calls setLastErrror with UDP_IAP_SUCCESS if successful, otherwise a @ref UDP_State or @ref IAP_Status
- * @return        always true
  * @note          device must be unlocked
- * @warning       The function calls @ref executeProgramFlash which calls @ref iap_Program which by itself calls @ref no_interrupts().
+ * @warning       The function calls @ref executeProgramFlash, which calls @ref iapProgram, which by itself calls @ref noInterrupts().
  */
 static bool updUpdateBootDescriptorBlock(uint8_t * data)
 {
@@ -771,7 +768,7 @@ static bool updUpdateBootDescriptorBlock(uint8_t * data)
         serial.println();
         serial.println("Bytes Rx    ", totalBytesReceived);
         serial.println("Bytes Flash ", totalBytesFlashed);
-        serial.println("Diff        ", totalBytesFlashed - totalBytesReceived); // difference here is normal, because flashing is always in multiple of FLASH_PAGE_SIZE
+        serial.println("Diff        ", totalBytesFlashed - totalBytesReceived); // the difference here is normal because flashing is always in multiple of FLASH_PAGE_SIZE
         serial.println();
         serial.println("FW start@ 0x", streamToUIn32(ramBuffer), HEX, 4);    // Firmware start address
         serial.println("FW end  @ 0x", streamToUIn32(ramBuffer+4), HEX, 4);  // Firmware end address
@@ -801,12 +798,12 @@ static bool updUpdateBootDescriptorBlock(uint8_t * data)
     }
 
     dump(serial.println("CRC MATCH, comparing MCUs BootDescriptor: count: ", count);)
-    //If received descriptor is not equal to current one, flash it
+    //If the received descriptor is not equal to the current one, flash it
     if(memcmp(address, ramBuffer, count) == 0)
     {
         dump(serial.println("is equal, skipping");)
         result = UDP_IAP_SUCCESS;
-        // dont return here, let's also check the AppDescriptionBlock
+        // don't return here, let's also check the AppDescriptionBlock
     }
     else
     {
@@ -823,7 +820,7 @@ static bool updUpdateBootDescriptorBlock(uint8_t * data)
         dump(serial.print("Flash Page:");)
 
         bcu.bus->pause();
-        result = executeProgramFlash(address, ramBuffer, FLASH_PAGE_SIZE, true); // no less than 256byte can be flashed
+        result = executeProgramFlash(address, ramBuffer, FLASH_PAGE_SIZE, true); // no less than 256 byte can be flashed
         bcu.bus->resume();
         dump(
            updResult2Serial(result);
@@ -852,14 +849,16 @@ static bool updUpdateBootDescriptorBlock(uint8_t * data)
 }
 
 /**
- * Handles the @ref UPD_SEND_DATA_TO_DECOMPRESS command. "Copies" the bytes from data to the @ref Decompressor.
+ * Handles the @ref UPD_SEND_DATA_TO_DECOMPRESS command.
+ * "Copies" the bytes from data to the @ref Decompressor.
  *
- * @param data    data[0..nCount-1] buffer containing the bytes to "copy" to the @ref Decompressor
+ * @param data    data[0...nCount-1] buffer containing the bytes to "copy" to the @ref Decompressor
  * @param nCount  Number of bytes to read from data
- * @post          calls setLastErrror with UDP_IAP_SUCCESS if successful, otherwise @ref UDP_RAM_BUFFER_OVERFLOW or @ref UDP_NOT_IMPLEMENTED
  * @return        always true
+ * @post          calls setLastError with UDP_IAP_SUCCESS if successful, otherwise @ref UDP_RAM_BUFFER_OVERFLOW or @ref UDP_NOT_IMPLEMENTED
  * @note          device must be unlocked
- * @warning       The function calls @ref Decompressor.pageCompletedDoFlash which calls @ref iap_Program which by itself calls @ref no_interrupts().
+ * @warning       The function calls @ref Decompressor.pageCompletedDoFlash,
+ *                which calls @ref iapProgram, which by itself calls @ref noInterrupts().
  */
 static bool updSendDataToDecompress(uint8_t * data, uint32_t nCount)
 {
@@ -884,10 +883,11 @@ static bool updSendDataToDecompress(uint8_t * data, uint32_t nCount)
  *        - calls @ref Decompressor.pageCompletedDoFlash to flash
  *
  * @param data    data[0-3] contains the crc32 for the received bytes
- * @post          calls setLastErrror with UDP_IAP_SUCCESS if successful, otherwise a @ref UDP_State
  * @return        always true
+ * @post          calls setLastError with @ref UDP_IAP_SUCCESS if successful, otherwise a @ref UDP_State
  * @note          device must be unlocked
- * @warning       The function calls @ref Decompressor.pageCompletedDoFlash which calls @ref iap_Program which by itself calls @ref no_interrupts().
+ * @warning       The function calls @ref Decompressor.pageCompletedDoFlash,
+ *                which calls @ref iapProgram, which by itself calls @ref noInterrupts().
  */
 static bool updProgramDecompressedDataToFlash(uint8_t * data)
 {

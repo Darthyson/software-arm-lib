@@ -8,7 +8,6 @@
  * @file   crc.cpp
  * @author Deti Fliegl <deti@fliegl.de> Copyright (c) 2015
  * @author Martin Glueck <martin@mangari.org> Copyright (c) 2015
- * @bug No known bugs.
  ******************************************************************************/
 
 /*
