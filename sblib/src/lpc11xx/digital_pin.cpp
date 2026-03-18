@@ -40,17 +40,12 @@ void pinMode(const uint32_t pin, const uint32_t mode)
         func = PF_PIO;
     }
 
-    if (type == OUTPUT || type == OUTPUT_MATCH)
+    if (type == OUTPUT_MATCH)
     {
-        port->DIR |= mask;
-
-        if (type == OUTPUT_MATCH)
-            func = PF_MAT;
+        func = PF_MAT;
     }
     else // INPUT modes
     {
-        port->DIR &= ~mask;
-
         if (type == INPUT_CAPTURE)
         {
             func = PF_CAP;
@@ -127,7 +122,19 @@ void pinMode(const uint32_t pin, const uint32_t mode)
             fatalError(); // the pin does not have the desired function
     }
 
+    // Write the IO configuration to the IOCON register
     *(ioconPointer(static_cast<PortPin>(pin))) = iocon;
+
+    // As last step, set pin direction after IOCON is configured
+    const bool isOutput = (type == OUTPUT) || (type == OUTPUT_MATCH);
+    if (isOutput)
+    {
+        port->DIR |= mask;
+    }
+    else
+    {
+        port->DIR &= ~mask;
+    }
 }
 
 void pinDirection(const uint32_t pin, const uint32_t dir)
