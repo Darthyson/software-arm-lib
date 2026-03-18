@@ -37,10 +37,10 @@
 #else
     // for catch unit tests ///\todo move this to cpu-emulation
     uint8_t * __base_Flash = &FLASH[0x0000];
-    uint8_t *  __top_Flash = &FLASH[0x10000];
+    uint8_t * __top_Flash = &FLASH[0x10000];
     uint8_t * _image_start = &FLASH[0x0000];
     uint8_t * _image_end = &FLASH[0x2F00];
-    unsigned int _image_size = _image_end - _image_start;
+    uint32_t _image_size = _image_end - _image_start;
 #endif
 
 char bl_id_string[BL_ID_STRING_LENGTH] = BL_ID_STRING;
@@ -58,58 +58,56 @@ char bl_id_string[BL_ID_STRING_LENGTH] = BL_ID_STRING;
  * @param start Start address of the vector table
  * @return The checksum of the vector table.
  */
-unsigned int checkVectorTable(uint8_t * start)
+uint32_t checkVectorTable(const uint8_t * start)
 {
-    unsigned int i;
-    unsigned int * address;
-    unsigned int cs = 0;
-    address = (unsigned int *) start;    // Vector table start always at base address, each entry is 4 byte
+    // Vector table starts always at base address, each entry is 4 bytes
+    const uint32_t * address = reinterpret_cast<const uint32_t*>(start);
+    uint32_t checkSum = 0;
+    for (uint8_t i = 0; i < 7; i++) // Checksum is 2's complement of entries 0 through 6
+    {
+        checkSum += address[i];
+    }
 
-    for (i = 0; i < 7; i++)                // Checksum is 2's complement of entries 0 through 6
-        cs += address[i];
-
-    return ~cs + 1;
+    return ~checkSum + 1;
 }
 
-unsigned int checkApplication(AppDescriptionBlock * block)
+bool checkApplication(const AppDescriptionBlock* block)
 {
-    if ((block->startAddress < applicationFirstAddress()) || (block->startAddress > flashLastAddress())) // we have just 64k of Flash
+    if (block->startAddress < applicationFirstAddress() || block->startAddress > flashLastAddress()) // we have just 64k of Flash
     {
-        return 0;
+        return false;
     }
     if (block->endAddress > flashLastAddress()) // we have just 64k of Flash
     {
-        return 0;
+        return false;
     }
     if (block->startAddress >= block->endAddress)
     {
-        return 0;
+        return false;
     }
 
-    unsigned int blockSize = block->endAddress - block->startAddress + 1;
-    unsigned int crc = crc32(0xFFFFFFFF, (unsigned char *) block->startAddress, blockSize);
+    const uint32_t blockSize = static_cast<uint32_t>(block->endAddress - block->startAddress + 1);
+    uint32_t crc = crc32(0xFFFFFFFF, block->startAddress, blockSize);
 
     if (crc == block->crc)
     {
-        return 1;
+        return true;
         // see note from checkVectorTable
         // return checkVectorTable(block->startAddress);
     }
-    return 0;
+    return false;
 }
 
-char* getAppVersion(AppDescriptionBlock * block)
+char* getAppVersion(const AppDescriptionBlock * block)
 {
-    void * appVersionAddress = (void *)(block->appVersionAddress);
-    if ((appVersionAddress >= applicationFirstAddress()) &&
-        (appVersionAddress < (flashLastAddress() - BL_ID_STRING_LENGTH)))
+    auto appVersionAddress = static_cast<void *>(block->appVersionAddress);
+    if (appVersionAddress >= applicationFirstAddress() &&
+        appVersionAddress < flashLastAddress() - BL_ID_STRING_LENGTH)
     {
         return block->appVersionAddress;
     }
-    else
-    {
-        return bl_id_string; // Bootloader ID is invalid (address out of range)
-    }
+
+    return bl_id_string; // Bootloader ID is invalid (address is out of range)
 }
 
 /**
@@ -119,16 +117,14 @@ char* getAppVersion(AppDescriptionBlock * block)
  * @return      Start address of application in case of valid descriptor block,
  *              otherwise base address of firmware area, directly behind bootloader
  */
-uint8_t * getFirmwareStartAddress(AppDescriptionBlock * block)
+uint8_t * getFirmwareStartAddress(const AppDescriptionBlock * block)
 {
     if (checkApplication(block))
     {
         return block->startAddress;
     }
-    else
-    {
-        return applicationFirstAddress();
-    }
+
+    return applicationFirstAddress();
 }
 
 uint8_t * bootLoaderFirstAddress()
@@ -142,10 +138,10 @@ uint8_t * bootLoaderLastAddress()
     return _image_end - 1;
 }
 
-unsigned int bootLoaderSize(void)
+uint32_t bootLoaderSize()
 {
     // includes .text and .data
-    return (unsigned int)(uintptr_t)&_image_size;
+    return reinterpret_cast<uintptr_t>(&_image_size);
 }
 
 uint8_t * flashFirstAddress()
@@ -155,14 +151,14 @@ uint8_t * flashFirstAddress()
 
 uint8_t * flashLastAddress()
 {
-    //linker sets this not correctly, so we need the -1
+    // The linker sets this not correctly, so we need the -1
     return __top_Flash - 1;
 }
 
-unsigned int flashSize(void)
+uint32_t flashSize()
 {
     // add the -1 from flashLastAddress(void) back to size
-    return flashLastAddress() - flashFirstAddress() + 1;
+    return static_cast<uint32_t>(flashLastAddress() - flashFirstAddress() + 1);
 }
 
 uint8_t * applicationFirstAddress()
@@ -175,7 +171,7 @@ uint8_t * applicationFirstAddress()
     void * ptr = appFirstAddress;
     std::size_t space = FLASH_PAGE_ALIGNMENT;
     std::align(FLASH_PAGE_SIZE, 1, ptr, space);
-    return (uint8_t *)ptr;
+    return static_cast<uint8_t *>(ptr);
 }
 
 uint8_t * bootDescriptorBlockAddress()

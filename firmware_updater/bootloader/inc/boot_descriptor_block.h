@@ -31,16 +31,8 @@
     constexpr uint16_t BL_FEATURES = 0x0100; //!< Feature list of bootloader in the Release version
 #endif
 
-/**
- * @def ALTERNATIVE_PROGRAMMING_BUTTON
- *
- * define to use the alternative programming button
- */
-//#define ALTERNATIVE_PROGRAMMING_BUTTON
-
-
-#define BL_ID_STRING         "[SB KNX BL ]"     //!< boot loader identity string for getAppVersion()
-#define BL_ID_STRING_LENGTH  13                 //!< length of boot loader identity string
+#define BL_ID_STRING         "[SB KNX BL ]" //!< boot loader identity string for getAppVersion()
+constexpr uint8_t BL_ID_STRING_LENGTH = 13; //!< length of the bootloader identity string
 
 constexpr uint16_t BOOT_BLOCK_DESC_SIZE = FLASH_PAGE_SIZE; //!< 1 flash page, any changes must also be done in the BLU's app_main.cpp
 
@@ -64,9 +56,9 @@ typedef struct AppDescriptionBlock
  *        start and end addresses
  *
  * @param block Application description block to check start and end address
- * @return      1 if block is valid, otherwise 0
+ * @return true if the block is valid, otherwise false
  */
-unsigned int checkApplication(AppDescriptionBlock * block);
+bool checkApplication(const AppDescriptionBlock * block);
 
 /**
  * Returns the address of the @ref APP_VERSION_STRING of the application starting after the magic identifier !AVP!@:
@@ -75,7 +67,7 @@ unsigned int checkApplication(AppDescriptionBlock * block);
  * @return      if valid, pointer to buffer of application version string (length @ref BL_ID_STRING_LENGTH)
  *              otherwise bl_id_string
  */
-char * getAppVersion(AppDescriptionBlock * block);
+char * getAppVersion(const AppDescriptionBlock * block);
 
 /**
  * Return start address of application
@@ -84,7 +76,7 @@ char * getAppVersion(AppDescriptionBlock * block);
  * @return      Start address of application in case of valid descriptor block,
  *              otherwise base address of firmware area, directly behind bootloader
  */
-uint8_t * getFirmwareStartAddress(AppDescriptionBlock * block);
+uint8_t * getFirmwareStartAddress(const AppDescriptionBlock * block);
 
 /**
  * Returns the first address of the bootloader image (_image_start symbol included by the linker)

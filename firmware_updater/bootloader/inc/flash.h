@@ -32,7 +32,7 @@
  * @param endPage   End page number to be erased
  * @return          @ref UDP_IAP_SUCCESS if successful, otherwise @ref UDP_PAGE_NOT_ALLOWED_TO_ERASE or an @ref IAP_Status
  */
-UDP_State erasePageRange(unsigned int startPage, unsigned int endPage);
+UDP_State erasePageRange(uint32_t startPage, uint32_t endPage);
 
 
 /**
@@ -54,7 +54,7 @@ UDP_State eraseFullFlash();
  * @warning             Function can take up to ~3.5 seconds to return.
  *                      It works on a page and sector base. Page erases are very slow ~100ms for one page
  */
-UDP_State eraseAddressRange(uint8_t * startAddress, const uint8_t * endAddress, const bool rangeCheck = true);
+UDP_State eraseAddressRange(const uint8_t * startAddress, const uint8_t * endAddress, bool rangeCheck = true);
 
 /**
  * Checks if the address range is allowed to be programmed
@@ -65,7 +65,7 @@ UDP_State eraseAddressRange(uint8_t * startAddress, const uint8_t * endAddress, 
  *                         or false to check the range of the application itself
  * @return                 true if programming is allowed, otherwise false
  */
-bool addressAllowedToProgram(uint8_t * start, unsigned int length, bool isBootDescriptor = false);
+bool addressAllowedToProgram(const uint8_t * start, uint32_t length, bool isBootDescriptor = false);
 
 /**
  * Programs the specified number of bytes from the RAM to the specified location
@@ -79,7 +79,7 @@ bool addressAllowedToProgram(uint8_t * start, unsigned int length, bool isBootDe
  *                or an @ref IAP_Status
  * @warning       The function calls @ref iapProgram, which by itself calls noInterrupts().
  */
-UDP_State executeProgramFlash(uint8_t * address, const uint8_t * ram, unsigned int size, bool isBootDescriptor = false);
+UDP_State executeProgramFlash(uint8_t * address, const uint8_t * ram, uint32_t size, bool isBootDescriptor = false);
 
 
 

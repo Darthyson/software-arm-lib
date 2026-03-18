@@ -67,10 +67,12 @@
 #include <sblib/internal/iap.h>
 
 
-#define UID_LENGTH_USED (12)            //!< Length of the mcu's UID (guid) used by the Selfbus Updater Tool
+constexpr uint8_t UID_LENGTH_USED = 12; //!< Length of the mcu's UID (guid) used by the Selfbus Updater Tool
 
 static_assert(UID_LENGTH_USED > 0, "UID_LENGTH_USED must be greater then 0");
 static_assert(UID_LENGTH_USED <= IAP_UID_LENGTH, "UID_LENGTH_USED must be less than or equal to IAP_UID_LENGTH");
+
+///\todo Delete this assert after deleting the endianness conversion of uid in updUnlockDevice(..)
 static_assert(UID_LENGTH_USED % sizeof(uint32_t) == 0, "UID_LENGTH_USED must be multiple of sizeof(uint32_t)");
 
 constexpr uint8_t idxInvalidUPDCommand = 0; //!< Array index of the @ref UPD_INVALID command in @ref updCommands
@@ -87,7 +89,7 @@ enum UPD_Code : uint8_t
     UPD_SEND_DATA_TO_DECOMPRESS = 0xec,     //!< Copy bytes from a telegram (data) to ramBuffer with differential method @note device must be unlocked
     UPD_PROGRAM_DECOMPRESSED_DATA = 0xeb,   //!< Flash bytes from ramBuffer to flash with the differential method @note device must be unlocked
     UPD_ERASE_COMPLETE_FLASH = 0xea,        //!< Erase the entire flash area excluding the bootloader itself @note device must be unlocked
-    UPD_ERASE_ADDRESSRANGE = 0xe9,          //!< Erase flash from given start address to end address (start: data[3-6] end: data[7-10]) @note device must be unlocked
+    UPD_ERASE_ADDRESS_RANGE = 0xe9,         //!< Erase flash from a given start address to end address (start: data[3-6] end: data[7-10]) @note device must be unlocked
     UPD_REQ_DATA = 0xe8,                    //!< Return bytes from flash at a given address? @note device must be unlocked @warning Not implemented
     UPD_DUMP_FLASH = 0xe7,                  //!< DUMP the flash of a given address range (data[0-3] - data[4-7]) to serial port of the mcu,
                                             //!< works only with in the DEBUG version of bootloader @note device must be unlocked
@@ -125,7 +127,7 @@ const struct UPD_Command {
     {UPD_SEND_DATA_TO_DECOMPRESS, 1, 254}, // max. 254 for extended frames support
     {UPD_PROGRAM_DECOMPRESSED_DATA, 4, 4},
     {UPD_ERASE_COMPLETE_FLASH, 0, 0},
-    {UPD_ERASE_ADDRESSRANGE, 8, 8},
+    {UPD_ERASE_ADDRESS_RANGE, 8, 8},
     {UPD_REQ_DATA, 3, 3}, // not implemented, maybe flash address (2 bytes) and count (1 byte)?
     {UPD_DUMP_FLASH, 8, 8},
     {UPD_REQUEST_STATISTIC, 0, 0},

@@ -30,9 +30,8 @@
  * @param sendBuffer The buffer to write the response into
  * @param data       data buffer received from KNX bus
  * @param size       size of data buffer
- * @return           whether to return a telegram, the real return values are encapsulated in sendBuffer[9..]
  */
-bool handleApciUsermsgManufacturer(uint8_t * sendBuffer, uint8_t * data, uint32_t size);
+void handleApciUsermsgManufacturer(uint8_t * sendBuffer, uint8_t * data, uint16_t size);
 
 /**
  * @brief Resets the UPD/UDP protocol ramBuffer and global variables to default
@@ -43,9 +42,8 @@ void resetUPDProtocol();
  * Handles deprecated KNX memory requests by sending the old @ref UPD_SEND_LAST_ERROR with the old value of @ref UDP_NOT_IMPLEMENTED
  *
  * @param sendBuffer The buffer to write the response into
- * @return always true
  */
-bool handleDeprecatedApciMemoryWrite(uint8_t * sendBuffer);
+void handleDeprecatedApciMemoryWrite(uint8_t * sendBuffer);
 
 #endif /* SB_BOOTLOADER_UPDATE_H_ */
 /** @}*/

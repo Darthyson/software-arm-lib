@@ -23,19 +23,19 @@
 #include "dump.h"
 
 
-UPD_Command code2UPDCommand(uint8_t code)
+UPD_Command code2UPDCommand(const uint8_t code)
 {
-    for (uint8_t i = 0; i < sizeof(updCommands) / sizeof(*updCommands); i++)
+    for (const auto updCommand : updCommands)
     {
-        if (updCommands[i].code == code)
+        if (updCommand.code == code)
         {
-            return updCommands[i];
+            return updCommand;
         }
     }
     return updCommands[idxInvalidUPDCommand]; // UPD_INVALID
 }
 
-UDP_State iapResult2UDPState(IAP_Status iapState)
+UDP_State iapResult2UDPState(const IAP_Status iapState)
 {
     UDP_State result;
     switch (iapState)
@@ -83,7 +83,7 @@ UDP_State iapResult2UDPState(IAP_Status iapState)
 }
 
 
-void updCommand2Serial(UPD_Command cmd)
+void updCommand2Serial([[maybe_unused]] const UPD_Command cmd)
 {
     dump(
         serial.print("UPD_");
@@ -95,7 +95,7 @@ void updCommand2Serial(UPD_Command cmd)
             case UPD_SEND_DATA_TO_DECOMPRESS: serial.print("SEND_DATA_TO_DECOMPRESS"); break;
             case UPD_PROGRAM_DECOMPRESSED_DATA: serial.print("PROGRAM_DECOMPRESSED_DATA"); break;
             case UPD_ERASE_COMPLETE_FLASH: serial.print("ERASE_COMPLETE_FLASH"); break;
-            case UPD_ERASE_ADDRESSRANGE: serial.print("ERASE_ADDRESSRANGE"); break;
+            case UPD_ERASE_ADDRESS_RANGE: serial.print("UPD_ERASE_ADDRESS_RANGE"); break;
             case UPD_REQ_DATA: serial.print("REQ_DATA"); break;
             case UPD_DUMP_FLASH: serial.println("DUMP_FLASH"); break;
             case UPD_REQUEST_STATISTIC: serial.print("REQUEST_STATISTIC"); break;
@@ -118,7 +118,7 @@ void updCommand2Serial(UPD_Command cmd)
     )
 }
 
-void updResult2Serial(UDP_State result)
+void updResult2Serial([[maybe_unused]] const UDP_State result)
 {
     dump(
         serial.print("UPD_");

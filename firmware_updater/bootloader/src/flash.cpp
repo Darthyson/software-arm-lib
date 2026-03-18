@@ -31,10 +31,10 @@
  * @param  alignment Expected alignment needs to be a power of 2
  * @return           true if the pointer is aligned to alignment, otherwise false
  */
-static inline bool is_aligned(const uint8_t * ptr, const uint32_t alignment)
+bool is_aligned(const uint8_t * ptr, const uint32_t alignment)
 {
     // See https://stackoverflow.com/a/1898487 and https://stackoverflow.com/a/28760180 for reasoning.
-    return (((uintptr_t)(const void *)ptr) & (alignment - 1)) == 0;
+    return (reinterpret_cast<uintptr_t>(static_cast<const void *>(ptr)) & (alignment - 1)) == 0;
 }
 
 /**
@@ -49,21 +49,20 @@ static UDP_State eraseSector(unsigned int sector)
 }
 */
 
-bool addressAllowedToProgram(uint8_t * start, unsigned int length, bool isBootDescriptor)
+bool addressAllowedToProgram(const uint8_t * start, const uint32_t length, const bool isBootDescriptor)
 {
     if (!is_aligned(start, FLASH_PAGE_SIZE) || !length) // not aligned to page or 0 length
     {
         return false;
     }
-    uint8_t * end = start + length - 1;
+
+    const uint8_t * end = start + length - 1;
     if (isBootDescriptor)
     {
-        return (start >= bootDescriptorBlockAddress()) && (end < applicationFirstAddress());
+        return start >= bootDescriptorBlockAddress() && end < applicationFirstAddress();
     }
-    else
-    {
-        return (start >= applicationFirstAddress()) && (end <= flashLastAddress());
-    }
+
+    return start >= applicationFirstAddress() && end <= flashLastAddress();
 }
 
 /**
@@ -72,10 +71,10 @@ bool addressAllowedToProgram(uint8_t * start, unsigned int length, bool isBootDe
  * @param  pageNumber Page number to check if erase is allowed
  * @return            true if the page is allowed to erase, otherwise false
  */
-static bool pageAllowedToErase(const unsigned int pageNumber)
+static bool pageAllowedToErase(const uint32_t pageNumber)
 {
-    return (pageNumber > iapPageOfAddress(bootLoaderLastAddress())) &&
-           ( pageNumber <= iapPageOfAddress(flashLastAddress()));
+    return pageNumber > iapPageOfAddress(bootLoaderLastAddress()) &&
+           pageNumber <= iapPageOfAddress(flashLastAddress());
 }
 
 /**
@@ -84,25 +83,24 @@ static bool pageAllowedToErase(const unsigned int pageNumber)
  * @param  sectorNumber Sector number to check erase is allowed
  * @return              true if the sector is allowed to erase, otherwise false
  */
-static bool sectorAllowedToErase(const unsigned int sectorNumber)
+static bool sectorAllowedToErase(const uint32_t sectorNumber)
 {
-    return (sectorNumber > iapSectorOfAddress(bootLoaderLastAddress())) &&
-           ( sectorNumber <= iapSectorOfAddress(flashLastAddress()));
+    return sectorNumber > iapSectorOfAddress(bootLoaderLastAddress()) &&
+           sectorNumber <= iapSectorOfAddress(flashLastAddress());
 }
 
-UDP_State erasePageRange(unsigned int startPage, unsigned int endPage)
+UDP_State erasePageRange(const uint32_t startPage, const uint32_t endPage)
 {
-    UDP_State result = UDP_PAGE_NOT_ALLOWED_TO_ERASE;
     dump(serial.print("page   0x", startPage, HEX, 2));
     dump(serial.print(" - 0x", endPage, HEX, 2));
     dump(serial.print(" "));
-    if ((!pageAllowedToErase(startPage)) || (!pageAllowedToErase(endPage)))
+    if (!pageAllowedToErase(startPage) || !pageAllowedToErase(endPage))
     {
         dump(serial.println("not allowed!");)
         return UDP_PAGE_NOT_ALLOWED_TO_ERASE;
     }
 
-    result = iapResult2UDPState(iapErasePageRange(startPage, endPage));
+    const UDP_State result = iapResult2UDPState(iapErasePageRange(startPage, endPage));
     dump(
         if (result != UDP_IAP_SUCCESS)
         {
@@ -124,18 +122,17 @@ UDP_State erasePageRange(unsigned int startPage, unsigned int endPage)
  * @param endSector   End sector number to be erased
  * @return  @ref UDP_IAP_SUCCESS if successful, otherwise @ref UDP_SECTOR_NOT_ALLOWED_TO_ERASE or an @ref IAP_Status
  */
-static UDP_State eraseSectorRange(unsigned int startSector, unsigned int endSector)
+static UDP_State eraseSectorRange(const uint32_t startSector, const uint32_t endSector)
 {
-    UDP_State result = UDP_SECTOR_NOT_ALLOWED_TO_ERASE;
     dump(serial.print("sector 0x", startSector, HEX, 2));
     dump(serial.print(" - 0x", endSector, HEX, 2));
-    if ((!sectorAllowedToErase(startSector)) || (!sectorAllowedToErase(endSector)))
+    if (!sectorAllowedToErase(startSector) || !sectorAllowedToErase(endSector))
     {
         dump(serial.println(" not allowed!");)
-        return (UDP_SECTOR_NOT_ALLOWED_TO_ERASE);
+        return UDP_SECTOR_NOT_ALLOWED_TO_ERASE;
     }
 
-    result = iapResult2UDPState(iapEraseSectorRange(startSector, endSector));
+    const UDP_State result = iapResult2UDPState(iapEraseSectorRange(startSector, endSector));
     dump(
         if (result != UDP_IAP_SUCCESS)
         {
@@ -150,7 +147,7 @@ static UDP_State eraseSectorRange(unsigned int startSector, unsigned int endSect
     return result;
 }
 
-UDP_State eraseAddressRange(uint8_t * startAddress, const uint8_t * endAddress, const bool rangeCheck)
+UDP_State eraseAddressRange(const uint8_t * startAddress, const uint8_t * endAddress, const bool rangeCheck)
 {
     UDP_State result = UDP_ADDRESS_RANGE_NOT_ALLOWED_TO_ERASE;
     dump(
@@ -158,24 +155,21 @@ UDP_State eraseAddressRange(uint8_t * startAddress, const uint8_t * endAddress, 
         serial.println("-0x", endAddress);
     );
 
-    if (rangeCheck && (!addressAllowedToProgram(startAddress, endAddress - startAddress + 1, false)))
+    if (rangeCheck && !addressAllowedToProgram(startAddress, static_cast<uint32_t>(endAddress - startAddress + 1), false))
     {
         dump(serial.println(" not allowed!");)
         return UDP_ADDRESS_RANGE_NOT_ALLOWED_TO_ERASE;
     }
 
-    unsigned int start;
-    unsigned int end;
-    unsigned int startSector;
-    unsigned int endSector;
-    unsigned int startPage;
-    const unsigned int endPage = iapPageOfAddress(endAddress);
+    uint32_t start;
+    uint32_t end;
+    const uint32_t endPage = iapPageOfAddress(endAddress);
 
-    startSector = iapSectorOfAddress(startAddress);
-    endSector = iapSectorOfAddress(endAddress);
-    startPage = iapPageOfAddress(startAddress);
+    uint32_t startSector = iapSectorOfAddress(startAddress);
+    uint32_t endSector = iapSectorOfAddress(endAddress);
+    const uint32_t startPage = iapPageOfAddress(startAddress);
 
-    const bool lessThenOneSector = (endPage - startPage + 1) < (FLASH_SECTOR_SIZE / FLASH_PAGE_SIZE);
+    const bool lessThenOneSector = endPage - startPage + 1 < FLASH_SECTOR_SIZE / FLASH_PAGE_SIZE;
     if (lessThenOneSector)
     {
         result = erasePageRange(startPage, endPage); // this is slow and can take up to 15*100ms = ~1,5s
@@ -188,7 +182,7 @@ UDP_State eraseAddressRange(uint8_t * startAddress, const uint8_t * endAddress, 
         start = startPage;
         startSector++;
         // from start to last page of the sector
-        uint8_t * nextSectorStartAddress = FLASH_BASE_ADDRESS + (startSector * FLASH_SECTOR_SIZE);
+        const uint8_t * nextSectorStartAddress = FLASH_BASE_ADDRESS + startSector * FLASH_SECTOR_SIZE;
         end = iapPageOfAddress(nextSectorStartAddress) - 1;
         result = erasePageRange(start, end); // this is slow and can take up to 15*100ms = ~1,5s
         if (result != UDP_IAP_SUCCESS)
@@ -200,9 +194,9 @@ UDP_State eraseAddressRange(uint8_t * startAddress, const uint8_t * endAddress, 
 
     startSector = iapSectorOfAddress(startAddress);
 
-    start = (endSector * FLASH_SECTOR_SIZE) / FLASH_PAGE_SIZE;
-    const bool lastPageInSector = ((endPage - start + 1) ==  ((FLASH_SECTOR_SIZE / FLASH_PAGE_SIZE)));
-    if (!(lastPageInSector))
+    start = endSector * FLASH_SECTOR_SIZE / FLASH_PAGE_SIZE;
+    const bool lastPageInSector = endPage - start + 1 == FLASH_SECTOR_SIZE / FLASH_PAGE_SIZE;
+    if (!lastPageInSector)
     {
         // end address is not sector aligned, let's erase on a page level
         end = iapPageOfAddress(endAddress);
@@ -225,20 +219,19 @@ UDP_State eraseAddressRange(uint8_t * startAddress, const uint8_t * endAddress, 
 
 UDP_State eraseFullFlash()
 {
-    unsigned int page = iapPageOfAddress(bootLoaderLastAddress());
+    uint32_t page = iapPageOfAddress(bootLoaderLastAddress());
     page++;
     return eraseAddressRange(iapAddressOfPage(page), flashLastAddress(), false);
 }
 
-UDP_State executeProgramFlash(uint8_t * address, const uint8_t * ram, unsigned int size, bool isBootDescriptor)
+UDP_State executeProgramFlash(uint8_t * address, const uint8_t * ram, const uint32_t size, const bool isBootDescriptor)
 {
-    UDP_State result = UDP_ADDRESS_NOT_ALLOWED_TO_FLASH;
     if (!addressAllowedToProgram(address, size, isBootDescriptor))
     {
         return UDP_ADDRESS_NOT_ALLOWED_TO_FLASH;
     }
 
-    result = iapResult2UDPState(iapProgram(address, ram, size));
+    const UDP_State result = iapResult2UDPState(iapProgram(address, ram, size));
     return result;
 }
 

@@ -22,30 +22,28 @@
 #define HEX_DATA_RECORD (00)
 #define HEX_END_OF_FILE "00000001FF"
 #define HEX_START_SEGMENT_RECORD "04000003"
-#define HEX_START_SEGMENT_RECORD_CHKSM (0x07)  // 04 + 00 + 00 + 03
+#define HEX_START_SEGMENT_RECORD_CHECKSUM (0x07)  // 04 + 00 + 00 + 03
 
 // A short example hex file with 16 bytes of data (an actual hex file has no spaces)
 // :10 7000 00 001F001049710000CD710000A5C20000 F2
 // :04 000003 0000 7149 3F
 // :00000001FF
-void dumpToSerialinIntelHex(Serial* serialPort, unsigned char* data, unsigned int count, unsigned int bytesPerLine)
+void dumpToSerialInIntelHex(Serial* serialPort, uint8_t * data, const uint32_t count, const uint16_t bytesPerLine)
 {
-    unsigned char x;
-    unsigned int checkSum;
-    unsigned int address;
-    unsigned int i = 0;
-    unsigned int bytesToWrite = bytesPerLine;
-    byte hexType = HEX_DATA_RECORD;
-    unsigned int startAddress = (unsigned int)data;
+    uint32_t checkSum;
+    uint32_t address;
+    constexpr uint8_t hexType = HEX_DATA_RECORD;
+    const auto startAddress = reinterpret_cast<uint32_t>(data);
 
+    uint32_t i = 0;
     while (i < count)
     {
-        bytesToWrite = bytesPerLine;
+        uint32_t bytesToWrite = bytesPerLine;
         // write line header/command, excluded from checksum
         serialPort->print(HEX_STARTCODE);
         checkSum = 0;
 
-        if ((count - i) < bytesPerLine)
+        if (count - i < bytesPerLine)
         {
             bytesToWrite = count - i;
         }
@@ -55,8 +53,8 @@ void dumpToSerialinIntelHex(Serial* serialPort, unsigned char* data, unsigned in
         serialPort->print(bytesToWrite, HEX, 2);
 
         // address
-        address = (unsigned int)data;
-        checkSum += ((address >> 8) & 0xff) + (address & 0xff);
+        address = reinterpret_cast<uint32_t>(data);
+        checkSum += (address >> 8 & 0xff) + (address & 0xff);
         serialPort->print(address, HEX, 4);
 
         // type/command
@@ -64,15 +62,15 @@ void dumpToSerialinIntelHex(Serial* serialPort, unsigned char* data, unsigned in
         checkSum += hexType;
 
         // write bytes
-        for (unsigned int j = 0; j < bytesToWrite; j++)
+        for (uint32_t j = 0; j < bytesToWrite; j++)
         {
-            x = *data++;
+            const uint8_t x = *data++;
             serialPort->print(x, HEX, 2);
             checkSum += x;
             i++;
         }
         checkSum &= 0xff;
-        checkSum = ((byte)(checkSum ^ 0xff) + 1) & 0xff;
+        checkSum = (static_cast<uint8_t>(checkSum ^ 0xff) + 1) & 0xff;
         // write line checksum
         serialPort->println(checkSum, HEX, 2);
     }
@@ -81,18 +79,18 @@ void dumpToSerialinIntelHex(Serial* serialPort, unsigned char* data, unsigned in
     serialPort->print(HEX_STARTCODE);
     // "04000003"
     serialPort->print(HEX_START_SEGMENT_RECORD);
-    checkSum = HEX_START_SEGMENT_RECORD_CHKSM;
+    checkSum = HEX_START_SEGMENT_RECORD_CHECKSUM;
 
-    // miss use of Segment to send start address
-    checkSum += ((startAddress >> 8) & 0xff) + (startAddress & 0xff);
+    // misuse of Segment to send start address
+    checkSum += (startAddress >> 8 & 0xff) + (startAddress & 0xff);
     serialPort->print(startAddress, HEX, 4);
 
-    // miss use of Offset to send end address
-    address = (unsigned int)data;
-    checkSum += ((address >> 8) & 0xff) + (address & 0xff);
+    // misuse of Offset to send end address
+    address = reinterpret_cast<uint32_t>(data);
+    checkSum += (address >> 8 & 0xff) + (address & 0xff);
     serialPort->print(address, HEX, 4);
     checkSum &= 0xff;
-    checkSum = ((byte)(checkSum ^ 0xff) + 1) & 0xff;
+    checkSum = (static_cast<uint8_t>(checkSum ^ 0xff) + 1) & 0xff;
 
     // write line checksum
     serialPort->println(checkSum, HEX, 2);

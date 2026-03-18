@@ -34,43 +34,42 @@
  */
 constexpr uint16_t BootloaderMaskVersion = 0x0012;
 
-#ifdef DEBUG
-#   define DEFAULT_COUNT_TO_FAIL (30)
-    int defaultCountToFail = DEFAULT_COUNT_TO_FAIL;
-    int countToFail = defaultCountToFail;
+//constexpr uint32_t DEFAULT_COUNT_TO_FAIL = 30;
+//uint32_t defaultCountToFail = DEFAULT_COUNT_TO_FAIL;
+//uint32_t countToFail = defaultCountToFail;
 
-    bool checkCountToFail()
-    {
-        return false; ///\done uncomment on release
-        // ok lets drop connection for debugging
-        countToFail--;
-        if (countToFail)
-        {
-            return false;
-        }
-        defaultCountToFail++;
-        countToFail = defaultCountToFail;
-        return true;
-    }
-#endif
+//bool debugOnlyCheckCountToFail()
+//{
+//    // ok, let's drop the connection for debugging
+//    countToFail--;
+//    if (countToFail)
+//    {
+//        return false;
+//    }
+//    defaultCountToFail++;
+//    countToFail = defaultCountToFail;
+//    return true;
+//}
 
 BcuUpdate::BcuUpdate() :
     BcuBase(nullptr, nullptr)
 {
 }
 
-bool BcuUpdate::processApci(ApciCommand apciCmd, unsigned char * telegram, uint8_t telLength, uint8_t * sendBuffer)
+bool BcuUpdate::processApci(const ApciCommand apciCmd, unsigned char * telegram, const uint8_t telLength, uint8_t * sendBuffer)
 {
-    uint32_t offset = 8;
-    uint32_t dataLength = telLength - offset - 1; // -1 exclude KNX checksum
+    constexpr uint8_t offset = 8;
+    const uint16_t dataLength = telLength - offset - 1; // -1 exclude KNX checksum
 
     switch(apciCmd)
     {
         case APCI_MEMORY_WRITE_PDU:
-            return handleDeprecatedApciMemoryWrite(sendBuffer);
+            handleDeprecatedApciMemoryWrite(sendBuffer);
+            return true;
 
         case APCI_USERMSG_MANUFACTURER_0:
-            return handleApciUsermsgManufacturer(sendBuffer, &telegram[offset], dataLength);
+            handleApciUsermsgManufacturer(sendBuffer, &telegram[offset], dataLength);
+            return true;
 
         case APCI_BASIC_RESTART_PDU:
             dump(
@@ -104,6 +103,7 @@ bool BcuUpdate::processApci(ApciCommand apciCmd, unsigned char * telegram, uint8
         default:
             return false;
     }
+    // We should never reach this point
 }
 
 void BcuUpdate::begin()
@@ -111,9 +111,9 @@ void BcuUpdate::begin()
     BcuBase::_begin();
 }
 
-bool BcuUpdate::processBroadCastTelegram(ApciCommand apciCmd, unsigned char *telegram, [[maybe_unused]] uint8_t telLength)
+bool BcuUpdate::processBroadCastTelegram(const ApciCommand apciCmd, unsigned char *telegram, [[maybe_unused]] uint8_t telLength)
 {
-    if (directConnection() && (apciCmd == APCI_INDIVIDUAL_ADDRESS_WRITE_PDU))
+    if (directConnection() && apciCmd == APCI_INDIVIDUAL_ADDRESS_WRITE_PDU)
     {
         // Don't handle address write while we have an open TL4 connection
         dump(serial.println("ADDRESS_WRITE ignored (TL4 active)");)
@@ -156,7 +156,8 @@ bool BcuUpdate::processBroadCastTelegram(ApciCommand apciCmd, unsigned char *tel
     return handled;
 }
 
-bool BcuUpdate::processGroupAddressTelegram(ApciCommand apciCmd, uint16_t groupAddress, unsigned char *telegram, uint8_t telLength)
+bool BcuUpdate::processGroupAddressTelegram([[maybe_unused]] ApciCommand apciCmd, [[maybe_unused]] uint16_t groupAddress,
+    [[maybe_unused]] unsigned char *telegram, [[maybe_unused]] uint8_t telLength)
 {
     return true;
 }

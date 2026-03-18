@@ -45,11 +45,11 @@
 
 
 #ifdef DECOMPRESSOR
-    static Decompressor decompressor((AppDescriptionBlock*) bootDescriptorBlockAddress()); //!< get application base address from boot descriptor
+    static Decompressor decompressor(reinterpret_cast<AppDescriptionBlock*>(bootDescriptorBlockAddress())); //!< get application base address from boot descriptor
 #endif
 
-#define DEVICE_LOCKED   ((unsigned int ) 0x5AA55AA5)     //!< magic number for device is locked and can't be flashed
-#define DEVICE_UNLOCKED ((unsigned int ) ~DEVICE_LOCKED) //!< magic number for device is unlocked and flashing is allowed
+constexpr uint32_t DEVICE_LOCKED = 0x5AA55AA5;       //!< Magic number for the device is locked and can't be flashed.
+constexpr uint32_t DEVICE_UNLOCKED = ~DEVICE_LOCKED; //!< Magic number for the device is unlocked and flashing is allowed.
 
 /**
  * Size in bytes of the RAM buffer.
@@ -70,19 +70,19 @@ static uint16_t totalBytesFlashed = 0;          //!< number of bytes flashed by 
 extern BcuUpdate bcu;
 
 /**
- * Converts a unsigned int into a 4 byte long provided buffer
+ * Converts an uint32_t into 4 bytes long provided buffer
  * @details A direct cast does not work due to possible misaligned addresses.
  *          Therefore, a good old conversion has to be performed
  *
- * @param val    the unsigned int to be converted
  * @param buffer in the 4 first bytes of the buffer the result will be stored
+ * @param value  the uint32_t to be converted
  * @warning function doesn't perform any sanity-checks on the provided buffer
  */
-void uInt32ToStream(uint8_t * buffer, unsigned int val);
+void uInt32ToStream(uint8_t * buffer, uint32_t value);
 
 /**
  * Send the flash content from startAddress to endAddress
- *        in Intel(R) hex file format over serial port
+ * in Intel(R) hex file format over serial port.
  *
  * @param startAddress The start address of the flash content to dump.
  * @param endAddress   The end address of the flash content to dump.
@@ -107,22 +107,22 @@ void dumpFlashContent(uint8_t * startAddress, uint8_t * endAddress)
         endAddress = flashLastAddress();
     }
 
-    dumpToSerialinIntelHex(&serial, startAddress, endAddress - startAddress + 1);
+    dumpToSerialInIntelHex(&serial, startAddress, static_cast<uint16_t>(endAddress - startAddress + 1));
 }
 #endif
 
 /**
- * Converts a 4 byte long provided buffer into a unsigned integer
+ * Converts 4 bytes long provided buffer into an uint32_t
  * @details A direct cast does not work due to possible misaligned addresses.
  *          Therefore, a good old conversion has to be performed
  *
  * @param buffer data to convert
- * @return to unsigned int converted value of the 4 first bytes of buffer
+ * @return The converted uint32_t value of the 4 first bytes of the buffer
  * @warning function doesn't perform any sanity-checks on the provided buffer
  */
-unsigned int streamToUIn32(uint8_t * buffer)
+uint32_t streamToUIn32(const uint8_t * buffer)
 {
-    return (unsigned int)(buffer[3] << 24 | buffer[2] << 16 | buffer[1] << 8 | buffer[0]);
+    return static_cast<uint32_t>(buffer[3] << 24 | buffer[2] << 16 | buffer[1] << 8 | buffer[0]);
 }
 
 /**
@@ -132,42 +132,42 @@ unsigned int streamToUIn32(uint8_t * buffer)
  * @return first 4 bytes of buffer converted to a pointer
  * @warning function doesn't perform any sanity-checks on the provided buffer
  */
-inline uint8_t * streamToPtr(uint8_t * buffer)
+uint8_t * streamToPtr(const uint8_t * buffer)
 {
     return FLASH_BASE_ADDRESS + streamToUIn32(buffer);
 }
 
 ///\todo implement universal numberToStream by providing the size as parameter
 ///      and delete uInt32ToStream + uShort16ToStream
-void uInt32ToStream(uint8_t * buffer, unsigned int val)
+void uInt32ToStream(uint8_t * buffer, const uint32_t value)
 {
-    buffer[3] = (byte)(val >> 24);
-    buffer[2] = (byte)(val >> 16);
-    buffer[1] = (byte)(val >> 8);
-    buffer[0] = (byte)(val & 0xff);
+    buffer[3] = static_cast<uint8_t>(value >> 24);
+    buffer[2] = static_cast<uint8_t>(value >> 16);
+    buffer[1] = static_cast<uint8_t>(value >> 8);
+    buffer[0] = static_cast<uint8_t>(value & 0xff);
 }
 
 /**
- * @brief Converts a pointer to a 4 byte long and writes it to buffer
+ * @brief Converts a pointer to a 4 byte uint32_t and writes it to the buffer
  *
  * @param buffer memory area to receive the converted value
  * @param value pointer to convert and write
  * @warning function doesn't perform any sanity-checks on the provided buffer
  */
-inline void ptrToStream(uint8_t * buffer, uint8_t * val)
+void ptrToStream(uint8_t * buffer, const uint8_t * value)
 {
-    uInt32ToStream(buffer, val - FLASH_BASE_ADDRESS);
+    uInt32ToStream(buffer, static_cast<uint32_t>(value - FLASH_BASE_ADDRESS));
 }
 
-void uShort16ToStream(uint8_t * buffer, unsigned int val)
+void uShort16ToStream(uint8_t * buffer, const uint16_t val)
 {
-    buffer[1] = (byte)(val >> 8);
-    buffer[0] = (byte)(val & 0xff);
+    buffer[1] = static_cast<uint8_t>(val >> 8);
+    buffer[0] = static_cast<uint8_t>(val & 0xff);
 }
 
-uint16_t streamToUShort16(uint8_t * buffer)
+uint16_t streamToUShort16(const uint8_t * buffer)
 {
-    return (uint16_t)(buffer[1] << 8 | buffer[0]);
+    return static_cast<uint16_t>(buffer[1] << 8 | buffer[0]);
 }
 
 /**
@@ -177,7 +177,7 @@ uint16_t streamToUShort16(uint8_t * buffer)
  * @param count Number of bytes the return telegram shall have
  * @param cmd   UPD/UDP command/response to set the return telegram
  */
-static void prepareReturnTelegram(unsigned int count, unsigned char cmd)
+void prepareReturnTelegram(uint8_t count, const UPD_Code cmd)
 {
     count += 2; // +1 byte because counting starts including retTelegram[7] (KNX Spec 2.1 3/3/3 2.1 NPDU p.6)
                 // +1 byte for cmd (retTelegram[8])
@@ -199,7 +199,7 @@ static void prepareReturnTelegram(unsigned int count, unsigned char cmd)
  *
  * @return true if the device is unlocked, otherwise false
  */
-static bool getDeviceUnlocked()
+bool getDeviceUnlocked()
 {
     dump(
         if (deviceLocked != DEVICE_UNLOCKED)
@@ -215,7 +215,7 @@ static bool getDeviceUnlocked()
  *
  * @param newDeviceLockState The new device lock state
  */
-static void setDeviceLockState(unsigned int newDeviceLockState)
+void setDeviceLockState(const uint32_t newDeviceLockState)
 {
     deviceLocked = newDeviceLockState;
     dump(
@@ -235,12 +235,12 @@ uint16_t getRAMBufferPosition()
     return ramBufferPositon;
 }
 
-void setRAMBufferPosition(uint16_t newRAMBufferPosition)
+void setRAMBufferPosition(const uint16_t newRAMBufferPosition)
 {
     ramBufferPositon = newRAMBufferPosition;
 }
 
-size_t getRAMBufferSize()
+uint16_t getRAMBufferSize()
 {
     return sizeof(ramBuffer)/sizeof(ramBuffer[0]);
 }
@@ -255,13 +255,13 @@ void resetRAMBuffer()
  *
  * @param errorToSet The error to set
  */
-static void setLastError(UDP_State errorToSet)
+void setLastError(const UDP_State errorToSet)
 {
     prepareReturnTelegram(1, UPD_SEND_LAST_ERROR);
     retTelegram[9] = errorToSet;
 }
 
-void resetUPDProtocol(void)
+void resetUPDProtocol()
 {
     resetRAMBuffer();
     totalBytesReceived = 0;
@@ -275,43 +275,44 @@ void resetUPDProtocol(void)
  *
  * @param data    buffer for the UID
  * @param size    size of the buffer
- * @return        always true
  * @post          calls setLastError with UDP_IAP_SUCCESS if the device is unlocked, otherwise @ref UDP_UID_MISMATCH or a @ref UDP_State.
  */
-static bool updUnlockDevice(uint8_t * data, uint32_t size)
+void updUnlockDevice(uint8_t * data, const uint32_t size)
 {
     // we need to ensure that only authorized operators can
     // update the application
     // as a simple method we use the unique ID of the CPU itself
     // only if this UID (GUID) is known, the device will be unlocked
-    if ((UID_LENGTH_USED != size))
+    if (UID_LENGTH_USED != size)
     {
         setLastError(UDP_UID_MISMATCH);
         dump(serial.println(" size mismatch");)
-        return true;
+        return;
     }
 
-    byte uid[IAP_UID_LENGTH];
+    uint8_t uid[IAP_UID_LENGTH];
     UDP_State error = iapResult2UDPState(iapReadUID(uid));
     if (error != UDP_IAP_SUCCESS)
     {
         // could not read UID of mcu
         setLastError(error);
         dump(serial.println(" iapReadUID failed");)
-        return true;
+        return;
     }
 
     if (memcmp(uid, data, size) != 0)
     {
+        ///\todo Delete this endian conversion of uid.
+        //       It's only for comfort and eating up, costly flash space
         // uid is not correct, as a last chance we convert the uid from big-endian to little-endian as displayed by Flashmagic
-        uint32_t reversed;
-        for (uint8_t i = 0; i < UID_LENGTH_USED; i=i+sizeof(uint32_t))
-        { ///\todo this should be reworked, maybe somehow with __REV
-            reversed = streamToUIn32(&data[i]);
-            data[i] = reversed >> 24;
-            data[i+1] = reversed >> 16;
-            data[i+2] = reversed >> 8;
-            data[i+3] = reversed & 0xff;
+        for (uint8_t i = 0; i < UID_LENGTH_USED; i = i + sizeof(uint32_t))
+        {
+            ///\todo this should be reworked, maybe somehow with __REV
+            const uint32_t reversed = streamToUIn32(&data[i]);
+            data[i] = static_cast<uint8_t>(reversed >> 24);
+            data[i + 1] = static_cast<uint8_t>(reversed >> 16);
+            data[i + 2] = static_cast<uint8_t>(reversed >> 8);
+            data[i + 3] = static_cast<uint8_t>(reversed & 0xff);
         }
 
         if (memcmp(uid, data, size) != 0)
@@ -319,7 +320,7 @@ static bool updUnlockDevice(uint8_t * data, uint32_t size)
             // uid is still not correct, finally decline access
             setLastError(UDP_UID_MISMATCH);
             dump(serial.println(" uid mismatch");)
-            return true;
+            return;
         }
     }
 
@@ -327,20 +328,15 @@ static bool updUnlockDevice(uint8_t * data, uint32_t size)
     setDeviceLockState(DEVICE_UNLOCKED);
     setLastError(UDP_IAP_SUCCESS);
     resetUPDProtocol();
-    return true;
 }
 
 /**
- *
- * @post          sets lastError to @ref UDP_IAP_SUCCESS if successful, otherwise to @ref UDP_WRONG_DESCRIPTOR_BLOCK
- * @return        always @ref true
  * Handles the @ref UPD_APP_VERSION_REQUEST command and sends a @ref UPD_APP_VERSION_RESPONSE.
  * The response contains the address of the AppVersion string.
  */
-static bool updAppVersionRequest()
+void updAppVersionRequest()
 {
-    char* appversion;
-    appversion = getAppVersion((AppDescriptionBlock *) (applicationFirstAddress() - BOOT_BLOCK_DESC_SIZE));
+    const char * appversion = getAppVersion(reinterpret_cast<AppDescriptionBlock *>(applicationFirstAddress() - BOOT_BLOCK_DESC_SIZE));
     prepareReturnTelegram(BL_ID_STRING_LENGTH - 1, UPD_APP_VERSION_RESPONSE);
     memcpy(retTelegram + 9, appversion, BL_ID_STRING_LENGTH - 1);
     dump(
@@ -354,68 +350,63 @@ static bool updAppVersionRequest()
         }
         for (int i = 0; i < BL_ID_STRING_LENGTH - 1; i++)
         {
-            serial.print((char)appversion[i]);
+            serial.print(appversion[i]);
         }
         serial.println();
     )
-    return true;
 }
 
 /**
  * Handles the @ref UPD_DUMP_FLASH command and dumps the given flash address range to the serial port in intel(R) hex
  *
  * @param data    data[0-3] contains startAddress, data[4-7] contains endAddress
- * @return        always true
  * @post          calls setLastError with @ref UDP_IAP_SUCCESS if successful, otherwise @ref UDP_SECTOR_NOT_ALLOWED_TO_ERASE or a @ref UDP_State.
  * @note          device must be unlocked
  */
-static bool updDumpFlashRange(uint8_t * data)
+void updDumpFlashRange([[maybe_unused]] const uint8_t * data)
 {
 #ifdef DEBUG
     uint8_t * startAddress = streamToPtr(&data[0]);
     uint8_t * endAddress = streamToPtr(&data[4]);
     setLastError(UDP_IAP_SUCCESS);
+    bcu.bus->pause();
     dumpFlashContent(startAddress, endAddress);
+    bcu.bus->resume();
 #else
     setLastError(UDP_NOT_IMPLEMENTED);
 #endif
-    return true;
 }
 
 
 /**
- * Handles the @ref UPD_ERASE_ADDRESSRANGE command and erases the requested flash address range
+ * Handles the @ref UPD_ERASE_ADDRESS_RANGE command and erases the requested flash address range
  *
  * @param data    data[0-3] contains startAddress, data[4-7] contains endAddress
- * @return        always true
  * @post          calls setLastError with UDP_IAP_SUCCESS if successful, otherwise @ref UDP_ADDRESS_RANGE_NOT_ALLOWED_TO_ERASE or a @ref UDP_State.
  * @note          device must be unlocked
  */
-static bool updEraseAddressRange(uint8_t * data)
+void updEraseAddressRange(const uint8_t * data)
 {
-    uint8_t * startAddress = streamToPtr(&data[0]);
-    uint8_t * endAddress = streamToPtr(&data[4]);
+    const uint8_t * startAddress = streamToPtr(&data[0]);
+    const uint8_t * endAddress = streamToPtr(&data[4]);
     bcu.bus->pause();
     setLastError(eraseAddressRange(startAddress, endAddress));
     bcu.bus->resume();
     resetUPDProtocol();
-    return true;
 }
 
 /**
  * Handles the @ref UPD_ERASE_COMPLETE_FLASH command and erases the entire flash except from the bootloader itself
  *
- * @return        always true
  * @post          calls setLastError with UDP_IAP_SUCCESS if successful, otherwise @ref UDP_SECTOR_NOT_ALLOWED_TO_ERASE or a @ref UDP_State.
  * @note          device must be unlocked
  */
-static bool updEraseFullFlash()
+void updEraseFullFlash()
 {
     bcu.bus->pause();
     setLastError(eraseFullFlash());
     bcu.bus->resume();
     resetUPDProtocol();
-    return true;
 }
 
 /**
@@ -423,17 +414,16 @@ static bool updEraseFullFlash()
  *
  * @param data    The bytes to copy into @ref ramBuffer
  * @param nCount  Number of bytes to copy
- * @return        always true
  * @post          calls setLastError with UDP_IAP_SUCCESS if successful, otherwise @ref UDP_RAM_BUFFER_OVERFLOW or a @ref UDP_State
  * @note          device must be unlocked
  */
-static bool updSendData(uint8_t * data, uint32_t nCount)
+void updSendData(const uint8_t * data, const uint16_t nCount)
 {
-    if ((getRAMBufferPosition() + nCount) > getRAMBufferSize()) // enough space left?
+    if (getRAMBufferPosition() + nCount > getRAMBufferSize()) // enough space left?
     {
         setLastError(UDP_RAM_BUFFER_OVERFLOW);
         dump(serial.println("ramBuffer Full");)
-        return true;
+        return;
     }
 
     memcpy(&ramBuffer[getRAMBufferPosition()], data, nCount);
@@ -441,7 +431,7 @@ static bool updSendData(uint8_t * data, uint32_t nCount)
     totalBytesReceived += nCount;
     setLastError(UDP_IAP_SUCCESS);
     dump(
-        for(unsigned int i=0; i<nCount; i++)
+        for(uint32_t i = 0; i < nCount; i++)
         {
             serial.print(data[i+1], HEX, 2);
             serial.print(" ");
@@ -449,57 +439,54 @@ static bool updSendData(uint8_t * data, uint32_t nCount)
         serial.print("at: ", getRAMBufferPosition(), DEC, 4);
         serial.println(" #", nCount, DEC, 3);
     )
-    return true;
 }
 
 /**
  * Handles the @ref UPD_PROGRAM command and copies the bytes from ramBuffer to flash
  *
  * @param data    the number of bytes to flash is in data[0-1], the flash address to program in data[2-5], and the crc32 in data[6-9]
- * @return        true
  * @post          calls setLastError with UDP_IAP_SUCCESS if successful, otherwise a @ref UDP_State or a @ref UDP_State
  * @note          device must be unlocked
  * @warning       The function calls @ref executeProgramFlash, which calls @ref iapProgram, which by itself calls @ref noInterrupts().
  */
-static bool updProgram(uint8_t * data)
+void updProgram(const uint8_t * data)
 {
-    int32_t flash_count = streamToUShort16(data);
+    uint16_t flash_count = streamToUShort16(data);
     uint8_t * address = streamToPtr(data + 2);
-    uint32_t crc32toCompare = streamToUIn32(data + 2 + 4);
+    const uint32_t crc32toCompare = streamToUIn32(data + 2 + 4);
 
     if (!addressAllowedToProgram(address, flash_count))
     {
-        // invalid address
         setLastError(UDP_ADDRESS_NOT_ALLOWED_TO_FLASH);
-        return true;
+        return;
     }
 
-    if (flash_count > static_cast<int32_t>(getRAMBufferSize())) // Selfbus Updater has a too big Mcu.UPD_PROGRAM_SIZE set. (see Mcu.java)
+    if (flash_count > getRAMBufferSize()) // Selfbus Updater has a too big Mcu.UPD_PROGRAM_SIZE set. (see Mcu.java)
     {
         setLastError(UDP_RAM_BUFFER_OVERFLOW);
-        return true;
+        return;
     }
 
     if (getRAMBufferPosition() > flash_count)
     {
         setLastError(UDP_BYTECOUNT_RECEIVED_TOO_HIGH);
         resetRAMBuffer();
-        return true;
+        return;
     }
 
     if (getRAMBufferPosition() < flash_count)
     {
         setLastError(UDP_BYTECOUNT_RECEIVED_TOO_LOW);
         resetRAMBuffer();
-        return true;
+        return;
     }
 
-    uint32_t crcRamBuffer = crc32(0xFFFFFFFF, ramBuffer, flash_count);
+    const uint32_t crcRamBuffer = crc32(0xFFFFFFFF, ramBuffer, flash_count);
     if (crcRamBuffer != crc32toCompare)
     {
         // invalid crcRamBuffer
         setLastError(UDP_CRC_ERROR);
-        return true;
+        return;
     }
 
     dump(
@@ -513,20 +500,20 @@ static bool updProgram(uint8_t * data)
     uint32_t bufferPosition = 0;
     bcu.bus->pause();
     // loop until error or all bytes flashed
-    while ((error == UDP_IAP_SUCCESS) && (flash_count > 0))
+    while (error == UDP_IAP_SUCCESS && flash_count > 0)
     {
-        for (uint8_t i = 0; i < IapBlockSizesCount; i++) // test all block sizes
+        for (const uint16_t i : IapBlockSize) // test all block sizes
         {
-            if (IapBlockSize[i] > getRAMBufferSize())
+            if (i > getRAMBufferSize())
             {
                 continue;
             }
 
-            while (flash_count >= IapBlockSize[i]) // flash as long as we have enough bytes for current blockSize
+            while (flash_count >= i) // flash as long as we have enough bytes for the current blockSize
             {
-                // Getting an UDP_IAP_COMPARE_ERROR here is an indicator of flash sectors/pages
+                // Getting a UDP_IAP_COMPARE_ERROR here is an indicator of flash sectors/pages
                 // not being erased before programming
-                error = executeProgramFlash(address, &ramBuffer[bufferPosition], IapBlockSize[i]);
+                error = executeProgramFlash(address, &ramBuffer[bufferPosition], i);
                 if (error != UDP_IAP_SUCCESS)
                 {
                     break; // exit inner while on error
@@ -535,20 +522,20 @@ static bool updProgram(uint8_t * data)
                     serial.print("wrote ", IapBlockSize[i]);
                     serial.println(" bytes @ 0x", address);
                 )
-                flash_count -= IapBlockSize[i];
-                address += IapBlockSize[i];
-                bufferPosition += IapBlockSize[i];
+                flash_count -= i;
+                address += i;
+                bufferPosition += i;
             }
 
-            if ((error != UDP_IAP_SUCCESS) || (flash_count <= 0))
+            if (error != UDP_IAP_SUCCESS || flash_count <= 0)
             {
                 break; // exit for on error or all bytes flashed
             }
         }
 
-        if ((error == UDP_IAP_SUCCESS) && (flash_count > 0) && (flash_count <= FLASH_PAGE_SIZE))
+        if (error == UDP_IAP_SUCCESS && flash_count > 0 && flash_count <= FLASH_PAGE_SIZE)
         {
-            // This is the final flashpage to program
+            // This is the final flash page to program
             error = executeProgramFlash(address, &ramBuffer[bufferPosition], FLASH_PAGE_SIZE);
             break; // exit topmost while
         }
@@ -556,7 +543,6 @@ static bool updProgram(uint8_t * data)
     resetRAMBuffer();
     bcu.bus->resume();
     setLastError(error);
-    return true;
 }
 
 /**
@@ -565,15 +551,14 @@ static bool updProgram(uint8_t * data)
  *        bootloader features (@ref BL_FEATURES) and applications first possible start address (@ref applicationFirstAddress())
  *        to the return telegram.
  *
- * @return always true
  * @param data  the major version of Selfbus Updater in data[0-3], the minor version of Selfbus Updater in data[4-7]
  */
-static bool updRequestBootloaderIdentity(uint8_t * data)
+void updRequestBootloaderIdentity(const uint8_t * data)
 {
-    uint8_t majorVersionUpdater = data[0];
-    uint8_t minorVersionUpdater = data[1];
-    bool versionMatch = (majorVersionUpdater > UPDATER_MIN_MAJOR_VERSION) ||
-              ((majorVersionUpdater == UPDATER_MIN_MAJOR_VERSION) && (minorVersionUpdater >= UPDATER_MIN_MINOR_VERSION));
+    const uint8_t majorVersionUpdater = data[0];
+    const uint8_t minorVersionUpdater = data[1];
+    const bool versionMatch = majorVersionUpdater > UPDATER_MIN_MAJOR_VERSION ||
+              (majorVersionUpdater == UPDATER_MIN_MAJOR_VERSION && minorVersionUpdater >= UPDATER_MIN_MINOR_VERSION);
 
     uint8_t offset = 9;
     if (!versionMatch)
@@ -588,19 +573,19 @@ static bool updRequestBootloaderIdentity(uint8_t * data)
             serial.print(" received: ", majorVersionUpdater);
             serial.println(".", minorVersionUpdater);
         )
-        return true;
+        return;
     }
 
-    uint16_t bootloaderFeatures = BL_FEATURES;
-    uint8_t majorSBLibVersion = highByte(static_cast<uint16_t>(SBLIB_VERSION));
-    uint8_t minorSBLibVersion = lowByte(SBLIB_VERSION);
-    uint8_t * appFirstAddress = applicationFirstAddress();
-    constexpr uint32_t dataSize = sizeof(BOOTLOADER_MAJOR_VERSION) +
-                                  sizeof(BOOTLOADER_MINOR_VERSION) +
-                                  sizeof(majorSBLibVersion) +
-                                  sizeof(minorSBLibVersion) +
-                                  sizeof(bootloaderFeatures) +
-                                  sizeof(appFirstAddress);
+    constexpr uint16_t bootloaderFeatures = BL_FEATURES;
+    constexpr uint8_t majorSBLibVersion = highByte(static_cast<uint16_t>(SBLIB_VERSION));
+    constexpr uint8_t minorSBLibVersion = lowByte(SBLIB_VERSION);
+    const uint8_t * appFirstAddress = applicationFirstAddress();
+    constexpr uint8_t dataSize = sizeof(BOOTLOADER_MAJOR_VERSION) +
+                                 sizeof(BOOTLOADER_MINOR_VERSION) +
+                                 sizeof(majorSBLibVersion) +
+                                 sizeof(minorSBLibVersion) +
+                                 sizeof(bootloaderFeatures) +
+                                 sizeof(appFirstAddress);
 
     prepareReturnTelegram(dataSize, UPD_RESPONSE_BL_IDENTITY);
     retTelegram[offset] = BOOTLOADER_MAJOR_VERSION;
@@ -620,17 +605,14 @@ static bool updRequestBootloaderIdentity(uint8_t * data)
         serial.print(", Feature 0x", bootloaderFeatures, HEX);
         serial.println(", FW start 0x", reinterpret_cast<uintptr_t>(appFirstAddress), HEX);
     )
-    return true;
 }
 
 /**
  * Handles the @ref UPD_REQUEST_STATISTIC command.
- *
- * @return always true
  */
-static bool updRequestStatistic()
+void updRequestStatistic()
 {
-    constexpr uint32_t sizeTotal = sizeof(disconnectCount) + sizeof(repeatedT_ACKcount);
+    constexpr uint8_t sizeTotal = sizeof(disconnectCount) + sizeof(repeatedT_ACKcount);
 
     prepareReturnTelegram(sizeTotal, UPD_RESPONSE_STATISTIC);
     uShort16ToStream(retTelegram + 9, disconnectCount);
@@ -639,31 +621,29 @@ static bool updRequestStatistic()
         serial.print("#DC ", disconnectCount);
         serial.println(" #repT_ACK ", repeatedT_ACKcount);
     )
-    return true;
 }
 
 /**
- * @return always true
+ * Handles the @ref UPD_REQUEST_BOOT_DESC command.
  * Copies the application description block (@ref AppDescriptionBlock) to the return telegram.
  */
-static bool udpRequestBootDescriptionBlock()
+void udpRequestBootDescriptionBlock()
 {
-    AppDescriptionBlock* bootDescr = (AppDescriptionBlock *) bootDescriptorBlockAddress(); // Address of boot block descriptor
+    const auto bootDescr = reinterpret_cast<AppDescriptionBlock *>(bootDescriptorBlockAddress()); // Address of boot block descriptor
 
-    bool valid;
-    valid = bootDescr->startAddress <= bootDescr->endAddress;
     // check that the start address is not beyond the end address
+    bool valid = bootDescr->startAddress <= bootDescr->endAddress;
     // addresses not outside the flash
-    valid &= (bootDescr->startAddress <= flashLastAddress()) && (bootDescr->endAddress <= flashLastAddress());
-    // addresses not smaller then allowed applications first address
-    valid &= (bootDescr->startAddress >= applicationFirstAddress()) && (bootDescr->endAddress >= applicationFirstAddress());
+    valid &= bootDescr->startAddress <= flashLastAddress() && bootDescr->endAddress <= flashLastAddress();
+    // addresses are not smaller than allowed applications first address
+    valid &= bootDescr->startAddress >= applicationFirstAddress() && bootDescr->endAddress >= applicationFirstAddress();
 
     if (!valid)
     {
-        bootDescr->startAddress = (uint8_t *)-1;
-        bootDescr->endAddress = (uint8_t *)-1;
-        bootDescr->appVersionAddress = (char *)-1;
-        bootDescr->crc = -1;
+        bootDescr->startAddress = reinterpret_cast<uint8_t *>(- 1);
+        bootDescr->endAddress = reinterpret_cast<uint8_t *>(- 1);
+        bootDescr->appVersionAddress = reinterpret_cast<char *>(- 1);
+        bootDescr->crc = 0xffffffff;
     }
 
     prepareReturnTelegram(12, UPD_RESPONSE_BOOT_DESC);
@@ -675,64 +655,52 @@ static bool udpRequestBootDescriptionBlock()
         serial.print(" Desc.@ 0x", bootDescr->appVersionAddress); // Firmware App descriptor address (for getAppVersion())
         serial.println(" CRC : 0x", bootDescr->crc, HEX);      // Firmware CRC
     )
-    return true;
 }
 
 /**
- * \todo Function not implemented
  * Function isn't implemented.
  *
- * @return        always true
  * @post    calls setLastError with @ref UDP_NOT_IMPLEMENTED
  * @warning function is not implemented, missing parameters address and count
  */
-static bool updRequestData()
+void updRequestData()
 {
-     /*
-     memcpy(retTelegram + 9, address, count);
-     retTelegram[5] = 0x63 + count;
-     retTelegram[6] = 0x42;
-     retTelegram[7] = 0x40 | count;
-     retTelegram[8] = UPD_SEND_DATA;
-     */
+    ///\todo implement updRequestData
+    //memcpy(retTelegram + 9, addressToCopyFrom, count);
+    //prepareReturnTelegram(count, UPD_SEND_DATA);
     setLastError(UDP_NOT_IMPLEMENTED);
-    return true;
 }
 
 /**
  * Handles the @ref UPD_REQUEST_UID command.
  * Copies @ref UID_LENGTH_USED bytes to the return telegram.
  *
- * @return        always true
  * @post    Calls setLastError with @ref UDP_IAP_SUCCESS if successful, otherwise an @ref IAP_Status
  * @note    Device must be unlocked.
  */
-static bool updRequestUID()
+void updRequestUID()
 {
-    byte uid[4 * 4];
-    UDP_State result = iapResult2UDPState(iapReadUID(uid));
+    uint8_t uid[4 * 4];
+    const UDP_State result = iapResult2UDPState(iapReadUID(uid));
     if (result != UDP_IAP_SUCCESS)
     {
         dump(serial.println("iapReadUID error");)
         setLastError(result);
-        return true;
+        return;
     }
     prepareReturnTelegram(UID_LENGTH_USED, UPD_RESPONSE_UID);
     memcpy(retTelegram + 9, uid, UID_LENGTH_USED);
     dump(serial.println(" OK");)
-    return true;
 }
 
 /**
  * Handles all unknown UPD/UDP commands.
  *
- * @return        always true
  * Calls @ref setLastError with @ref UDP_UNKNOWN_COMMAND
  */
-static bool updUnkownCommand()
+void updUnknownCommand()
 {
-    setLastError(UDP_UNKNOWN_COMMAND); // set to unknown error
-    return true;
+    setLastError(UDP_UNKNOWN_COMMAND);
 }
 
 /**
@@ -744,27 +712,24 @@ static bool updUnkownCommand()
  *
  * @param data    - data[0..3] contains the length of the application boot descriptor block received
  *                - data[4..7] contains the crc32 of the received bytes
+ * @post          calls setLastError with UDP_IAP_SUCCESS if successful, otherwise a @ref UDP_State or @ref IAP_Status
  * @note          device must be unlocked
  * @warning       The function calls @ref executeProgramFlash, which calls @ref iapProgram, which by itself calls @ref noInterrupts().
  */
-static bool updUpdateBootDescriptorBlock(uint8_t * data)
+void updUpdateBootDescriptorBlock(const uint8_t * data)
 {
-    uint32_t count = streamToUIn32(data); // length of the descriptor
-    uint32_t crcReceived = streamToUIn32(data + sizeof(count));
-    uint8_t * address;
-    uint32_t crc;
-
-    UDP_State result = UDP_NOT_IMPLEMENTED;
+    const uint32_t count = streamToUIn32(data); // data[0..3] length of the descriptor
+    const uint32_t crcReceived = streamToUIn32(data + 4); // data[4..7]
 
     // check for a possible ramBuffer overflow
     if (count > sizeof(ramBuffer)/sizeof(ramBuffer[0]))
     {
         setLastError(UDP_RAM_BUFFER_OVERFLOW);
         dump(serial.println("ramBuffer Full");)
-        return true;
+        return;
     }
     dump(
-        totalBytesReceived -= count; // subtract bytes received for boot descriptor
+        totalBytesReceived -= static_cast<uint16_t>(count); // subtract bytes received for boot descriptor
         serial.println();
         serial.println("Bytes Rx    ", totalBytesReceived);
         serial.println("Bytes Flash ", totalBytesFlashed);
@@ -777,8 +742,8 @@ static bool updUpdateBootDescriptorBlock(uint8_t * data)
         // serial.println("RamBuffer[16-20] 0x", streamToUIn32(ramBuffer+16), HEX, 8);// This is beyond the descriptor block
     )
 
-    address = bootDescriptorBlockAddress();     // start address of boot block descriptor
-    crc = crc32(0xFFFFFFFF, ramBuffer, count);  // checksum on used length only
+    uint8_t * address = bootDescriptorBlockAddress(); // start address of boot block descriptor
+    const uint32_t crc = crc32(0xFFFFFFFF, ramBuffer, count);  // checksum on used length only
 
     dump(
         serial.println("Desc.      @ 0x", address);
@@ -794,9 +759,10 @@ static bool updUpdateBootDescriptorBlock(uint8_t * data)
             serial.print(" data[7-4]:", streamToUIn32(data+4), HEX, 8);
         )
         setLastError(UDP_CRC_ERROR);
-        return true;
+        return;
     }
 
+    UDP_State result;
     dump(serial.println("CRC MATCH, comparing MCUs BootDescriptor: count: ", count);)
     //If the received descriptor is not equal to the current one, flash it
     if(memcmp(address, ramBuffer, count) == 0)
@@ -814,7 +780,7 @@ static bool updUpdateBootDescriptorBlock(uint8_t * data)
         if (result != UDP_IAP_SUCCESS)
         {
             setLastError(result);
-            return true;
+            return;
         }
 
         dump(serial.print("Flash Page:");)
@@ -832,20 +798,19 @@ static bool updUpdateBootDescriptorBlock(uint8_t * data)
             setLastError(result);
             if (result == UDP_ADDRESS_NOT_ALLOWED_TO_FLASH)
             {
-                return true;
+                return;
             }
         }
     }
 
-    if (!checkApplication((AppDescriptionBlock *) ramBuffer))
+    if (!checkApplication(reinterpret_cast<AppDescriptionBlock*>(ramBuffer)))
     {
         dump(serial.println("-->UDP_APPLICATION_NOT_STARTABLE");)
         setLastError(UDP_APPLICATION_NOT_STARTABLE);
-        return true;
+        return;
     }
 
     setLastError(result);
-    return true;
 }
 
 /**
@@ -854,26 +819,24 @@ static bool updUpdateBootDescriptorBlock(uint8_t * data)
  *
  * @param data    data[0...nCount-1] buffer containing the bytes to "copy" to the @ref Decompressor
  * @param nCount  Number of bytes to read from data
- * @return        always true
  * @post          calls setLastError with UDP_IAP_SUCCESS if successful, otherwise @ref UDP_RAM_BUFFER_OVERFLOW or @ref UDP_NOT_IMPLEMENTED
  * @note          device must be unlocked
  * @warning       The function calls @ref Decompressor.pageCompletedDoFlash,
  *                which calls @ref iapProgram, which by itself calls @ref noInterrupts().
  */
-static bool updSendDataToDecompress(uint8_t * data, uint32_t nCount)
+void updSendDataToDecompress(const uint8_t * data, const uint32_t nCount)
 {
 #ifndef DECOMPRESSOR
     dump(serial.println("-->not implemented");)
     setLastError(UDP_NOT_IMPLEMENTED);
 #else
     dump(serial.println("-->decompressor");)
-    for (unsigned int i = 0; i < nCount; i++)
+    for (uint32_t i = 0; i < nCount; i++)
     {
         decompressor.putByte(data[i]);
     }
     setLastError(UDP_IAP_SUCCESS);
 #endif
-    return true;
 }
 
 /**
@@ -883,21 +846,19 @@ static bool updSendDataToDecompress(uint8_t * data, uint32_t nCount)
  *        - calls @ref Decompressor.pageCompletedDoFlash to flash
  *
  * @param data    data[0-3] contains the crc32 for the received bytes
- * @return        always true
  * @post          calls setLastError with @ref UDP_IAP_SUCCESS if successful, otherwise a @ref UDP_State
  * @note          device must be unlocked
  * @warning       The function calls @ref Decompressor.pageCompletedDoFlash,
  *                which calls @ref iapProgram, which by itself calls @ref noInterrupts().
  */
-static bool updProgramDecompressedDataToFlash(uint8_t * data)
+void updProgramDecompressedDataToFlash(const uint8_t * data)
 {
 #ifndef DECOMPRESSOR
     setLastError(UDP_NOT_IMPLEMENTED);
 #else
-    uint32_t crcReceived = streamToUIn32(data);
-    uint32_t count = decompressor.getBytesCountToBeFlashed();
-    uint8_t * address = decompressor.getStartAddrOfPageToBeFlashed();
-    uint32_t crc;
+    const uint32_t crcReceived = streamToUIn32(data);
+    const uint32_t count = decompressor.getBytesCountToBeFlashed();
+    const uint8_t * address = decompressor.getStartAddrOfPageToBeFlashed();
 
     dump(
         serial.println();
@@ -908,16 +869,16 @@ static bool updProgramDecompressedDataToFlash(uint8_t * data)
     {
         dump(serial.println(" Address protected!");)
         setLastError(UDP_ADDRESS_NOT_ALLOWED_TO_FLASH);
-        return true;
+        return;
     }
 
     dump(serial.print(" Address valid, ");)
-    crc = decompressor.getCrc32();
+    const uint32_t crc = decompressor.getCrc32();
     if (crc != crcReceived)
     {
         dump(serial.println("CRC Error!");)
         setLastError(UDP_CRC_ERROR);
-        return true;
+        return;
     }
 
     dump(serial.println("CRC OK");)
@@ -926,10 +887,9 @@ static bool updProgramDecompressedDataToFlash(uint8_t * data)
     bcu.bus->resume();
     resetUPDProtocol(); // we need this, otherwise updSendDataToDecompress will run into a buffer overflow
 #endif
-    return true;
 }
 
-bool handleDeprecatedApciMemoryWrite(uint8_t * sendBuffer)
+void handleDeprecatedApciMemoryWrite(uint8_t * sendBuffer)
 {
     sendBuffer[5] = 0x63 + 4; // routing count in high nibble + response length in low nibble
     sendBuffer[6] = 0x42;     // APCI_MEMORY_RESPONSE_PDU
@@ -940,30 +900,29 @@ bool handleDeprecatedApciMemoryWrite(uint8_t * sendBuffer)
     sendBuffer[11] = 0xff;
     sendBuffer[12] = 0x00;
     sendBuffer[13] = 0x00;
-    return true;
 }
 
-bool handleApciUsermsgManufacturerInternal(uint8_t * data, uint32_t size)
+void handleApciUsermsgManufacturerInternal(uint8_t * data, uint16_t size)
 {
     if (size < sizeof(updCommands[idxInvalidUPDCommand].code))
     {
         dump(serial.println("UDP_NO_DATA"))
         setLastError(UDP_NO_DATA);
-        return true;
+        return;
     }
 
-    UPD_Command updCommand = code2UPDCommand(data[0]);
+    const UPD_Command updCommand = code2UPDCommand(data[0]);
     if (updCommand.code == UPD_INVALID)
     {
         dump(serial.println("updCommand.code invalid"))
         setLastError(UDP_INVALID);
-        return true;
+        return;
     }
 
     data++;
     size--;
     updCommand2Serial(updCommand); // simple command debugging message
-    if ((size < updCommand.minBytes) || (size > updCommand.maxBytes))
+    if (size < updCommand.minBytes || size > updCommand.maxBytes)
     {
         dump(
             serial.print(" UDP_INVALID_DATA minCount=", updCommand.minBytes);
@@ -971,7 +930,7 @@ bool handleApciUsermsgManufacturerInternal(uint8_t * data, uint32_t size)
             serial.println(" length=", size);
         )
         setLastError(UDP_INVALID_DATA);
-        return true;
+        return;
     }
 
 #if defined(DEBUG) && (!(defined(TS_ARM)))
@@ -991,7 +950,7 @@ bool handleApciUsermsgManufacturerInternal(uint8_t * data, uint32_t size)
             default:
                 // device is locked -> command not allowed, send lastError and return
                 setLastError(UDP_DEVICE_LOCKED);
-                return true;
+                return;
         }
     }
 
@@ -999,62 +958,76 @@ bool handleApciUsermsgManufacturerInternal(uint8_t * data, uint32_t size)
     switch (updCommand.code)
     {
         case UPD_UNLOCK_DEVICE:
-            return updUnlockDevice(data, size);
+            updUnlockDevice(data, size);
+            break;
 
         case UPD_REQUEST_UID:
-            return updRequestUID();
+            updRequestUID();
+            break;
 
         case UPD_APP_VERSION_REQUEST:
-            return updAppVersionRequest();
+            updAppVersionRequest();
+            break;
 
         case UPD_SEND_DATA:
-            return updSendData(data, size);
+            updSendData(data, size);
+            break;
 
         case UPD_PROGRAM:
-            return updProgram(data);
+            updProgram(data);
+            break;
 
         case UPD_SEND_DATA_TO_DECOMPRESS:
-            return updSendDataToDecompress(data, size);
+            updSendDataToDecompress(data, size);
+            break;
 
         case UPD_PROGRAM_DECOMPRESSED_DATA:
-            return updProgramDecompressedDataToFlash(data);
+            updProgramDecompressedDataToFlash(data);
+            break;
 
         case UPD_ERASE_COMPLETE_FLASH:
-            return updEraseFullFlash();
+            updEraseFullFlash();
+            break;
 
-        case UPD_ERASE_ADDRESSRANGE:
-            return updEraseAddressRange(data);
+        case UPD_ERASE_ADDRESS_RANGE:
+            updEraseAddressRange(data);
+            break;
 
         case UPD_DUMP_FLASH:
-            return updDumpFlashRange(data);
+            updDumpFlashRange(data);
+            break;
 
         case UPD_REQUEST_STATISTIC:
-            return updRequestStatistic();
+            updRequestStatistic();
+            break;
 
         case UPD_UPDATE_BOOT_DESC:
-            return updUpdateBootDescriptorBlock(data);
+            updUpdateBootDescriptorBlock(data);
+            break;
 
         case UPD_REQUEST_BOOT_DESC:
-            return udpRequestBootDescriptionBlock();
+            udpRequestBootDescriptionBlock();
+            break;
 
         case UPD_REQUEST_BL_IDENTITY:
-            return updRequestBootloaderIdentity(data);
+            updRequestBootloaderIdentity(data);
+            break;
 
         case UPD_REQ_DATA:
-            return updRequestData();
+            updRequestData();
+            break;
 
         default:
-            return updUnkownCommand();
+            updUnknownCommand();
+            break;
     }
-    return false; //we should never land here
 }
 
-bool handleApciUsermsgManufacturer(uint8_t * sendBuffer, uint8_t * data, uint32_t size)
+void handleApciUsermsgManufacturer(uint8_t * sendBuffer, uint8_t * data, const uint16_t size)
 {
     retTelegram = sendBuffer;
-    auto result = handleApciUsermsgManufacturerInternal(data, size);
+    handleApciUsermsgManufacturerInternal(data, size);
     retTelegram = nullptr;
-    return result;
 }
 
 /** @}*/
