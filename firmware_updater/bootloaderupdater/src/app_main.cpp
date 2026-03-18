@@ -66,7 +66,8 @@ void setup()
             serial.println("debugOnlyDescriptor 0x", &debugOnlyDescriptor);
             if (debugOnlyDescriptor != nullptr)
             {
-                serial.println("uid 0x", debugOnlyDescriptor->uidBootloaderDescriptor, HEX);
+                serial.println("bootState 0x", debugOnlyDescriptor->bootState, HEX);
+                serial.println("reserved 0x", debugOnlyDescriptor->reserved, HEX);
                 serial.println("physicalAddress 0x", debugOnlyDescriptor->physicalAddress, HEX);
                 serial.println("progButton 0x", debugOnlyDescriptor->programmingButton, HEX);
                 serial.println("appId 0x", debugOnlyDescriptor->applicationId, HEX);
