@@ -53,6 +53,9 @@ void BcuBase::_begin()
     TLayer4::_begin();
     bus->begin(ownAddress());
     progButtonDebouncer.init(1);
+#if defined(INCLUDE_SERIAL)
+    serial.println("bootLoaderDescriptor address: 0x", reinterpret_cast<uintptr_t>(debugOnlyBootloaderDescriptor()), HEX);
+#endif
 }
 
 void BcuBase::loop()
@@ -218,7 +221,7 @@ void BcuBase::softSystemReset()
     if (restartType == RestartType::MasterIntoBootloader)
     {
         noInterrupts();
-        prepareRestartIntoBootloader(this->ownAddress());
+        initBootloaderDescriptor(BootState::BootLoader , ownAddress(), progPin, 0, 0); ///\todo set appId and appVersion);
     }
 
     NVIC_SystemReset();

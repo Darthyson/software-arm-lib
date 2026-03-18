@@ -2,6 +2,7 @@
 #include <sblib/io_pin_names.h>
 #include <sblib/digital_pin.h>
 #include <sblib/version.h>
+#include <sblib/internal/bootloader_commands.h>
 #include <sblib/platform.h>
 #include <cstdint>
 #include <cstring>
@@ -46,7 +47,34 @@ void setup()
         serial.println(__TIME__);
         serial.flush();
     );
+
+    // Check for BootloaderDescriptor in RAM
+    const BootloaderDescriptor* blDescriptor = getBootloaderDescriptor();
+
+    dump(serial.print("BootloaderDescriptor ");)
+    if (blDescriptor != nullptr)
+    {
+        dump(serial.println("valid");)
+        gpioProgButton = blDescriptor->programmingButton;
+    }
+    else
+    {
+        dump(
+            serial.println("INVALID");
+            serial.flush();
+            const BootloaderDescriptor* debugOnlyDescriptor = debugOnlyBootloaderDescriptor();
+            serial.println("debugOnlyDescriptor 0x", &debugOnlyDescriptor);
+            if (debugOnlyDescriptor != nullptr)
+            {
+                serial.println("uid 0x", debugOnlyDescriptor->uidBootloaderDescriptor, HEX);
+                serial.println("physicalAddress 0x", debugOnlyDescriptor->physicalAddress, HEX);
+                serial.println("progButton 0x", debugOnlyDescriptor->programmingButton, HEX);
+                serial.println("appId 0x", debugOnlyDescriptor->applicationId, HEX);
+                serial.println("appVersion 0x", debugOnlyDescriptor->applicationVersion, HEX);
+            }
+        )
         gpioProgButton = PIN_PROG;
+    }
     pinMode(gpioProgButton, OUTPUT);
     digitalWrite(gpioProgButton, false);
 }
@@ -135,6 +163,7 @@ int main()
     else
     {
         dump(serial.println(" done");)
+        BootloaderDescriptor();
     }
 
     SystemReset();

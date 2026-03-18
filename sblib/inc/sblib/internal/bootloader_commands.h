@@ -7,37 +7,67 @@
 #ifndef SBLIB_INTERNAL_BOOTLOADER_COMMANDS_H_
 #define SBLIB_INTERNAL_BOOTLOADER_COMMANDS_H_
 
-#include "sblib/eib/apci.h"
+
 #include <cstdint>
 
+enum class BootState : uint8_t
+{
+    Reset = 0,
+    BootLoader = 1,
+    BootLoaderUpdater = 2,
+    Application = 3,
+};
+
 /**
- * Magic word, which will be checked on startup of the bootloader
- * weather or not to go into bootloader mode
+ * Bootloader descriptor structure stored in RAM to pass parameters to the bootloader.
  */
-constexpr uint32_t BOOTLOADER_MAGIC_WORD = 0x5E1FB055;
+struct BootloaderDescriptor
+{
+    BootState bootState;            //!< The current boot state
+    uint8_t reserved;               //!< Reserved for alignment, feel free to use
+    uint16_t physicalAddress;       //!< Physical address to use in bootloader
+    uint32_t programmingButton;     //!< GPIO of the programming button to use in bootloader
+    uint32_t applicationId;         //!< Application ID of the application
+    uint32_t applicationVersion;    //!< Application version of the application
+};
 
 /**
- * Magic address for the magic word to be checked on startup of the bootloader
- * weather or not to go into bootloader mode
+ * Initialize the BootloaderDescriptor in RAM.
+ *  
+ * @param newBootState          The @ref BootState to set
+ * @param physicalAddressToUse  Physical address to use in bootloader
+ * @param programmingButton     The GPIO of the programming button
+ * @param applicationId         The application ID of the application
+ * @param applicationVersion    The application version of the application
+ * @warning The BootloaderDescriptor is stored in RAM at 0x10000000. 
+ *          The application RAM must start at 0x10000100 or higher to avoid overwriting this structure.
  */
-#define BOOTLOADER_MAGIC_ADDRESS ((uint32_t *) 0x10000000)
-//uint32_t* BOOTLOADER_MAGIC_ADDRESS = reinterpret_cast<uint32_t*>(0x10000000UL);
+void initBootloaderDescriptor(BootState newBootState, uint16_t physicalAddressToUse, uint32_t programmingButton,
+        uint32_t applicationId, uint32_t applicationVersion);
 
 /**
- * Bootloader magic erase = FactoryResetWithoutIndividualAddress in calimero-core
+ * Retrieves the BootloaderDescriptor from RAM.
+ * 
+ * @return Pointer to the BootloaderDescriptor if valid, nullptr otherwise
+ * @warning The BootloaderDescriptor is stored in RAM at 0x10000000. 
+ *          The application RAM must start at 0x10000100 or higher to avoid overwriting this structure.
  */
-constexpr RestartPDUMasterReset BOOTLOADER_MAGIC_ERASE = T_MASTERRESET_FACTORY_WO_IA;
+const BootloaderDescriptor* getBootloaderDescriptor();
 
 /**
- * Bootloader magic channel
+ * Clears the BootloaderDescriptor in RAM.
+ * @warning The BootloaderDescriptor is stored in RAM at 0x10000000. 
+ *          The application RAM must start at 0x10000100 or higher to avoid overwriting this structure.
  */
-constexpr uint8_t BOOTLOADER_MAGIC_CHANNEL = 255;
-
+void clearBootloaderDescriptor();
 
 /**
- * Set magicWord to start in bootloader mode after reset.
- **/
-void prepareRestartIntoBootloader(uint16_t physicalAddressToUse);
+ * Debug-only function to retrieve the BootloaderDescriptor from RAM.
+ * 
+ * @return Pointer to the BootloaderDescriptor in RAM
+ * @warning Use of this function is intended for debugging purposes only.
+ */
+const BootloaderDescriptor* debugOnlyBootloaderDescriptor();
 
 /**
  * Checks a APCI for the bus-updater Magic word
@@ -50,6 +80,6 @@ void prepareRestartIntoBootloader(uint16_t physicalAddressToUse);
  * @return True if apci is a APCI_RESTART_TYPE1_PDU with a magic word<br/>
  *         otherwise false
  */
-bool checkApciForMagicWord(byte eraseCode, byte channelNumber);
+bool checkApciForMagicWord(uint8_t eraseCode, uint8_t channelNumber);
 
 #endif /* SBLIB_INTERNAL_BOOTLOADER_COMMANDS_H_ */

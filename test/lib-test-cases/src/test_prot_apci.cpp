@@ -20,6 +20,7 @@
  ---------------------------------------------------------------------------*/
 
 #include <sblib/eib/apci.h>
+#include <sblib/internal/bootloader_commands.h>
 #include <protocol.h>
 
 #include <catch.hpp> // If possible, include catch.hpp as last header
@@ -120,8 +121,9 @@ static Telegram apciMasterResetTelegrams[] =
 {
     // 1. T_CONNECT_PDU (0x80) from sourceAddr=10.0.1 to destAddr=10.0.0
     {TEL_RX,  7, 0, 0, NULL, {0xB0, 0xA0, 0x01, 0xA0, 0x00, 0x60, 0x80}},
-    // 2. APCI_MASTER_RESET_PDU eraseCode = BOOTLOADER_MAGIC_ERASE, channelNumber = BOOTLOADER_MAGIC_CHANNEL
-    {TEL_RX, 10, 0, 0, NULL, {0xB0, 0xA0, 0x01, 0xA0, 0x00, 0x61, 0x43, 0x81,  BOOTLOADER_MAGIC_ERASE, BOOTLOADER_MAGIC_CHANNEL}},
+    // 2. APCI_MASTER_RESET_PDU eraseCode = BOOTLOADER_MAGIC_ERASE == T_MASTERRESET_FACTORY_WO_IA,
+    //                          channelNumber = BOOTLOADER_MAGIC_CHANNEL = 255
+    {TEL_RX, 10, 0, 0, NULL, {0xB0, 0xA0, 0x01, 0xA0, 0x00, 0x61, 0x43, 0x81,  T_MASTERRESET_FACTORY_WO_IA, 255}},
     // 3. Check T_ACK, loop() once so APCI_MASTER_RESET_RESPONSE_PDU will be send
     {TEL_TX,  7, 1, 0, NULL, {0xB0, 0xA0, 0x00, 0xA0, 0x01, 0x60, 0xC2}},
     // 4. APCI_MASTER_RESET_RESPONSE_PDU => T_RESTART_NO_ERROR with 1 second, loop() once so T_DISCONNECT_PDU will be sent
