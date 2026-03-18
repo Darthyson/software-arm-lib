@@ -244,4 +244,28 @@ public class SBManagementClientImpl extends ManagementClientImpl {
 
         return String.format("%s, link %s, %s", status, link, super.toString());
     }
+
+    // From calimero-core ManagementProceduresImpl, which has a response timeout of 3 seconds.
+    // We use our own SBManagementClientImpl with reduced response timeout of 1 second
+    public boolean isAddressOccupied(final IndividualAddress devAddr)
+            throws KNXException, InterruptedException
+    {
+        final var oldTimeout = responseTimeout();
+        responseTimeout(Duration.ofSeconds(1));  // temporarily decrease responseTimeout
+        try (Destination dst = createDestination(devAddr, true)) {
+            readDeviceDesc(dst, 0);
+        }
+        catch (final KNXTimeoutException e) {
+            return false;
+        }
+        catch (final KNXDisconnectException e) {
+            // remote disconnect: device with that address exists but does not support CO mode
+            //if (e.getDestination().getDisconnectedBy() != Destination.REMOTE_ENDPOINT)
+            return false;
+        }
+        finally {
+            responseTimeout(oldTimeout); // restore responseTimeout
+        }
+        return true;
+    }
 }
