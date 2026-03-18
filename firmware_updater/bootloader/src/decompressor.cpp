@@ -24,52 +24,46 @@
 #include <cstring>
 
 
-#define CMD_RAW 0
-#define CMD_COPY 0b10000000
-#define FLAG_LONG 0b01000000
-#define ADDR_FROM_ROM 0
-#define ADDR_FROM_RAM 0b10000000
+constexpr uint8_t CMD_RAW = 0;
+constexpr uint8_t CMD_COPY = 0b10000000;
+constexpr uint8_t FLAG_LONG = 0b01000000;
+constexpr uint8_t ADDR_FROM_ROM = 0;
+constexpr uint8_t ADDR_FROM_RAM = 0b10000000;
 
-Decompressor::Decompressor(AppDescriptionBlock* BaseAddress)
+Decompressor::Decompressor(const AppDescriptionBlock* BaseAddress)
 {
     startAddrOfFlash = getFirmwareStartAddress(BaseAddress);
     startAddrOfPageToBeFlashed = startAddrOfFlash;
 }
 
-int Decompressor::getLength()
+uint16_t Decompressor::getLength() const
 {
     if ((cmdBuffer[0] & FLAG_LONG) == FLAG_LONG)
     {
-        return ((cmdBuffer[0] & 0b111111) << 8) | (cmdBuffer[1] & 0xff);
+        return static_cast<uint16_t>((cmdBuffer[0] & 0b111111) << 8) | (cmdBuffer[1] & 0xff);
     }
-    else
-    {
-        return cmdBuffer[0] & 0b111111;
-    }
+
+    return cmdBuffer[0] & 0b111111;
 }
 
-bool Decompressor::isCopyFromRam()
+bool Decompressor::isCopyFromRam() const
 {
     if ((cmdBuffer[0] & FLAG_LONG) == FLAG_LONG)
     {
         return (cmdBuffer[2] & ADDR_FROM_RAM) == ADDR_FROM_RAM;
     }
-    else
-    {
-        return (cmdBuffer[1] & ADDR_FROM_RAM) == ADDR_FROM_RAM;
-    }
+
+    return (cmdBuffer[1] & ADDR_FROM_RAM) == ADDR_FROM_RAM;
 }
 
-int Decompressor::getCopyAddress()
+uint32_t Decompressor::getCopyAddress() const
 {
     if ((cmdBuffer[0] & FLAG_LONG) == FLAG_LONG)
     {
         return ((cmdBuffer[2] & 0b1111111) << 16) | ((cmdBuffer[3] & 0xff) << 8) | (cmdBuffer[4] & 0xff);
     }
-    else
-    {
-        return ((cmdBuffer[1] & 0b1111111) << 16) | ((cmdBuffer[2] & 0xff) << 8) | (cmdBuffer[3] & 0xff);
-    }
+
+    return ((cmdBuffer[1] & 0b1111111) << 16) | ((cmdBuffer[2] & 0xff) << 8) | (cmdBuffer[3] & 0xff);
 }
 
 void Decompressor::resetStateMachine()
@@ -87,8 +81,8 @@ UDP_State Decompressor::pageCompletedDoFlash()
     // this is a FIFO buffer, oldest pages gets dropped
     // shift data one flash page forward to make space for the new page at the end
     memcpy(oldPages, oldPages + FLASH_PAGE_SIZE, sizeof(oldPages) - FLASH_PAGE_SIZE);
-    memcpy(oldPages + (FLASH_PAGE_SIZE * (REMEMBER_OLD_PAGES_COUNT-1)), startAddrOfPageToBeFlashed, FLASH_PAGE_SIZE);
     // add the latest (current) page (this may not be the whole page when EOF) at the end
+    memcpy(oldPages + (FLASH_PAGE_SIZE * (REMEMBER_OLD_PAGES_COUNT - 1)), startAddrOfPageToBeFlashed, FLASH_PAGE_SIZE);
 
     // Check if the flash page is identical or if we need to flash it
     dump(serial.print("Diff - Compare Page ", getFlashPageNumberToBeFlashed(), DEC, 2);)
@@ -96,14 +90,21 @@ UDP_State Decompressor::pageCompletedDoFlash()
     {
         // erase the page to be flashed
         dump(serial.print(" different, Erase Page", getFlashPageNumberToBeFlashed(), DEC, 2);)
-
         result = erasePageRange(getFlashPageNumberToBeFlashed(), getFlashPageNumberToBeFlashed());
         //result = UDP_IAP_SUCCESS; // Dry RUN! for debug
+        if (result != UDP_IAP_SUCCESS)
+        {
+            dump(serial.print(" --> failed", result);)
+        }
 
         // proceed to flash the decompressed page stored in the scratchpad RAM
         dump(serial.print("Diff - Program Page at Address 0x", startAddrOfPageToBeFlashed);)
         result = executeProgramFlash(startAddrOfPageToBeFlashed, scratchpad, FLASH_PAGE_SIZE);
         //result = UDP_IAP_SUCCESS; // Dry RUN! for debug
+        if (result != UDP_IAP_SUCCESS)
+        {
+            dump(serial.print(" --> failed", result);)
+        }
     }
     else
     {
@@ -119,7 +120,7 @@ UDP_State Decompressor::pageCompletedDoFlash()
     return result;
 }
 
-void Decompressor::putByte(uint8_t data)
+void Decompressor::putByte(const uint8_t data)
 {
     ///\todo Implement buffer overflow protection for cmdBuffer, scratchpad, oldPages
 
@@ -143,7 +144,7 @@ void Decompressor::putByte(uint8_t data)
             if ((data & FLAG_LONG) == FLAG_LONG)
             {
                 //dump(serial.print(" FLAG_LONG");)
-                expectedCmdLength += 1; // 1 more byte for longer length
+                expectedCmdLength += 1; // 1 more byte for the longer length
             }
             if (expectedCmdLength > 1)
             {
@@ -155,6 +156,7 @@ void Decompressor::putByte(uint8_t data)
                 rawLength = 0;
             }
             break;
+
         case State::EXPECT_COMMAND_PARAMS:
             //dump(serial.print(" params");)
             cmdBuffer[cmdBufferLength++] = data;
@@ -227,8 +229,9 @@ void Decompressor::putByte(uint8_t data)
                 }
             } // else expect more params of the command
             break;
+
         case State::EXPECT_RAW_DATA:
-            dump(serial.print(" raw");)
+            //dump(serial.print(" raw");)
             // store data read to scratchpad
             scratchpad[bytesToFlash++] = data;
             rawLength++;
@@ -237,13 +240,20 @@ void Decompressor::putByte(uint8_t data)
                 // we have all RAW data, reset state machine
                 resetStateMachine();
             }
+            break;
+
+        default:
+            // should not happen
+            dump(serial.println("putByte unknown state 0x", state););
+            break;
     }
     //UART_printf("\n\r");
     //dump(serial.println();)
 }
 
-uint32_t Decompressor::getCrc32() {
-    uint32_t ccrc = crc32(0xFFFFFFFF, scratchpad, bytesToFlash);
+uint32_t Decompressor::getCrc32() const
+{
+    const uint32_t crcScratchpad = crc32(0xFFFFFFFF, scratchpad, bytesToFlash);
 
     //UART_printf("# CRC req scratchpad content l=%d", bytesToFlash);
     for (int i = 0; i < bytesToFlash; i++) {
@@ -253,19 +263,22 @@ uint32_t Decompressor::getCrc32() {
         //UART_printf("%02X ", scratchpad[i]);
     }
     //UART_printf("\n\r");
-    return ccrc;
+    return crcScratchpad;
 }
 
-uint8_t * Decompressor::getStartAddrOfPageToBeFlashed() {
+uint8_t * Decompressor::getStartAddrOfPageToBeFlashed() const
+{
     return startAddrOfPageToBeFlashed;
 }
 
-uint32_t Decompressor::getBytesCountToBeFlashed() {
+uint32_t Decompressor::getBytesCountToBeFlashed() const
+{
     return bytesToFlash;
 }
 
-uint8_t Decompressor::getFlashPageNumberToBeFlashed() {
-    return (uint8_t)((uint32_t)startAddrOfPageToBeFlashed / FLASH_PAGE_SIZE);
+uint8_t Decompressor::getFlashPageNumberToBeFlashed()
+{
+    return static_cast<uint8_t>(reinterpret_cast<uint32_t>(startAddrOfPageToBeFlashed) / FLASH_PAGE_SIZE);
 }
 
 /** @}*/

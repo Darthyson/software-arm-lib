@@ -27,8 +27,7 @@
 #include <cstdint>
 
 
-#define REMEMBER_OLD_PAGES_COUNT 2 // There seems to be a RAM leak/overflow somewhere, 2 seems to work for the moment!
-
+constexpr uint8_t REMEMBER_OLD_PAGES_COUNT = 2; //!< There seems to be a RAM leak/overflow somewhere, 2 seems to work for the moment!
 
 /**
  * Apply differential stream and produce one page to be flashed
@@ -36,6 +35,24 @@
  */
 class Decompressor
 {
+public:
+    explicit Decompressor(const AppDescriptionBlock * BaseAddress);
+    // delete default constructors
+    Decompressor() = delete;
+    Decompressor(const Decompressor&) = delete;
+    Decompressor& operator=(const Decompressor&) = delete;
+
+    void putByte(uint8_t data);
+
+    UDP_State pageCompletedDoFlash();
+
+    [[nodiscard]] uint32_t getCrc32() const;
+
+    [[nodiscard]] uint8_t * getStartAddrOfPageToBeFlashed() const;
+
+    [[nodiscard]] uint32_t getBytesCountToBeFlashed() const;
+
+    uint8_t getFlashPageNumberToBeFlashed();
 
 private:
     enum class State
@@ -45,49 +62,24 @@ private:
         EXPECT_RAW_DATA
     };
 
-private:
-    uint8_t cmdBuffer[5] = {0};
-    int expectedCmdLength = 0;
-    int cmdBufferLength = 0;
-    alignas(FLASH_RAM_BUFFER_ALIGNMENT) uint8_t scratchpad[FLASH_PAGE_SIZE] = {0};
-    uint8_t oldPages[FLASH_PAGE_SIZE * REMEMBER_OLD_PAGES_COUNT] = {0};
-    int bytesToFlash = 0;
-    int rawLength = 0;
+    uint8_t cmdBuffer[5] = {};
+    uint16_t expectedCmdLength = 0;
+    uint16_t cmdBufferLength = 0;
+    alignas(FLASH_RAM_BUFFER_ALIGNMENT) uint8_t scratchpad[FLASH_PAGE_SIZE] = {};
+    uint8_t oldPages[FLASH_PAGE_SIZE * REMEMBER_OLD_PAGES_COUNT] = {};
+    uint16_t bytesToFlash = 0;
+    uint16_t rawLength = 0;
     State state = State::EXPECT_COMMAND_BYTE;
-    alignas(FLASH_RAM_BUFFER_ALIGNMENT) uint8_t * startAddrOfPageToBeFlashed = 0;
-    uint8_t * startAddrOfFlash = 0;
+    alignas(FLASH_RAM_BUFFER_ALIGNMENT) uint8_t * startAddrOfPageToBeFlashed = nullptr;
+    uint8_t * startAddrOfFlash = nullptr;
 
-public:
-    Decompressor(AppDescriptionBlock* BaseAddress);
+    [[nodiscard]] uint16_t getLength() const;
 
-private:
-    // remove default constructors
-    Decompressor() = delete;
-    Decompressor(const Decompressor&) = delete;
-    Decompressor& operator=(const Decompressor&) = delete;
+    [[nodiscard]] bool isCopyFromRam() const;
 
-    int getLength();
-
-    bool isCopyFromRam();
-
-    int getCopyAddress();
+    [[nodiscard]] uint32_t getCopyAddress() const;
 
     void resetStateMachine();
-
-public:
-
-    void putByte(uint8_t data);
-
-    UDP_State pageCompletedDoFlash();
-
-    uint32_t getCrc32();
-
-    uint8_t * getStartAddrOfPageToBeFlashed();
-
-    uint32_t getBytesCountToBeFlashed();
-
-    uint8_t getFlashPageNumberToBeFlashed();
-
 };
 
 #endif /* SB_BOOTLOADER_DECOMPRESSOR_H_ */
