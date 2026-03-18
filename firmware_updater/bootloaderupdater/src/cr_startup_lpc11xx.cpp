@@ -1,3 +1,6 @@
+#pragma GCC diagnostic push
+#pragma GCC diagnostic ignored "-Wpedantic"
+#pragma GCC diagnostic ignored "-Wold-style-cast"
 //*****************************************************************************
 // LPC11xx Microcontroller Startup code for use with LPCXpresso IDE
 //
@@ -331,3 +334,4 @@ void IntDefaultHandler(void)
     }
 }
 
+#pragma GCC diagnostic pop
