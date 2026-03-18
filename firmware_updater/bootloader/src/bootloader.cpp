@@ -201,7 +201,7 @@ void loop_noapp()
 /**
  * Restores MCU and register changes made by the bootloader (e.g. sysTick).
  */
-static inline void finalize()
+static void finalize()
 {
     Timeout ledTimeout; // don't use delay(), it needs nearly 100% more flash
     pinMode(getProgrammingButton(), OUTPUT);
