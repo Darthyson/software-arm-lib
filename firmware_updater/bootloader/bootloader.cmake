@@ -1,0 +1,22 @@
+set(BOOTLOADER_SRC
+    inc/bcu_updater.h
+    inc/boot_descriptor_block.h
+    inc/crc.h
+    inc/decompressor.h
+    inc/dump.h
+    inc/flash.h
+    inc/intelhex.h
+    inc/upd_protocol.h
+    inc/update.h
+    inc/version.h
+    src/bcu_updater.cpp
+    src/boot_descriptor_block.cpp
+    src/bootloader.cpp
+    src/cr_startup_lpc11xx.cpp
+    src/crc.cpp
+    src/decompressor.cpp
+    src/flash.cpp
+    src/intelhex.cpp
+    src/upd_protocol.cpp
+    src/update.cpp
+)
