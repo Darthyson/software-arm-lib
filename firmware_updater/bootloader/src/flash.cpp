@@ -37,18 +37,6 @@ bool is_aligned(const uint8_t * ptr, const uint32_t alignment)
     return (reinterpret_cast<uintptr_t>(static_cast<const void *>(ptr)) & (alignment - 1)) == 0;
 }
 
-/**
- * @brief Erases if allowed the requested sector.
- * @param sector  Sector number to be erased
- * @return        @ref UDP_IAP_SUCCESS if successful, otherwise @ref UDP_SECTOR_NOT_ALLOWED_TO_ERASE or a @ref IAP_Status
- */
-/*
-static UDP_State eraseSector(unsigned int sector)
-{
-    return eraseSectorRange(sector, sector);
-}
-*/
-
 bool addressAllowedToProgram(const uint8_t * start, const uint32_t length, const bool isBootDescriptor)
 {
     if (!is_aligned(start, FLASH_PAGE_SIZE) || !length) // not aligned to page or 0 length

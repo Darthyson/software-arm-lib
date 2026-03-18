@@ -24,16 +24,35 @@
 
 
 #ifndef IAP_EMULATION
-    extern uint8_t __base_Flash[];      //!< marks the beginning of the flash memory (inserted by the linker)
-                                        //!< used to protect the updater from killing itself with a new application downloaded over the bus
-    extern uint8_t __top_Flash[];       //!< marks the end of the flash memory (inserted by the linker)
-                                        //!< used to protect the updater from killing itself with a new application downloaded over the bus
-    extern uint8_t _image_start[];      //!< marks the beginning of the bootloader firmware (inserted by the linker)
-                                        //!< used to protect the updater from killing itself with a new application downloaded over the bus
-    extern uint8_t _image_end[];        //!< marks the end of the bootloader firmware (inserted by the linker)
-                                        //!< used to protect the updater from killing itself with a new application downloaded over the bus
-    extern unsigned int _image_size;    //!< marks the size of the bootloader firmware (inserted by the linker)
-                                        //!< used to protect the updater from killing itself with a new application downloaded over the bus
+    /**
+     * Marks the beginning of the flash memory (inserted by the linker).
+     * Used to protect the updater from killing itself with a new application downloaded over the bus.
+     */
+    extern uint8_t __base_Flash[];
+
+    /**
+     * Marks the end of the flash memory (inserted by the linker).
+     * Used to protect the updater from killing itself with a new application downloaded over the bus
+     */
+    extern uint8_t __top_Flash[];
+
+    /**
+     * Marks the beginning of the bootloader firmware (inserted by the linker).
+     * Used to protect the updater from killing itself with a new application downloaded over the bus.
+     */
+    extern uint8_t _image_start[];
+
+    /**
+     * Marks the end of the bootloader firmware (inserted by the linker).
+     * Used to protect the updater from killing itself with a new application downloaded over the bus.
+     */
+    extern uint8_t _image_end[];
+
+    /**
+     * Marks the size of the bootloader firmware (inserted by the linker).
+     * Used to protect the updater from killing itself with a new application downloaded over the bus.
+     */
+    extern uint32_t _image_size;
 #else
     // for catch unit tests ///\todo move this to cpu-emulation
     uint8_t * __base_Flash = &FLASH[0x0000];
