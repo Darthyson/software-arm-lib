@@ -80,7 +80,7 @@ char bl_id_string[BL_ID_STRING_LENGTH] = BL_ID_STRING;
 uint32_t checkVectorTable(const uint8_t * start)
 {
     // Vector table starts always at base address, each entry is 4 bytes
-    const uint32_t * address = reinterpret_cast<const uint32_t*>(start);
+    const auto * address = reinterpret_cast<const uint32_t*>(start);
     uint32_t checkSum = 0;
     for (uint8_t i = 0; i < 7; i++) // Checksum is 2's complement of entries 0 through 6
     {

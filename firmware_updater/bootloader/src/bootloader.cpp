@@ -231,8 +231,8 @@ static inline void finalize()
 [[noreturn]] static void jumpToApplication(uint8_t * applicationStartAddress)
 {
     finalize(); // restore changes made and turn the programming led on
-    const uint32_t* rom = reinterpret_cast<const uint32_t*>(applicationStartAddress);
-    uint32_t* ram = reinterpret_cast<uint32_t*>(BL_RESERVED_RAM_START);
+    const auto* rom = reinterpret_cast<const uint32_t*>(applicationStartAddress);
+    auto* ram = reinterpret_cast<uint32_t*>(BL_RESERVED_RAM_START);
     uint32_t StackTop = rom[0];
     uint32_t ResetVector = rom[1];
 
@@ -254,7 +254,7 @@ static inline void finalize()
     // table of the application is not located at 0x0 we have to do this
     // manually to ensure a correct stack.
     asm volatile ("mov SP, %0" : : "r" (StackTop));
-    /* Once the stack is setup we jump to the application reset vector */
+    /* Once the stack is set up we jump to the application reset vector */
     asm volatile ("bx      %0" : : "r" (ResetVector));
     __builtin_unreachable(); // Tell compiler this point is never reached
 }
@@ -294,7 +294,7 @@ const BootloaderDescriptor* startup()
     }
 
     // Start main application at address
-    const AppDescriptionBlock* block = reinterpret_cast<const AppDescriptionBlock*>(bootDescriptorBlockAddress());
+    const auto* block = reinterpret_cast<const AppDescriptionBlock*>(bootDescriptorBlockAddress());
     if (checkApplication(block))
     {
         dump(serial.println("Application valid");)
