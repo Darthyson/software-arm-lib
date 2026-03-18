@@ -19,30 +19,23 @@
 #include "crc.h"
 
 
-unsigned int crc32(unsigned int startCrc32, unsigned char * data, unsigned int count)
+uint32_t crc32(uint32_t crc, const uint8_t * data, uint32_t count)
 {
-    int crc;
-    unsigned int byte;
-    unsigned int c;
-    const unsigned int g0 = 0xEDB88320;
-    const unsigned int g1 = g0 >> 1;
-    const unsigned int g2 = g0 >> 2;
-    const unsigned int g3 = g0 >> 3;
-    const unsigned int g4 = g0 >> 4;
-    const unsigned int g5 = g0 >> 5;
-    const unsigned int g6 = (g0 >> 6) ^ g0;
-    const unsigned int g7 = ((g0 >> 6) ^ g0) >> 1;
-
-    crc = startCrc32;
-    while (count--)
-    {
-        byte = *data++;       // Get next byte.
-        crc = crc ^ byte;
-        c = ((crc << 31 >> 31) & g7) ^ ((crc << 30 >> 31) & g6)
-                ^ ((crc << 29 >> 31) & g5) ^ ((crc << 28 >> 31) & g4)
-                ^ ((crc << 27 >> 31) & g3) ^ ((crc << 26 >> 31) & g2)
-                ^ ((crc << 25 >> 31) & g1) ^ ((crc << 24 >> 31) & g0);
-        crc = ((unsigned) crc >> 8) ^ c;
+    // https://stackoverflow.com/questions/27939882/fast-crc-algorithm/27950866#27950866
+    constexpr uint32_t POLYNOM = 0xEDB88320;
+    while (count--) {
+        crc ^= *data++; // Get next byte and XOR
+        for (uint8_t i = 0; i < 8; i++)
+        {
+            if (crc & 1)
+            {
+                crc = (crc >> 1) ^ POLYNOM;
+            }
+            else
+            {
+                crc = crc >> 1;
+            }
+        }
     }
     return ~crc;
 }

@@ -21,6 +21,9 @@
 #ifndef SB_BOOTLOADER_CRC32_H_
 #define SB_BOOTLOADER_CRC32_H_
 
+#include <cstdint>
+
+
 /**
  * Calculates the crc32 of provided buffer data.
  *
@@ -29,7 +32,7 @@
  * @param count      Length of data
  * @return crc32 of data
  */
-unsigned int crc32 (unsigned int startCrc32, unsigned char * data, unsigned int count);
+uint32_t crc32(uint32_t crc, const uint8_t * data, uint32_t count);
 
 #endif /* SB_BOOTLOADER_CRC32_H_ */
 
