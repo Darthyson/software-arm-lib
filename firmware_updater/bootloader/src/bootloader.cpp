@@ -34,6 +34,7 @@
 
 #ifdef DEBUG
 #   include "flash.h"
+#   include "version.h"
 #   include <sblib/serial.h>
 #   include <sblib/version.h>
 #   include <sblib/bits.h>
@@ -109,7 +110,7 @@ BcuBase* setup()
     if (blDescriptor != nullptr)
     {
         physAddr = blDescriptor->physicalAddress;
-        progButton = blDescriptor->gpioProgrammingButton;
+        progButton = blDescriptor->programmingButton;
         ///\todo After reset the application will be started (old behavior).
         ///      We need to find the right place to clear the BootloaderDescriptor.
         ///      Here it's too early. Best place would be, if we are 100% sure that the application is startable.
