@@ -2,6 +2,7 @@
 #include <sblib/io_pin_names.h>
 #include <sblib/digital_pin.h>
 #include <sblib/version.h>
+#include <sblib/platform.h>
 #include <cstdint>
 #include <cstring>
 
@@ -10,9 +11,9 @@
 #endif
 
 #ifdef DEBUG
-#   define d(x) {x;}
+#   define dump(x) {x}
 #else
-#   define d(x)
+#   define dump(x)
 #endif
 
 // Remember to change build-variable sw_version in the .cproject file
@@ -25,39 +26,34 @@ APP_VERSION("SBblu   ", "1", "20");
 extern const __attribute__((aligned(16))) uint8_t incbin_bl_start[];
 extern const uint8_t incbin_bl_end[];
 
-///\todo Create common header of constants shared between BL and BLU
-#define BOOTLOADER_FLASH_STARTADDRESS ((uint8_t *) 0x0) //!< Flash start address of the bootloader
-
-/** Size of the BootDescriptorBlock. Must match the BOOT_BLOCK_DESC_SIZE of the BL in the boot_descriptor_block.h */
-constexpr uint16_t BOOT_BLOCK_DESC_SIZE = 0x100; // same as FLASH_PAGE_SIZE of sblib/platform.h
+uint32_t gpioProgButton = PIN_PROG;
 
 void setup()
 {
-    pinMode(PIN_PROG, OUTPUT);
-    digitalWrite(PIN_PROG, false);
-
-    d(
-        //serial.setRxPin(PIO3_1);
-        //serial.setTxPin(PIO3_0);
+    dump(
         if (!serial.enabled())
         {
+            serial.setRxPin(PIO1_6);
+            serial.setTxPin(PIO1_7);
             serial.begin(115200);
         }
         serial.println();
         serial.print("Selfbus BootloaderUpdater v", BOOTLOADERUPDATER_MAJOR_VERSION);
-        serial.print(".", BOOTLOADERUPDATER_MINOR_VERSION);
-        serial.println(" DEBUG MODE :-)");
+        serial.println(".", BOOTLOADERUPDATER_MINOR_VERSION);
         serial.print("Build: ");
         serial.print(__DATE__);
         serial.print(" ");
         serial.println(__TIME__);
         serial.flush();
     );
+        gpioProgButton = PIN_PROG;
+    pinMode(gpioProgButton, OUTPUT);
+    digitalWrite(gpioProgButton, false);
 }
 
 void SystemReset()
 {
-    d(
+    dump(
         serial.println("RESET");
         serial.flush();
     )
@@ -68,12 +64,12 @@ int main()
 {
     setup();
 
-    const unsigned int newBlSize = (incbin_bl_end - incbin_bl_start);
-    const uint8_t* newBlEndAddress = BOOTLOADER_FLASH_STARTADDRESS + newBlSize - 1;
-    const unsigned int newBlStartSector = iapSectorOfAddress(BOOTLOADER_FLASH_STARTADDRESS);
-    const unsigned int newBlEndSector = iapSectorOfAddress(newBlEndAddress);
+    const uint32_t newBlSize = incbin_bl_end - incbin_bl_start;
+    const uint8_t* newBlEndAddress = FLASH_BASE_ADDRESS + newBlSize - 1;
+    const uint32_t newBlStartSector = iapSectorOfAddress(FLASH_BASE_ADDRESS);
+    const uint32_t newBlEndSector = iapSectorOfAddress(newBlEndAddress);
 
-    d(
+    dump(
         serial.println("newBlSize: 0x", newBlSize, HEX, 4);
         serial.print("Erasing Sectors: ", newBlStartSector);
         serial.print(" - ", newBlEndSector);
@@ -81,24 +77,24 @@ int main()
 
     if (iapEraseSectorRange(newBlStartSector, newBlEndSector) != IAP_SUCCESS)
     {
-        d(serial.println(" --> FAILED");)
+        dump(serial.println(" --> FAILED");)
         SystemReset();
     }
 
-    d(serial.println(" --> done");)
+    dump(serial.println(" done");)
 
     for (const uint8_t * i = incbin_bl_start; i < incbin_bl_end; i += FLASH_SECTOR_SIZE)
     {
         __attribute__ ((aligned (FLASH_RAM_BUFFER_ALIGNMENT))) byte buf[FLASH_SECTOR_SIZE]; // Address of buf must be word aligned, see iapProgram(..) hint.
         memset(buf, 0xFF, FLASH_SECTOR_SIZE);
-        unsigned int len = incbin_bl_end - i;
+        uint32_t len = incbin_bl_end - i;
         if (len > FLASH_SECTOR_SIZE)
         {
             len = FLASH_SECTOR_SIZE;
         }
         memcpy(buf, i, len);
 
-        uint8_t * flash = BOOTLOADER_FLASH_STARTADDRESS + (i - incbin_bl_start);
+        uint8_t * flash = FLASH_BASE_ADDRESS + (i - incbin_bl_start);
 
         if (flash == nullptr)
         {
@@ -106,35 +102,39 @@ int main()
             // If the value is not correct, then it does not start the application
             // Vector table starts always at base address. Each entry is 4 bytes.
             uint32_t checksum = 0;
-            for (int j = 0; j < 7; j++) // Checksum is 2's complement of entries 0 through 6
+            for (uint8_t j = 0; j < 7; j++) // Checksum is 2's complement of entries 0 through 6
             {
                 checksum += *(int*)&buf[j*4];
             }
             checksum = -checksum;
             *(int*)&buf[28] = checksum;
-            d(serial.println("checksum: 0x", checksum, HEX);)
+            dump(serial.println("checksum: 0x", checksum, HEX);)
         }
-        d(serial.print("flashing 0x", flash);)
+
+        dump(
+            serial.print("flashing 0x", flash);
+            serial.print(" - ", flash + FLASH_SECTOR_SIZE - 1);
+        )
         if (iapProgram(flash, buf, FLASH_SECTOR_SIZE) != IAP_SUCCESS)
         {
-            d(serial.println(" --> FAILED");)
+            dump(serial.println(" --> FAILED");)
             SystemReset();
         }
-        d(serial.println(" --> done");)
-        digitalWrite(PIN_PROG, !digitalRead(PIN_PROG));
+        dump(serial.println(" done");)
+        digitalWrite(gpioProgButton, !digitalRead(gpioProgButton));
     }
 
     // Make sure that the current boot descriptor of the BLU is erased,
     // otherwise the BL will restart the BLU in an endless loop.
-    const uint32_t bootDescriptorBlockPage = iapPageOfAddress(newBlEndAddress + BOOT_BLOCK_DESC_SIZE);
-    d(serial.println("Erasing BootDescriptorPage: 0x", bootDescriptorBlockPage, HEX);)
+    const uint32_t bootDescriptorBlockPage = iapPageOfAddress(newBlEndAddress + FLASH_PAGE_SIZE);
+    dump(serial.print("Erasing BootDescriptorPage: 0x", bootDescriptorBlockPage, HEX);)
     if (iapErasePageRange(bootDescriptorBlockPage, bootDescriptorBlockPage) != IAP_SUCCESS)
     {
-        d(serial.println(" --> FAILED");)
+        dump(serial.println(" --> FAILED");)
     }
     else
     {
-        d(serial.println(" --> done");)
+        dump(serial.println(" done");)
     }
 
     SystemReset();
