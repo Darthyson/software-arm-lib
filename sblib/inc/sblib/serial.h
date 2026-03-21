@@ -20,7 +20,25 @@
 
 #include <sblib/buffered_stream.h>
 #include <sblib/interrupt.h>
-#include <sblib/libconfig.h>
+
+/**
+ * Callback type for serial line error conditions.
+ *
+ * @param lineStatus The UART line status register (LSR) value containing the error flags.
+ * @param context    User-provided context pointer.
+ *
+ * LSR error bits:
+ * - @c LSR_OE  (0x02) Overrun error
+ * - @c LSR_PE  (0x04) Parity error
+ * - @c LSR_FE  (0x08) Framing error
+ * - @c LSR_BI  (0x10) Break interrupt
+ */
+typedef void (*SerialErrorCallback)(uint32_t lineStatus, void* context);
+
+constexpr uint8_t LSR_OE = 0x02; //!< Overrun error
+constexpr uint8_t LSR_PE = 0x04; //!< Parity error
+constexpr uint8_t LSR_FE = 0x08; //!< Framing error
+constexpr uint8_t LSR_BI = 0x10; //!< Break interrupt
 
 /** @defgroup SERIAL_11XX CHIP: LPC11xx Serial port driver
  * @ingroup CHIP_11XX_Drivers
@@ -145,21 +163,43 @@ public:
     /**
      * Wait until all bytes are written.
      */
-    void flush(void) override;
+    void flush() override;
 
     /**
      * @brief Check if serial port enabled and available for transmission
      *
      * @return true if serial port is enabled, otherwise false
      */
-    operator bool() const { return enabled_; }
+    explicit operator bool() const { return enabled_; }
 
     /**
      * @brief Check if serial port enabled and available for transmission
      *
      * @return true if serial port is enabled, otherwise false
      */
-    bool enabled(void) const { return enabled_; }
+    [[nodiscard]] bool enabled() const { return enabled_; }
+
+    /**
+     * Set an optional callback for serial line error conditions
+     * (break, framing error, parity error, overrun).
+     *
+     * @param callback Function to call on error, or nullptr to disable.
+     *                 Receives the line status register value and the user context.
+     * @param context  Optional user context pointer passed to the callback (default: nullptr).
+     *
+     * @code
+     *      // Example using a lambda to call a member function:
+     *      serial.setErrorCallback([](uint32_t lineStatus, void* ctx) {
+     *          auto* self = static_cast<MyClass*>(ctx);
+     *          if (lsr & LSR_BI) { self->onBreak(); }
+     *          if (lsr & LSR_FE) { self->onFrameError(); }
+     *          if (lsr & LSR_PE) { self->onParityError(); }
+     *          if (lsr & LSR_OE) { self->onOverrunError(); }
+     *      }, this);
+     * @endcode
+     * @warning The callback is called from interrupt context, so it should be kept short.
+     */
+    void setErrorCallback(SerialErrorCallback callback, void* context = nullptr);
 
 protected:
     // Allow the interrupt handler to call our protected methods
@@ -172,6 +212,18 @@ protected:
 
 private:
     bool enabled_; //!> true if serial port is enabled, otherwise false
+    SerialErrorCallback errorCallback;   //!> optional callback for serial line errors
+    void* errorCallbackContext;          //!> user context for error callback
+
+    /**
+     * Handle UART line errors detected in the line status register (LSR).
+     *
+     * Discards the 0x00 byte from the receive buffer on BREAK conditions
+     * and invokes the user error callback (if set) with the relevant error flags.
+     *
+     * @param lineStatus The UART line status register value containing the error bits.
+     */
+    void handleLineError(uint32_t lineStatus)const;
 };
 
 
