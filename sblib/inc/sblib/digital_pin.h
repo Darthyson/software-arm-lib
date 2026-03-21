@@ -273,6 +273,11 @@ enum PinMode : uint32_t
     SERIAL_TXD = OUTPUT | PinModeFunc(PF_TXD),
 
     /**
+     * Configure the pin as serial request to send (RTS).
+     */
+    SERIAL_RTS = OUTPUT | PinModeFunc(PF_RTS),
+
+    /**
      * Configure the pin as output for SPI clock (SCK) in SPI master mode or input
      * for SPI clock (SCK) in SPI slave mode. Shall be combined with OUTPUT or INPUT.
      */
