@@ -246,10 +246,10 @@ public:
      *
      * The bits are:
      *
-     * 0 - interrupt flag for match channel MAT0
-     * 1 - interrupt flag for match channel MAT1
-     * 2 - interrupt flag for match channel MAT2
-     * 3 - interrupt flag for match channel MAT3
+     * 0 - interrupt flag for match channel TIMER_MATCH_MAT0
+     * 1 - interrupt flag for match channel TIMER_MATCH_MAT1
+     * 2 - interrupt flag for match channel TIMER_MATCH_MAT2
+     * 3 - interrupt flag for match channel TIMER_MATCH_MAT3
      * 4 - interrupt flag for capture channel CAP0
      * 5 - interrupt flag for capture channel CAP1
      *
@@ -269,7 +269,7 @@ public:
     /**
      * Reset interrupt flag of a match channel.
      *
-     * @param match - the match channel: MAT0, MAT1, MAT2, MAT3.
+     * @param match - the match channel: TIMER_MATCH_MAT0, TIMER_MATCH_MAT1, TIMER_MATCH_MAT2, TIMER_MATCH_MAT3.
      */
     void resetFlag(TimerMatch match) const;
 
@@ -283,7 +283,7 @@ public:
     /**
      * Test if the timer flag of a match channel is set.
      *
-     * @param match - the match channel: MAT0, MAT1, MAT2, MAT3.
+     * @param match - the match channel: TIMER_MATCH_MAT0, TIMER_MATCH_MAT1, TIMER_MATCH_MAT2, TIMER_MATCH_MAT3.
      * @return True if the flag is set, false if it is not set.
      */
     bool flag(TimerMatch match) const;
@@ -299,7 +299,7 @@ public:
     /**
      * Get the timer flag mask for flags() for a match channel.
      *
-     * @param match - the match channel: MAT0, MAT1, MAT2, MAT3.
+     * @param match - the match channel: TIMER_MATCH_MAT0, TIMER_MATCH_MAT1, TIMER_MATCH_MAT2, TIMER_MATCH_MAT3.
      * @return The timer flag mask.
      */
     static int flagMask(TimerMatch match);
@@ -315,7 +315,7 @@ public:
     /**
      * Configure a match channel.
      *
-     * @param channel - the match channel to configure: MAT0, MAT1, MAT2, MAT3.
+     * @param channel - the match channel to configure: TIMER_MATCH_MAT0, TIMER_MATCH_MAT1, TIMER_MATCH_MAT2, TIMER_MATCH_MAT3.
      * @param mode - the configuration. Multiple values are combined with "|".
      *
      * @brief
@@ -336,7 +336,7 @@ public:
     /**
      * Get the configuration of a match channel.
      *
-     * @param channel - the match channel to query: MAT0, MAT1, MAT2, MAT3.
+     * @param channel - the match channel to query: TIMER_MATCH_MAT0, TIMER_MATCH_MAT1, TIMER_MATCH_MAT2, TIMER_MATCH_MAT3.
      *
      * @return The configuration. See matchMode(short,short) above for the possible configuration values.
      */
@@ -347,7 +347,7 @@ public:
      * happen when the timer matches. Use pinMode(short,short) to configure the digital pin as
      * match output pin.
      *
-     * @param channel - the match channel: MAT0, MAT1, MAT2, MAT3.
+     * @param channel - the match channel: TIMER_MATCH_MAT0, TIMER_MATCH_MAT1, TIMER_MATCH_MAT2, TIMER_MATCH_MAT3.
      * @param value - the timer value when the match channel shall match. The value is 16 bit for
      *                16 bit timers and 32 bit for 32 bit timers.
      */
@@ -356,7 +356,7 @@ public:
     /**
      * Get the timer value of a match channel.
      *
-     * @param channel - the match channel to query: MAT0, MAT1, MAT2, MAT3.
+     * @param channel - the match channel to query: TIMER_MATCH_MAT0, TIMER_MATCH_MAT1, TIMER_MATCH_MAT2, TIMER_MATCH_MAT3.
      * @return The timer value when the match channel shall match. The value is 16 bit for 16 bit
      *         timers and 32 bit for 32 bit timers.
      */
@@ -392,7 +392,7 @@ public:
     /**
      * Get the timer value of a capture channel.
      *
-     * @param channel - the channel to query: MAT0, MAT1, MAT2, MAT3
+     * @param channel - the channel to query: TIMER_MATCH_MAT0, TIMER_MATCH_MAT1, TIMER_MATCH_MAT2, TIMER_MATCH_MAT3
      *
      * @return The timer value when the capture occurred. The value is 16 bit for 16 bit timers
      *         and 32 bit for 32 bit timers.
@@ -400,7 +400,7 @@ public:
     unsigned int capture(int channel) const;
 
     /**
-     * Enable a PWM channel. When enabled, the corresponding match channel (MAT0 for PWM0, ...)
+     * Enable a PWM channel. When enabled, the corresponding match channel (TIMER_MATCH_MAT0 for PWM0, ...)
      * will control the level of the digital pin of the match channel. Use pinMode(short,short)
      * to configure the digital pin as match output pin.
      *
@@ -451,7 +451,7 @@ public:
     /**
      * Configure a match pin mode of the channel.
      *
-     * @param channel - the match channel to configure: MAT0, MAT1, MAT2, MAT3.
+     * @param channel - the match channel to configure: TIMER_MATCH_MAT0, TIMER_MATCH_MAT1, TIMER_MATCH_MAT2, TIMER_MATCH_MAT3.
      * @param mode - the configuration. Multiple values are combined with "|".
      *
      * @brief
@@ -473,7 +473,7 @@ public:
     /**
      * Get the digital level of match channel (even if output pin is disabled)
      *
-     * @param channel - the match channel to configure: MAT0, MAT1, MAT2, MAT3.
+     * @param channel - the match channel to configure: TIMER_MATCH_MAT0, TIMER_MATCH_MAT1, TIMER_MATCH_MAT2, TIMER_MATCH_MAT3.
      *
      * @return - true = high, false = low
      */

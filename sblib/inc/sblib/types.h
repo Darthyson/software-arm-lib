@@ -124,22 +124,22 @@ enum TimerMatch
     /**
      * ID of the timer match channel #0
      */
-    MAT0,
+    TIMER_MATCH_MAT0,
 
     /**
      * ID of the timer match channel #1
      */
-    MAT1,
+    TIMER_MATCH_MAT1,
 
     /**
      * ID of the timer match channel #2
      */
-    MAT2,
+    TIMER_MATCH_MAT2,
 
     /**
      * ID of the timer match channel #3
      */
-    MAT3
+    TIMER_MATCH_MAT3
 };
 
 
