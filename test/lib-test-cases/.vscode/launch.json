@@ -1,0 +1,15 @@
+{
+    "name": "Catch2 Tests Debug with logging x86",
+    "type": "cppdbg",
+    "request": "launch",
+    "program": "${workspaceFolder}/cmake-build/x64_logging/Debug/lib-test-cases_x64.exe",
+    "args": ["--reporter", "console", "--success"],
+    "stopAtEntry": false,
+    "cwd": "${workspaceFolder}/cmake-build/x64_logging",
+    "environment": [],
+    "MIMode": "gdb",
+    "miDebuggerPath": "C:/msys64/ucrt64/bin/gdb.exe",
+    "setupCommands": [
+        { "text": "-enable-pretty-printing", "ignoreFailures": true }
+    ]
+}
