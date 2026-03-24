@@ -159,8 +159,8 @@ BcuBase* setup()
     enableInterrupt(TIMER_32_0_IRQn);                   // Enable the timer interrupt
     timer32_0.begin();                                  // Begin using the timer
     timer32_0.prescaler((SystemCoreClock / 1000) - 1);  // Let the timer count milliseconds
-    timer32_0.matchMode(MAT1, RESET | INTERRUPT);       // On match of MAT1, generate an interrupt and reset the timer
-    timer32_0.match(MAT1, READ_TIMER);                  // Match MAT1 when the timer reaches this value (in milliseconds)
+    timer32_0.matchMode(TIMER_MATCH_MAT1, RESET | INTERRUPT); // On match of MAT1, generate an interrupt and reset the timer
+    timer32_0.match(TIMER_MATCH_MAT1, READ_TIMER);      // Match MAT1 when the timer reaches this value (in milliseconds)
     timer32_0.start();                                  // Start now the timer
 
     return (&bcu);

@@ -78,10 +78,10 @@ void FlashRX_LED(int FlashTime_ms = RX_FLASH_MS)
     timer32_0.prescaler((SystemCoreClock / 1000) - 1);
 
     // On match of MAT1, generate an interrupt and reset the timer
-    timer32_0.matchMode(MAT1, RESET | INTERRUPT);
+    timer32_0.matchMode(TIMER_MATCH_MAT1, RESET | INTERRUPT);
 
     // Match MAT1 when the timer reaches this value (in milliseconds)
-    timer32_0.match(MAT1, RX_FLASH_MS);
+    timer32_0.match(TIMER_MATCH_MAT1, RX_FLASH_MS);
 
     timer32_0.start();
     */
@@ -104,10 +104,10 @@ void FlashTX_LED(int FlashTime_ms = TX_FLASH_MS)
     timer32_1.prescaler((SystemCoreClock / 1000) - 1);
 
     // On match of MAT1, generate an interrupt and reset the timer
-    timer32_1.matchMode(MAT1, RESET | INTERRUPT);
+    timer32_1.matchMode(TIMER_MATCH_MAT1, RESET | INTERRUPT);
 
     // Match MAT1 when the timer reaches this value (in milliseconds)
-    timer32_1.match(MAT1, TX_FLASH_MS);
+    timer32_1.match(TIMER_MATCH_MAT1, TX_FLASH_MS);
 
     timer32_1.start();
     */

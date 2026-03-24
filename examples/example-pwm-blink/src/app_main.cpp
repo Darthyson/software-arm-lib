@@ -45,13 +45,13 @@ BcuBase* setup()
     timer32_0.begin();
 
     timer32_0.prescaler((SystemCoreClock / 1000) - 1); // let the timer count milliseconds
-    timer32_0.matchMode(MAT1, SET);  // set the output of PIN_INFO to 1 when the timer matches MAT1
-    timer32_0.match(MAT1, 800);      // match MAT1 when the timer reaches this value
-    timer32_0.pwmEnable(MAT1);       // enable PWM for match channel MAT1
+    timer32_0.matchMode(TIMER_MATCH_MAT1, SET);  // set the output of PIN_INFO to 1 when the timer matches MAT1
+    timer32_0.match(TIMER_MATCH_MAT1, 800);      // match MAT1 when the timer reaches this value
+    timer32_0.pwmEnable(TIMER_MATCH_MAT1);       // enable PWM for match channel MAT1
 
     // Reset the timer when the timer matches MAT3 and generate an interrupt.
-    timer32_0.matchMode(MAT3, RESET | INTERRUPT);
-    timer32_0.match(MAT3, 1000);     // match MAT3 after 1000 milliseconds
+    timer32_0.matchMode(TIMER_MATCH_MAT3, RESET | INTERRUPT);
+    timer32_0.match(TIMER_MATCH_MAT3, 1000);     // match MAT3 after 1000 milliseconds
 
     timer32_0.start();
 
