@@ -22,7 +22,7 @@
 
 // FIXME: Logging should really be somewhere else higher up
 #ifdef LOGGING
-#include "log/logger.h"
+#include <logger.h>
     #define pretty(val) (int)(val*1)
     #define LOG(...) serPrintf(__VA_ARGS__)
     // Uncomment, to enable more debug messages
