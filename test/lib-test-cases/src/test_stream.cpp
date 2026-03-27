@@ -103,10 +103,8 @@ TEST_CASE("Stream::", "[stream]")
     {
         mock.setTimeout(500);
         REQUIRE(mock.timeout == 500);
-///\todo fix it
-#warning "Fix stream::setTimeout(..) and enable test for negative timeout"
-        mock.setTimeout(-1); // Negative timeout should be treated as 0
-        //REQUIRE(mock.timeout == 0);
+        mock.setTimeout(0);
+        REQUIRE(mock.timeout == 0);
     }
 
     struct PeekTestCase {
