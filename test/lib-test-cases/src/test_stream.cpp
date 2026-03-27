@@ -123,9 +123,8 @@ TEST_CASE("Stream::", "[stream]")
         // timedPeek() returns the first byte as-is (without advancing readPos), or -1 on timeout.
         // Non-digit/non-minus characters are also returned by timedPeek() without discarding.
         constexpr PeekTestCase peekTestCases[] = {
-#warning "Fix stream::timedPeek() and timedRead() with 'int ch = peek(); and int ch = read();' then enable two test for '... test without timeout'"
-            //{" ",      0, ' ',    -1, 1, "Simple first char test without timeout"},
-            //{"TestA",  0, 'T',    -1, 5, "Simple Test without timeout"},
+            {" ",      0, ' ',    -1, 1, "Simple first char test without timeout"},
+            {"TestA",  0, 'T',    -1, 5, "Simple Test without timeout"},
             {"Test",  50, 'T',    -1, 4, "Simple Test with timeout"},
             {"est",   10, 'e',    -1, 3, "peek should never advance readPos"},
             {"",      50, -1,     -1, 0, "No data available"},

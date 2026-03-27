@@ -89,7 +89,7 @@ bool Stream::findUntil(const char* target, const int targetLen, const char* term
 int Stream::timedRead()
 {
     const int start = millis();
-    int ch = -1;
+    int ch = read();
 
     while (ch < 0 && elapsed(start) < timeout)
     {
@@ -102,7 +102,7 @@ int Stream::timedRead()
 int Stream::timedPeek()
 {
     const int start = millis();
-    int ch = -1;
+    int ch = peek();
 
     while (ch < 0 && elapsed(start) < timeout)
     {
