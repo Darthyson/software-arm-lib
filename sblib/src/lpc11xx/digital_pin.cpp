@@ -111,19 +111,22 @@ void pinMode(const uint32_t pin, const uint32_t mode)
     }
 
     if ((pin & PFL_ADMODE) && func != PF_AD)
-        iocon |= 0x80;
-
-    if (func)
     {
-        const int8_t funcNum = getPinFunctionNumber(pin, func);
-        if (funcNum >= 0)
-            iocon |= funcNum;
-        else
-            fatalError(); // the pin does not have the desired function
+        iocon |= 0x80;
+    }
+
+    const int8_t funcNum = getPinFunctionNumber(pin, func);
+    if (funcNum >= 0)
+    {
+        iocon |= funcNum;
+    }
+    else
+    {
+        fatalError(); // the pin does not have the desired function
     }
 
     // Write the IO configuration to the IOCON register
-    *(ioconPointer(static_cast<PortPin>(pin))) = iocon;
+    *ioconPointer(static_cast<PortPin>(pin)) = iocon;
 
     // As last step, set pin direction after IOCON is configured
     const bool isOutput = (type == OUTPUT) || (type == OUTPUT_MATCH);
