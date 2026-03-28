@@ -25,10 +25,11 @@ public:
     using Memory::normalizeAddress;
     //using Memory::inRange;
 
-    // Implement dummy abstract methods
-    byte& operator[](const uint32_t address) override { return dummyByte; }
-    [[nodiscard]] uint8_t getUInt8(uint32_t address) const override { return 0;}
-    [[nodiscard]] uint16_t getUInt16(uint32_t address) const override { return 0;}
+    // Implement dummy abstract methods,
+    // [[maybe_unused]] is used to avoid warnings about unused parameters, as these methods are not actually tested.
+    byte& operator[]([[maybe_unused]] const uint32_t address) override { return dummyByte; }
+    [[nodiscard]] uint8_t getUInt8([[maybe_unused]] uint32_t address) const override { return 0;}
+    [[nodiscard]] uint16_t getUInt16([[maybe_unused]] uint32_t address) const override { return 0;}
 
 private:
     uint8_t dummyByte = 0;
