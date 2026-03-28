@@ -112,18 +112,18 @@ uint32_t getDigitalPinFunctionNumber(const PortPin pin, const PinFunc pinFunctio
 
 struct IOConRegister
 {
-    uint32_t RESERVED0[1];
-    uint32_t SSEL1_LOC;
-    uint32_t SCK_LOC;
-    uint32_t DSR_LOC;
-    uint32_t DCD_LOC;
-    uint32_t RI_LOC;
-    uint32_t CT16B0_CAP0_LOC;
-    uint32_t SCK1_LOC;
-    uint32_t MISO1_LOC;
-    uint32_t MOSI1_LOC;
-    uint32_t CT32B0_CAP0_LOC;
-    uint32_t RXD_LOC;
+    uint32_t RESERVED0[1] = {};
+    uint32_t SSEL1_LOC = 0;
+    uint32_t SCK_LOC = 0;
+    uint32_t DSR_LOC = 0;
+    uint32_t DCD_LOC = 0;
+    uint32_t RI_LOC = 0;
+    uint32_t CT16B0_CAP0_LOC = 0;
+    uint32_t SCK1_LOC = 0;
+    uint32_t MISO1_LOC = 0;
+    uint32_t MOSI1_LOC = 0;
+    uint32_t CT32B0_CAP0_LOC = 0;
+    uint32_t RXD_LOC = 0;
 };
 
 void readIOConRegisters(IOConRegister* reg)

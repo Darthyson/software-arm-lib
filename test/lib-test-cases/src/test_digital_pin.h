@@ -18,8 +18,8 @@
  * Pairs a @ref PinMode with its printable name.
  */
 struct PinModeInfo {
-    PinMode mode;
-    char name[20];
+    PinMode mode = INPUT;
+    char name[20] = {};
 };
 
 /**
@@ -48,8 +48,8 @@ static const std::vector<PinModeInfo> allPinModes = {
  * Pairs a @ref Port with its printable name.
  */
 struct PortInfo {
-    Port port;
-    char name[20];
+    Port port = PIO0;
+    char name[20] = {};
 };
 
 /**
