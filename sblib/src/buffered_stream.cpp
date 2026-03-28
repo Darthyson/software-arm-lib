@@ -17,9 +17,7 @@ int BufferedStream::read()
         return -1;
 
     const int ch = readBuffer[readHead];
-
-    ++readHead;
-    readHead &= BufferedStream::BUFFER_SIZE_MASK;
+    readHead = (readHead + 1) & BufferedStream::BUFFER_SIZE_MASK;
 
     return ch;
 }
@@ -31,11 +29,32 @@ int BufferedStream::peek()
     return readBuffer[readHead];
 }
 
+int32_t BufferedStream::peekWrite() const
+{
+    if (writeTail == writeHead)
+    {
+        return -1;
+    }
+
+    return writeBuffer[writeHead];
+}
+
 int BufferedStream::available()
 {
     int num = readTail - readHead;
     if (num < 0)
-        num += BufferedStream::BUFFER_SIZE;
+        num += BUFFER_SIZE;
+
+    return num;
+}
+
+int32_t BufferedStream::availableWrite() const
+{
+    int32_t num = writeTail - writeHead;
+    if (num < 0)
+    {
+        num += BUFFER_SIZE;
+    }
 
     return num;
 }

@@ -129,7 +129,7 @@ uint32_t Serial::write(byte ch)
     return 1;
 #endif
 
-    if (writeHead == writeTail && (LPC_UART->LSR & LSR_THRE))
+    if (writeEmpty() && (LPC_UART->LSR & LSR_THRE))
     {
         // Transmitter hold register and write buffer are empty -> directly send
         LPC_UART->THR = ch;
@@ -137,14 +137,11 @@ uint32_t Serial::write(byte ch)
         return 1;
     }
 
-    const int writeTailNext = (writeTail + 1) & BufferedStream::BUFFER_SIZE_MASK;
-
     // Wait until the output buffer has space
-    while (writeHead == writeTailNext)
+    while (writeFull())
         ;
 
-    writeBuffer[writeTail] = ch;
-    writeTail = writeTailNext;
+    pushWrite(ch);
     LPC_UART->IER |= UART_IE_THRE;
 
 #ifdef IAP_EMULATION
@@ -167,7 +164,7 @@ void Serial::flush()
     while ((LPC_UART->LSR & (LSR_THRE | LSR_TEMT)) != (LSR_THRE | LSR_TEMT))
         ;
 #else
-    while (writeHead != writeTail)
+    while (!writeEmpty())
             ;
 #endif
 }
@@ -179,10 +176,10 @@ int Serial::read()
         return -1;
     }
 
-    const bool readFull = readBufferFull();
+    const bool isReadFull = readFull();
     const int ch = BufferedStream::read();
 
-    if (readFull && (LPC_UART->LSR & LSR_RDR))
+    if (isReadFull && (LPC_UART->LSR & LSR_RDR))
     {
         disableInterrupt(UART_IRQn);
         interruptHandler();
@@ -216,12 +213,9 @@ void Serial::interruptHandler()
             }
         }
 
-        if (!readBufferFull())
+        if (!readFull())
         {
-            readBuffer[readTail] = LPC_UART->RBR;
-
-            ++readTail;
-            readTail &= BufferedStream::BUFFER_SIZE_MASK;
+            pushRead(LPC_UART->RBR);
         }
         else
         {
@@ -232,16 +226,13 @@ void Serial::interruptHandler()
     // Tx interrupt handling
     if (LPC_UART->LSR & LSR_THRE)
     {
-        if (writeHead == writeTail)
+        if (writeEmpty())
         {
             LPC_UART->IER &= ~UART_IE_THRE;
         }
         else
         {
-            LPC_UART->THR = writeBuffer[writeHead];
-
-            ++writeHead;
-            writeHead &= BufferedStream::BUFFER_SIZE_MASK;
+            LPC_UART->THR = popWrite();
         }
     }
 }

@@ -16,10 +16,15 @@ class MockBufferedStream final : public BufferedStream
 {
 public:
     using Print::write;
+    using BufferedStream::clearBuffers;
+    using BufferedStream::readEmpty;
+    using BufferedStream::writeEmpty;
+    using BufferedStream::pushRead;
+    using BufferedStream::popWrite;
 
     uint32_t write(const uint8_t ch) override
     {
-        if (insertInWriteBuffer(ch))
+        if (pushWrite(ch))
         {
             return 1;
         }
@@ -27,44 +32,10 @@ public:
         return 0;
     }
 
-
     void flush() override
     {
         clearBuffers();
     }
-
-    /**
-     * Simulate receiving data into the read buffer (producer side).
-     */
-    bool insertInReadBuffer(const uint8_t ch)
-    {
-        if (readBufferFull())
-        {
-            return false;
-        }
-        readBuffer[readTail] = ch;
-        readTail = (readTail + 1) & BUFFER_SIZE_MASK;
-        return true;
-    }
-
-    /**
-     * Simulate writing data into the write buffer (consumer side).
-     */
-    bool insertInWriteBuffer(const uint8_t ch)
-    {
-        if (writeBufferFull())
-        {
-            return false;
-        }
-        writeBuffer[writeTail] = ch;
-        writeTail = (writeTail + 1) & BUFFER_SIZE_MASK;
-        return true;
-    }
-
-    using BufferedStream::readHead;
-    using BufferedStream::readTail;
-    using BufferedStream::writeHead;
-    using BufferedStream::writeTail;
 };
 
 
@@ -73,14 +44,41 @@ TEST_CASE("BufferedStream::", "[buffered_stream]")
     MockBufferedStream mockSPSCRingBuffer;
     mockSPSCRingBuffer.clearBuffers();
 
+    SECTION("writeBufferEmpty() returns true when buffer is empty")
+    {
+        REQUIRE(mockSPSCRingBuffer.writeEmpty() == true);
+        REQUIRE(mockSPSCRingBuffer.write('A') == 1);
+        REQUIRE(mockSPSCRingBuffer.writeEmpty() == false);
+    }
+
+    SECTION("readBufferEmpty() returns true when buffer is empty")
+    {
+        REQUIRE(mockSPSCRingBuffer.readEmpty() == true);
+        REQUIRE(mockSPSCRingBuffer.pushRead('B') == 1);
+        REQUIRE(mockSPSCRingBuffer.readEmpty() == false);
+    }
+
     SECTION("read() returns -1 when buffer is empty")
     {
         REQUIRE(mockSPSCRingBuffer.read() == -1);
     }
 
-    SECTION("peek() returns -1 when buffer is empty")
+    SECTION("peek()")
     {
         REQUIRE(mockSPSCRingBuffer.peek() == -1);
+        REQUIRE(mockSPSCRingBuffer.pushRead('G') == 1);
+        REQUIRE(mockSPSCRingBuffer.available() == 1);
+        REQUIRE(mockSPSCRingBuffer.peek() == 'G');
+        REQUIRE(mockSPSCRingBuffer.available() == 1);
+    }
+
+    SECTION("peekWriteBuffer()")
+    {
+        REQUIRE(mockSPSCRingBuffer.peekWrite() == -1);
+        REQUIRE(mockSPSCRingBuffer.write('H') == 1);
+        REQUIRE(mockSPSCRingBuffer.availableWrite() == 1);
+        REQUIRE(mockSPSCRingBuffer.peekWrite() == 'H');
+        REQUIRE(mockSPSCRingBuffer.availableWrite() == 1);
     }
 
     SECTION("available() returns 0 when buffer is empty")
@@ -90,33 +88,33 @@ TEST_CASE("BufferedStream::", "[buffered_stream]")
 
     SECTION("read() single byte")
     {
-        REQUIRE(mockSPSCRingBuffer.insertInReadBuffer('A') == true);
-        REQUIRE(mockSPSCRingBuffer.available() == 1);
-        REQUIRE(mockSPSCRingBuffer.read() == 'A');
-        REQUIRE(mockSPSCRingBuffer.available() == 0);
-        REQUIRE(mockSPSCRingBuffer.read() == -1);
+        REQUIRE(mockSPSCRingBuffer.write('A') == 1);
+        REQUIRE(mockSPSCRingBuffer.availableWrite() == 1);
+        REQUIRE(mockSPSCRingBuffer.popWrite() == 'A');
+        REQUIRE(mockSPSCRingBuffer.availableWrite() == 0);
+        REQUIRE(mockSPSCRingBuffer.popWrite() == -1);
     }
 
     SECTION("peek() does not consume the byte")
     {
-        REQUIRE(mockSPSCRingBuffer.insertInReadBuffer('B') == true);
-        REQUIRE(mockSPSCRingBuffer.peek() == 'B');
-        REQUIRE(mockSPSCRingBuffer.available() == 1);
-        REQUIRE(mockSPSCRingBuffer.peek() == 'B');
-        REQUIRE(mockSPSCRingBuffer.read() == 'B');
-        REQUIRE(mockSPSCRingBuffer.available() == 0);
+        REQUIRE(mockSPSCRingBuffer.write('B') == 1);
+        REQUIRE(mockSPSCRingBuffer.peekWrite() == 'B');
+        REQUIRE(mockSPSCRingBuffer.availableWrite() == 1);
+        REQUIRE(mockSPSCRingBuffer.peekWrite() == 'B');
+        REQUIRE(mockSPSCRingBuffer.popWrite() == 'B');
+        REQUIRE(mockSPSCRingBuffer.availableWrite() == 0);
     }
 
     SECTION("read() multiple bytes in FIFO order")
     {
-        REQUIRE(mockSPSCRingBuffer.insertInReadBuffer('X') == true);
-        REQUIRE(mockSPSCRingBuffer.insertInReadBuffer('Y') == true);
-        REQUIRE(mockSPSCRingBuffer.insertInReadBuffer('Z') == true);
-        REQUIRE(mockSPSCRingBuffer.available() == 3);
-        REQUIRE(mockSPSCRingBuffer.read() == 'X');
-        REQUIRE(mockSPSCRingBuffer.read() == 'Y');
-        REQUIRE(mockSPSCRingBuffer.read() == 'Z');
-        REQUIRE(mockSPSCRingBuffer.available() == 0);
+        REQUIRE(mockSPSCRingBuffer.write('X') == 1);
+        REQUIRE(mockSPSCRingBuffer.write('Y') == 1);
+        REQUIRE(mockSPSCRingBuffer.write('Z') == 1);
+        REQUIRE(mockSPSCRingBuffer.availableWrite() == 3);
+        REQUIRE(mockSPSCRingBuffer.popWrite() == 'X');
+        REQUIRE(mockSPSCRingBuffer.popWrite() == 'Y');
+        REQUIRE(mockSPSCRingBuffer.popWrite() == 'Z');
+        REQUIRE(mockSPSCRingBuffer.availableWrite() == 0);
     }
 
     SECTION("available() tracks count correctly")
@@ -124,7 +122,7 @@ TEST_CASE("BufferedStream::", "[buffered_stream]")
         constexpr uint8_t numBytes = 10;
         for (uint8_t i = 0; i < numBytes; i++)
         {
-            REQUIRE(mockSPSCRingBuffer.insertInReadBuffer(i) == true);
+            REQUIRE(mockSPSCRingBuffer.pushRead(i) == 1);
         }
         REQUIRE(mockSPSCRingBuffer.available() == numBytes);
 
@@ -138,11 +136,23 @@ TEST_CASE("BufferedStream::", "[buffered_stream]")
         constexpr uint32_t maxElements = BufferedStream::BUFFER_SIZE - 1;
         for (uint32_t i = 0; i < maxElements; i++)
         {
-            REQUIRE(mockSPSCRingBuffer.insertInReadBuffer(static_cast<uint8_t>(i)) == true);
+            REQUIRE(mockSPSCRingBuffer.pushRead(static_cast<uint8_t>(i)) == 1);
         }
         REQUIRE(mockSPSCRingBuffer.available() == maxElements);
-        REQUIRE(mockSPSCRingBuffer.insertInReadBuffer('E') == false);
+        REQUIRE(mockSPSCRingBuffer.pushRead('E') == 0);
         REQUIRE(mockSPSCRingBuffer.available() == maxElements);
+    }
+
+    SECTION("write buffer fills up to BUFFER_SIZE - 1")
+    {
+        constexpr uint32_t maxElements = BufferedStream::BUFFER_SIZE - 1;
+        for (uint32_t i = 0; i < maxElements; i++)
+        {
+            REQUIRE(mockSPSCRingBuffer.write(static_cast<uint8_t>(i)) == 1);
+        }
+        REQUIRE(mockSPSCRingBuffer.availableWrite() == maxElements);
+        REQUIRE(mockSPSCRingBuffer.write('E') == 0);
+        REQUIRE(mockSPSCRingBuffer.availableWrite() == maxElements);
     }
 
     SECTION("read buffer wraps around correctly")
@@ -151,7 +161,7 @@ TEST_CASE("BufferedStream::", "[buffered_stream]")
         constexpr uint32_t initialFill = BufferedStream::BUFFER_SIZE - 1;
         for (uint32_t i = 0; i < initialFill; i++)
         {
-            REQUIRE(mockSPSCRingBuffer.insertInReadBuffer(static_cast<uint8_t>(i)) == true);
+            REQUIRE(mockSPSCRingBuffer.pushRead(static_cast<uint8_t>(i)) == 1);
         }
         for (uint32_t i = 0; i < initialFill; i++)
         {
@@ -163,7 +173,7 @@ TEST_CASE("BufferedStream::", "[buffered_stream]")
         constexpr uint32_t numBytes = BufferedStream::BUFFER_SIZE / 2;
         for (uint32_t i = 0; i < numBytes; i++)
         {
-            REQUIRE(mockSPSCRingBuffer.insertInReadBuffer(static_cast<uint8_t>(i)) == true);
+            REQUIRE(mockSPSCRingBuffer.pushRead(static_cast<uint8_t>(i)) == 1);
         }
         REQUIRE(mockSPSCRingBuffer.available() == numBytes);
         for (uint32_t i = 0; i < numBytes; i++)
@@ -173,10 +183,38 @@ TEST_CASE("BufferedStream::", "[buffered_stream]")
         REQUIRE(mockSPSCRingBuffer.available() == 0);
     }
 
+    SECTION("write buffer wraps around correctly")
+    {
+        // Fill partially and drain to advance head
+        constexpr uint32_t initialFill = BufferedStream::BUFFER_SIZE - 1;
+        for (uint32_t i = 0; i < initialFill; i++)
+        {
+            REQUIRE(mockSPSCRingBuffer.write(static_cast<uint8_t>(i)) == 1);
+        }
+        for (uint32_t i = 0; i < initialFill; i++)
+        {
+            REQUIRE(mockSPSCRingBuffer.popWrite() == static_cast<uint8_t>(i));
+        }
+        REQUIRE(mockSPSCRingBuffer.availableWrite() == 0);
+
+        // Now push and read again, this time the head/tail indices wrap around
+        constexpr uint32_t numBytes = BufferedStream::BUFFER_SIZE / 2;
+        for (uint32_t i = 0; i < numBytes; i++)
+        {
+            REQUIRE(mockSPSCRingBuffer.write(static_cast<uint8_t>(i)) == 1);
+        }
+        REQUIRE(mockSPSCRingBuffer.availableWrite() == numBytes);
+        for (uint32_t i = 0; i < numBytes; i++)
+        {
+            REQUIRE(mockSPSCRingBuffer.popWrite() == static_cast<uint8_t>(i));
+        }
+        REQUIRE(mockSPSCRingBuffer.availableWrite() == 0);
+    }
+
     SECTION("clearBuffers() resets all indices")
     {
-        REQUIRE(mockSPSCRingBuffer.insertInReadBuffer('A') == true);
-        REQUIRE(mockSPSCRingBuffer.insertInReadBuffer('B') == true);
+        REQUIRE(mockSPSCRingBuffer.write('A') == true);
+        REQUIRE(mockSPSCRingBuffer.write('B') == true);
         REQUIRE(mockSPSCRingBuffer.write('C') == 1);
         REQUIRE(mockSPSCRingBuffer.write('D') == 1);
 
@@ -185,10 +223,6 @@ TEST_CASE("BufferedStream::", "[buffered_stream]")
         REQUIRE(mockSPSCRingBuffer.available() == 0);
         REQUIRE(mockSPSCRingBuffer.read() == -1);
         REQUIRE(mockSPSCRingBuffer.peek() == -1);
-        REQUIRE(mockSPSCRingBuffer.readHead == 0);
-        REQUIRE(mockSPSCRingBuffer.readTail == 0);
-        REQUIRE(mockSPSCRingBuffer.writeHead == 0);
-        REQUIRE(mockSPSCRingBuffer.writeTail == 0);
     }
 
     SECTION("write() single byte to write buffer")
@@ -208,25 +242,30 @@ TEST_CASE("BufferedStream::", "[buffered_stream]")
 
     SECTION("read and write buffers are independent")
     {
-        REQUIRE(mockSPSCRingBuffer.insertInReadBuffer('R') == true);
+        REQUIRE(mockSPSCRingBuffer.pushRead('R') == true);
         REQUIRE(mockSPSCRingBuffer.write('W') == 1);
 
         REQUIRE(mockSPSCRingBuffer.available() == 1);
         REQUIRE(mockSPSCRingBuffer.peek() == 'R');
         REQUIRE(mockSPSCRingBuffer.read() == 'R');
         REQUIRE(mockSPSCRingBuffer.available() == 0);
+
+        REQUIRE(mockSPSCRingBuffer.availableWrite() == 1);
+        REQUIRE(mockSPSCRingBuffer.peekWrite() == 'W');
+        REQUIRE(mockSPSCRingBuffer.popWrite() == 'W');
+        REQUIRE(mockSPSCRingBuffer.availableWrite() == 0);
     }
 
     SECTION("interleaved push and read operations")
     {
-        REQUIRE(mockSPSCRingBuffer.insertInReadBuffer('A') == true);
+        REQUIRE(mockSPSCRingBuffer.pushRead('A') == true);
         REQUIRE(mockSPSCRingBuffer.read() == 'A');
 
-        REQUIRE(mockSPSCRingBuffer.insertInReadBuffer('B') == true);
-        REQUIRE(mockSPSCRingBuffer.insertInReadBuffer('C') == true);
+        REQUIRE(mockSPSCRingBuffer.pushRead('B') == true);
+        REQUIRE(mockSPSCRingBuffer.pushRead('C') == true);
         REQUIRE(mockSPSCRingBuffer.read() == 'B');
 
-        REQUIRE(mockSPSCRingBuffer.insertInReadBuffer('D') == true);
+        REQUIRE(mockSPSCRingBuffer.pushRead('D') == true);
         REQUIRE(mockSPSCRingBuffer.available() == 2);
         REQUIRE(mockSPSCRingBuffer.read() == 'C');
         REQUIRE(mockSPSCRingBuffer.read() == 'D');
@@ -245,7 +284,7 @@ TEST_CASE("BufferedStream::", "[buffered_stream]")
             // Produce a batch
             for (uint32_t i = 0; i < 10 && produced < totalItems; i++)
             {
-                REQUIRE(mockSPSCRingBuffer.insertInReadBuffer(static_cast<uint8_t>(produced & 0xff)) == true);
+                REQUIRE(mockSPSCRingBuffer.pushRead(static_cast<uint8_t>(produced & 0xff)) == true);
                 produced++;
             }
 
