@@ -53,12 +53,9 @@ TEST_CASE("FLASH_RAM_BUFFER_ALIGNMENT", "[platform]")
 
 TEST_CASE("ioconPointer(pin)", "[platform]")
 {
-#warning "TODO fix sblib and enable ioconPointer tests"
-    ///\todo All below tests with nullptr are failing with current sblib
     SECTION("Invalid pin")
     {
-        // CHECK(ioconPointer(0) == nullptr);
-        // CHECK(ioconPointer(0xffff) == nullptr);
+        CHECK(ioconPointer(static_cast<PortPin>(0xffff)) == nullptr);
     }
 
     SECTION("Port 0")
@@ -122,8 +119,6 @@ TEST_CASE("ioconPointer(pin)", "[platform]")
 
 TEST_CASE("ioconPointer(port, pinNum)", "[platform]")
 {
-#warning "TODO fix sblib and enable remaining ioconPointer tests"
-    ///\todo All below tests with nullptr are failing with sblib 2.10
     SECTION("Port 0")
     {
         REQUIRE(ioconPointer(PIO0, 0) == &_LPC_IOCON.RESET_PIO0_0);
@@ -138,7 +133,7 @@ TEST_CASE("ioconPointer(port, pinNum)", "[platform]")
         REQUIRE(ioconPointer(PIO0, 9) == &_LPC_IOCON.PIO0_9);
         REQUIRE(ioconPointer(PIO0, 10) == &_LPC_IOCON.SWCLK_PIO0_10);
         REQUIRE(ioconPointer(PIO0, 11) == &_LPC_IOCON.R_PIO0_11);
-        // CHECK(ioconPointer(PIO0, 12) == nullptr);
+        REQUIRE(ioconPointer(PIO0, 12) == nullptr);
     }
 
     SECTION("Port 1")
@@ -155,7 +150,7 @@ TEST_CASE("ioconPointer(port, pinNum)", "[platform]")
         REQUIRE(ioconPointer(PIO1, 9) == &_LPC_IOCON.PIO1_9);
         REQUIRE(ioconPointer(PIO1, 10) == &_LPC_IOCON.PIO1_10);
         REQUIRE(ioconPointer(PIO1, 11) == &_LPC_IOCON.PIO1_11);
-        // CHECK(ioconPointer(PIO1, 12) == nullptr);
+        REQUIRE(ioconPointer(PIO1, 12) == nullptr);
     }
 
     SECTION("Port 2")
@@ -172,7 +167,7 @@ TEST_CASE("ioconPointer(port, pinNum)", "[platform]")
         REQUIRE(ioconPointer(PIO2, 9) == &_LPC_IOCON.PIO2_9);
         REQUIRE(ioconPointer(PIO2, 10) == &_LPC_IOCON.PIO2_10);
         REQUIRE(ioconPointer(PIO2, 11) == &_LPC_IOCON.PIO2_11);
-        // CHECK(ioconPointer(PIO2, 12) == nullptr);
+        REQUIRE(ioconPointer(PIO2, 12) == nullptr);
     }
 
     SECTION("Port 3")

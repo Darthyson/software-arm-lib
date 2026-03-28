@@ -30,7 +30,17 @@ void portMode(const uint8_t portNum, uint32_t pinMask, const uint32_t mode)
     for (int pinNum = 0; pinMask != 0; ++pinNum, pinMask >>= 1)
     {
         if (pinMask & 1)
-            *(ioconPointer(static_cast<Port>(portNum), pinNum)) = iocon;
+        {
+            uint32_t* ioconPtr = ioconPointer(static_cast<Port>(portNum), pinNum);
+            if (ioconPtr != nullptr)
+            {
+                *ioconPtr = iocon;
+            }
+            else
+            {
+                // Invalid pin, ignore the iocon configuration
+            }
+        }
     }
 }
 

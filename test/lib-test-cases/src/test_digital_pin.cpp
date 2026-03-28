@@ -314,7 +314,7 @@ TEST_CASE("pinMode(pin, INPUT_ANALOG)", "[digital_pin]")
         const uint32_t* iocon = ioconPointer(pin.pin);
         const uint32_t bitOutMask = 1 << digitalPinToPinNum(pin.pin);
 
-        int8_t pinPIOfunctionNumber = getPinFunctionNumber(pin.pin, PF_AD);
+        const int8_t pinPIOfunctionNumber = getPinFunctionNumber(pin.pin, PF_AD);
 
         pinMode(pin.pin, INPUT_ANALOG);         // Set pin mode to input
         REQUIRE((port->DIR & bitOutMask) == 0); // port direction bit for pin NOT set
@@ -780,9 +780,15 @@ bool checkIOConfigRegister(const Port portNum, uint32_t pinMask, const uint16_t 
     const uint32_t toTestIOConfigRegister = mode & 0xfff;
     for (uint16_t pinNum = 0; pinMask != 0; ++pinNum, pinMask >>= 1)
     {
+        const uint32_t * ioconPtr = ioconPointer(portNum, pinNum);
+        if (ioconPtr == nullptr)
+        {
+            return true;
+        }
+
         if (pinMask & 1)
         {
-            if (*(ioconPointer(portNum, pinNum)) != toTestIOConfigRegister)
+            if (*ioconPtr != toTestIOConfigRegister)
             {
                 return false;
             }
@@ -802,6 +808,8 @@ TEST_CASE("portMode(...)", "[digital_pin]")
             uint32_t lastPortDIR = port->DIR;
             portMode(testPort.port, i, OUTPUT);
             REQUIRE(port->DIR == (lastPortDIR | i));
+            INFO("testPort.port: " << static_cast<int>(testPort.port) << ", i: " << i);
+
             REQUIRE(checkIOConfigRegister(testPort.port, i, OUTPUT) == true);
 
             lastPortDIR = port->DIR;

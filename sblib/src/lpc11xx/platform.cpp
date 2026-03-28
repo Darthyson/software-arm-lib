@@ -12,13 +12,16 @@
 #include <cstddef>
 
 
-LPC_GPIO_TypeDef* const gpioPorts[4] = { LPC_GPIO0, LPC_GPIO1, LPC_GPIO2, LPC_GPIO3 };
+constexpr uint8_t PORT_COUNT = 4;
+constexpr uint8_t MAX_PIN_COUNT = 12;
+
+LPC_GPIO_TypeDef* const gpioPorts[PORT_COUNT] = { LPC_GPIO0, LPC_GPIO1, LPC_GPIO2, LPC_GPIO3 };
 
 // Get the offset of the pin in the structure LPC_IOCON_TypeDef
 #define OFFSET_OF_IOCON(pin)  (offsetof(LPC_IOCON_TypeDef, pin) >> 2)
 
 // Offsets to IO configurations in the structure LPC_IOCON_TypeDef
-static constexpr uint8_t ioconOffsets[4][12] =
+static constexpr uint8_t ioconOffsets[PORT_COUNT][MAX_PIN_COUNT] =
 {
     {
         OFFSET_OF_IOCON(RESET_PIO0_0),
@@ -85,5 +88,14 @@ uint32_t* ioconPointer(const PortPin pin)
 
 uint32_t* ioconPointer(const Port port, const uint8_t pinNum)
 {
-    return ((uint32_t*)(LPC_IOCON_BASE) + ioconOffsets[port][pinNum]);
+    if (port >= (sizeof(gpioPorts)/sizeof(gpioPorts[0]))) // port is always > 0, cause it's an uint8_t, so only need to check upper bound
+    {
+        return nullptr;
+    }
+
+    if (pinNum >= (sizeof(ioconOffsets[port])/sizeof(ioconOffsets[port][0]))) // pinNum is always > 0, cause it's an uint8_t, so only need to check upper bound
+    {
+        return nullptr;
+    }
+    return reinterpret_cast<uint32_t*>(LPC_IOCON_BASE) + ioconOffsets[port][pinNum];
 }
