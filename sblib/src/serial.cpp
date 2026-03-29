@@ -69,18 +69,36 @@ void Serial::begin(const int baudRate, const SerialConfig config)
 
     LPC_UART->LCR = 0x80 | config;
 
-    unsigned int val = SystemCoreClock * LPC_SYSCON->SYSAHBCLKDIV /
+    uint32_t val;
+    // Restrictions for the fractional divider (UM10398 13.5.15 p. 216):
+    // 1 <= MULVAL <= 15
+    // 0 <= DIVADDVAL < MULVAL
+    switch (baudRate) // pre-set val and FDR only works for system clock 48MHz
+    {
+        case 460800:
+            val = 5;
+            LPC_UART->FDR = 0xa3; //MULVAL = 10, DIVADDVAL = 3
+            break;
+        case 576000:
+            val = 3;
+            LPC_UART->FDR = 0xfb; //MULVAL = 15, DIVADDVAL = 11
+            break;
+        case 661765:
+            val = 4;
+            LPC_UART->FDR = 0xf2; //MULVAL = 15, DIVADDVAL = 2
+            break;
+        case 921600:
+            val = 3;
+            LPC_UART->FDR = 0xc1; //MULVAL = 12, DIVADDVAL = 1
+            break;
+        default:
+            // 2400, 4800, 750,000, 1,000,000, 1,500,000 baud match perfectly with 48MHz system clock
+            // Other lower baud rates 9600 - 230400 should be within the error margin
+            // For unsupported baud rates, disable the fractional divider to avoid incorrect baud rates
+            val = SystemCoreClock * LPC_SYSCON->SYSAHBCLKDIV /
                        LPC_SYSCON->UARTCLKDIV / 16 / baudRate;
-
-    if (baudRate == 460800) //FIXME works only with SystemCoreClock=48000000 ?
-    {
-        val = 5;
-        LPC_UART->FDR = (0x00a3); //DIVADDVAL = 3, MULVAL = 10
-    }
-    else if (baudRate == 576000) //FIXME works only with SystemCoreClock=48000000 ?
-    {
-        val = 3;
-        LPC_UART->FDR = (0x00fb); //DIVADDVAL = 11, MULVAL = 15
+            LPC_UART->FDR = (0x10); //DIVADDVAL = 0, MULVAL = 1 (fractional divider disabled)
+            break;
     }
 
     LPC_UART->DLM = val / 256;
