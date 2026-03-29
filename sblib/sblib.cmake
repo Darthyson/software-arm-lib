@@ -4,6 +4,7 @@ set(SBLIB_CORE_SRC
 #        inc/sblib/hardware/gpio_lpc11xx_gnax.h
         inc/sblib/internal/bootloader_commands.h
         inc/sblib/internal/iap.h
+        inc/sblib/always_inline.h
         inc/sblib/analog_pin.h
         inc/sblib/arrays.h
         inc/sblib/bits.h
@@ -23,6 +24,7 @@ set(SBLIB_CORE_SRC
         inc/sblib/onewire.h
         inc/sblib/platform.h
         inc/sblib/print.h
+        inc/sblib/ring_buffer.h
         inc/sblib/serial.h
         inc/sblib/spi.h
         inc/sblib/stream.h
@@ -54,6 +56,7 @@ set(SBLIB_CORE_SRC
         src/new.cpp
         src/onewire.cpp
         src/print.cpp
+        src/ring_buffer.cpp
         src/serial.cpp
         src/serial0.cpp
         src/spi.cpp

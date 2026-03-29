@@ -10,6 +10,7 @@
 #ifndef SBLIB_TYPES_H_
 #define SBLIB_TYPES_H_
 
+#include "sblib/always_inline.h"
 #include <cstdint>
 
 /**
@@ -186,15 +187,6 @@ enum TimerPWM
     PWM3
 };
 
-
-/**
- * Declare a function as always inline
- */
-#if defined ( __GNUC__ )
-#define ALWAYS_INLINE __attribute__((always_inline)) inline
-#else
-#define ALWAYS_INLINE inline
-#endif
 
 /**
  * For compatibility across different language versions: GNU C++ has BIG_ENDIAN and LITTLE_ENDIAN

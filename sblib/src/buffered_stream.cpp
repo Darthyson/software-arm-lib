@@ -1,7 +1,8 @@
 /*
- *  buffered_stream.cpp - Base class for character-based streams.
+ *  Implementation of class BufferedStream for character-based IO-streams.
  *
  *  Copyright (c) 2015 Stefan Taferner <stefan.taferner@gmx.at>
+ *  Copyright (c) 2026 Darthyson <darth@maptrack.de>
  *
  *  This program is free software; you can redistribute it and/or modify
  *  it under the terms of the GNU General Public License version 3 as
@@ -11,50 +12,34 @@
 #include <sblib/buffered_stream.h>
 
 
+BufferedStream::BufferedStream()
+    :
+    readBuffer(fixedBufferSize128bytes),
+    writeBuffer(fixedBufferSize128bytes)
+{
+}
+
 int BufferedStream::read()
 {
-    if (readTail == readHead)
-        return -1;
-
-    const int ch = readBuffer[readHead];
-    readHead = (readHead + 1) & BufferedStream::BUFFER_SIZE_MASK;
-
-    return ch;
+    return readBuffer.pop();
 }
 
 int BufferedStream::peek()
 {
-    if (readTail == readHead)
-        return -1;
-    return readBuffer[readHead];
+    return readBuffer.peek();
 }
 
 int32_t BufferedStream::peekWrite() const
 {
-    if (writeTail == writeHead)
-    {
-        return -1;
-    }
-
-    return writeBuffer[writeHead];
+    return writeBuffer.peek();
 }
 
 int BufferedStream::available()
 {
-    int num = readTail - readHead;
-    if (num < 0)
-        num += BUFFER_SIZE;
-
-    return num;
+    return readBuffer.available();
 }
 
 int32_t BufferedStream::availableWrite() const
 {
-    int32_t num = writeTail - writeHead;
-    if (num < 0)
-    {
-        num += BUFFER_SIZE;
-    }
-
-    return num;
+    return writeBuffer.available();
 }

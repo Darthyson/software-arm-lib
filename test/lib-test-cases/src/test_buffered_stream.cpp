@@ -133,7 +133,7 @@ TEST_CASE("BufferedStream::", "[buffered_stream]")
 
     SECTION("read buffer fills up to BUFFER_SIZE - 1")
     {
-        constexpr uint32_t maxElements = BufferedStream::BUFFER_SIZE - 1;
+        constexpr uint32_t maxElements = BufferedStream::getBufferSize() - 1;
         for (uint32_t i = 0; i < maxElements; i++)
         {
             REQUIRE(mockSPSCRingBuffer.pushRead(static_cast<uint8_t>(i)) == 1);
@@ -145,7 +145,7 @@ TEST_CASE("BufferedStream::", "[buffered_stream]")
 
     SECTION("write buffer fills up to BUFFER_SIZE - 1")
     {
-        constexpr uint32_t maxElements = BufferedStream::BUFFER_SIZE - 1;
+        constexpr uint32_t maxElements = BufferedStream::getBufferSize() - 1;
         for (uint32_t i = 0; i < maxElements; i++)
         {
             REQUIRE(mockSPSCRingBuffer.write(static_cast<uint8_t>(i)) == 1);
@@ -158,7 +158,7 @@ TEST_CASE("BufferedStream::", "[buffered_stream]")
     SECTION("read buffer wraps around correctly")
     {
         // Fill partially and drain to advance head
-        constexpr uint32_t initialFill = BufferedStream::BUFFER_SIZE - 1;
+        constexpr uint32_t initialFill = BufferedStream::getBufferSize() - 1;
         for (uint32_t i = 0; i < initialFill; i++)
         {
             REQUIRE(mockSPSCRingBuffer.pushRead(static_cast<uint8_t>(i)) == 1);
@@ -170,7 +170,7 @@ TEST_CASE("BufferedStream::", "[buffered_stream]")
         REQUIRE(mockSPSCRingBuffer.available() == 0);
 
         // Now push and read again, this time the head/tail indices wrap around
-        constexpr uint32_t numBytes = BufferedStream::BUFFER_SIZE / 2;
+        constexpr uint32_t numBytes = BufferedStream::getBufferSize() / 2;
         for (uint32_t i = 0; i < numBytes; i++)
         {
             REQUIRE(mockSPSCRingBuffer.pushRead(static_cast<uint8_t>(i)) == 1);
@@ -186,7 +186,7 @@ TEST_CASE("BufferedStream::", "[buffered_stream]")
     SECTION("write buffer wraps around correctly")
     {
         // Fill partially and drain to advance head
-        constexpr uint32_t initialFill = BufferedStream::BUFFER_SIZE - 1;
+        constexpr uint32_t initialFill = BufferedStream::getBufferSize() - 1;
         for (uint32_t i = 0; i < initialFill; i++)
         {
             REQUIRE(mockSPSCRingBuffer.write(static_cast<uint8_t>(i)) == 1);
@@ -198,7 +198,7 @@ TEST_CASE("BufferedStream::", "[buffered_stream]")
         REQUIRE(mockSPSCRingBuffer.availableWrite() == 0);
 
         // Now push and read again, this time the head/tail indices wrap around
-        constexpr uint32_t numBytes = BufferedStream::BUFFER_SIZE / 2;
+        constexpr uint32_t numBytes = BufferedStream::getBufferSize() / 2;
         for (uint32_t i = 0; i < numBytes; i++)
         {
             REQUIRE(mockSPSCRingBuffer.write(static_cast<uint8_t>(i)) == 1);
@@ -232,7 +232,7 @@ TEST_CASE("BufferedStream::", "[buffered_stream]")
 
     SECTION("write buffer fills up to BUFFER_SIZE - 1")
     {
-        constexpr uint32_t maxElements = BufferedStream::BUFFER_SIZE - 1;
+        constexpr uint32_t maxElements = BufferedStream::getBufferSize() - 1;
         for (uint32_t i = 0; i < maxElements; i++)
         {
             REQUIRE(mockSPSCRingBuffer.write(static_cast<uint8_t>(i)) == 1);
@@ -277,7 +277,7 @@ TEST_CASE("BufferedStream::", "[buffered_stream]")
         // Simulate a producer-consumer pattern across multiple buffer wraps
         uint32_t produced = 0;
         uint32_t consumed = 0;
-        constexpr uint32_t totalItems = BufferedStream::BUFFER_SIZE * 3;
+        constexpr uint32_t totalItems = BufferedStream::getBufferSize() * 3;
 
         while (consumed < totalItems)
         {
