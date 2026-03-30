@@ -30,7 +30,7 @@ public:
      *
      * @return The read byte (0..255) or -1 if no byte was received.
      */
-    int read() override;
+    int16_t read() override;
 
     /**
      * Query the next byte to be read, without reading it.
@@ -38,7 +38,7 @@ public:
      * @return The next byte (0..255) or -1 if no byte is available
      *         for reading.
      */
-    int peek() override;
+    int16_t peek() override;
 
     /**
      * Query the next byte from the writeBuffer, without reading it.
@@ -50,7 +50,7 @@ public:
     /**
      * @return The number of bytes that are available for reading.
      */
-    int available() override;
+    uint32_t available() override;
 
     /**
      * @return The number of bytes that are available in writeBuffer.

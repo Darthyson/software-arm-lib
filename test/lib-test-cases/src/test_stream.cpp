@@ -22,13 +22,13 @@
 class MockStream final : public Stream
 {
 public:
-    std::vector<byte> buffer;
-    int readPos = 0;
+    std::vector<uint8_t> buffer;
+    uint32_t readPos = 0;
 
     /*********************+***
      * Virtual Print methods *
      *********************+***/
-    uint32_t write(const byte ch) override
+    uint32_t write(const uint8_t ch) override
     {
         buffer.push_back(ch);
         return 1;
@@ -39,9 +39,9 @@ public:
     /***********************+**
      * Virtual Stream methods *
      **********************+***/
-    int read() override
+    int16_t read() override
     {
-        if (readPos >= static_cast<int>(buffer.size()))
+        if (readPos >= buffer.size())
         {
             return -1;
         }
@@ -49,9 +49,9 @@ public:
         return buffer.at(readPos++);
     }
 
-    int peek() override
+    int16_t peek() override
     {
-        if (readPos >= static_cast<int>(buffer.size()))
+        if (readPos >= buffer.size())
         {
             return -1;
         }
@@ -59,7 +59,7 @@ public:
         return buffer.at(readPos);
     }
 
-    int available() override
+    uint32_t available() override
     {
         return static_cast<int>(buffer.size()) - readPos;
     }
@@ -76,12 +76,6 @@ public:
     void setInput(const char* data)
     {
         buffer.assign(data, data + strlen(data));
-        readPos = 0;
-    }
-
-    void setInput(const std::vector<byte>& data)
-    {
-        buffer = data;
         readPos = 0;
     }
 
@@ -110,9 +104,9 @@ TEST_CASE("Stream::", "[stream]")
     struct PeekTestCase {
         const char* input;
         const uint32_t timeoutToSet;
-        const int expectedPeek;
-        const int expectedPeekDigit;
-        const int32_t expectedNewReadPos;
+        const int32_t expectedPeek;
+        const int32_t expectedPeekDigit;
+        const uint32_t expectedNewReadPos;
         const char* info;
     };
 
@@ -154,7 +148,7 @@ TEST_CASE("Stream::", "[stream]")
         {
             mock.setTimeout(timeoutToSet);
             mock.setInput(input);
-            int32_t oldReadPos = mock.readPos;
+            uint32_t oldReadPos = mock.readPos;
 
             INFO("mock.peek() " << info);
             REQUIRE(mock.peek() == expectedPeek);
@@ -174,8 +168,8 @@ TEST_CASE("Stream::", "[stream]")
     {
         struct ParseIntTestCase {
             const char* input;
-            int result;
-            int newReadPos;
+            int32_t result;
+            uint32_t newReadPos;
         };
 
         ParseIntTestCase parseTestCases[] = {
@@ -203,7 +197,7 @@ TEST_CASE("Stream::", "[stream]")
     {
         struct ParseIntSkipTestCase {
             const char* input;
-            int result;
+            int32_t result;
             char skipCHar;
         };
         ParseIntSkipTestCase parseSkipTestCases[] = {
@@ -229,7 +223,7 @@ TEST_CASE("Stream::", "[stream]")
         {
             mock.setInput("Hello");
             char buffer[6] = {};
-            int count = mock.readBytes(buffer, 5);
+            uint32_t count = mock.readBytes(buffer, 5);
             REQUIRE(count == 5);
             REQUIRE(std::string(buffer, 5) == "Hello");
         }
@@ -238,7 +232,7 @@ TEST_CASE("Stream::", "[stream]")
         {
             mock.setInput("Hello World");
             char buffer[4] = {};
-            int count = mock.readBytes(buffer, 3);
+            uint32_t count = mock.readBytes(buffer, 3);
             REQUIRE(count == 3);
             REQUIRE(std::string(buffer, 3) == "Hel");
         }
@@ -247,7 +241,7 @@ TEST_CASE("Stream::", "[stream]")
         {
             mock.setInput("Hello");
             char buffer[1] = {};
-            int count = mock.readBytes(buffer, 0);
+            uint32_t count = mock.readBytes(buffer, 0);
             REQUIRE(count == 0);
         }
     }
@@ -257,8 +251,8 @@ TEST_CASE("Stream::", "[stream]")
         SECTION("Read bytes into byte buffer")
         {
             mock.setInput("ABC");
-            byte buffer[4] = {};
-            int count = mock.readBytes(buffer, 3);
+            uint8_t buffer[4] = {};
+            uint32_t count = mock.readBytes(buffer, 3);
             REQUIRE(count == 3);
             REQUIRE(buffer[0] == 'A');
             REQUIRE(buffer[1] == 'B');
@@ -272,7 +266,7 @@ TEST_CASE("Stream::", "[stream]")
         {
             mock.setInput("Hello\nWorld");
             char buffer[12] = {};
-            int count = mock.readBytesUntil('\n', buffer, 11);
+            uint32_t count = mock.readBytesUntil('\n', buffer, 11);
             REQUIRE(count == 5);
             REQUIRE(std::string(buffer, 5) == "Hello");
         }
@@ -281,7 +275,7 @@ TEST_CASE("Stream::", "[stream]")
         {
             mock.setInput("Hello\nWorld");
             char buffer[4] = {};
-            int count = mock.readBytesUntil('\n', buffer, 3);
+            uint32_t count = mock.readBytesUntil('\n', buffer, 3);
             REQUIRE(count == 3);
             REQUIRE(std::string(buffer, 3) == "Hel");
         }
@@ -290,7 +284,7 @@ TEST_CASE("Stream::", "[stream]")
         {
             mock.setInput("Hello");
             char buffer[10] = {};
-            int count = mock.readBytesUntil('\n', buffer, 10);
+            uint32_t count = mock.readBytesUntil('\n', buffer, 10);
             REQUIRE(count == 5);
             REQUIRE(std::string(buffer, 5) == "Hello");
         }
@@ -301,8 +295,8 @@ TEST_CASE("Stream::", "[stream]")
         SECTION("Read into byte buffer until terminator")
         {
             mock.setInput("AB;CD");
-            byte buffer[6] = {};
-            int count = mock.readBytesUntil(';', buffer, 5);
+            uint8_t buffer[6] = {};
+            uint32_t count = mock.readBytesUntil(';', buffer, 5);
             REQUIRE(count == 2);
             REQUIRE(buffer[0] == 'A');
             REQUIRE(buffer[1] == 'B');
@@ -356,7 +350,7 @@ TEST_CASE("Stream::", "[stream]")
         SECTION("Find byte string")
         {
             mock.setInput("Hello World");
-            const byte target[] = "World";
+            constexpr uint8_t target[] = "World";
             REQUIRE(mock.find(target) == true);
         }
     }
@@ -366,7 +360,7 @@ TEST_CASE("Stream::", "[stream]")
         SECTION("Find byte string with length")
         {
             mock.setInput("Hello World");
-            const byte target[] = "World";
+            constexpr uint8_t target[] = "World";
             REQUIRE(mock.find(target, 5) == true);
         }
     }
@@ -391,7 +385,7 @@ TEST_CASE("Stream::", "[stream]")
         SECTION("Find byte target before terminator")
         {
             mock.setInput("Hello World End");
-            const byte target[] = "World";
+            constexpr uint8_t target[] = "World";
             REQUIRE(mock.findUntil(target, "End") == true);
         }
     }
@@ -413,13 +407,13 @@ TEST_CASE("Stream::", "[stream]")
         SECTION("Find with no terminator (null, 0)")
         {
             mock.setInput("Hello World");
-            REQUIRE(mock.findUntil("World", 5, (const char*)0, 0) == true);
+            REQUIRE(mock.findUntil("World", 5, nullptr, 0) == true);
         }
 
         SECTION("Target not found, no terminator")
         {
             mock.setInput("Hello");
-            REQUIRE(mock.findUntil("xyz", 3, (const char*)0, 0) == false);
+            REQUIRE(mock.findUntil("xyz", 3, nullptr, 0) == false);
         }
     }
 
@@ -429,7 +423,7 @@ TEST_CASE("Stream::", "[stream]")
         SECTION("Find byte target with lengths")
         {
             mock.setInput("Hello World End");
-            constexpr byte target[] = "World";
+            constexpr uint8_t target[] = "World";
             REQUIRE(mock.findUntil(target, 5, "End", 3) == true);
         }
     }
@@ -494,8 +488,8 @@ TEST_CASE("Stream::", "[stream]")
 
     SECTION("write()")
     {
-        REQUIRE(mock.write(static_cast<byte>('A')) == 1);
-        REQUIRE(mock.write(static_cast<byte>('B')) == 1);
+        REQUIRE(mock.write(static_cast<uint8_t>('A')) == 1);
+        REQUIRE(mock.write(static_cast<uint8_t>('B')) == 1);
         REQUIRE(mock.buffer.size() == 2);
         REQUIRE(mock.buffer[0] == 'A');
         REQUIRE(mock.buffer[1] == 'B');
@@ -508,8 +502,8 @@ TEST_CASE("Stream::", "[stream]")
         // but '0' is always handled as a digit before the skipChar check.
         struct ParseIntZeroTestCase {
             const char* input;
-            int result;
-            int newReadPos;
+            int32_t result;
+            uint32_t newReadPos;
         };
 
         ParseIntZeroTestCase zeroTestCases[] = {
@@ -573,7 +567,7 @@ TEST_CASE("Stream::", "[stream]")
         {
             mock.setInput("\nHello");
             char buffer[10] = {};
-            int count = mock.readBytesUntil('\n', buffer, 10);
+            uint32_t count = mock.readBytesUntil('\n', buffer, 10);
             REQUIRE(count == 0);
         }
 
@@ -582,7 +576,7 @@ TEST_CASE("Stream::", "[stream]")
             mock.setTimeout(10);
             mock.setInput("");
             char buffer[10] = {};
-            int count = mock.readBytesUntil('\n', buffer, 10);
+            uint32_t count = mock.readBytesUntil('\n', buffer, 10);
             REQUIRE(count == 0);
         }
     }
@@ -594,7 +588,7 @@ TEST_CASE("Stream::", "[stream]")
             mock.setTimeout(10);
             mock.setInput("Hi");
             char buffer[10] = {};
-            int count = mock.readBytes(buffer, 10);
+            uint32_t count = mock.readBytes(buffer, 10);
             REQUIRE(count == 2);
             REQUIRE(std::string(buffer, 2) == "Hi");
         }
@@ -608,7 +602,7 @@ TEST_CASE("Stream::", "[stream]")
             // without re-checking the current character against target[0].
             // This causes overlapping patterns to be missed.
             mock.setInput("aaab");
-            REQUIRE(mock.findUntil("aab", 3, (const char*)0, 0) == false);
+            REQUIRE(mock.findUntil("aab", 3, nullptr, 0) == false);
             // NOTE: "aab" exists at position 1 in "aaab", but is not found
         }
 
@@ -622,7 +616,7 @@ TEST_CASE("Stream::", "[stream]")
         SECTION("Target at very end of stream")
         {
             mock.setInput("xxxWorld");
-            REQUIRE(mock.findUntil("World", 5, (const char*)0, 0) == true);
+            REQUIRE(mock.findUntil("World", 5, nullptr, 0) == true);
         }
 
         SECTION("Single character target found before terminator")

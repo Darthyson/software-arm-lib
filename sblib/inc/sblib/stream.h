@@ -12,6 +12,7 @@
 
 #include <sblib/print.h>
 #include <cstring>
+#include <cstdint>
 
 
 /**
@@ -25,16 +26,16 @@ public:
      * Set the maximum number of milliseconds that are waited for a
      * character to arrive. Default is 1000 msec.
      *
-     * @param newTimeout - the number of milliseconds to wait.
+     * @param newTimeout  The number of milliseconds to wait.
      */
-    void setTimeout(unsigned int newTimeout);
+    void setTimeout(uint32_t newTimeout);
 
     /**
      * Read a single byte.
      *
      * @return The read byte (0..255) or -1 if no byte was received.
      */
-    virtual int read() = 0;
+    virtual int16_t read() = 0;
 
     /**
      * Query the next byte to be read, without reading it.
@@ -42,12 +43,13 @@ public:
      * @return The next byte (0..255) or -1 if no byte is available
      *         for reading.
      */
-    virtual int peek() = 0;
+    virtual int16_t peek() = 0;
 
     /**
+     * @brief Get the number of bytes available for reading.
      * @return The number of bytes that are available for reading.
      */
-    virtual int available() = 0;
+    virtual uint32_t available() = 0;
 
     /**
      * Wait until all bytes are written.
@@ -61,7 +63,7 @@ public:
      *
      * @return The read integer, or 0 if no integer could be read due to timeout.
      */
-    int parseInt();
+    int32_t parseInt();
 
     /**
      * Read the first valid integer value from the current position. Initial characters
@@ -69,101 +71,101 @@ public:
      * by the first character that is not a digit. If the skip character is read, it
      * is ignored and skipped. Digits are no valid skip character, they are never ignored.
      *
-     * @param skipChar - the character to ignore when read (do not use a digit)
+     * @param skipChar  The character to ignore when read (do not use a digit)
      *
      * @return The read integer, or 0 if no integer could be read due to timeout.
      */
-    int parseInt(char skipChar);
+    int32_t parseInt(char skipChar);
 
     /**
      * Read characters from the stream into the buffer. Reading stops if length
      * characters have been read or a timeout occurs.
      *
-     * @param buffer - the buffer to read into
-     * @param length - the maximum number of bytes to read
+     * @param buffer  The buffer to read into
+     * @param length  The maximum number of bytes to read
      *
-     * @return The number of bytes read.
+     * @return The number of bytes read, or 0 if timeout occurred.
      */
-    int readBytes(char* buffer, int length);
+    uint32_t readBytes(char* buffer, uint32_t length);
 
     /**
      * Read characters from the stream into the buffer. Reading stops if length
      * characters have been read or a timeout occurs.
      *
-     * @param buffer - the buffer to read into
-     * @param length - the maximum number of bytes to read
+     * @param buffer  The buffer to read into
+     * @param length  The maximum number of bytes to read
      *
-     * @return The number of bytes read.
+     * @return The number of bytes read, or 0 if timeout occurred.
      */
-    int readBytes(byte* buffer, int length);
+    uint32_t readBytes(uint8_t* buffer, uint32_t length);
 
     /**
      * Read characters from the stream into the buffer. Reading stops if length
      * characters have been read, the terminator character is read, or a timeout occurs.
      *
-     * @param terminator - the terminator character
-     * @param buffer - the buffer to read into
-     * @param length - the maximum number of bytes to read
+     * @param terminator  The terminator character
+     * @param buffer      The buffer to read into
+     * @param length      The maximum number of bytes to read
      *
-     * @return The number of bytes read.
+     * @return The number of bytes read, or 0 if timeout occurred.
      */
-    int readBytesUntil(char terminator, char* buffer, int length);
+    uint32_t readBytesUntil(char terminator, char* buffer, uint32_t length);
 
     /**
      * Read characters from the stream into the buffer. Reading stops if length
      * characters have been read, the terminator character is read, or a timeout occurs.
      *
-     * @param terminator - the terminator character
-     * @param buffer - the buffer to read into
-     * @param length - the maximum number of bytes to read
+     * @param terminator  The terminator character
+     * @param buffer      The buffer to read into
+     * @param length      The maximum number of bytes to read
      *
-     * @return The number of bytes read.
+     * @return The number of bytes read, or 0 if timeout occurred.
      */
-    int readBytesUntil(char terminator, byte* buffer, int length);
+    uint32_t readBytesUntil(char terminator, uint8_t* buffer, uint32_t length);
 
     /**
      * Reads data from the stream until the target string is read.
      *
-     * @param target - the target string to find, zero terminated.
-     * @return true if target string is found, false if timed out.
+     * @param target  The target string to find, zero terminated.
+     * @return True if target string is found, false if timed out.
      */
     bool find(const char* target);
 
     /**
      * Reads data from the stream until the target string is read.
      *
-     * @param target - the target string to find, zero terminated.
-     * @return true if target string is found, false if timed out.
+     * @param target   The target string to find, zero terminated.
+     * @return True if target string is found, false if timed out.
      */
-    bool find(const byte* target);
+    bool find(const uint8_t* target);
 
     /**
      * Reads data from the stream until the target string is read.
      *
-     * @param target - the target string to find.
-     * @param length - the length of the target string to find.
+     * @param target  The target string to find.
+     * @param length  The length of the target string to find.
      *
-     * @return true if target string is found, false if timed out.
+     * @return True if target string is found, false if timed out.
      */
-    bool find(const char* target, int length);
+    bool find(const char* target, uint32_t length);
 
     /**
      * Reads data from the stream until the target string is read.
      *
-     * @param target - the target string to find.
-     * @param length - the length of the target string to find.
+     * @param target  The target string to find.
+     * @param length  The length of the target string to find.
      *
-     * @return true if target string is found, false if timed out.
+     * @return True if target string is found, false if timed out.
      */
-    bool find(const byte* target, int length);
+    bool find(const uint8_t* target, uint32_t length);
 
     /**
      * Reads data from the stream until the target string is read. Reading stops
      * if the target string is read, the terminator string is read, or a timeout
      * occurs.
      *
-     * @param target - the target string to find, zero terminated.
-     * @param terminator - the terminator string, zero terminated.
+     * @param target      The target string to find, zero terminated.
+     * @param terminator  The terminator string, zero terminated.
      *
      * @return true if target string is found, false if the terminator string was
      *         read or a timeout occurred.
@@ -181,7 +183,7 @@ public:
      * @return true if target string is found, false if the terminator string was
      *         read or a timeout occurred.
      */
-    bool findUntil(const byte* target, const char* terminator);
+    bool findUntil(const uint8_t* target, const char* terminator);
 
     /**
      * Reads data from the stream until the target string is read. Reading stops
@@ -196,7 +198,7 @@ public:
      * @return true if target string is found, false if the terminator string was
      *         read or a timeout occurred.
      */
-    bool findUntil(const char* target, int targetLen, const char* terminator, int termLen);
+    bool findUntil(const char* target, uint32_t targetLen, const char* terminator, uint32_t termLen);
 
     /**
      * Reads data from the stream until the target string is read. Reading stops
@@ -211,10 +213,10 @@ public:
      * @return true if target string is found, false if the terminator string was
      *         read or a timeout occurred.
      */
-    bool findUntil(const byte* target, int targetLen, const char* terminate, int termLen);
+    bool findUntil(const uint8_t* target, uint32_t targetLen, const char* terminate, uint32_t termLen);
 
 protected:
-    unsigned int timeout; //!< timeout for timed reads in milliseconds
+    uint32_t timeout; //!< timeout for timed reads in milliseconds
 
     /**
      * Create a stream with the default timeout of 1 second.
@@ -227,7 +229,7 @@ protected:
      *
      * @return The read byte (0..255) or -1 if no byte was read within the timeout.
      */
-    int timedRead();
+    int16_t timedRead();
 
     /**
      * Query the next byte to be read, without reading it. Wait up to the number of
@@ -235,7 +237,7 @@ protected:
      *
      * @return The peeked byte (0..255) or -1 if no byte was peeked within the timeout.
      */
-    int timedPeek();
+    int16_t timedPeek();
 
     /**
      * Query the next numeric digit (or minus) from the stream. Non-digit characters
@@ -243,7 +245,7 @@ protected:
      *
      * @return The next digit or -1 if a timeout occurs.
      */
-    int peekNextDigit();
+    int16_t peekNextDigit();
 
 private:
     /**
@@ -256,7 +258,7 @@ private:
      *
      * @return The number of bytes read.
      */
-    int _readBytesUntil(int terminator, char* buffer, int length);
+    uint32_t _readBytesUntil(int32_t terminator, char* buffer, uint32_t length);
 };
 
 
@@ -265,58 +267,59 @@ private:
 //
 
 inline Stream::Stream()
+    :
+    timeout(1000)
 {
-    timeout = 1000;
 }
 
-inline void Stream::setTimeout(const unsigned int newTimeout)
+inline void Stream::setTimeout(const uint32_t newTimeout)
 {
     timeout = newTimeout;
 }
 
-inline int Stream::parseInt()
+inline int32_t Stream::parseInt()
 {
     return parseInt('0');
 }
 
-inline int Stream::readBytes(char* buffer, const int length)
+inline uint32_t Stream::readBytes(char* buffer, const uint32_t length)
 {
     return _readBytesUntil(-1, buffer, length);
 }
 
-inline int Stream::readBytes(byte* buffer, const int length)
+inline uint32_t Stream::readBytes(uint8_t* buffer, const uint32_t length)
 {
-    return _readBytesUntil(-1, (char*)buffer, length);
+    return _readBytesUntil(-1, reinterpret_cast<char*>(buffer), length);
 }
 
-inline int Stream::readBytesUntil(const char terminator, char* buffer, const int length)
+inline uint32_t Stream::readBytesUntil(const char terminator, char* buffer, const uint32_t length)
 {
-    return _readBytesUntil(terminator, (char*)buffer, length);
+    return _readBytesUntil(terminator, buffer, length);
 }
 
-inline int Stream::readBytesUntil(const char terminator, byte* buffer, const int length)
+inline uint32_t Stream::readBytesUntil(const char terminator, uint8_t* buffer, const uint32_t length)
 {
-    return _readBytesUntil(terminator, (char*)buffer, length);
+    return _readBytesUntil(terminator, reinterpret_cast<char*>(buffer), length);
 }
 
 inline bool Stream::find(const char* target)
 {
-    return findUntil(target, strlen(target), (const char*)0, 0);
+    return findUntil(target, strlen(target), nullptr, 0);
 }
 
-inline bool Stream::find(const byte* target)
+inline bool Stream::find(const uint8_t* target)
 {
-    return find((const char*)target);
+    return find(reinterpret_cast<const char*>(target));
 }
 
-inline bool Stream::find(const char* target, const int length)
+inline bool Stream::find(const char* target, const uint32_t length)
 {
-    return findUntil(target, length, (const char*)0, 0);
+    return findUntil(target, length, nullptr, 0);
 }
 
-inline bool Stream::find(const byte* target, const int length)
+inline bool Stream::find(const uint8_t* target, const uint32_t length)
 {
-    return find((const char*)target, length);
+    return find(reinterpret_cast<const char*>(target), length);
 }
 
 inline bool Stream::findUntil(const char* target, const char* terminator)
@@ -324,14 +327,15 @@ inline bool Stream::findUntil(const char* target, const char* terminator)
     return findUntil(target, strlen(target), terminator, strlen(terminator));
 }
 
-inline bool Stream::findUntil(const byte* target, const char* terminator)
+inline bool Stream::findUntil(const uint8_t* target, const char* terminator)
 {
-    return findUntil((const char*)target, terminator);
+    return findUntil(reinterpret_cast<const char*>(target), terminator);
 }
 
-inline bool Stream::findUntil(const byte* target, const int targetLen, const char* terminate, const int termLen)
+inline bool Stream::findUntil(const uint8_t* target, const uint32_t targetLen, const char* terminate,
+    const uint32_t termLen)
 {
-    return findUntil((const char*)target, targetLen, terminate, termLen);
+    return findUntil(reinterpret_cast<const char*>(target), targetLen, terminate, termLen);
 }
 
 #endif /* SBLIB_STREAM_H_ */

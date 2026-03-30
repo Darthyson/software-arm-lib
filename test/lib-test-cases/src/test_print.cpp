@@ -7,7 +7,6 @@
  */
 
 #include <sblib/print.h>
-#include <string>
 #include <vector>
 #include <cstring>
 #include <limits>
@@ -22,9 +21,9 @@
 class MockPrint final : public Print
 {
 public:
-    std::vector<byte> buffer;
+    std::vector<uint8_t> buffer;
 
-    uint32_t write(const byte ch) override
+    uint32_t write(const uint8_t ch) override
     {
         buffer.push_back(ch);
         return 1;
@@ -129,13 +128,13 @@ TEST_CASE("Print::", "[print]") {
 
         SECTION("Print negative number")
         {
-            mock.print(static_cast<int32_t>(-456));
+            mock.print(-456);
             REQUIRE(mock.getString() == "-456");
         }
 
         SECTION("Print with minimum digits padding")
         {
-            mock.print(static_cast<int32_t>(42), DEC, 0);
+            mock.print(42, DEC, 0);
             REQUIRE(mock.getString() == "42");
         }
 
@@ -147,7 +146,7 @@ TEST_CASE("Print::", "[print]") {
 
         SECTION("Print with more digits padding")
         {
-            mock.print(static_cast<int32_t>(1234542), DEC, 20);
+            mock.print(1234542, DEC, 20);
             REQUIRE(mock.getString() == "00000000000001234542");
         }
 
@@ -694,7 +693,7 @@ TEST_CASE("Print::", "[print]") {
 
         SECTION("Print string + value with newline")
         {
-            mock.println("Result: ", static_cast<int32_t>(123));
+            mock.println("Result: ", 123);
             REQUIRE(mock.getString() == "Result: 123\r\n");
         }
 
@@ -742,7 +741,7 @@ TEST_CASE("Print::", "[print]") {
 
         SECTION("Write byte array")
         {
-            byte data[] = {65, 66, 67}; // "ABC"
+            uint8_t data[] = {65, 66, 67}; // "ABC"
             uint32_t result = mock.write(&data[0], 3);
             REQUIRE(result == 3);
             REQUIRE(mock.getString() == "ABC");
@@ -750,7 +749,7 @@ TEST_CASE("Print::", "[print]") {
 
         SECTION("Write empty array")
         {
-            byte data[] = {65};
+            uint8_t data[] = {65};
             uint32_t result = mock.write(data, 0);
             REQUIRE(result == 0);
             REQUIRE(mock.getString().empty());
@@ -758,7 +757,7 @@ TEST_CASE("Print::", "[print]") {
 
         SECTION("Write single byte via array")
         {
-            byte data[] = {88};
+            uint8_t data[] = {88};
             mock.write(data, 1);
             REQUIRE(mock.getString() == "X");
         }
@@ -798,7 +797,7 @@ TEST_CASE("Print::", "[print]") {
         SECTION("Mixed print calls")
         {
             mock.print("Count: ");
-            mock.print(static_cast<int32_t>(10));
+            mock.print(10);
             mock.print(", Hex: ");
             mock.print(static_cast<uint16_t>(255), HEX);
             mock.println();
@@ -815,7 +814,7 @@ TEST_CASE("Print::", "[print]") {
 
         SECTION("Large number formatting")
         {
-            mock.print(static_cast<uint32_t>(0xFFFFFFFF), HEX);
+            mock.print(0xFFFFFFFF, HEX);
             REQUIRE(mock.getString() == "FFFFFFFF");
         }
 
@@ -846,7 +845,7 @@ TEST_CASE("Print::", "[print]") {
 
         SECTION("Large negative number")
         {
-            mock.print(static_cast<int32_t>(-999999));
+            mock.print(-999999);
             REQUIRE(mock.getString() == "-999999");
         }
 

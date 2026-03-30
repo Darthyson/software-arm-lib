@@ -12,13 +12,13 @@
 #include <sblib/timer.h>
 
 
-int Stream::parseInt(const char skipChar)
+int32_t Stream::parseInt(const char skipChar)
 {
     bool negative = false;
-    int value = 0;
+    int32_t value = 0;
 
-    int ch = peekNextDigit(); // skip leading non numeric characters
-    if (ch == '-')
+    int16_t ch = peekNextDigit(); // skip leading non-numeric characters
+    if (static_cast<uint8_t>(ch) == '-')
     {
         negative = true;
         ch = '0';
@@ -27,39 +27,46 @@ int Stream::parseInt(const char skipChar)
     while (ch >= 0)
     {
         if (ch >= '0' && ch <= '9')
+        {
             value = value * 10 + ch - '0';
+        }
         else if (ch != skipChar)
+        {
             break;
+        }
 
         read(); // consume the character we got with peek
         ch = timedPeek();
     }
 
     if (negative)
+    {
         return -value;
+    }
     return value;
 }
 
-int Stream::_readBytesUntil(const int terminator, char* buffer, const int length)
+uint32_t Stream::_readBytesUntil(const int32_t terminator, char* buffer, const uint32_t length)
 {
-    int count;
+    uint32_t count;
     for (count = 0; count < length; ++count)
     {
-        const int ch = timedRead();
+        const int16_t ch = timedRead();
         if (ch < 0 || ch == terminator)
+        {
             break;
+        }
 
-        buffer[count] = ch;
+        buffer[count] = static_cast<char>(ch);
     }
-
     return count;
 }
 
-bool Stream::findUntil(const char* target, const int targetLen, const char* terminator, const int termLen)
+bool Stream::findUntil(const char* target, const uint32_t targetLen, const char* terminator, const uint32_t termLen)
 {
-    int targetIdx = 0;
-    int termIdx = 0;
-    int ch;
+    uint32_t targetIdx = 0;
+    uint32_t termIdx = 0;
+    int16_t ch;
 
     while ((ch = timedRead()) >= 0)
     {
@@ -69,7 +76,9 @@ bool Stream::findUntil(const char* target, const int targetLen, const char* term
                 return true;
         }
         else
+        {
             targetIdx = 0;
+        }
 
         if (termLen > 0)
         {
@@ -79,55 +88,60 @@ bool Stream::findUntil(const char* target, const int targetLen, const char* term
                     return false;
             }
             else
+            {
                 termIdx = 0;
+            }
         }
     }
-
     return false;
 }
 
-int Stream::timedRead()
+int16_t Stream::timedRead()
 {
-    const int start = millis();
-    int ch = read();
+    const uint32_t start = millis();
+    int16_t ch = read();
 
     while (ch < 0 && elapsed(start) < timeout)
     {
         ch = read();
     }
-
     return ch;
 }
 
-int Stream::timedPeek()
+int16_t Stream::timedPeek()
 {
-    const int start = millis();
-    int ch = peek();
+    const uint32_t start = millis();
+    int16_t ch = peek();
 
     while (ch < 0 && elapsed(start) < timeout)
     {
         ch = peek();
     }
-
     return ch;
 }
 
-int Stream::peekNextDigit()
+int16_t Stream::peekNextDigit()
 {
-    int ch;
+    int16_t ch;
     while (true)
     {
         ch = timedPeek();
         if (ch < 0)
+        {
             break; // timeout
+        }
 
-        if (ch == '-')
+        if (static_cast<uint8_t>(ch) == '-')
+        {
             break;
-        if (ch >= '0' && ch <= '9')
+        }
+
+        if (ch >= '0' && static_cast<uint8_t>(ch) <= '9')
+        {
             break;
+        }
 
         read(); // discard non-numeric characters
     }
-
     return ch;
 }

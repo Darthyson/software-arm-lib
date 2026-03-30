@@ -141,26 +141,25 @@ private:
      * @brief The actual ring buffer array.
      */
     uint8_t * buffer;
-
 };
 
-#define SBLIB_OPTIMIZE __attribute__((optimize("O3")))
 
 //
 //  Inline functions which are performance critical
 //  and are hopefully be inlined by the compiler
 //
-ALWAYS_INLINE SBLIB_OPTIMIZE bool RingBuffer::empty() const
+#define RINGBUFFER_OPTIMIZE_O3 __attribute__((optimize("O3"))) // Use -O3 (most optimized) for all time critical methods
+ALWAYS_INLINE RINGBUFFER_OPTIMIZE_O3 bool RingBuffer::empty() const
 {
     return head == tail;
 }
 
-ALWAYS_INLINE SBLIB_OPTIMIZE bool RingBuffer::full() const
+ALWAYS_INLINE RINGBUFFER_OPTIMIZE_O3 bool RingBuffer::full() const
 {
     return ((tail + 1) & bufferSizeMask) == head;
 }
 
-ALWAYS_INLINE SBLIB_OPTIMIZE int16_t RingBuffer::pop()
+ALWAYS_INLINE RINGBUFFER_OPTIMIZE_O3 int16_t RingBuffer::pop()
 {
     if (empty())
     {
@@ -172,7 +171,7 @@ ALWAYS_INLINE SBLIB_OPTIMIZE int16_t RingBuffer::pop()
     return value;
 }
 
-ALWAYS_INLINE SBLIB_OPTIMIZE bool RingBuffer::push(const uint8_t byteToPush)
+ALWAYS_INLINE RINGBUFFER_OPTIMIZE_O3 bool RingBuffer::push(const uint8_t byteToPush)
 {
     if (full())
     {
@@ -184,6 +183,6 @@ ALWAYS_INLINE SBLIB_OPTIMIZE bool RingBuffer::push(const uint8_t byteToPush)
     return true;
 }
 
-#undef SBLIB_OPTIMIZE
+#undef RINGBUFFER_OPTIMIZE_O3
 
 #endif /* SBLIB_RINGBUFFER_H */

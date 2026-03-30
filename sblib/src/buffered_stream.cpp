@@ -19,12 +19,12 @@ BufferedStream::BufferedStream()
 {
 }
 
-int BufferedStream::read()
+int16_t BufferedStream::read()
 {
     return readBuffer.pop();
 }
 
-int BufferedStream::peek()
+int16_t BufferedStream::peek()
 {
     return readBuffer.peek();
 }
@@ -34,7 +34,7 @@ int32_t BufferedStream::peekWrite() const
     return writeBuffer.peek();
 }
 
-int BufferedStream::available()
+uint32_t BufferedStream::available()
 {
     return readBuffer.available();
 }

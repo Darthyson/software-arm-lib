@@ -147,7 +147,7 @@ public:
      *
      * @return The read byte (0..255) or -1 if no byte was received.
      */
-    int read() override;
+    int16_t read() override;
 
     // Pull in write(str) and write(buf, size) from Print
     using Print::write;

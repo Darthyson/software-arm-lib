@@ -187,7 +187,7 @@ void Serial::flush()
 #endif
 }
 
-int Serial::read()
+int16_t Serial::read()
 {
     if (!enabled_)
     {

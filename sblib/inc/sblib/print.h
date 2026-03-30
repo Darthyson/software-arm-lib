@@ -10,7 +10,6 @@
 #ifndef SBLIB_PRINT_H_
 #define SBLIB_PRINT_H_
 
-#include <sblib/types.h>
 #include <type_traits>
 #include <cstdint>
 
@@ -280,7 +279,7 @@ public:
      * @param count     The number of bytes to write.
      * @return The number of bytes that were written.
      */
-    virtual uint32_t write(const byte* data, uint32_t count);
+    virtual uint32_t write(const uint8_t* data, uint32_t count);
 
     /**
      * Write a single byte.
@@ -288,7 +287,7 @@ public:
      * @param ch    The byte to write.
      * @return 1 if the byte was written, 0 if not.
      */
-    virtual uint32_t write(byte ch) = 0;
+    virtual uint32_t write(uint8_t ch) = 0;
 
 private:
     /**
@@ -460,7 +459,7 @@ namespace test_print
 
 inline uint32_t Print::print(const char ch)
 {
-    return this->write(reinterpret_cast<const byte*>(&ch), 1);
+    return this->write(reinterpret_cast<const uint8_t*>(&ch), 1);
 }
 
 inline uint32_t Print::print(const char* str)

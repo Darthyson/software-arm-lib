@@ -18,22 +18,22 @@ constexpr size_t PRINT_BUFFER_SIZE = 8 * sizeof(uintmax_t);
 
 uint32_t Print::printInteger(intmax_t value, const Base base, int8_t digits)
 {
-    uint32_t wlen = 0;
+    uint32_t writeCounter = 0;
     if (value < 0)
     {
-        wlen += write('-');
+        writeCounter += write('-');
         value = -value;
         --digits;
     }
 
-    return printUnsignedInteger(static_cast<uintmax_t>(value), base, digits) + wlen;
+    return printUnsignedInteger(static_cast<uintmax_t>(value), base, digits) + writeCounter;
 }
 
 uint32_t Print::printInteger(const char* str, const intmax_t value, const Base base, const int8_t digits)
 {
-    uint32_t wlen = print(str);
-    wlen += printInteger(value, base, digits);
-    return wlen;
+    uint32_t writeCounter = print(str);
+    writeCounter += printInteger(value, base, digits);
+    return writeCounter;
 }
 
 uint32_t Print::printUnsignedInteger(uintmax_t value, Base base, int8_t digits)
@@ -59,9 +59,9 @@ uint32_t Print::printUnsignedInteger(uintmax_t value, Base base, int8_t digits)
 
 uint32_t Print::printUnsignedInteger(const char* str, const uintmax_t value, const Base base, const int8_t digits)
 {
-    uint32_t wlen = print(str);
-    wlen += printUnsignedInteger(value, base, digits);
-    return wlen;
+    uint32_t writeCounter = print(str);
+    writeCounter += printUnsignedInteger(value, base, digits);
+    return writeCounter;
 }
 
 uint32_t Print::print(const float value, uint8_t precision)
@@ -101,12 +101,12 @@ uint32_t Print::print(const float value, uint8_t precision)
     const uint8_t exponent = bits >> SizeMantissaInBits & MaskExponent;
     uint32_t mantissa = bits & MaskMantissa;
 
-    uint32_t wlen = 0;
+    uint32_t writeCounter = 0;
 
     // Print sign
     if (sign)
     {
-        wlen += write('-');
+        writeCounter += write('-');
     }
 
     // Handle NaN and inf
@@ -114,25 +114,25 @@ uint32_t Print::print(const float value, uint8_t precision)
     {
         if (mantissa != 0)
         {
-            return wlen + write("NaN");
+            return writeCounter + write("NaN");
         }
 
-        return wlen + write("inf");
+        return writeCounter + write("inf");
     }
 
     // Handle zero
     if (exponent == 0 && mantissa == 0)
     {
-        wlen += write('0');
+        writeCounter += write('0');
         if (precision > 0)
         {
-            wlen += write('.');
+            writeCounter += write('.');
             for (uint8_t i = 0; i < precision; i++)
             {
-                wlen += write('0');
+                writeCounter += write('0');
             }
         }
-        return wlen;
+        return writeCounter;
     }
 
     int16_t exp;
@@ -158,14 +158,14 @@ uint32_t Print::print(const float value, uint8_t precision)
     {
         // Large number: all mantissa bits are in integer part
         // Check for potential overflow:
-        // if shift amount exceeds bit width, clamp to max
+        // if shift amount exceeds the bit width, clamp to max
         const int32_t shiftAmount = exp - SizeMantissaInBits;
         constexpr auto shiftMax = static_cast<int16_t>(8 * sizeof(uintmax_t) -
                                   (SizeMantissaInBits + 1));
         if (shiftAmount > shiftMax)
         {
             // Shift would overflow
-            return wlen + write("overflow");
+            return writeCounter + write("overflow");
         }
 
         integerPart = static_cast<uintmax_t>(mantissa) << shiftAmount;
@@ -189,15 +189,15 @@ uint32_t Print::print(const float value, uint8_t precision)
     }
 
     // Print integer part
-    wlen += print(integerPart);
+    writeCounter += print(integerPart);
 
     if (precision == 0)
     {
-        return wlen;
+        return writeCounter;
     }
 
     // Print fractional part
-    wlen += write('.');
+    writeCounter += write('.');
 
     // Convert binary fractional part to decimal digits
     // fractionalPart is scaled to use upper bits of 64-bit value
@@ -211,19 +211,19 @@ uint32_t Print::print(const float value, uint8_t precision)
 
         // Extract the digit from the high part
         const auto digit = static_cast<uint8_t>(high >> 32);
-        wlen += write('0' + digit);
+        writeCounter += write('0' + digit);
 
         // Keep only the fractional part
         fractionalPart = ((high & 0xffffffff) << 32) | (low & 0xffffffff);
     }
-    return wlen;
+    return writeCounter;
 }
 
 uint32_t Print::print(const char* str, const float value, const uint8_t precision)
 {
-    uint32_t wlen = print(str);
-    wlen += print(value, precision);
-    return wlen;
+    uint32_t writeCounter = print(str);
+    writeCounter += print(value, precision);
+    return writeCounter;
 }
 
 uint32_t Print::println()
@@ -231,15 +231,15 @@ uint32_t Print::println()
     return write('\r') + write('\n');
 }
 
-uint32_t Print::write(const byte* data, uint32_t count)
+uint32_t Print::write(const uint8_t* data, uint32_t count)
 {
-    uint32_t wlen = 0;
+    uint32_t writeCounter = 0;
     while (count--)
     {
-        wlen += write(*data++);
+        writeCounter += write(*data++);
     }
 
-    return wlen;
+    return writeCounter;
 }
 
 uint32_t Print::write(const char* str)
@@ -247,33 +247,33 @@ uint32_t Print::write(const char* str)
     if (str == nullptr)
         return 0;
 
-    return write(reinterpret_cast<const byte*>(str), strlen(str));
+    return write(reinterpret_cast<const uint8_t*>(str), strlen(str));
 }
 
 uint32_t Print::printUnsignedIntegerLn(const char* str, const uintmax_t value, const Base base, const int8_t digits)
 {
-    uint32_t wlen = printUnsignedInteger(str, value, base, digits);
-    wlen += println();
-    return wlen;
+    uint32_t writeCounter = printUnsignedInteger(str, value, base, digits);
+    writeCounter += println();
+    return writeCounter;
 }
 
 uint32_t Print::printIntegerLn(const char* str, const intmax_t value, const Base base, const int8_t digits)
 {
-    uint32_t wlen = printInteger(str, value, base, digits);
-    wlen += println();
-    return wlen;
+    uint32_t writeCounter = printInteger(str, value, base, digits);
+    writeCounter += println();
+    return writeCounter;
 }
 
 uint32_t Print::println(const float value, const uint8_t precision)
 {
-    uint32_t wlen = print(value, precision);
-    wlen += println();
-    return wlen;
+    uint32_t writeCounter = print(value, precision);
+    writeCounter += println();
+    return writeCounter;
 }
 
 uint32_t Print::println(const char* str, const float value, const uint8_t precision)
 {
-    uint32_t wlen = print(str, value, precision);
-    wlen += println();
-    return wlen;
+    uint32_t writeCounter = print(str, value, precision);
+    writeCounter += println();
+    return writeCounter;
 }
