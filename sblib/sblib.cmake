@@ -25,6 +25,7 @@ set(SBLIB_CORE_SRC
         inc/sblib/platform.h
         inc/sblib/print.h
         inc/sblib/ring_buffer.h
+        inc/sblib/serial_registers.h
         inc/sblib/serial.h
         inc/sblib/spi.h
         inc/sblib/stream.h
