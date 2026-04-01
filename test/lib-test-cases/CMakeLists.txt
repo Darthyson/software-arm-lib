@@ -125,12 +125,7 @@ if(SBLIB_ARCHITECTURE STREQUAL "x86")
     )
     target_link_libraries(${TARGET_X86} sblib-test_x86)
 
-    # Register test with Catch2 options for better output
-    add_test(NAME ${TARGET_X86}
-        COMMAND ${TARGET_X86} --reporter console --success
-        WORKING_DIRECTORY ${CMAKE_BINARY_DIR}
-    )
-    # Add test to run with JUnit XML output
+    # Register test to run with JUnit XML output
     add_test(NAME ${TARGET_X86}_junit
         COMMAND ${TARGET_X86} --reporter junit --out $<TARGET_FILE_DIR:${TARGET_X86}>/${TARGET_X86}_result.xml
         WORKING_DIRECTORY $<TARGET_FILE_DIR:${TARGET_X86}>
@@ -149,12 +144,7 @@ elseif(SBLIB_ARCHITECTURE STREQUAL "x64")
     )
     target_link_libraries(${TARGET_X64} sblib-test_x64)
 
-    # Register test with Catch2 options for better output
-    add_test(NAME ${TARGET_X64}
-        COMMAND ${TARGET_X64} --reporter console --success
-        WORKING_DIRECTORY ${CMAKE_BINARY_DIR}
-    )
-    # Add test to run with JUnit XML output
+    # Register test to run with JUnit XML output
     add_test(NAME ${TARGET_X64}_junit
         COMMAND ${TARGET_X64} --reporter junit --out $<TARGET_FILE_DIR:${TARGET_X64}>/${TARGET_X64}_result.xml
         WORKING_DIRECTORY $<TARGET_FILE_DIR:${TARGET_X64}>
