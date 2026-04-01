@@ -8,6 +8,7 @@
 
 #define CATCH_CONFIG_MAIN
 
+// ReSharper disable once CppUnusedIncludeDirective
 #include <catch.hpp> // If possible, include catch.hpp as last header
 
 
@@ -15,7 +16,7 @@
  * since the lib tests don't have an application we need to provide an
  * empty setup function
  */
-void setup(void)
+void setup()
 {
     ///\todo check valid userRamData and userEepromData before we even start something REQUIRE(...);
 }
