@@ -53,6 +53,7 @@ public:
     //Delete the other constructors
     RingBuffer() = delete;
     RingBuffer(const RingBuffer&) = delete;
+    RingBuffer& operator=(const RingBuffer&) = delete;
 
     /**
      * @brief Destructor for the RingBuffer class
@@ -119,11 +120,13 @@ public:
 private:
     /**
      * @brief The head cursor of the buffer.
+     * The producer (writer) owns the head cursor and updates it when pushing data into the buffer.
      */
     volatile uint16_t head;
 
     /**
      * @brief The tail cursor of the buffer.
+     * The consumer (reader) owns the tail cursor and updates it when popping data from the buffer.
      */
     volatile uint16_t tail;
 
@@ -148,20 +151,19 @@ private:
 //  Inline functions which are performance critical
 //  and are hopefully be inlined by the compiler
 //
-#define RINGBUFFER_OPTIMIZE_O3 __attribute__((optimize("O3"))) // Use -O3 (most optimized) for all time critical methods
-ALWAYS_INLINE RINGBUFFER_OPTIMIZE_O3 bool RingBuffer::empty() const
+ALWAYS_INLINE bool RingBuffer::empty() const
 {
     return head == tail;
 }
 
-ALWAYS_INLINE RINGBUFFER_OPTIMIZE_O3 bool RingBuffer::full() const
+ALWAYS_INLINE bool RingBuffer::full() const
 {
     return ((tail + 1) & bufferSizeMask) == head;
 }
 
-ALWAYS_INLINE RINGBUFFER_OPTIMIZE_O3 int16_t RingBuffer::pop()
+ALWAYS_INLINE int16_t RingBuffer::pop()
 {
-    if (empty())
+    if (head == tail)
     {
         return -1;
     }
@@ -171,7 +173,7 @@ ALWAYS_INLINE RINGBUFFER_OPTIMIZE_O3 int16_t RingBuffer::pop()
     return value;
 }
 
-ALWAYS_INLINE RINGBUFFER_OPTIMIZE_O3 bool RingBuffer::push(const uint8_t byteToPush)
+ALWAYS_INLINE bool RingBuffer::push(const uint8_t byteToPush)
 {
     if (full())
     {
@@ -182,7 +184,5 @@ ALWAYS_INLINE RINGBUFFER_OPTIMIZE_O3 bool RingBuffer::push(const uint8_t byteToP
     tail = (tail + 1) & bufferSizeMask;
     return true;
 }
-
-#undef RINGBUFFER_OPTIMIZE_O3
 
 #endif /* SBLIB_RINGBUFFER_H */
