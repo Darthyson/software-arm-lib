@@ -3,12 +3,10 @@
  * @brief LPC11xx Serial port driver
  *
  * @author Stefan Taferner <stefan.taferner@gmx.at> Copyright (c) 2014
- * @author HoRa  Copyright (c) March 2021
- * @author Darthyson <darth@maptrack.de> Copyright (c) 2021
+ * @author HoRa Copyright (c) March 2021
+ * @author Darthyson <darth@maptrack.de> Copyright (c) 2026
  *
- * @note default serial Tx and Rx-pin definitions moved to config.h
- *
- * @bug No known bugs.
+ * @note default serial Tx and Rx-pin definitions moved to libconfig.h
  *
  * @par
  * This program is free software; you can redistribute it and/or modify
@@ -19,7 +17,7 @@
 #define SBLIB_SERIAL_H_
 
 #include <sblib/buffered_stream.h>
-#include <sblib/interrupt.h>
+#include <sblib/types.h>
 
 /**
  * Callback type for serial line error conditions.

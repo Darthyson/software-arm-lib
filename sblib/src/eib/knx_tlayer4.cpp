@@ -23,6 +23,7 @@
 #include <sblib/eib/knx_tlayer4.h>
 #include <sblib/eib/knx_lpdu.h>
 #include <sblib/eib/knx_npdu.h>
+#include <sblib/interrupt.h>
 #include <sblib/libconfig.h>
 
 #if defined(INCLUDE_SERIAL)
