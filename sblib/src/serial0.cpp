@@ -11,7 +11,16 @@
 #include <sblib/serial.h>
 #include <sblib/digital_pin.h>
 #include <sblib/core.h>
-#include <sblib/libconfig.h>
+// ReSharper disable once CppUnusedIncludeDirective
+#include "sblib/libconfig.h"
+
+
+#if !defined(SERIAL_TX_PIN)
+#   define SERIAL_TX_PIN PIO1_7     //!> Default serial Tx-Pin PIO1.7 (LPC11xx)
+#endif
+#if !defined(SERIAL_RX_PIN)
+#   define SERIAL_RX_PIN PIO1_6     //!> Default serial Rx-Pin PIO1.6 (LPC11xx)
+#endif
 
 Serial serial(SERIAL_RX_PIN, SERIAL_TX_PIN);
 

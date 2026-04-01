@@ -42,11 +42,6 @@ constexpr uint8_t LSR_BI = 0x10; //!< Break interrupt
  * @{
  */
 
-#if !defined(SERIAL_TX_PIN) || !defined(SERIAL_RX_PIN)
-#   define SERIAL_TX_PIN PIO1_7     //!> default serial Tx-Pin PIO1.7 (LPC11xx)
-#   define SERIAL_RX_PIN PIO1_6     //!> default serial Rx-Pin PIO1.6 (LPC11xx)
-#endif
-
 class Serial;
 
 /**
