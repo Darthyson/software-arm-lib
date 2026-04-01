@@ -65,7 +65,7 @@
  * so it won't make it into the release version
  ******************************************************************************/
 
-/** @def DEBUG_BUS enable dumping of state machine interrupt data e.g timer values, mapping of ports in serial.cpp */
+/** @def DEBUG_BUS enable dumping of state machine interrupt data e.g. timer values, mapping of ports in serial.cpp */
 //#define DEBUG_BUS
 
 /** @def DEBUG_BUS_BITLEVEL extension used with DEBUG_BUS to dump interrupt of each bit - use with care due to easy overflow of the trace buffer*/
@@ -98,7 +98,6 @@
 /// \todo following #defines should be moved to this libconfig.h file
 // IAP_EMULATION        /// \todo from platform.h & analog_pin.cpp (used for catch-unit tests of the sblib)
 // DEBUG                /// \todo from utils.h
-// SERIAL_WRITE_DIRECT  /// \todo from serial.cpp
 // BH1750_DEBUG         /// \todo from in bh1750.h
 // LOGGING              /// \todo from in bh1750.h
 

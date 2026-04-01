@@ -139,13 +139,7 @@ uint32_t Serial::write(byte ch)
         return 0;
     }
 
-#if defined(SERIAL_WRITE_DIRECT) && !defined(IAP_EMULATION)
-    // wait until the transmitter hold register is free
-    while (!(LPC_UART->LSR & LSR_THRE))
         ;
-    LPC_UART->THR = ch;
-    return 1;
-#endif
 
     if (writeEmpty() && (LPC_UART->LSR & LSR_THRE))
     {
@@ -178,13 +172,8 @@ void Serial::flush()
     {
         return;
     }
-#ifdef SERIAL_WRITE_DIRECT
-    while ((LPC_UART->LSR & (LSR_THRE | LSR_TEMT)) != (LSR_THRE | LSR_TEMT))
-        ;
-#else
     while (!writeEmpty())
             ;
-#endif
 }
 
 int16_t Serial::read()
