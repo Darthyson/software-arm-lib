@@ -1,5 +1,4 @@
 /**
- * @file serial.h
  * @brief LPC11xx Serial port driver
  *
  * @author Stefan Taferner <stefan.taferner@gmx.at> Copyright (c) 2014
@@ -20,7 +19,7 @@
 #include <sblib/types.h>
 
 /**
- * Callback type for serial line error conditions.
+ * Callback for serial line error conditions.
  *
  * @param lineStatus The UART line status register (LSR) value containing the error flags.
  * @param context    User-provided context pointer.
@@ -51,14 +50,14 @@ constexpr uint8_t LSR_BI = 0x10; //!< Break interrupt
 class Serial;
 
 /**
- * The serial port, also known as UART.
+ * @brief The serial port, also known as UART.
  * This serial port uses PIO1_6 for RXD and PIO1_7 for TXD.
  */
 extern Serial serial;
 
 
 /**
- * The configuration for opening the serial port.
+ * @brief The configuration for opening the serial port.
  */
 enum SerialConfig
 {
@@ -92,56 +91,55 @@ extern "C" void UART_IRQHandler();
 
 
 /**
- * Serial port access. All ARM processors have a serial port, also known as UART.
+ * @brief Serial port access. All ARM processors have a serial port, also known as UART.
  */
 class Serial : public BufferedStream
 {
 public:
     /**
-     * Create a serial port access object.
+     * @brief Create a serial port access object.
      *
-     * @param rxPin - the pin to use for RXD: PIO1_6, PIO2_7, PIO3_1, or PIO3_4
-     * @param txPin - the pin to use for TXD: PIO1_7, PIO2_8, PIO3_0, or PIO3_5
+     * @param rxPin The pin to use for RXD: PIO1_6, PIO2_7, PIO3_1, or PIO3_4
+     * @param txPin The pin to use for TXD: PIO1_7, PIO2_8, PIO3_0, or PIO3_5
      */
     Serial(int rxPin, int txPin);
 
     /**
-     * Set rx pin for serial communication.
+     * @brief Set Rx pin for serial communication.
      *
-     * @param rxPin - the pin to use for RXD: PIO1_6, PIO2_7, PIO3_1, or PIO3_4
+     * @param rxPin The pin to use for RXD: PIO1_6, PIO2_7, PIO3_1, or PIO3_4
      */
     void setRxPin(int rxPin);
 
     /**
-     * Set tx pin for serial communication.
+     * @brief Set Tx pin for serial communication.
      *
-     * @param txPin - the pin to use for TXD: PIO1_7, PIO2_8, PIO3_0, or PIO3_5
+     * @param txPin The pin to use for TXD: PIO1_7, PIO2_8, PIO3_0, or PIO3_5
      */
     void setTxPin(int txPin);
 
     /**
-     * Begin using the serial port with the specified baud rate and 8 data bits,
-     * no parity bit, and 1 stop bit (SERIAL_8N1).
-     *
-     * @param baudRate - the baud rate: 9600, 19200, ...
+     * @brief Begin using the serial port with the specified baud rate.
+     *        - 8 data bits, no parity bit, 1 stop bit
+     * @param baudRate The baud rate: 9600, 19200, ...
      */
     void begin(int baudRate);
 
     /**
-     * Begin using the serial port.
+     * @brief Begin using the serial port.
      *
-     * @param baudRate - the baud rate: 9600, 19200, ...
-     * @param config - the configuration for data bits, parity, stop bits, e.g. SERIAL_8N1
+     * @param baudRate The baud rate: 9600, 19200, ...
+     * @param config   The configuration for data bits, parity, stop bits, e.g. SERIAL_8N1
      */
     void begin(int baudRate, SerialConfig config);
 
     /**
-     * End using the serial port.
+     * @brief End using the serial port.
      */
     void end();
 
     /**
-     * Read a single byte.
+     * @brief Read a single byte.
      *
      * @return The read byte (0..255) or -1 if no byte was received.
      */
@@ -151,35 +149,37 @@ public:
     using Print::write;
 
     /**
-     * Write a single byte.
+     * @brief Write a single byte to the serial port.
      *
-     * @param ch - the byte to write.
-     * @return 1 if the byte was written, 0 if not.
+     * @param ch The byte to write.
+     * @return 1 If the byte was written, 0 if not.
+     *
      */
     uint32_t write(byte ch) override;
 
     /**
-     * Wait until all bytes are written.
+     * @brief Wait until all bytes are written.
      */
     void flush() override;
 
     /**
      * @brief Check if serial port enabled and available for transmission
      *
-     * @return true if serial port is enabled, otherwise false
+     * @return True if serial port is enabled, otherwise false
      */
     explicit operator bool() const { return enabled_; }
 
     /**
      * @brief Check if serial port enabled and available for transmission
      *
-     * @return true if serial port is enabled, otherwise false
+     * @return True if serial port is enabled, otherwise false
      */
     [[nodiscard]] bool enabled() const { return enabled_; }
 
     /**
-     * Set an optional callback for serial line error conditions
-     * (break, framing error, parity error, overrun).
+     * @brief Set an optional callback for serial line error conditions.
+     *
+     * break (BI), framing error (FE), parity error (PE), overrun error (OE)
      *
      * @param callback Function to call on error, or nullptr to disable.
      *                 Receives the line status register value and the user context.
@@ -200,18 +200,18 @@ public:
     void setErrorCallback(SerialErrorCallback callback, void* context = nullptr);
 
 protected:
-    // Allow the interrupt handler to call our protected methods
+    // Allow the UART interrupt handler to call our protected methods
     friend void UART_IRQHandler();
 
     /**
-     * Handle the serial interrupt.
+     * @brief Handle the serial interrupt.
      */
     void interruptHandler();
 
 private:
-    bool enabled_; //!> true if serial port is enabled, otherwise false
-    SerialErrorCallback errorCallback;   //!> optional callback for serial line errors
-    void* errorCallbackContext;          //!> user context for error callback
+    bool enabled_;               //!> True if serial port is enabled, otherwise false
+    SerialErrorCallback errorCallback; //!> Optional callback for serial line errors
+    void* errorCallbackContext;  //!> User context for error callback
 
     /**
      * Handle UART line errors detected in the line status register (LSR).
