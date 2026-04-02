@@ -74,6 +74,29 @@ class Serial;
  */
 extern Serial serial;
 
+/** @brief Common baud rates for the serial port */
+enum SerialBaudRate : uint32_t
+{
+    SERIAL_BAUD_RATE_1200 = 1200,
+    SERIAL_BAUD_RATE_2400 = 2400,
+    SERIAL_BAUD_RATE_4800 = 4800,
+    SERIAL_BAUD_RATE_9600 = 9600,
+    SERIAL_BAUD_RATE_19200 = 19200,
+    SERIAL_BAUD_RATE_28800 = 28800,
+    SERIAL_BAUD_RATE_38400 = 38400,
+    SERIAL_BAUD_RATE_57600 = 57600,
+    SERIAL_BAUD_RATE_76800 = 76800,
+    SERIAL_BAUD_RATE_115200 = 115200,
+    SERIAL_BAUD_RATE_230400 = 230400,
+    SERIAL_BAUD_RATE_460800 = 460800,
+    SERIAL_BAUD_RATE_576000 = 576000,
+    SERIAL_BAUD_RATE_661765 = 661765,
+    SERIAL_BAUD_RATE_750000 = 750000,
+    SERIAL_BAUD_RATE_921600 = 921600,
+    SERIAL_BAUD_RATE_1000000 = 1000000,
+    SERIAL_BAUD_RATE_1500000 = 1500000
+};
+
 /**
  * @brief The configuration for opening the serial port.
  */
@@ -146,15 +169,22 @@ public:
     void begin(uint32_t baudRate);
 
     /**
+     * @brief Begin using the serial port with the specified baud rate.
+     *        - 8 data bits, no parity bit, 1 stop bit
+     * @param baudRate The baud rate @ref SerialBaudRate
+     */
+    void begin(SerialBaudRate baudRate);
+
+    /**
      * @brief Begin using the serial port.
      *
-     * @param baudRate The baud rate: 9600, 19200, ...
+     * @param baudRate The baud rate @ref SerialBaudRate
      * @param config   The configuration for data bits, parity, stop bits, e.g. SERIAL_8N1
      * @param rxTriggerLevel     The trigger level for the Rx FIFO. Default is RxTriggerLevel::CHAR_1 (1 character in the Rx FIFO).
      * @param receiveBufferSize  The size of the Rx software buffer. Default is 128 bytes.
      * @param transmitBufferSize The size of the Tx software buffer. Default is 128 bytes.
      */
-    void begin(uint32_t baudRate, SerialConfig config, RxTriggerLevel rxTriggerLevel = RxTriggerLevel::CHAR_1,
+    void begin(SerialBaudRate baudRate, SerialConfig config, RxTriggerLevel rxTriggerLevel = RxTriggerLevel::CHAR_1,
                RingBuffer::Size receiveBufferSize = RingBuffer::Size::bytes_128,
                RingBuffer::Size transmitBufferSize = RingBuffer::Size::bytes_128);
 

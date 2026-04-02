@@ -8,6 +8,10 @@
 
 #define CATCH_CONFIG_MAIN
 
+#ifdef INCLUDE_SERIAL
+#    include <sblib/serial.h>
+#endif
+
 // ReSharper disable once CppUnusedIncludeDirective
 #include <catch.hpp> // If possible, include catch.hpp as last header
 
@@ -20,3 +24,19 @@ void setup()
 {
     ///\todo check valid userRamData and userEepromData before we even start something REQUIRE(...);
 }
+
+void beforeTestStarts()
+{
+#ifdef INCLUDE_SERIAL
+    // Clear the serial buffers before each test to avoid interference between tests.
+    Serial::testClearSentBytes();
+#endif
+}
+
+void afterTestFinished()
+{
+#ifdef INCLUDE_SERIAL
+    Serial::testGetSentBytes();
+#endif
+}
+

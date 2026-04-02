@@ -116,9 +116,13 @@ void Serial::setTxPin(const uint32_t txPin)
     pinMode(txPin, SERIAL_TXD);
 }
 
-void Serial::begin(const uint32_t baudRate, const SerialConfig config, const RxTriggerLevel rxTriggerLevel,
+void Serial::begin(const SerialBaudRate baudRate, const SerialConfig config, const RxTriggerLevel rxTriggerLevel,
                const RingBuffer::Size receiveBufferSize, const RingBuffer::Size transmitBufferSize)
 {
+    if (enabled())
+    {
+        end();
+    }
     disableInterrupt(UART_IRQn);
 
     // Enable UART clock, GPIO pins must have been already configured (see UM10398 13.2 p.198)!
@@ -213,12 +217,13 @@ void Serial::begin(const uint32_t baudRate, const SerialConfig config, const RxT
     enabled_ = true;
 }
 
-void Serial::begin(const uint32_t baudRate)
+void Serial::begin(uint32_t baudRate)
 {
-    if (enabled())
-    {
-        end();
-    }
+    begin(static_cast<SerialBaudRate>(baudRate), SERIAL_8N1);
+}
+
+void Serial::begin(const SerialBaudRate baudRate)
+{
     begin(baudRate, SERIAL_8N1);
 }
 
