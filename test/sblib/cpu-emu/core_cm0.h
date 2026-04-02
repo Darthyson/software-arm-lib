@@ -159,6 +159,16 @@
     \li to specify the access to peripheral variables.
     \li for automatic generation of peripheral register debug information.
 */
+
+/* On x86/x64 test builds with GCC >= 15, avx512fintrin.h (pulled in via
+ * catch.hpp -> windows.h -> winnt.h -> x86intrin.h) uses __I and __O as
+ * function parameter names.  Pre-include x86intrin.h here so it is parsed
+ * BEFORE __I/__O/__IO are macro-defined below.  The header's include guard
+ * prevents double-inclusion when windows.h later requests it again.        */
+#if defined(__GNUC__) && (defined(__x86_64__) || defined(__i386__))
+#   include <x86intrin.h>
+#endif
+
 #ifdef __cplusplus
   #define   __I     volatile             /*!< Defines 'read only' permissions                 */
 #else
