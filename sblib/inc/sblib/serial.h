@@ -15,27 +15,51 @@
 #ifndef SBLIB_SERIAL_H_
 #define SBLIB_SERIAL_H_
 
-#include <sblib/buffered_stream.h>
-#include <sblib/types.h>
+#include "sblib/stream.h"
+#include "sblib/ring_buffer.h"
+
+#ifdef IAP_EMULATION
+#    include <vector>
+#endif
+
+
+/**
+ * @brief Receiver (Rx) FIFO interrupt trigger level in the UART FIFO Control Register (FCR).
+ */
+enum class RxTriggerLevel : uint8_t
+{
+    CHAR_1, //!< 1 character in the Rx FIFO
+    CHAR_4, //!< 4 characters in the Rx FIFO
+    CHAR_8, //!< 8 characters in the Rx FIFO
+    CHAR_14 //!< 14 characters in the Rx FIFO
+};
+
+/**
+ * @brief Serial line error conditions that can be reported
+ */
+enum SerialError: uint8_t
+{
+    // Same bit values as UART_LSR defined in serial_registers.h
+    SERIAL_OVERRUN_ERROR    = 1 << 1, //!< Overrun error (OE)
+    SERIAL_PARITY_ERROR     = 1 << 2, //!< Parity error (PE)
+    SERIAL_FRAME_ERROR      = 1 << 3, //!< Framing error (FE)
+    SERIAL_BREAK_INDICATION = 1 << 4, //!< Break indication (BI)
+};
 
 /**
  * Callback for serial line error conditions.
  *
- * @param lineStatus The UART line status register (LSR) value containing the error flags.
+ * @param errorFlags Error flags of the faulty byte.
+ * @param faultyByte The byte that caused the error.
  * @param context    User-provided context pointer.
  *
- * LSR error bits:
- * - @c LSR_OE  (0x02) Overrun error
- * - @c LSR_PE  (0x04) Parity error
- * - @c LSR_FE  (0x08) Framing error
- * - @c LSR_BI  (0x10) Break interrupt
+ * errors bits:
+ * - @c SerialError::SERIAL_OVERRUN_ERROR Overrun error (OE)
+ * - @c SerialError::SERIAL_PARITY_ERROR Parity error (PE)
+ * - @c SerialError::SERIAL_FRAME_ERROR Framing error (FE)
+ * - @c SerialError::SERIAL_BREAK_INDICATION Break interrupt (BI)
  */
-typedef void (*SerialErrorCallback)(uint32_t lineStatus, void* context);
-
-constexpr uint8_t LSR_OE = 0x02; //!< Overrun error
-constexpr uint8_t LSR_PE = 0x04; //!< Parity error
-constexpr uint8_t LSR_FE = 0x08; //!< Framing error
-constexpr uint8_t LSR_BI = 0x10; //!< Break interrupt
+typedef void (*SerialErrorCallback)(uint8_t errorFlags, uint8_t faultyByte, void* context);
 
 /** @defgroup SERIAL_11XX CHIP: LPC11xx Serial port driver
  * @ingroup CHIP_11XX_Drivers
@@ -46,15 +70,14 @@ class Serial;
 
 /**
  * @brief The serial port, also known as UART.
- * This serial port uses PIO1_6 for RXD and PIO1_7 for TXD.
+ * This serial port uses by default PIO1_6 for RXD and PIO1_7 for TXD.
  */
 extern Serial serial;
-
 
 /**
  * @brief The configuration for opening the serial port.
  */
-enum SerialConfig
+enum SerialConfig : uint8_t
 {
     SERIAL_5N1 = 0x00, //!< 5 data bits, no parity, 1 stop bit
     SERIAL_6N1 = 0x01, //!< 6 data bits, no parity, 1 stop bit
@@ -88,7 +111,7 @@ extern "C" void UART_IRQHandler();
 /**
  * @brief Serial port access. All ARM processors have a serial port, also known as UART.
  */
-class Serial : public BufferedStream
+class Serial : public Stream
 {
 public:
     /**
@@ -97,36 +120,43 @@ public:
      * @param rxPin The pin to use for RXD: PIO1_6, PIO2_7, PIO3_1, or PIO3_4
      * @param txPin The pin to use for TXD: PIO1_7, PIO2_8, PIO3_0, or PIO3_5
      */
-    Serial(int rxPin, int txPin);
+    Serial(uint32_t rxPin, uint32_t txPin);
+
+    ~Serial() override;
 
     /**
      * @brief Set Rx pin for serial communication.
      *
      * @param rxPin The pin to use for RXD: PIO1_6, PIO2_7, PIO3_1, or PIO3_4
      */
-    void setRxPin(int rxPin);
+    void setRxPin(uint32_t rxPin);
 
     /**
      * @brief Set Tx pin for serial communication.
      *
      * @param txPin The pin to use for TXD: PIO1_7, PIO2_8, PIO3_0, or PIO3_5
      */
-    void setTxPin(int txPin);
+    void setTxPin(uint32_t txPin);
 
     /**
      * @brief Begin using the serial port with the specified baud rate.
      *        - 8 data bits, no parity bit, 1 stop bit
      * @param baudRate The baud rate: 9600, 19200, ...
      */
-    void begin(int baudRate);
+    void begin(uint32_t baudRate);
 
     /**
      * @brief Begin using the serial port.
      *
      * @param baudRate The baud rate: 9600, 19200, ...
      * @param config   The configuration for data bits, parity, stop bits, e.g. SERIAL_8N1
+     * @param rxTriggerLevel     The trigger level for the Rx FIFO. Default is RxTriggerLevel::CHAR_1 (1 character in the Rx FIFO).
+     * @param receiveBufferSize  The size of the Rx software buffer. Default is 128 bytes.
+     * @param transmitBufferSize The size of the Tx software buffer. Default is 128 bytes.
      */
-    void begin(int baudRate, SerialConfig config);
+    void begin(uint32_t baudRate, SerialConfig config, RxTriggerLevel rxTriggerLevel = RxTriggerLevel::CHAR_1,
+               RingBuffer::Size receiveBufferSize = RingBuffer::Size::bytes_128,
+               RingBuffer::Size transmitBufferSize = RingBuffer::Size::bytes_128);
 
     /**
      * @brief End using the serial port.
@@ -140,7 +170,33 @@ public:
      */
     int16_t read() override;
 
-    // Pull in write(str) and write(buf, size) from Print
+    /**
+     * @brief Query the next byte to be read, without reading it.
+     *
+     * @return The next byte (0..255) or -1 if no byte is available
+     *         for reading.
+     */
+    [[nodiscard]] int16_t peek() override;
+
+    /**
+     * @brief Query the number of bytes available for reading.
+     *
+     * @return The number of bytes that are available for reading.
+     */
+    [[nodiscard]] uint32_t available() override;
+
+    /**
+     * @brief Read a single byte with timeout.
+     * 
+     * @note This method is inherited from Stream and can be used with Serial::setTimeout() to specify the timeout duration.
+     */
+    using Stream::timedRead;
+
+    /**
+     * @brief Write a zero-terminated string or number of bytes.
+     * 
+     * @note This method is inherited from Print and can be used to write strings or byte arrays to the serial port.
+     */
     using Print::write;
 
     /**
@@ -148,14 +204,27 @@ public:
      *
      * @param ch The byte to write.
      * @return 1 If the byte was written, 0 if not.
-     *
      */
-    uint32_t write(byte ch) override;
+    uint32_t write(uint8_t ch) override;
+
+    /**
+     * @brief Write a number of bytes to the serial port.
+     *
+     * @param data  The bytes to write.
+     * @param count The number of bytes to write.
+     * @return The number of bytes that were written.
+     */
+    uint32_t write(const uint8_t* data, uint32_t count) override;
 
     /**
      * @brief Wait until all bytes are written.
      */
     void flush() override;
+
+    /**
+     * @brief Clear the internal receive and transfer software buffers.
+     */
+    void clearBuffers();
 
     /**
      * @brief Check if serial port enabled and available for transmission
@@ -177,17 +246,17 @@ public:
      * break (BI), framing error (FE), parity error (PE), overrun error (OE)
      *
      * @param callback Function to call on error, or nullptr to disable.
-     *                 Receives the line status register value and the user context.
+     *                 Receives the errorFlags value and the user context.
      * @param context  Optional user context pointer passed to the callback (default: nullptr).
      *
      * @code
      *      // Example using a lambda to call a member function:
-     *      serial.setErrorCallback([](uint32_t lineStatus, void* ctx) {
+     *      serial.setErrorCallback([](uint8_t errorFlags, void* ctx) {
      *          auto* self = static_cast<MyClass*>(ctx);
-     *          if (lsr & LSR_BI) { self->onBreak(); }
-     *          if (lsr & LSR_FE) { self->onFrameError(); }
-     *          if (lsr & LSR_PE) { self->onParityError(); }
-     *          if (lsr & LSR_OE) { self->onOverrunError(); }
+     *          if (errorFlags & SerialError::SERIAL_OVERRUN_ERROR) { self->onOverrunError(); }
+     *          if (errorFlags & SerialError::SERIAL_BREAK_INDICATION) { self->onBreak(); }
+     *          if (errorFlags & SerialError::SERIAL_FRAME_ERROR) { self->onFrameError(); }
+     *          if (errorFlags & SerialError::SERIAL_PARITY_ERROR) { self->onParityError(); }
      *      }, this);
      * @endcode
      * @warning The callback is called from interrupt context, so it should be kept short.
@@ -201,36 +270,176 @@ protected:
     /**
      * @brief Handle the serial interrupt.
      */
-    void interruptHandler();
+    void uartNewInterruptHandler();
+
+    /**
+     * @brief Handle the serial interrupt.
+     */
+    void uartInterruptHandler();
+
+    uint32_t readCounter = 0; ///\todo delete on release
+    uint32_t writeDirect = 0; ///\todo delete on release
+    uint32_t writeQueued = 0; ///\todo delete on release
+    uint32_t writeTotal = 0;  ///\todo delete on release
+    uint32_t transmitCounter = 0; ///\todo delete on release
+    uint32_t receiveCounter = 0; ///\todo delete on release
+    uint32_t receiveDropped = 0; ///\todo delete on release
+    uint32_t isrCounterRDA = 0; ///\todo delete on release
+    uint32_t isrCounterCTI = 0; ///\todo delete on release
+    uint32_t isrEntries = 0; ///\todo delete on release
+    uint32_t isrRealPendings = 0; ///\todo delete on release
+    uint32_t isrFakePendings = 0; ///\todo delete on release
 
 private:
     bool enabled_;               //!> True if serial port is enabled, otherwise false
+    RingBuffer * receiveBuffer;  //!> Software RingBuffer for the received bytes
+    RingBuffer * transmitBuffer; //!> Software RingBuffer for the bytes to transmit
     SerialErrorCallback errorCallback; //!> Optional callback for serial line errors
     void* errorCallbackContext;  //!> User context for error callback
 
     /**
-     * Handle UART line errors detected in the line status register (LSR).
-     *
-     * Discards the 0x00 byte from the receive buffer on BREAK conditions
-     * and invokes the user error callback (if set) with the relevant error flags.
-     *
-     * @param lineStatus The UART line status register value containing the error bits.
+     * @brief Allocate the internal send and receive SPSC ring buffers with the specified sizes.
+     * 
+     * @param receiveBufferSize The size of the software Rx RingBuffer in bytes.
+     * @param transmitBufferSize The size of the software Tx RingBuffer in bytes.
      */
-    void handleLineError(uint32_t lineStatus)const;
+    void allocateBuffers(RingBuffer::Size receiveBufferSize, RingBuffer::Size transmitBufferSize);
+
+    /**
+     * @brief Deallocate the internal send and receive SPSC ring buffers.
+     */
+    void deallocateBuffers();
+
+    /**
+     * @brief Handle UART line errors detected in the line status register (LSR).
+     *
+     * @param errorFlags The UART line status register value containing the error bits.
+     * @param faultyByte The byte that caused the error.
+     */
+    void handleLineError(uint8_t errorFlags, uint8_t faultyByte) const;
+
+    /********************************************************************************************/
+    /* All methods below are only for unit testing and should never be used in production code. */
+    /* They are only included when IAP_EMULATION is defined.                                    */
+    /********************************************************************************************/
+#ifdef IAP_EMULATION
+public:
+    /****************************************************/
+    /* Public methods below are only for unit testing.  */
+    /****************************************************/
+    /**
+     * @brief Return all bytes captured by testSimulateByteSent() since the last call to testClearSentBytes().
+     *
+     * @return A vector of bytes that were "sent" via write().
+     * @note Must be compiled with IAP_EMULATION defined to have any effect.
+     * @warning This method is only for unit testing and should never be used in production code.
+     */
+    static const std::vector<uint8_t>& testGetSentBytes();
+
+    /**
+     * @brief Clear the captured sent-bytes buffer.
+     *
+     * @note Must be compiled with IAP_EMULATION defined to have any effect.
+     * @warning This method is only for unit testing and should never be used in production code.
+     */
+    static void testClearSentBytes();
+
+    /*****************************************************/
+    /* Private methods below are only for unit testing.  */
+    /*****************************************************/
+private:
+    /**
+     * @brief Simulate that a byte was sent.
+     *
+     * @param sentByte The byte that was sent.
+     * @warning This method is only for unit testing and should never be used in production code.
+     */
+    static void testSimulateByteSent(uint8_t sentByte);
+
+    /**
+     * @brief Simulate initializing the Interrupt Identification Register (IIR) for unit testing.
+     *
+     * @warning This method is only for unit testing and should never be used in production code.
+     */
+    static void testInitIIR();
+    /**
+     * @brief Simulate setting a UART register value for unit testing.
+     *
+     * @param registerToSet The UART register to set.
+     * @param value         The value to write to the UART register.
+     * @note Must be compiled with IAP_EMULATION defined to have any effect.
+     * @warning This method is only for unit testing and should never be used in production code.
+     */
+    static void testSimulateRegisterValue(volatile uint32_t * registerToSet, uint32_t value);
+
+    /**
+     * @brief Simulate changing specific bits in a UART register for unit testing.
+     *
+     * @param registerToChange The UART register to modify.
+     * @param bitMask          The bitMask to write to the UART register.
+     * @param setBits          If true, the bits in bitMask will be set; if false, they will be cleared.
+     * @note Must be compiled with IAP_EMULATION defined to have any effect.
+     * @warning This method is only for unit testing and should never be used in production code.
+     */
+    static void testSimulateRegisterBitsChange(volatile uint32_t * registerToChange, uint32_t bitMask, bool setBits);
+
+    /**
+     * @brief Simulate that a UART interrupt was set/cleared
+     * 
+     * @param interruptID      The ID of the interrupt to set/clear.
+     * @param setPending       If true, the interrupt is set; if false, the interrupt is cleared.
+     * @param registerToSet    The UART register to set. nullptr if no register should be set.
+     * @param valueToSet       The value to write to the UART register.
+     * @param registerToChange The UART register to apply the bit mask to when writing to the UART register.
+     *                         nullptr if no bit mask should be applied.
+     * @param bitMaskToSet     The bit mask to set in the UART register.
+     * @param setBits          If true, the bits in bitMaskToSet will be set; if false, they will be cleared.
+     * @note Must be compiled with IAP_EMULATION defined to have any effect.
+     * @warning This method is only for unit testing and should never be used in production code.
+     */
+    static void testChangeInterruptPending(uint32_t interruptID, bool setPending, volatile uint32_t * registerToSet,
+         uint32_t valueToSet, volatile uint32_t * registerToChange, uint8_t bitMaskToSet, bool setBits);
+
+    /**    
+     * @brief Simulate that a UART interrupt was cleared by the ISR, e.g. the THRE interrupt after the THR is empty set.
+     * 
+     * @param interruptID      The ID of the interrupt to clear.
+     * @param registerToSet    The UART register to set. nullptr if no register should be set.
+     * @param valueToSet       The value to write to the UART register.
+     * @param registerToChange The UART register to apply the bit mask to when writing to the UART register.
+     *                         nullptr if no bit mask should be applied.
+     * @param bitMaskToChange  The bit mask to set in the UART register.
+     * @param setBits          If true, the bits in bitMaskToChange will be set; if false, they will be cleared.
+     * @note Must be compiled with IAP_EMULATION defined to have any effect.
+     * @warning This method is only for unit testing and should never be used in production code.
+     */
+    static void testClearInterrupt(uint32_t interruptID, volatile uint32_t * registerToSet,
+         uint32_t valueToSet, volatile uint32_t * registerToChange, uint8_t bitMaskToChange, bool setBits);
+
+    /**    
+     * @brief Simulate that a UART interrupt is set, e.g. to trigger the ISR for unit testing.
+     * 
+     * @param interruptID      The ID of the interrupt to set.
+     * @param registerToSet    The UART register to set. nullptr if no register should be set.
+     * @param valueToSet       The value to write to the UART register.
+     * @param registerToChange The UART register to apply the bit mask to when writing to the UART register.
+     *                         nullptr if no bit mask should be applied.
+     * @param bitMaskToChange  The bit mask to set in the UART register.
+     * @param setBits          If true, the bits in bitMaskToChange will be set; if false, they will be cleared.
+     * @note Must be compiled with IAP_EMULATION defined to have any effect.
+     * @warning This method is only for unit testing and should never be used in production code.
+     */
+    static void testSetInterruptPending(uint32_t interruptID, volatile uint32_t * registerToSet,
+         uint32_t valueToSet, volatile uint32_t * registerToChange, uint8_t bitMaskToChange, bool setBits);
+
+    /**
+     * @brief Buffer that captures every byte "sent" through testSimulateByteSent().
+     * @note Must be compiled with IAP_EMULATION defined to have any effect.
+     * @warning This buffer is only for unit testing and should never be used in production code.
+     */
+    static std::vector<uint8_t> sentBytesBuffer;
+#endif
 };
-
-
-//
-//  Inline functions
-//
-inline void Serial::begin(const int baudRate)
-{
-    if (enabled())
-    {
-        end();
-    }
-    begin(baudRate, SERIAL_8N1);
-}
 
 /** @}*/
 #endif /* SBLIB_SERIAL_H_ */
