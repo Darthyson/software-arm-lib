@@ -630,9 +630,9 @@ STATE_SWITCH:
                 break;
             }
 
-        // Timeout. Enhance the timer to 9 bit times more in state WAIT_50BT_FOR_NEXT_RX_OR_PENDING_TX_OR_IDLE, so
-        // we can start receiving right away (even if it's a cap event at the same time), but wait some more time
-        // before starting to send.
+            // Timeout. Enhance the timer to 9 bit times more in state WAIT_50BT_FOR_NEXT_RX_OR_PENDING_TX_OR_IDLE, so
+            // we can start receiving right away (even if it's a cap event at the same time), but wait some more time
+            // before starting to send.
             timer.match(timeChannel, BIT_TIMES_DELAY(2) + WAIT_50BIT_FOR_IDLE - PRE_SEND_TIME);
             timer.matchMode(timeChannel, INTERRUPT | RESET);
             state = WAIT_50BT_FOR_NEXT_RX_OR_PENDING_TX_OR_IDLE;
@@ -648,13 +648,12 @@ STATE_SWITCH:
         case Bus::IDLE:
             tb_d(state + 100, ttimer.value(), tb_in);
             DB_TELEGRAM(telRXWaitIdleTime = ttimer.value());
-#pragma GCC diagnostic push
-#pragma GCC diagnostic ignored "-Wimplicit-fallthrough=" // disable fallthrough warnings
             if (!isCaptureEvent) // Not a bus-in signal or Tel in the queue: do nothing
                 break;
 
-        // no break here as we have received a capture event - falling edge of the start bit
-        // we continue with initialization for receiving new telegram
+            // no break here as we have received a capture event - falling edge of the start bit
+            // we continue with initialization for receiving new telegram
+            [[fallthrough]];
 
         // RX process functions
         // initialize the RX process for a new telegram reception.
@@ -680,10 +679,10 @@ STATE_SWITCH:
             sendAck = 0;
             valid = true;
 
-        //todo if timer was  disabled for power saving and enable in this state
-        // no break here as we have received a capture event - falling edge of the start bit
-        // we continue with receiving of start bit.
-#pragma GCC diagnostic pop // reenable fallthrough warnings
+            //todo if timer was  disabled for power saving and enable in this state
+            // no break here as we have received a capture event - falling edge of the start bit
+            // we continue with receiving of start bit.
+            [[fallthrough]];
 
         // A start bit (by cap event) is expected to arrive here. If we have a timeout instead, the
         // transmission of a frame is over.  (after 11 bit plus 2 fill bits :13*104us  + margin (1452us) after start of last char)
@@ -716,15 +715,15 @@ STATE_SWITCH:
                 break;
             }
 
-        //tb_h(state + 100, currentByte, tb_in);
-        // we captured a startbit falling edge trigger
+            //tb_h(state + 100, currentByte, tb_in);
+            // we captured a startbit falling edge trigger
 
-        // we received a start bit interrupt - reset timer for next byte reception,
-        // set byte time incl stop bit to 1144us and use that as ref for all succeeding timings in RX process
-        // any rx-bit start should be within n*104 -7us, n*104 + 33us -> max 1177us
-        // correct the timer start value by the process time (about 13us) we had since the capture event
-        //todo  restart timer by capture in order to have a ref point for the frame timeout
-        // and check the capture event to be in the allowed time window for the start bit
+            // we received a start bit interrupt - reset timer for next byte reception,
+            // set byte time incl stop bit to 1144us and use that as ref for all succeeding timings in RX process
+            // any rx-bit start should be within n*104 -7us, n*104 + 33us -> max 1177us
+            // correct the timer start value by the process time (about 13us) we had since the capture event
+            //todo  restart timer by capture in order to have a ref point for the frame timeout
+            // and check the capture event to be in the allowed time window for the start bit
 
             tv = timer.value();
             cv = timer.capture(captureChannel);
@@ -897,8 +896,8 @@ STATE_SWITCH:
                 goto STATE_SWITCH;
             }
 
-        // timeout -  check if there is anything to send
-        // check if we have max resend for last telegram.
+            // timeout -  check if there is anything to send
+            // check if we have max resend for last telegram.
             if ((repeatTelegram && (sendRetries >= sendRetriesMax || sendBusyRetries >= sendBusyRetriesMax)) ||
                 collisions > COLLISION_RETRY_MAX)
             {
@@ -1039,13 +1038,12 @@ STATE_SWITCH:
             else
             {
                 // Timeout: we have a hardware problem as receiving our sent signal does not work. set error and just continue sending bit0
-#pragma GCC diagnostic push
-#pragma GCC diagnostic ignored "-Wimplicit-fallthrough=" // disable fallthrough warnings
                 tb_t(state + 400, ttimer.value(), tb_in);
                 state = Bus::SEND_BIT_0; //   prepare to send bit 0 immediately
                 tx_error |= TX_PWM_STARTBIT_ERROR;
             }
             // no break, continue with bit0 as we have a timeout here
+            [[fallthrough]];
 
         /* SEND_BIT_0
          *  state is in phase shift with respect to bus timing, entered by match/period interrupt from pwm
@@ -1072,9 +1070,10 @@ STATE_SWITCH:
                     currentByte ^= 0x100;  // toggle/xor parity bit
             }
             bitMask = 1;
-            state = Bus::SEND_BITS_OF_BYTE; // set next state, no break here, continue sending first bit/ LSB
+            state = Bus::SEND_BITS_OF_BYTE; // set next state
             tb_h(SEND_BIT_0 + 200, currentByte, tb_in);
-#pragma GCC diagnostic pop // reenable fallthrough warnings
+            // no break, continue sending first bit (LSB)
+            [[fallthrough]];
 
         /* SEND_BITS_OF_BYTE
          * state is in phase shift, entered by cap event or match/period interrupt from pwm
@@ -1242,13 +1241,11 @@ STATE_SWITCH:
                 timer.match(timeChannel, time - 1); // interrupt at end of low/high bit pulse - next raising edge or after stop bit + 2 wait bits
                 break;
             }
-#pragma GCC diagnostic push
-#pragma GCC diagnostic ignored "-Wimplicit-fallthrough=" // disable fallthrough warnings
             // Stop bit reached.
             state = Bus::SEND_END_OF_BYTE;
             // Intentionally fall through to SEND_END_OF_BYTE.
+            [[fallthrough]];
         }
-#pragma GCC diagnostic pop // reenable fallthrough warnings
 
         // Completed transmission of parity bit and are in the middle of the stop bit transmission.
         // What do we need to do next?
