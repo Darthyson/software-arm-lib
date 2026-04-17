@@ -30,6 +30,7 @@ constexpr uint32_t DisableTransmitInterrupt = InitialEnabledUARTInterrupts & ~IE
 
 Serial::Serial(const uint32_t rxPin, const uint32_t txPin) :
     enabled_(false),
+    savedFIFOcontrolRegister(0),
     receiveBuffer(nullptr),
     transmitBuffer(nullptr),
     errorCallback(nullptr),
@@ -64,17 +65,40 @@ void Serial::deallocateBuffers()
 // ReSharper disable once CppMemberFunctionMayBeConst
 void Serial::clearBuffers()
 {
-    disableInterrupt(UART_IRQn);
+    clearRxBuffer();
+    clearTxBuffer();
+}
+
+// ReSharper disable once CppMemberFunctionMayBeConst
+void Serial::clearRxBuffer()
+{
     if (receiveBuffer != nullptr)
     {
+        disableInterrupt(UART_IRQn);
         receiveBuffer->clear();
+        enableInterrupt(UART_IRQn);
     }
+}
 
+// ReSharper disable once CppMemberFunctionMayBeConst
+void Serial::clearTxBuffer()
+{
     if (transmitBuffer != nullptr)
     {
+        disableInterrupt(UART_IRQn);
         transmitBuffer->clear();
+        enableInterrupt(UART_IRQn);
     }
-    enableInterrupt(UART_IRQn);
+}
+
+void Serial::resetUartRxFifo() const
+{
+    LPC_UART->FCR = savedFIFOcontrolRegister | FCR_RXFIFORES;
+}
+
+void Serial::resetUartTxFifo() const
+{
+    LPC_UART->FCR = savedFIFOcontrolRegister | FCR_TXFIFORES;
 }
 
 int16_t Serial::peek()
@@ -189,7 +213,8 @@ void Serial::begin(const SerialBaudRate baudRate, const SerialConfig config, con
 
     // Set Rx FIFO triggerLevel and enable and reset Tx and Rx FIFOs
     // If no FIFOs are used, the value of `TxFifoSize` must be changed to 1!
-    LPC_UART->FCR = triggerLevelValue | FCR_FIFOEN | FCR_RXFIFORES | FCR_TXFIFORES;
+    savedFIFOcontrolRegister = triggerLevelValue | FCR_FIFOEN;
+    LPC_UART->FCR = savedFIFOcontrolRegister | FCR_RXFIFORES | FCR_TXFIFORES;
     LPC_UART->MCR = MCR_NONE;   // Disable modem controls (DTR, DSR, RTS, CTS)
 
     LPC_UART->IER = InitialEnabledUARTInterrupts;

@@ -252,9 +252,29 @@ public:
     void flush() override;
 
     /**
+     * @brief Clear the UART Rx RingBuffer.
+     */
+    void clearRxBuffer();
+
+    /**
+     * @brief Clear the UART Tx RingBuffer.
+     */
+    void clearTxBuffer();
+
+    /**
      * @brief Clear the internal receive and transfer software buffers.
      */
     void clearBuffers();
+
+    /**
+     * @brief Reset the UART Rx FIFO.
+     */
+    void resetUartRxFifo() const;
+
+    /**
+     * @brief Reset the UART Tx FIFO.
+     */
+    void resetUartTxFifo() const;
 
     /**
      * @brief Check if serial port enabled and available for transmission
@@ -322,6 +342,7 @@ protected:
 
 private:
     bool enabled_;               //!> True if serial port is enabled, otherwise false
+    uint32_t savedFIFOcontrolRegister; //!> Saved FCR value for resetting the UART FIFOs
     RingBuffer * receiveBuffer;  //!> Software RingBuffer for the received bytes
     RingBuffer * transmitBuffer; //!> Software RingBuffer for the bytes to transmit
     SerialErrorCallback errorCallback; //!> Optional callback for serial line errors
