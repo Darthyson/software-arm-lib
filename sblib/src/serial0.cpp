@@ -27,5 +27,4 @@ Serial serial(SERIAL_RX_PIN, SERIAL_TX_PIN);
 extern "C" void UART_IRQHandler()
 {
     serial.uartInterruptHandler();
-//    serial.uartNewInterruptHandler();
 }

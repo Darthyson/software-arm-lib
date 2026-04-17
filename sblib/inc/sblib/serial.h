@@ -320,11 +320,6 @@ protected:
     /**
      * @brief Handle the serial interrupt.
      */
-    void uartNewInterruptHandler();
-
-    /**
-     * @brief Handle the serial interrupt.
-     */
     void uartInterruptHandler();
 
     uint32_t readCounter = 0; ///\todo delete on release
@@ -334,11 +329,15 @@ protected:
     uint32_t transmitCounter = 0; ///\todo delete on release
     uint32_t receiveCounter = 0; ///\todo delete on release
     uint32_t receiveDropped = 0; ///\todo delete on release
-    uint32_t isrCounterRDA = 0; ///\todo delete on release
-    uint32_t isrCounterCTI = 0; ///\todo delete on release
+    uint32_t isrRLScounter = 0; ///\todo delete on release
+    uint32_t isrRDAcounter = 0; ///\todo delete on release
+    uint32_t isrCTIcounter = 0; ///\todo delete on release
+    uint32_t isrTHREcounter = 0; ///\todo delete on release
+    uint32_t isrMODEMCounter = 0; ///\todo delete on release
     uint32_t isrEntries = 0; ///\todo delete on release
     uint32_t isrRealPendings = 0; ///\todo delete on release
     uint32_t isrFakePendings = 0; ///\todo delete on release
+    uint32_t isrIIR = 0; ///\todo delete on release
 
 private:
     bool enabled_;               //!> True if serial port is enabled, otherwise false
@@ -347,6 +346,13 @@ private:
     RingBuffer * transmitBuffer; //!> Software RingBuffer for the bytes to transmit
     SerialErrorCallback errorCallback; //!> Optional callback for serial line errors
     void* errorCallbackContext;  //!> User context for error callback
+
+    /**
+     * @brief Fills the UART Tx FIFO with bytes from the transmit ring buffer.
+     * 
+     * @return The number of bytes written to the UART Tx FIFO, zero if no bytes were written.
+     */
+    uint32_t fillUartTxFifoWithRingBuffer();
 
     /**
      * @brief Allocate the internal send and receive SPSC ring buffers with the specified sizes.

@@ -22,11 +22,17 @@
 #include "sblib/platform.h"
 
 
-constexpr uint8_t TxFifoSize = 16; //!< The Tx FIFO size of the HW. If no FIFOs are used, this must be changed to 1.
+/**
+ * @brief The Tx FIFO size of the HW.
+ * @note If no FIFOs are used, this must be changed to 1.
+ */
+constexpr uint8_t TxFifoSize = 16;
 
-constexpr uint32_t InitialEnabledUARTInterrupts = IER_RBRIE; //!< Initially enable only Rx interrupt
-constexpr uint32_t EnableTransmitInterrupt = InitialEnabledUARTInterrupts | IER_THRIE;
-constexpr uint32_t DisableTransmitInterrupt = InitialEnabledUARTInterrupts & ~IER_THRIE;
+/**
+ * @brief The initial enabled UART interrupts.
+ * This enables Tx, Rx and line status interrupts.
+ */
+constexpr uint32_t InitialEnabledUARTInterrupts = IER_THRIE | IER_RBRIE | IER_RXLIE;
 
 Serial::Serial(const uint32_t rxPin, const uint32_t txPin) :
     enabled_(false),
@@ -211,11 +217,11 @@ void Serial::begin(const SerialBaudRate baudRate, const SerialConfig config, con
             triggerLevelValue = FCR_RXTL_0; // Default to 1 character
     }
 
-    // Set Rx FIFO triggerLevel and enable and reset Tx and Rx FIFOs
+    // Set Rx FIFO triggerLevel, enable and reset Tx and Rx FIFOs
     // If no FIFOs are used, the value of `TxFifoSize` must be changed to 1!
     savedFIFOcontrolRegister = triggerLevelValue | FCR_FIFOEN;
     LPC_UART->FCR = savedFIFOcontrolRegister | FCR_RXFIFORES | FCR_TXFIFORES;
-    LPC_UART->MCR = MCR_NONE;   // Disable modem controls (DTR, DSR, RTS, CTS)
+    LPC_UART->MCR = MCR_NONE; // Disable modem controls (DTR, DSR, RTS, CTS)
 
     LPC_UART->IER = InitialEnabledUARTInterrupts;
 
@@ -242,7 +248,7 @@ void Serial::begin(const SerialBaudRate baudRate, const SerialConfig config, con
     enabled_ = true;
 }
 
-void Serial::begin(uint32_t baudRate)
+void Serial::begin(const uint32_t baudRate)
 {
     begin(static_cast<SerialBaudRate>(baudRate), SERIAL_8N1);
 }
@@ -280,7 +286,6 @@ uint32_t Serial::write(const uint8_t ch)
     {
         return 0; // transmitBuffer was probably deallocated in end()
     }
-    writeTotal++;
 
     while(!transmitBuffer->push(ch))
     {
@@ -288,9 +293,9 @@ uint32_t Serial::write(const uint8_t ch)
         ;
     }
 
-    if (LPC_UART->IER == InitialEnabledUARTInterrupts)
+    if (transmitBuffer->available() == 1)
     {
-        // Tx is disabled
+        // Transmitter hold register is empty (THRE)
         setPendingInterrupt(UART_IRQn);
         writeDirect++;
     }
@@ -298,7 +303,7 @@ uint32_t Serial::write(const uint8_t ch)
     {
         writeQueued++;
     }
-    LPC_UART->IER = EnableTransmitInterrupt; // Make sure Rx and Tx interrupt are enabled;
+    writeTotal++;
 
 #ifdef IAP_EMULATION
     // for unit testing only
@@ -332,9 +337,9 @@ uint32_t Serial::write(const uint8_t* data, const uint32_t count)
 #endif
     }
 
-    if (LPC_UART->IER == InitialEnabledUARTInterrupts)
+    if (transmitBuffer->available() == count)
     {
-        // Tx is disabled
+        // Transmitter hold register is empty (THRE)
         setPendingInterrupt(UART_IRQn);
         writeDirect += written;
     }
@@ -342,7 +347,6 @@ uint32_t Serial::write(const uint8_t* data, const uint32_t count)
     {
         writeQueued+= written;
     }
-    LPC_UART->IER = EnableTransmitInterrupt; // Make sure Rx and Tx interrupt are enabled;
     return written;
 }
 
@@ -373,128 +377,90 @@ int16_t Serial::read()
     return ch;
 }
 
+FORCE_INLINE uint32_t Serial::fillUartTxFifoWithRingBuffer()
+{
+    // If the transmitter hold register (THRE) is empty,
+    // the whole Tx FIFO is also empty
+    // See: https://community.nxp.com/t5/LPCXpresso-IDE/can-t-get-uart-tx-fifo-to-work/td-p/560098
+
+    // Fill the HW Tx FIFO in one go to reduce interrupt frequency
+    uint32_t bytesWrittenToFIFO = 0;
+    for (uint8_t i = 0; i < TxFifoSize; i++)
+    {
+        const int16_t nextByteToSend = transmitBuffer->pop();
+        if (nextByteToSend < 0)
+        {
+            // Nothing to send, break out of for
+            break;
+        }
+        bytesWrittenToFIFO++;
+        LPC_UART->THR = nextByteToSend;
+        transmitCounter++;
+    }
+    return bytesWrittenToFIFO;
+}
+
 void Serial::uartInterruptHandler()
 {
     isrEntries++;
-    // Tx part
-    if (LPC_UART->LSR & LSR_THRE)
-    {
-        // If the transmitter hold register (THRE) is empty,
-        // the whole Tx FIFO is also empty
-        // See: https://community.nxp.com/t5/LPCXpresso-IDE/can-t-get-uart-tx-fifo-to-work/td-p/560098
-
-        // Fill the HW Tx FIFO in one go to reduce interrupt frequency
-        for (uint8_t i = 0; i < TxFifoSize; i++)
-        {
-            const int16_t nextByteToSend = transmitBuffer->pop();
-            if (nextByteToSend < 0)
-            {
-                // Nothing to send, so disable Tx interrupt
-                LPC_UART->IER = InitialEnabledUARTInterrupts;
-                break;
-            }
-
-            LPC_UART->THR = nextByteToSend;
-            transmitCounter++;
-        }
-    }
-
-    // Rx part
-    uint8_t lineStatusRegister = LPC_UART->LSR; // Read line status
-    while (lineStatusRegister & LSR_RDR)
-    {
-        const uint8_t errorFlags = lineStatusRegister & LSR_RX_ERROR_MASK;
-        const uint8_t receivedByte = LPC_UART->RBR; // Read the actual Rx-byte
-        if (errorFlags)
-        {
-            // current byte has an error --> call the error callback if set
-            handleLineError(errorFlags, receivedByte);
-        }
-        receiveCounter++;
-        // Put the byte in the receive buffer even if it has an error
-        if (!receiveBuffer->push(receivedByte))
-        {
-            receiveDropped++; // drop the byte in receiver holding register
-        }
-        lineStatusRegister = LPC_UART->LSR;
-    }
-}
-
-void Serial::uartNewInterruptHandler()
-{
-    isrEntries++;
-    // Read IIR (Interrupt Identification Register)
-    const uint32_t iir = LPC_UART->IIR;
-
-    if (iir & IIR_INTSTATUS) // INTSTATUS is active low: bit0=1 means no interrupt pending
-    {
-        isrFakePendings++;
-        const uint32_t lsr = LPC_UART->LSR;
-        if (!(lsr & LSR_THRE))
-        {
-            //fatalError(); ///\todo remove on release
-        }
-        else
-        {
-            // Check if there is more data to send
-            const int16_t nextByteToSend = transmitBuffer->pop();
-            if (nextByteToSend > -1)
-            {
-                LPC_UART->THR = nextByteToSend;
-                transmitCounter++;
-            }
-            else
-            {
-                fatalError(); ///\todo remove on release
-            }
-        }
-    }
+    bool transmitterHoldingIsEmpty = false;
 
     // Read IIR in a loop until there are no more pending interrupts
     // E.g. multiple bytes in Rx FIFO or a Tx byte was sent and the THRE interrupt is still pending
-    if (!(iir & IIR_INTSTATUS)) // INTSTATUS is active low: bit0=1 means no interrupt pending
+    uint32_t iir = 0;
+    while (!((iir = LPC_UART->IIR) & IIR_INTSTATUS)) // INTSTATUS is active low: bit0=1 means no interrupt pending
     {
         isrRealPendings++;
+        isrIIR = iir;
+        uint32_t receivedByte = 0;
+        uint32_t errorFlags = 0;
+        uint32_t lineStatusRegister = 0;
+
         switch (iir & IIR_INTID_MASK)
         {
              // Line status/error interrupt
              // Reset by reading the Line Status Register (LSR)
             case IIR_INTID_RLS:
-            {
-                fatalError(); // not implemented
+                isrRLScounter++;
+                lineStatusRegister = LPC_UART->LSR; // Resets interrupt IIR_INTID_RLS
+                receivedByte = LPC_UART->RBR; // clear the break 0x00 byte
+                errorFlags = lineStatusRegister & LSR_RX_ERROR_MASK;
+                handleLineError(errorFlags, receivedByte);
+                transmitterHoldingIsEmpty = lineStatusRegister & LSR_THRE;
                 break;
-            }
 
             // Rx data available or trigger level reached in FIFO
             // Reset by reading the Receiver Buffer Register (RBR) or FIFO drops below trigger level.
             case IIR_INTID_RDA:
-                isrCounterRDA++;
+                isrRDAcounter++;
                 [[fallthrough]]; // Intentional fall-through to CTI: both cases require draining all bytes from the Rx FIFO.
 
             // Character timeout interrupt, indicates that the Rx FIFO has not received a new byte within
             // a certain time after the last byte was received.
             // Reset by reading the Receiver Buffer Register (RBR)
             case IIR_INTID_CTI:
-            {
-                isrCounterCTI++;
-                uint32_t lineStatusRegister = LPC_UART->LSR;
-                while(lineStatusRegister & LSR_RDR)
+                isrCTIcounter++;
+                lineStatusRegister = LPC_UART->LSR;
+                if (lineStatusRegister & LSR_RDR)
                 {
-                    const uint8_t receivedByte = LPC_UART->RBR;
-                    if (const uint8_t errorFlags = lineStatusRegister & LSR_RX_ERROR_MASK)
+                    errorFlags = lineStatusRegister & LSR_RX_ERROR_MASK;
+                    receivedByte = LPC_UART->RBR; // Resets IIR_INTID_RDA and IIR_INTID_CTI
+                    if (errorFlags)
                     {
-                        // current byte has an error, so call the error callback if set
                         handleLineError(errorFlags, receivedByte);
                     }
-                    if (!receiveBuffer->push(receivedByte)) // Put the byte in the receive buffer even if it has an error, so the caller can decide what to do with it (e.g. discard or return with an error flag)
+
+                    if (!receiveBuffer->push(receivedByte))
                     {
                         receiveDropped++;
                     }
-                    receiveCounter++;
-                    lineStatusRegister = LPC_UART->LSR;
+                    else
+                    {
+                        receiveCounter++;
+                    }
                 }
+                transmitterHoldingIsEmpty = lineStatusRegister & LSR_THRE;
                 break;
-            }
 
             // Transmitter Holding Register Empty (THRE) interrupt
             // Indicates that the UART is ready to accept a new byte for transmission
@@ -502,17 +468,8 @@ void Serial::uartNewInterruptHandler()
             //          or writing to the Transmitter Holding Register (THR)
             case IIR_INTID_THRE:
             {
-                // Check if there is more data to send
-                const int16_t nextByteToSend = transmitBuffer->pop();
-                if (nextByteToSend > -1)
-                {
-                    LPC_UART->THR = nextByteToSend;
-                    transmitCounter++;
-                }
-                else
-                {
-                    //LPC_UART->IER &= ~IER_THRIE; // No more data to send, disable Tx interrupt
-                }
+                isrTHREcounter++;
+                transmitterHoldingIsEmpty = fillUartTxFifoWithRingBuffer() == 0; // Check if there is more data to send
                 // for unit testing only, simulates that the THRE interrupt was cleared by the ISR
 #               ifdef IAP_EMULATION
                     testClearInterrupt(IIR_INTID_THRE, &LPC_UART->THR, 0, &LPC_UART->LSR, LSR_THRE, false);
@@ -523,8 +480,8 @@ void Serial::uartNewInterruptHandler()
             // Modem interrupt, e.g. CTS, DSR, RI or DCD change
             // Reset by reading the Modem Status Register (MSR)
             case IIR_INTID_MODEM:
+                isrMODEMCounter++;
                 LPC_UART->MSR;
-                fatalError(); ///todo delete on release
                 break;
 
             // We should never get here, because all possible INTID values are handled above.
@@ -534,7 +491,23 @@ void Serial::uartNewInterruptHandler()
                 fatalError();
                 break;
         }
+
     }
+
+    if (!transmitterHoldingIsEmpty)
+    {
+        // No UART HW interrupt set transmitterHoldingIsEmpty, but this may be
+        // a software-triggered ISR entry from Serial::write(). Check LSR directly.
+        if (!(LPC_UART->LSR & LSR_THRE))
+        {
+            return;
+        }
+    }
+
+    isrFakePendings++;
+
+    // Check if there is data to send
+    fillUartTxFifoWithRingBuffer();
 }
 
 void Serial::setErrorCallback(const SerialErrorCallback callback, void* context)
@@ -545,10 +518,12 @@ void Serial::setErrorCallback(const SerialErrorCallback callback, void* context)
 
 void Serial::handleLineError(const uint8_t errorFlags, const uint8_t faultyByte) const
 {
-    if (errorCallback)
+    if (errorCallback == nullptr)
     {
-        errorCallback(errorFlags, faultyByte, errorCallbackContext);
+        return;
     }
+
+    errorCallback(errorFlags, faultyByte, errorCallbackContext);
 }
 
 /********************************************************************************************/
