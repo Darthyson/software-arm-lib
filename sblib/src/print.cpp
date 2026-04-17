@@ -228,7 +228,8 @@ uint32_t Print::print(const char* str, const float value, const uint8_t precisio
 
 uint32_t Print::println()
 {
-    return write('\r') + write('\n');
+    constexpr uint8_t buffer[2] = { '\r', '\n' };
+    return write(buffer, 2);
 }
 
 uint32_t Print::write(const uint8_t* data, uint32_t count)
