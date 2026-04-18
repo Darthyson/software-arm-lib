@@ -270,8 +270,8 @@ void Serial::end()
 
     while (!(LPC_UART->LSR & LSR_TEMT))
     {
-        // ReSharper disable once CppRedundantEmptyStatement
-        ; // Wait for Tx transmitter shift register to be empty, before killing the clock
+        // Wait for Tx transmitter shift register to be empty, before killing the clock
+        waitForInterrupt();
     }
 
     disableInterrupt(UART_IRQn);
@@ -290,8 +290,8 @@ uint32_t Serial::write(const uint8_t ch)
 
     while(!transmitBuffer->push(ch))
     {
-        // ReSharper disable once CppRedundantEmptyStatement
-        ;
+        // Wait until there is space in the transmit buffer to push the byte
+        waitForInterrupt();
     }
 
     if (transmitBuffer->available() == 1)
@@ -326,8 +326,8 @@ uint32_t Serial::write(const uint8_t* data, const uint32_t count)
     {
         while (!transmitBuffer->push(data[i]))
         {
-            // ReSharper disable once CppRedundantEmptyStatement
-            ;
+            // Wait until there is space in the transmit buffer
+            waitForInterrupt();
         }
         written++;
 
@@ -360,8 +360,8 @@ void Serial::flush()
 
     while (!transmitBuffer->empty())
     {
-        // ReSharper disable once CppRedundantEmptyStatement
-        ; // Wait until all bytes in the SW transmit buffer have been written into the UART Tx FIFO
+        // Wait until all bytes in the SW transmit buffer have been written into the UART Tx FIFO
+        waitForInterrupt();
     }
 }
 
@@ -370,8 +370,8 @@ void Serial::sendBreak(const uint32_t durationMicroseconds)
     flush();
     while (!(LPC_UART->LSR & LSR_TEMT))
     {
-        // ReSharper disable once CppRedundantEmptyStatement
-        ; // Wait for Tx transmitter shift register to be empty, before sending the break signal
+        // Wait for Tx transmitter shift register to be empty, before sending the break signal
+        waitForInterrupt();
     }
 
     LPC_UART->LCR |= LCR_BC;
