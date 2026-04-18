@@ -277,6 +277,18 @@ public:
     void resetUartTxFifo() const;
 
     /**
+     * @brief Send a BREAK condition on the Tx line.
+     *
+     * Forces the Tx output LOW for the specified duration.
+     * Any pending transmission is flushed before the BREAK is sent.
+     *
+     * @param durationMicroseconds Duration of the BREAK in microseconds.
+     *        Must be between @ref MIN_DELAY_MICROSECONDS and @ref MAX_DELAY_MICROSECONDS.
+     * @note This method is blocking and will wait until the BREAK condition has been sent for the specified duration.
+     */
+    void sendBreak(uint32_t durationMicroseconds);
+
+    /**
      * @brief Check if serial port enabled and available for transmission
      *
      * @return True if serial port is enabled, otherwise false

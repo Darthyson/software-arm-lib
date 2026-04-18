@@ -20,6 +20,7 @@
 #include "sblib/digital_pin.h"
 #include "sblib/interrupt.h"
 #include "sblib/platform.h"
+#include "sblib/timer.h"
 
 
 /**
@@ -362,6 +363,20 @@ void Serial::flush()
         // ReSharper disable once CppRedundantEmptyStatement
         ; // Wait until all bytes in the SW transmit buffer have been written into the UART Tx FIFO
     }
+}
+
+void Serial::sendBreak(const uint32_t durationMicroseconds)
+{
+    flush();
+    while (!(LPC_UART->LSR & LSR_TEMT))
+    {
+        // ReSharper disable once CppRedundantEmptyStatement
+        ; // Wait for Tx transmitter shift register to be empty, before sending the break signal
+    }
+
+    LPC_UART->LCR |= LCR_BC;
+    delayMicroseconds(durationMicroseconds);
+    LPC_UART->LCR &= ~LCR_BC;
 }
 
 int16_t Serial::read()
