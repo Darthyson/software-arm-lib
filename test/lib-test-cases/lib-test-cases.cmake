@@ -19,6 +19,7 @@ set(SBLIB_LIB_TEST_CASES_SRC
         src/test_platform.cpp
         src/test_print.cpp
         src/test_ring_buffer.cpp
+        src/test_soft_uart.cpp
         src/test_stream.cpp
         src/test_buffered_stream.cpp
         src/test_prot_apci.cpp

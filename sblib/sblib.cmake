@@ -27,6 +27,7 @@ set(SBLIB_CORE_SRC
         inc/sblib/ring_buffer.h
         inc/sblib/serial_registers.h
         inc/sblib/serial.h
+        inc/sblib/soft_uart.h
         inc/sblib/spi.h
         inc/sblib/stream.h
         inc/sblib/timeout.h
@@ -60,6 +61,7 @@ set(SBLIB_CORE_SRC
         src/ring_buffer.cpp
         src/serial.cpp
         src/serial0.cpp
+        src/soft_uart.cpp
         src/spi.cpp
         src/stream.cpp
         src/timer.cpp
