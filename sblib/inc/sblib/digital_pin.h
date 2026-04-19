@@ -10,10 +10,10 @@
 #ifndef SBLIB_DIGITAL_PIN_H_
 #define SBLIB_DIGITAL_PIN_H_
 
-#include <cstdint>
 #include <sblib/ioports.h>
 #include <sblib/platform.h>
 #include <sblib/types.h>
+#include <cstdint>
 
 
 /**
@@ -153,6 +153,10 @@ enum PinMode : uint32_t
     SPI_SSEL = PinModeFunc(PF_SSEL)
 };
 
+/**
+ * @brief Interrupt modes for I/O pins.
+ * @details These are used for pinInterruptMode() to configure the interrupt of a pin.
+ */
 enum PinInterruptMode : uint16_t
 {
     /**
@@ -213,10 +217,11 @@ void pinDirection(uint32_t pin, uint32_t dir);
 /**
  * Configure the interrupt for the I/O port
  *
- * @param pin   The pin to configure: PIO0_0, PIO0_1, ... @ref PortPin
- * @param mode  The interrupt mode. Use a combination of @ref PinInterruptMode values
+ * @param pin            The pin to configure: PIO0_0, PIO0_1, ... @ref PortPin
+ * @param interruptMode  The interrupt mode. Use a combination of @ref PinInterruptMode values
+ * @param pinModeConfig  The pin configuration for the pin. Use a combination of @ref PinMode values.
  */
-void pinInterruptMode(uint32_t pin,  uint16_t mode);
+void pinInterruptMode(uint32_t pin,  uint16_t interruptMode, uint32_t pinModeConfig = INPUT);
 
 /**
  * Enable the interrupt for this I/O pin

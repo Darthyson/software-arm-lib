@@ -151,34 +151,34 @@ void pinDirection(const uint32_t pin, const uint32_t dir)
         port->DIR &= ~mask;
 }
 
-void pinInterruptMode(const uint32_t pin, const uint16_t mode)
+void pinInterruptMode(const uint32_t pin, const uint16_t interruptMode, const uint32_t pinModeConfig)
 {
     LPC_GPIO_TypeDef* port = gpioPorts[digitalPinToPort(pin)];
     const uint32_t mask = digitalPinToBitMask(pin);
 
-    /* Configure the pin as input */
-    pinMode(pin, INPUT);
+    // Ensure that the pin is at least configured as INPUT, otherwise the interrupt configuration will not work.
+    pinMode(pin, pinModeConfig | INPUT);
 
     /* Set the level/edge configuration */
-    if (mode & 0x0100)
+    if (interruptMode & 0x0100)
         port->IS |= mask;
     else
         port->IS &= ~mask;
 
     /* Set the both edge configuration */
-    if (mode & 0x0010)
+    if (interruptMode & 0x0010)
         port->IBE |= mask;
     else
         port->IBE &= ~mask;
 
     /* Set the edge/level type configuration */
-    if (mode & 0x0001)
+    if (interruptMode & 0x0001)
         port->IEV |= mask;
     else
         port->IEV &= ~mask;
 
     /* Enable the interrupt for this pin */
-    if (mode & 0x1000)
+    if (interruptMode & 0x1000)
         port->IE |= mask;
     else
         port->IE &= ~mask;
