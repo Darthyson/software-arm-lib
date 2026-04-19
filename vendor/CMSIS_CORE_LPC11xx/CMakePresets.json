@@ -1,0 +1,176 @@
+{
+    "version": 8,
+    "cmakeMinimumRequired": {
+        "major": 3,
+        "minor": 28,
+        "patch": 3
+    },
+    "configurePresets": [
+        {
+            "name": "arm",
+            "displayName": "ARM Target",
+            "hidden": false,
+            "generator": "Ninja Multi-Config",
+            "binaryDir": "${sourceDir}/cmake-build/${presetName}",
+            "toolchainFile": "${sourceDir}/../software-arm-lib/cmake/toolchains/arm-none-eabi_mcuxpresso.cmake",
+            "cacheVariables": {
+                "CMSIS_ARCHITECTURE": "arm"
+            }
+        },
+        {
+            "name": "x86",
+            "displayName": "x86 Target",
+            "description": "Sets architecture x86, build directory and Ninja Multi Config generator",
+            "generator": "Ninja Multi-Config",
+            "binaryDir": "${sourceDir}/cmake-build/${presetName}",
+            "hidden": false,
+            "cacheVariables": {
+                "CMSIS_ARCHITECTURE": "x86"
+            }
+        },
+        {
+            "name": "x64",
+            "displayName": "x64 Target",
+            "description": "Sets architecture x64, build directory and Ninja Multi Config generator",
+            "generator": "Ninja Multi-Config",
+            "binaryDir": "${sourceDir}/cmake-build/${presetName}",
+            "hidden": false,
+            "cacheVariables": {
+                "CMSIS_ARCHITECTURE": "x64"
+            }
+        }
+    ],
+    "buildPresets": [
+        {
+            "name": "debug-arm",
+            "configurePreset": "arm",
+            "configuration": "Debug",
+            "displayName": "ARM Target Debug Build",
+            "description": "Builds all targets in Debug configuration",
+            "hidden": false,
+            "verbose": true,
+            "targets": [
+                "CMSIS_CORE_LPC11xx_arm"
+            ]
+        },
+        {
+            "name": "release-arm",
+            "configurePreset": "arm",
+            "configuration": "Release",
+            "displayName": "ARM Target Release Build", 
+            "description": "Builds all targets in Release configuration",          
+            "hidden": false,
+            "verbose": true,
+            "targets": [
+                "CMSIS_CORE_LPC11xx_arm"
+            ]
+        },
+        {
+            "name": "debug-x86",
+            "configurePreset": "x86",
+            "configuration": "Debug",
+            "displayName": "x86 Target Debug Build",
+            "description": "Build x86 target in Debug configuration",
+            "hidden": false,
+            "verbose": true,
+            "targets": [
+                "CMSIS_CORE_LPC11xx_x86"
+            ]
+        },
+        {
+            "name": "release-x86",
+            "configurePreset": "x86",
+            "configuration": "Release",
+            "displayName": "x86 Target Release Build",
+            "description": "Build x86 target in Release configuration",
+            "hidden": false,
+            "verbose": true,
+            "targets": [
+                "CMSIS_CORE_LPC11xx_x86"
+            ]
+        },
+        {
+            "name": "debug-x64",
+            "configurePreset": "x64",
+            "configuration": "Debug",
+            "displayName": "x64 Target Debug Build",
+            "description": "Build x64 target in Debug configuration",
+            "hidden": false,
+            "verbose": true,
+            "targets": [
+                "CMSIS_CORE_LPC11xx_x64"
+            ]
+        },
+        {
+            "name": "release-x64",
+            "configurePreset": "x64",
+            "configuration": "Release",
+            "displayName": "x64 Target Release Build",
+            "description": "Build x64 target in Release configuration",
+            "hidden": false,
+            "verbose": true,
+            "targets": [
+                "CMSIS_CORE_LPC11xx_x64"
+            ]
+        }
+    ],
+    "workflowPresets": [
+        {
+            "name": "build-arm-all",
+            "description": "Build ARM target in Debug and Release configurations",
+            "displayName": "Build ARM (all configs)",
+            "steps": [
+                {
+                    "type": "configure",
+                    "name": "arm"
+                },
+                {
+                    "type": "build",
+                    "name": "release-arm"
+                },
+                {
+                    "type": "build",
+                    "name": "debug-arm"
+                }
+            ]
+        },
+        {
+            "name": "build-x64-all",
+            "description": "Build x64 target in Debug and Release configurations",
+            "displayName": "Build x64 (all configs)",
+            "steps": [
+                {
+                    "type": "configure",
+                    "name": "x64"
+                },
+                {
+                    "type": "build",
+                    "name": "release-x64"
+                },
+                {
+                    "type": "build",
+                    "name": "debug-x64"
+                }
+            ]
+        },
+        {
+            "name": "build-x86-all",
+            "description": "Build x86 target in Debug and Release configurations",
+            "displayName": "Build x86 (all configs)",
+            "steps": [
+                {
+                    "type": "configure",
+                    "name": "x86"
+                },
+                {
+                    "type": "build",
+                    "name": "release-x86"
+                },
+                {
+                    "type": "build",
+                    "name": "debug-x86"
+                }
+            ]
+        }
+    ]
+}
