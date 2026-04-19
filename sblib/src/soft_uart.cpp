@@ -283,11 +283,18 @@ void SoftUART::startTx()
     txState_ = UartState::StartBit;
     txBitIndex_ = 0;
 
-    // Send the start bit immediately (line goes low)
+    // Ensure the timer is running BEFORE driving the start bit so that
+    // bitTimer_.value() returns a live counter value.  When both Tx and Rx
+    // were idle the timer is stopped; reading 'now' from a frozen counter
+    // and only calling start() afterwards extends the start bit by the
+    // setup overhead – enough to corrupt the byte at higher baud rates
+    // (e.g. 38400). start() is idempotent if the timer is already running.
+    bitTimer_.start();
+
+    // Send the start bit (line goes low)
     digitalWrite(txPin_, false);
 
     // Schedule the first TX interrupt one bit period from now on MAT2.
-    // The timer may already be running for RX.
     const uint32_t now = bitTimer_.value();
     bitTimer_.match(TIMER_MATCH_MAT2, (now + bitPeriodTicks_) & timerMask_);
 
@@ -298,7 +305,6 @@ void SoftUART::startTx()
     // to ~1-2 µs instead of the full bit period – corrupting the entire byte.
     bitTimer_.resetFlag(TIMER_MATCH_MAT2);
     bitTimer_.matchMode(TIMER_MATCH_MAT2, INTERRUPT);
-    bitTimer_.start(); // idempotent if already running for RX
 }
 
 void SoftUART::handleTxBit()
