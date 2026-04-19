@@ -16,18 +16,6 @@
 #include "sblib/platform.h"
 
 
-/**
- * @brief Map a GPIO port number to its corresponding IRQn.
- * 
- * @param port GPIO port number e.g., PIO0, PIO1, PIO2, PIO3
- * @return The corresponding IRQn_Type value.
- */
-static IRQn_Type gpioIRQn(const Port port)
-{
-    ///\todo check if we can get rid of this method
-    return static_cast<IRQn_Type>(EINT0_IRQn - static_cast<int>(port));
-}
-
 SoftUART::SoftUART(const uint32_t rxPin, const uint32_t txPin, Timer& timer,
                    const BaudRate baudRate, const uint32_t systemClock)
     : bitTimer_(timer),
@@ -45,9 +33,7 @@ SoftUART::SoftUART(const uint32_t rxPin, const uint32_t txPin, Timer& timer,
       txBitIndex_(0),
       txShiftReg_(0),
       rxBitIndex_(0),
-      rxShiftReg_(0),
-      rxPort_(digitalPinToPort(rxPin_)),
-      rxPinMask_(0)
+      rxShiftReg_(0)
 {
 }
 
@@ -102,7 +88,7 @@ void SoftUART::begin()
     bitTimer_.setIRQPriority(InterruptPriority::low);
     bitTimer_.interrupts();
 
-    setInterruptPriority(gpioIRQn(rxPort_), InterruptPriority::low);
+    setInterruptPriority(digitalPinToIRQn(rxPin_), InterruptPriority::low);
 
     // Clear buffers
     receiveBuffer_.clear();
@@ -111,9 +97,6 @@ void SoftUART::begin()
     // Init state machines
     txState_ = UartState::Idle;
     rxState_ = UartState::Idle;
-
-    // Register this instance for the GPIO port ISR
-    rxPinMask_ = digitalPinToBitMask(rxPin_);
 
     // Explicitly configure the Rx pin for falling-edge GPIO interrupt
     pinInterruptMode(rxPin_, INTERRUPT_EDGE_FALLING, rxPinModeConfig);
@@ -132,9 +115,6 @@ void SoftUART::end()
 
     flush();
     disableRxInterrupt();
-
-    // Unregister this instance from the GPIO port ISR
-    rxPinMask_ = 0;
 
     bitTimer_.matchMode(TIMER_MATCH_MAT2, DISABLE);
     bitTimer_.matchMode(TIMER_MATCH_MAT3, DISABLE);
@@ -227,12 +207,12 @@ void SoftUART::enableRxInterrupt() const
     // latches the raw interrupt status even when the pin interrupt is
     // disabled. Without clearing, re-enabling would immediately trigger
     // a spurious start-bit detection.
-    gpioPorts[rxPort_]->IC = mask;
-    clearPendingInterrupt(gpioIRQn(rxPort_));
+    gpioPorts[digitalPinToPort(rxPin_)]->IC = mask;
+    clearPendingInterrupt(digitalPinToIRQn(rxPin_));
 
     // Re-enable the Rx pin interrupt (edge config was already set in begin())
     pinEnableInterrupt(rxPin_);
-    enableInterrupt(gpioIRQn(rxPort_));
+    enableInterrupt(digitalPinToIRQn(rxPin_));
 }
 
 void SoftUART::disableRxInterrupt() const
@@ -442,14 +422,15 @@ void SoftUART::handleRxBit()
 
 void SoftUART::handleGpioInterrupt()
 {
+    const uint32_t rxPinMask = digitalPinToBitMask(rxPin_);
     //Check if the interrupt was caused by our Rx pin
-    if (!(gpioPorts[rxPort_]->MIS & rxPinMask_))
+    if (!(gpioPorts[digitalPinToPort(rxPin_)]->MIS & rxPinMask))
     {
         return;
     }
 
     // Clear the interrupt flag for this pin (IC is write-only, write-1-to-clear)
-    gpioPorts[rxPort_]->IC = rxPinMask_;
+    gpioPorts[digitalPinToPort(rxPin_)]->IC = rxPinMask;
     rxStartBitDetected();
 }
 

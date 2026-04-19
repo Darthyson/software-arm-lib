@@ -52,19 +52,23 @@
  *     SoftUART softSerial(PIO0_3, PIO0_6, timer16_0, SoftUART::BaudRate::Baud19200, SystemCoreClock);
  *
  *     // User must provide the timer and GPIO port ISR handlers e.g.:
- *     extern "C" void TIMER16_0_IRQHandler() {
- *         SoftUART::handleTimerInterruptStatic(TIMER16_0);
+ *     extern "C" void TIMER16_0_IRQHandler()
+ *     {
+ *         softUART.timerInterruptHandler();
  *     }
- *     extern "C" void PIOINT0_IRQHandler() {
- *         SoftUART::handleGpioInterruptStatic(PIO0);
+ *     extern "C" void PIOINT1_IRQHandler()
+ *     {
+ *         softUART.handleGpioInterrupt();
  *     }
  *
- *     void setup() {
+ *     void setup()
+ *     {
  *         softSerial.begin();
  *         softSerial.println("Hello SoftUART!");
  *     }
  *
- *     void loop() {
+ *     void loop()
+ *     {
  *         uint16_t byteReceived = softSerial.read();
  *         if (byteReceived >= 0x00)
  *         {
@@ -276,9 +280,6 @@ private:
 
     volatile uint8_t rxBitIndex_; //!< Current Rx bit position (0..7)
     volatile uint8_t rxShiftReg_; //!< Rx shift register (byte being assembled)
-
-    const Port rxPort_;  //!< The port of the Rx GPIO pin
-    uint32_t rxPinMask_; //!< Bit mask for the Rx pin on its GPIO port
 
     /**
      * @brief Enable the GPIO falling-edge interrupt on the Rx pin for
