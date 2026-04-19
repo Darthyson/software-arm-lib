@@ -8,7 +8,7 @@ set(CMAKE_C_STANDARD_REQUIRED ON)
 set(CMAKE_CXX_STANDARD 17)
 set(CMAKE_CXX_STANDARD_REQUIRED ON)
 
-set(SBLPC_DIR ${CMAKE_CURRENT_SOURCE_DIR}/../../../CMSIS_CORE_LPC11xx CACHE PATH "Path to the 'CMSIS_CORE_LPC11xx' directory")
+set(SBLPC_DIR ${CMAKE_CURRENT_SOURCE_DIR}/../../vendor/CMSIS_CORE_LPC11xx CACHE PATH "Path to the 'CMSIS_CORE_LPC11xx' directory")
 set(SBLIB_PATH "${CMAKE_SOURCE_DIR}/../../sblib" CACHE PATH "Path to the sblib")
 
 # Toolchain file is set in CMakePresets.json or on command line
