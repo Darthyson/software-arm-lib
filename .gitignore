@@ -42,6 +42,24 @@ Flashstart*
 # Gradle cache files
 .gradle
 
+#######################################################
+# Covers VS Code
+# fetched 19.4.2026
+# https://github.com/github/gitignore/blob/main/Global/VisualStudioCode.gitignore
+
+.vscode/*
+!.vscode/settings.json
+!.vscode/tasks.json
+!.vscode/launch.json
+!.vscode/extensions.json
+!.vscode/*.code-snippets
+!*.code-workspace
+
+# Built Visual Studio Code Extensions
+*.vsix
+
+#######################################################
+
 # JetBrains version control system settings
 **/.idea/vcs.xml
 
