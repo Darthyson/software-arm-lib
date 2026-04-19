@@ -16,8 +16,8 @@
 **The used timer should have the highest priority of the used interrupts in the lib and the app**
 
 As the priority is set at reset to the highest level for all peripheral interrupt sources, any used peripheral interrupt should be set to
-a lower level by a call of the CMSIS `void NVIC_SetPriority (IRQn_t IRQn, uint32_t priority)` function with respective IRQn
-and a prio >0 (0 is the highest level for periph.).
+a lower level by a call of the `void setInterruptPriority(IRQn_Type interruptType, InterruptPriority newPriority)` function with respective IRQn
+and a priority of `InterruptPriority::high, InterruptPriority::medium` or `InterruptPriority::lowest`.
 
 Support for debugging and dumping of data on the serial line - configuration is in the `libconfig.h` header
 and serial support need to be started with a high baud rate (recommended 1.5Mb) in the app module. Debugging usages timer32_0 for time measurement on bit/byte level

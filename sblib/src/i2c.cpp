@@ -37,6 +37,8 @@
 
 #include <sblib/i2c.h>
 
+#include "sblib/interrupt.h"
+
 
 /*****************************************************************************
  * Control funtions for LPCOpen I2C functions
@@ -91,7 +93,7 @@ static void i2c_set_mode(I2C_ID_T id, int polling)
         Chip_I2C_SetMasterEventHandler(id, Chip_I2C_EventHandler);
         NVIC_EnableIRQ(I2C_IRQn);
         // set I2C priority lower than normal, because sblib interrupts have to be served with highest priority (prio = 0)
-        NVIC_SetPriority(I2C_IRQn, 1);
+        setInterruptPriority(I2C_IRQn, InterruptPriority::high);
     }
     else {
         NVIC_DisableIRQ(I2C_IRQn);

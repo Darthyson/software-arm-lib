@@ -215,23 +215,23 @@ void Timer::counterMode(const int mode, const int clearMode) const
     timer->CTCR = config;
 }
 
-void Timer::setIRQPriority(const uint32_t newPriority) const
+void Timer::setIRQPriority(const InterruptPriority newPriority) const
 {
     if (this == &timer16_0)
     {
-        NVIC_SetPriority(TIMER_16_0_IRQn, newPriority);
+        setInterruptPriority(TIMER_16_0_IRQn, newPriority);
     }
     else if (this == &timer16_1)
     {
-        NVIC_SetPriority(TIMER_16_1_IRQn, newPriority);
+        setInterruptPriority(TIMER_16_1_IRQn, newPriority);
     }
     else if (this == &timer32_0)
     {
-        NVIC_SetPriority(TIMER_32_0_IRQn, newPriority);
+        setInterruptPriority(TIMER_32_0_IRQn, newPriority);
     }
     else if (this == &timer32_1)
     {
-        NVIC_SetPriority(TIMER_32_1_IRQn, newPriority);
+        setInterruptPriority(TIMER_32_1_IRQn, newPriority);
     }
 }
 

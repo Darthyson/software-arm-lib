@@ -10,9 +10,10 @@
 #ifndef SBLIB_TIMER_H_
 #define SBLIB_TIMER_H_
 
-#include <limits.h>
+#include <sblib/interrupt.h>
 #include <sblib/platform.h>
 #include <sblib/types.h>
+#include <climits>
 
 class Timer;
 
@@ -484,7 +485,7 @@ public:
      *
      * @param newPriority - new interrupt priority for the timer
      */
-    void setIRQPriority(uint32_t newPriority) const;
+    void setIRQPriority(InterruptPriority newPriority) const;
 
 protected:
     LPC_TMR_TypeDef* timer;

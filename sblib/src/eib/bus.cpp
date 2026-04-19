@@ -60,7 +60,7 @@ void Bus::begin(const uint16_t physicalAddress)
     sendCurTelegram = nullptr;
     prepareForSending();
     //initialize bus-timer( e.g. defined as 16bit timer1)
-    timer.setIRQPriority(0); // ensure highest IRQ-priority for the Bus timer
+    timer.setIRQPriority(InterruptPriority::highest); // ensure highest IRQ-priority for the Bus timer
     timer.begin();
     timer.pwmEnable(pwmChannel);
     //timer.counterMode(DISABLE,  captureChannel | FALLING_EDGE); // todo  enabled the timer reset by the falling edge of cap event

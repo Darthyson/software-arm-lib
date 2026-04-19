@@ -235,7 +235,7 @@ void Serial::begin(const SerialBaudRate baudRate, const SerialConfig config, con
     }
 
     //added by Hora in order to provide the highest interrupt level to the bus timer of the lib
-    NVIC_SetPriority(UART_IRQn, 3);
+    setInterruptPriority(UART_IRQn, InterruptPriority::low);
 
     LPC_UART->IIR; // Read IIR to clear any pending UART interrupt
     clearPendingInterrupt(UART_IRQn); // Clear any stale pending interrupt

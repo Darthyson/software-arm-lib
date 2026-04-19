@@ -11,7 +11,6 @@
 #define SBLIB_INTERRUPT_H_
 
 #include <sblib/platform.h>
-#include <sblib/types.h>
 #include <sblib/utils.h>
 
 /**
@@ -41,6 +40,18 @@
  * WAKEUP_IRQHandler()
  * WDT_IRQHandler()
  */
+
+/**
+ * @brief Interrupt priorities
+ * @details 0 is highest priority, 3 is lowest priority
+ */
+enum class InterruptPriority : uint8_t
+{
+    highest = 0,
+    high = 1,
+    medium = 2,
+    low = 3
+};
 
 /**
  * Disable all interrupts.
@@ -89,14 +100,14 @@ void setPendingInterrupt(IRQn_Type interruptType);
  * @fn bool isInsideInterrupt()
  * @brief Returns if within an Isr
  *
- * @return true if called inside a Isr otherwise false
+ * @return true if called inside an Isr otherwise false
  */
-bool isInsideInterrupt(void);
+bool isInsideInterrupt();
 
 /**
  * @fn bool getInterruptEnabled(IRQn_Type)
  * @brief Returns the enabled status of an interrupt
- *        doesnt work for NonMaskableInt_IRQn,
+ *        doesn't work for NonMaskableInt_IRQn,
  *                        HardFault_IRQn,
  *                        SVCall_IRQn,
  *                        PendSV_IRQn,
@@ -106,6 +117,14 @@ bool isInsideInterrupt(void);
  * @return true if interrupt is enabled, otherwise false
  */
 bool getInterruptEnabled(IRQn_Type interruptType);
+
+/**
+ * @brief Set the priority of an interrupt.
+ *
+ * @param interruptType  The interrupt to set the priority for: TIMER_16_0_IRQn, I2C_IRQn, ...
+ * @param newPriority    The new priority to set for the interrupt.
+ */
+void setInterruptPriority(IRQn_Type interruptType, InterruptPriority newPriority);
 
 /**
  * This define creates an interrupt handler that calls a callback function.
@@ -121,7 +140,7 @@ extern "C" void handler() { callback; }
 // Inline functions
 //
 
-ALWAYS_INLINE void noInterrupts()
+FORCE_INLINE void noInterrupts()
 {
     // data synchronization barrier and instruction synchronization barrier to ensure that no interrupt occurs after we disabled them
     __DSB();
@@ -129,22 +148,22 @@ ALWAYS_INLINE void noInterrupts()
     __disable_irq();
 }
 
-ALWAYS_INLINE void interrupts()
+FORCE_INLINE void interrupts()
 {
     __enable_irq();
 }
 
-ALWAYS_INLINE void waitForInterrupt()
+FORCE_INLINE void waitForInterrupt()
 {
     __WFI();
 }
 
-ALWAYS_INLINE void enableInterrupt(const IRQn_Type interruptType)
+FORCE_INLINE void enableInterrupt(const IRQn_Type interruptType)
 {
     NVIC->ISER[0] = 1 << (interruptType & 0x1f);
 }
 
-ALWAYS_INLINE void disableInterrupt(const IRQn_Type interruptType)
+FORCE_INLINE void disableInterrupt(const IRQn_Type interruptType)
 {
     // data synchronization barrier and instruction synchronization barrier to ensure that no interrupt occurs after we disabled them
     __DSB();
@@ -152,22 +171,22 @@ ALWAYS_INLINE void disableInterrupt(const IRQn_Type interruptType)
     NVIC->ICER[0] = 1 << (interruptType & 0x1f);
 }
 
-ALWAYS_INLINE void clearPendingInterrupt(const IRQn_Type interruptType)
+FORCE_INLINE void clearPendingInterrupt(const IRQn_Type interruptType)
 {
     NVIC->ICPR[0] = 1 << (interruptType & 0x1f);
 }
 
-ALWAYS_INLINE void setPendingInterrupt(const IRQn_Type interruptType)
+FORCE_INLINE void setPendingInterrupt(const IRQn_Type interruptType)
 {
     NVIC->ISPR[0] = 1 << (interruptType & 0x1f);
 }
 
-ALWAYS_INLINE bool isInsideInterrupt(void)
+FORCE_INLINE bool isInsideInterrupt()
 {
     return (SCB->ICSR & SCB_ICSR_VECTACTIVE_Msk) != 0;
 }
 
-ALWAYS_INLINE bool getInterruptEnabled(const IRQn_Type interruptType)
+FORCE_INLINE bool getInterruptEnabled(const IRQn_Type interruptType)
 {
     if (interruptType >= 0)
     {
@@ -177,4 +196,10 @@ ALWAYS_INLINE bool getInterruptEnabled(const IRQn_Type interruptType)
     fatalError();
     return false; // Just here to make the linter happy
 }
+
+FORCE_INLINE void setInterruptPriority(const IRQn_Type interruptType, const InterruptPriority newPriority)
+{
+    NVIC_SetPriority(interruptType, static_cast<uint32_t>(newPriority));
+}
+
 #endif /* SBLIB_INTERRUPT_H_ */
