@@ -15,155 +15,6 @@
 #include <sblib/platform.h>
 #include <sblib/types.h>
 
-/**
- * Configure the mode of an I/O pin.
- *
- * @param pin   The pin to configure: PIO0_0, PIO0_1, ... @ref PortPin
- * @param mode  The I/O mode to set. Use a combination of the PinMode values (see below)
- *
- * Examples:
- * Configure PIO0_2 to digital input: pinMode(PIO0_2, INPUT);
- * Configure PIO1_7 to serial data output: pinMode(PIO1_7, OUTPUT | PINMODE_FUNC(PF_TXD));
- *
- * @see PinMode in digital_pin.h for the pin modes
- * @see PinFunc in ioports.h for the pin functions for PINMODE_FUNC()
- */
-void pinMode(uint32_t pin, uint32_t mode);
-
-/**
- * Configure the direction of an I/O pin. This does not change the other configuration
- * settings of the pin.
- *
- * @param pin   The pin to configure: PIO0_0, PIO0_1, ... @ref PortPin
- * @param dir   The direction: INPUT or OUTPUT
- */
-void pinDirection(uint32_t pin, uint32_t dir);
-
-/**
- * Configure the interrupt for the I/O port
- *
- * @param pin   The pin to configure: PIO0_0, PIO0_1, ... @ref PortPin
- * @param mode  The interrupt mode. Use a combination of @ref PinInterruptMode values
- */
-void pinInterruptMode(uint32_t pin,  uint16_t mode);
-
-/**
- * Enable the interrupt for this I/O pin
- */
-void pinEnableInterrupt(uint32_t pin);
-
-/**
- * Disable the interrupt for this I/O pin
- */
-void pinDisableInterrupt(uint32_t pin);
-
-/**
- * Configure the mode of the pins of an I/O port.
- *
- * This function can only handle a sub-set of the available pin configurations.
- * The following PinMode values are supported: INPUT, OUTPUT, PULL_UP, PULL_DOWN,
- * REPEATER_MODE, HYSTERESIS, OPEN_DRAIN.
- *
- * @param portNum   The port to configure: PIO0, PIO1, PIO2, PIO3  (see sblib/ioports.h)
- * @param pinMask   The bit mask for the port pins that shall be configured.
- * @param mode      The I/O mode to set. Use a combination of the PinMode values.
- *
- * Example: to configure pins 0,1,2 of port 0 to open drain output:
- *          portMode(PIO0, 7, OUTPUT|OPEN_DRAIN);
- *
- * @see PinMode in digital_pin.h for the pin modes
- */
-void portMode(uint8_t portNum, uint32_t pinMask, uint32_t mode);
-
-/**
- * Configure the direction of an I/O pin. This does not change the other configuration
- * settings of the port pins.
- *
- * @param portNum   The port to configure: PIO0, PIO1, PIO2, PIO3  (see sblib/ioports.h)
- * @param pinMask   The bit mask for the port pins that shall be configured.
- * @param dir       The direction: INPUT or OUTPUT
- */
-void portDirection(uint8_t portNum, uint32_t pinMask, uint32_t dir);
-
-/**
- * Set the value of a digital output pin.
- *
- * @param pin   The pin to set: PIO0_0, PIO0_1, ... @ref PortPin
- * @param value The value to set: true or false.
- */
-void digitalWrite(uint32_t pin, bool value);
-
-/**
- * Read the value of a digital input pin.
- *
- * @param pin   The pin to read: PIO0_0, PIO0_1, ... @ref PortPin
- * @return The value of the pin: true (1) or false (0).
- */
-bool digitalRead(uint32_t pin);
-
-/**
- * Output a byte on a digital pin. The output is done bit by bit. The clock pin
- * pulses the output. Output of a bit happens when the clock pin is high. This
- * is a software function. For hardware supported output of data, see SPI or I2C.
- *
- * @param dataPin   The data pin to output the byte to
- * @param clockPin  The clock pin
- * @param bitOrder  The bit order: LSBFIRST or MSBFIRST.
- * @param val       The value to output.
- */
-void shiftOut(uint32_t dataPin, uint32_t clockPin, BitOrder bitOrder, uint8_t val);
-
-/**
- * Read a byte from a digital pin. The byte is read bit by bit. The clock pin
- * pulses the reading. Please note that the clock pin is used as output and outputs
- * the pulses for reading. This is a software function. For hardware supported input
- * of data, see SPI or I2C.
- *
- * @param dataPin   The data pin to read the byte from
- * @param clockPin  The clock pin
- * @param bitOrder  The bit order: LSBFIRST or MSBFIRST.
- *
- * @return The read byte.
- */
-uint8_t shiftIn(uint32_t dataPin, uint32_t clockPin, BitOrder bitOrder);
-
-/**
- * Measures the length (in microseconds) of a pulse on the pin; state is HIGH
- * or LOW, the type of pulse to measure. Works on pulses from 2-3 microseconds
- * to 3 minutes in length, but must be called at least a few dozen microseconds
- * before the start of the pulse.
- *
- * @param pin       The pin to measure.
- * @param state     The state of the pin to measure: true measures a high pulse, false measures a low pulse.
- * @param timeout   The timeout to wait for the pulse to end, in microseconds.
- *
- * @return The length of the pulse in microseconds.
- */
-uint32_t pulseIn(uint32_t pin, bool state, uint32_t timeout);
-
-/**
- * Get the port number of the pin.
- *
- * @param pin   The pin to process, e.g. PIO1_9
- * @return The port number of the pin, e.g. 1
- */
-constexpr Port digitalPinToPort(const uint32_t pin) {return static_cast<Port>((pin >> 5) & 3);} // 3 = 0b0000 0011
-
-/**
- * Get the number of the pin.
- *
- * @param pin   The pin to process, e.g. PIO1_9
- * @return The number of the pin, e.g. 9
- */
-constexpr uint8_t digitalPinToPinNum(const uint32_t pin) {return (pin & 31);} // 31 = 0b0001 1111
-
-/**
- * Get the bit mask for the pin.
- *
- * @param pin   The pin to process, e.g. PIO1_9
- * @return The bit mask for the pin, e.g. 0x200
- */
-constexpr uint32_t digitalPinToBitMask(const uint32_t pin) {return (1 << digitalPinToPinNum(pin));}
 
 /**
  * Modes for I/O pin configuration with pinMode().
@@ -334,6 +185,156 @@ enum PinInterruptMode : uint16_t
      */
     INTERRUPT_ENABLED = 0x1000,
 };
+
+/**
+ * Configure the mode of an I/O pin.
+ *
+ * @param pin   The pin to configure: PIO0_0, PIO0_1, ... @ref PortPin
+ * @param mode  The I/O mode to set. Use a combination of the PinMode values (see below)
+ *
+ * Examples:
+ * Configure PIO0_2 to digital input: pinMode(PIO0_2, INPUT);
+ * Configure PIO1_7 to serial data output: pinMode(PIO1_7, OUTPUT | PINMODE_FUNC(PF_TXD));
+ *
+ * @see PinMode in digital_pin.h for the pin modes
+ * @see PinFunc in ioports.h for the pin functions for PINMODE_FUNC()
+ */
+void pinMode(uint32_t pin, uint32_t mode);
+
+/**
+ * Configure the direction of an I/O pin. This does not change the other configuration
+ * settings of the pin.
+ *
+ * @param pin   The pin to configure: PIO0_0, PIO0_1, ... @ref PortPin
+ * @param dir   The direction: INPUT or OUTPUT
+ */
+void pinDirection(uint32_t pin, uint32_t dir);
+
+/**
+ * Configure the interrupt for the I/O port
+ *
+ * @param pin   The pin to configure: PIO0_0, PIO0_1, ... @ref PortPin
+ * @param mode  The interrupt mode. Use a combination of @ref PinInterruptMode values
+ */
+void pinInterruptMode(uint32_t pin,  uint16_t mode);
+
+/**
+ * Enable the interrupt for this I/O pin
+ */
+void pinEnableInterrupt(uint32_t pin);
+
+/**
+ * Disable the interrupt for this I/O pin
+ */
+void pinDisableInterrupt(uint32_t pin);
+
+/**
+ * Configure the mode of the pins of an I/O port.
+ *
+ * This function can only handle a sub-set of the available pin configurations.
+ * The following PinMode values are supported: INPUT, OUTPUT, PULL_UP, PULL_DOWN,
+ * REPEATER_MODE, HYSTERESIS, OPEN_DRAIN.
+ *
+ * @param portNum   The port to configure: PIO0, PIO1, PIO2, PIO3  (see sblib/ioports.h)
+ * @param pinMask   The bit mask for the port pins that shall be configured.
+ * @param mode      The I/O mode to set. Use a combination of the PinMode values.
+ *
+ * Example: to configure pins 0,1,2 of port 0 to open drain output:
+ *          portMode(PIO0, 7, OUTPUT|OPEN_DRAIN);
+ *
+ * @see PinMode in digital_pin.h for the pin modes
+ */
+void portMode(uint8_t portNum, uint32_t pinMask, uint32_t mode);
+
+/**
+ * Configure the direction of an I/O pin. This does not change the other configuration
+ * settings of the port pins.
+ *
+ * @param portNum   The port to configure: PIO0, PIO1, PIO2, PIO3  (see sblib/ioports.h)
+ * @param pinMask   The bit mask for the port pins that shall be configured.
+ * @param dir       The direction: INPUT or OUTPUT
+ */
+void portDirection(uint8_t portNum, uint32_t pinMask, uint32_t dir);
+
+/**
+ * Set the value of a digital output pin.
+ *
+ * @param pin   The pin to set: PIO0_0, PIO0_1, ... @ref PortPin
+ * @param value The value to set: true or false.
+ */
+void digitalWrite(uint32_t pin, bool value);
+
+/**
+ * Read the value of a digital input pin.
+ *
+ * @param pin   The pin to read: PIO0_0, PIO0_1, ... @ref PortPin
+ * @return The value of the pin: true (1) or false (0).
+ */
+bool digitalRead(uint32_t pin);
+
+/**
+ * Output a byte on a digital pin. The output is done bit by bit. The clock pin
+ * pulses the output. Output of a bit happens when the clock pin is high. This
+ * is a software function. For hardware supported output of data, see SPI or I2C.
+ *
+ * @param dataPin   The data pin to output the byte to
+ * @param clockPin  The clock pin
+ * @param bitOrder  The bit order: LSBFIRST or MSBFIRST.
+ * @param val       The value to output.
+ */
+void shiftOut(uint32_t dataPin, uint32_t clockPin, BitOrder bitOrder, uint8_t val);
+
+/**
+ * Read a byte from a digital pin. The byte is read bit by bit. The clock pin
+ * pulses the reading. Please note that the clock pin is used as output and outputs
+ * the pulses for reading. This is a software function. For hardware supported input
+ * of data, see SPI or I2C.
+ *
+ * @param dataPin   The data pin to read the byte from
+ * @param clockPin  The clock pin
+ * @param bitOrder  The bit order: LSBFIRST or MSBFIRST.
+ *
+ * @return The read byte.
+ */
+uint8_t shiftIn(uint32_t dataPin, uint32_t clockPin, BitOrder bitOrder);
+
+/**
+ * Measures the length (in microseconds) of a pulse on the pin; state is HIGH
+ * or LOW, the type of pulse to measure. Works on pulses from 2-3 microseconds
+ * to 3 minutes in length, but must be called at least a few dozen microseconds
+ * before the start of the pulse.
+ *
+ * @param pin       The pin to measure.
+ * @param state     The state of the pin to measure: true measures a high pulse, false measures a low pulse.
+ * @param timeout   The timeout to wait for the pulse to end, in microseconds.
+ *
+ * @return The length of the pulse in microseconds.
+ */
+uint32_t pulseIn(uint32_t pin, bool state, uint32_t timeout);
+
+/**
+ * Get the port number of the pin.
+ *
+ * @param pin   The pin to process, e.g. PIO1_9
+ * @return The port number of the pin, e.g. 1
+ */
+constexpr Port digitalPinToPort(const uint32_t pin) {return static_cast<Port>((pin >> 5) & 3);} // 3 = 0b0000 0011
+
+/**
+ * Get the number of the pin.
+ *
+ * @param pin   The pin to process, e.g. PIO1_9
+ * @return The number of the pin, e.g. 9
+ */
+constexpr uint8_t digitalPinToPinNum(const uint32_t pin) {return (pin & 31);} // 31 = 0b0001 1111
+
+/**
+ * Get the bit mask for the pin.
+ *
+ * @param pin   The pin to process, e.g. PIO1_9
+ * @return The bit mask for the pin, e.g. 0x200
+ */
+constexpr uint32_t digitalPinToBitMask(const uint32_t pin) {return (1 << digitalPinToPinNum(pin));}
 
 //
 //  Inline functions
