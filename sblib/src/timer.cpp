@@ -62,9 +62,12 @@ void delay(unsigned int msec)
     }
 }
 
-#ifndef IAP_EMULATION
 void delayMicroseconds(const unsigned int usec)
 {
+#ifdef IAP_EMULATION
+    ///\todo implement propper delayMicroseconds() for unit testing
+    return;
+#endif
     uint16_t lastSystemTickValue = SysTick->VAL; // get our start SysTickcount
     int ticksToWait = 1; // as fast as we can go
 
@@ -92,7 +95,6 @@ void delayMicroseconds(const unsigned int usec)
         lastSystemTickValue = sysTickValue;
     }
 }
-#endif
 
 #ifdef IAP_EMULATION
 void setMillis(unsigned int newSystemTime)
