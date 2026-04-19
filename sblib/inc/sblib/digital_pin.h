@@ -341,6 +341,28 @@ constexpr uint8_t digitalPinToPinNum(const uint32_t pin) {return (pin & 31);} //
  */
 constexpr uint32_t digitalPinToBitMask(const uint32_t pin) {return (1 << digitalPinToPinNum(pin));}
 
+/**
+ * @brief Maps a GPIO port number to its corresponding IRQn.
+ *
+ * @param port GPIO port number e.g., PIO0, PIO1, PIO2, PIO3
+ * @return The corresponding IRQn_Type value.
+ */
+constexpr IRQn_Type digitalPortToIRQn(const Port port)
+{
+     return static_cast<IRQn_Type>(EINT0_IRQn - static_cast<int>(port));
+}
+
+/**
+ * @brief Maps a GPIO pin to its corresponding IRQn.
+ *
+ * @param pinNumber GPIO port number e.g., PIO0, PIO1, PIO2, PIO3
+ * @return The corresponding IRQn_Type value.
+ */
+constexpr IRQn_Type digitalPinToIRQn(const uint32_t pinNumber)
+{
+    return static_cast<IRQn_Type>(EINT0_IRQn - static_cast<int>(digitalPinToPort(pinNumber)));
+}
+
 //
 //  Inline functions
 //

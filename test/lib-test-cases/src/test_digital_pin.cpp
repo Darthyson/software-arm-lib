@@ -881,4 +881,46 @@ TEST_CASE("digitalRead(...)", "[digital_pin]")
     }
 }
 
+TEST_CASE("digitalPortToIRQn - maps GPIO port to correct IRQn", "[digital_pin]")
+{
+    struct PortToIRQnTestCase {
+        Port port;
+        IRQn_Type expected;
+        const char* name;
+    };
+
+    const std::vector<PortToIRQnTestCase> testCases = {
+        {PIO0, EINT0_IRQn, "PIO0"},
+        {PIO1, EINT1_IRQn, "PIO1"},
+        {PIO2, EINT2_IRQn, "PIO2"},
+        {PIO3, EINT3_IRQn, "PIO3"},
+    };
+
+    for (const auto& [port, expected, name] : testCases)
+    {
+        SECTION(name)
+        {
+            REQUIRE(digitalPortToIRQn(port) == expected);
+        }
+    }
+}
+
+TEST_CASE("digitalPinToIRQn - maps GPIO pin to correct IRQn", "[digital_pin]")
+{
+    struct PinToIRQnTestCase {
+        uint32_t pin;
+        IRQn_Type expected;
+        const char* name;
+    };
+
+    for (const auto& testPin : allPins)
+    {
+        const auto expectedIRQn = static_cast<IRQn_Type>(EINT0_IRQn - digitalPinToPort(testPin.pin));
+        SECTION(testPin.name)
+        {
+            REQUIRE(digitalPinToIRQn(testPin.pin) == expectedIRQn);
+        }
+    }
+}
+
 ///\todo Find a way to implement tests for functions shiftOut(..), shiftIn(..) and pulseIn(..) of digital_pin.h
