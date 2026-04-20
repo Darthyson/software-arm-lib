@@ -119,7 +119,7 @@ public:
      * @details Configures GPIO pins, timer and enables interrupts.
      *          Must be called before any read/write operations.
      */
-    void begin();
+    virtual void begin();
 
     /**
      * @brief Shut down the software UART.
