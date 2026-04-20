@@ -4,7 +4,7 @@ set(COMPILER_FLAGS_LIST
     # TODO warnings to enable in future
     # -Wconversion
     -g3 -gdwarf-4
-    -fmessage-length=0 -fno-builtin -ffunction-sections -fdata-sections -fno-exceptions
+    -fmessage-length=0 -fno-builtin -ffunction-sections -fdata-sections -fno-exceptions -fno-rtti
     -fmerge-constants -mcpu=cortex-m0 -mthumb -fstack-usage -specs=nano.specs
     -fmacro-prefix-map=\"${CMAKE_SOURCE_DIR}/\"=
 )
