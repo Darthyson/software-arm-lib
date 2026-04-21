@@ -38,7 +38,7 @@ public:
      * @brief The first byte of the table contains the number of entries. The rest of
      * the table consists of the addresses: 2 bytes per address.
      */
-    virtual byte* addrTable() = 0;
+    virtual uint8_t* addrTable() = 0;
 
     /**
      * Get the association table. The association table connects group addresses
@@ -50,7 +50,7 @@ public:
      * the table consists of the associations - 2 bytes per association:
      * 1 byte addr-table index, 1 byte com-object number.
      */
-    virtual byte* assocTable() = 0;
+    virtual uint8_t* assocTable() = 0;
 
     /**
      * Get total number of address entries

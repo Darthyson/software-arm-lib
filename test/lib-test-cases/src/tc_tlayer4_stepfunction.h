@@ -37,8 +37,8 @@ typedef struct
     unsigned short ownAddress;
     TLayer4::TL4State machineState;
     int connectedAddrNew;
-    byte seqNoSend;
-    byte seqNoRcv;
+    uint8_t seqNoSend;
+    uint8_t seqNoRcv;
     TLayer4::SendTelegramBufferState sendConnectedTelegramBufferState;
 } ProtocolTestState;
 

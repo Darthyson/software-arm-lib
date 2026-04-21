@@ -233,9 +233,9 @@ void dumpLogHeader()
 
 TLayer4::TLayer4(const uint8_t maxTelegramLength):
     ownAddr(PHY_ADDR_DEFAULT),
-    sendTelegram(new byte[maxTelegramLength]()),
-    sendConnectedTelegram(new byte[maxTelegramLength]()),
-    sendConnectedTelegram2(new byte[maxTelegramLength]()) {}
+    sendTelegram(new uint8_t[maxTelegramLength]()),
+    sendConnectedTelegram(new uint8_t[maxTelegramLength]()),
+    sendConnectedTelegram2(new uint8_t[maxTelegramLength]()) {}
 
 void TLayer4::_begin()
 {
@@ -466,7 +466,7 @@ bool TLayer4::processConControlAcknowledgmentPDU(const uint16_t senderAddr, cons
             return (false);
         }
 
-        const byte curSeqNo = sequenceNumber(telegram);
+        const uint8_t curSeqNo = sequenceNumber(telegram);
         // check if we got correct sequence number
         if (curSeqNo != seqNoSend)
         {
@@ -501,7 +501,7 @@ bool TLayer4::processConControlAcknowledgmentPDU(const uint16_t senderAddr, cons
         );
 
         // check CLOSED state for events E11, E12, E13, E14
-        const byte curSeqNo = sequenceNumber(telegram);
+        const uint8_t curSeqNo = sequenceNumber(telegram);
         if ((state == CLOSED) || (curSeqNo != seqNoSend) || (connectedAddr != senderAddr))
         {
             dump2(
@@ -762,7 +762,7 @@ void TLayer4::actionA02sendAckPduAndProcessApci(const ApciCommand apciCmd, const
     seqNoRcv &= 0x0F;         // handle overflow
     connectedTime = millis(); // "restart the connection timeout timer"
 
-    byte* sendBuffer;
+    uint8_t* sendBuffer;
     volatile SendTelegramBufferState* sendBufferState;
     if (sendConnectedTelegramBufferState == TELEGRAM_FREE)
     {

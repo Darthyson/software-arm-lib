@@ -75,10 +75,10 @@ enum ComType
 struct ComConfig
 {
     /** Configuration flags. See enum @ref ComConfigFlag. */
-    byte config;
+    uint8_t config;
 
     /** Type of the communication object (bits 0..5). See enum @ref ComType. */
-    byte type;
+    uint8_t type;
 };
 
 /**

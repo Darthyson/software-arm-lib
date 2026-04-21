@@ -54,7 +54,7 @@ void SHT2xClass::Init()
 {
     i2c_lpcopen_init();
 
-    byte result;
+    uint8_t result;
     if (Chip_I2C_MasterCmdRead(I2C0, eSHT2xAddress, eReadUserReg, &result, 1) == 1)
     {
         const uint8_t data[] = {(uint8_t)eWriteUserReg, (uint8_t)(result & 0x7E)};

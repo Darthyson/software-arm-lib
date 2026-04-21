@@ -10,7 +10,7 @@
 #ifndef SBLIB_ARRAYS_H_
 #define SBLIB_ARRAYS_H_
 
-#include <sblib/types.h>
+#include <cstdint>
 
 /**
  * Find a value in an array of integers.
@@ -40,6 +40,6 @@ short indexOf(unsigned short val, const unsigned short* arr, short count);
  * @param count - the number of values in the array.
  * @return The index of the value in the array, -1 if not found.
  */
-short indexOf(byte val, const byte* arr, short count);
+short indexOf(uint8_t val, const uint8_t* arr, short count);
 
 #endif /* SBLIB_ARRAYS_H_ */

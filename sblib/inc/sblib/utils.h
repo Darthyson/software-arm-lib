@@ -22,7 +22,7 @@
  * @param src - the source to copy from
  * @param len - the number of bytes to copy
  */
-void reverseCopy(byte* dest, const byte* src, int len);
+void reverseCopy(uint8_t* dest, const uint8_t* src, int len);
 
 /**
  * Call when a fatal application error happens. This function will never
@@ -52,7 +52,7 @@ void setKNX_TX_Pin(int newTxPin);
  * @param len_hash - size of provided hash buffer (normally 6byte/48bit for EIB)
  * @return True if hash successfully created, false if not.
  */
-int hashUID(byte* uid, const int len_uid, byte* hash, const int len_hash);
+int hashUID(uint8_t* uid, const int len_uid, uint8_t* hash, const int len_hash);
 
 /**
  * Include the C++ code snippet if DEBUG is defined, do not include the code

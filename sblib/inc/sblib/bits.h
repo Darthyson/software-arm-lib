@@ -39,14 +39,14 @@
  * @param low - the low byte.
  * @return The bytes combined as word.
  */
-uint16_t makeWord(byte high, byte low);
+uint16_t makeWord(uint8_t high, uint8_t low);
 
 
 //
 //  Inline functions
 //
 
-inline uint16_t makeWord(const byte high, const byte low)
+inline uint16_t makeWord(const uint8_t high, const uint8_t low)
 {
     return ((uint16_t)((high << 8) | low));
 }

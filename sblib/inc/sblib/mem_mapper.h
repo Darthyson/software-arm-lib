@@ -48,7 +48,7 @@ public:
      * @param data - a byte that should be written to the address
      * @return 0 on success, else error
      */
-    int writeMem(int virtAddress, byte data);
+    int writeMem(int virtAddress, uint8_t data);
 
     /**
      * Write an array of byte to virtual address
@@ -59,7 +59,7 @@ public:
      * @param length - number of bytes to write
      * @return 0 on success, else error
      */
-    virtual int writeMemPtr(int virtAddress, byte* data, int length);
+    virtual int writeMemPtr(int virtAddress, uint8_t* data, int length);
 
     /**
      * Read a single byte from virtual address
@@ -70,7 +70,7 @@ public:
      * @param forceFlash - force pending data to be flashed before operation
      * @return 0 on success, else error
      */
-    int readMem(int virtAddress, byte& data, bool forceFlash = false) const;
+    int readMem(int virtAddress, uint8_t& data, bool forceFlash = false) const;
 
     /**
      * Read a single byte from virtual address
@@ -82,7 +82,7 @@ public:
      * @param forceFlash - force pending data to be flashed before operation
      * @return 0 on success, else error
      */
-    virtual int readMemPtr(int virtAddress, byte* data, int length, bool forceFlash =
+    virtual int readMemPtr(int virtAddress, uint8_t* data, int length, bool forceFlash =
                                    false);
 
     /**
@@ -146,7 +146,7 @@ public:
      * @return error value of flash operation
      */
 
-    int setUInt8(int virtAddress, byte data);
+    int setUInt8(int virtAddress, uint8_t data);
 
     /**
      * Access the user EEPROM to set a unsigned short
@@ -173,7 +173,7 @@ public:
      * @param forceFlash - force pending data to be flashed before operation
      * @return a pointer to the desired data
      */
-    byte* memoryPtr(int virtAddress, bool forceFlash = true) const;
+    uint8_t* memoryPtr(int virtAddress, bool forceFlash = true) const;
 
     /**
      * Query about mapping
@@ -207,8 +207,8 @@ private:
     // End of members initialized in the constructor
 
     static constexpr uint8_t InvalidAllocTableByte = 0xff;
-    alignas(FLASH_RAM_BUFFER_ALIGNMENT) byte allocTable[FLASH_PAGE_SIZE]{};
-    alignas(FLASH_RAM_BUFFER_ALIGNMENT) mutable byte writeBuf[FLASH_PAGE_SIZE]{};
+    alignas(FLASH_RAM_BUFFER_ALIGNMENT) uint8_t allocTable[FLASH_PAGE_SIZE]{};
+    alignas(FLASH_RAM_BUFFER_ALIGNMENT) mutable uint8_t writeBuf[FLASH_PAGE_SIZE]{};
     mutable int writePage = 0;
     unsigned int lastAllocated = 0;
     int endianess = LITTLE_ENDIAN;

@@ -211,7 +211,7 @@ int ComObjects::telegramObjectSize(const int objno)
 
 void ComObjects::addObjectFlags(const int objno, int flags)
 {
-    byte* flagsTab = objectFlagsTable();
+    uint8_t* flagsTab = objectFlagsTable();
     if (flagsTab == 0)
         return;
 
@@ -235,7 +235,7 @@ void ComObjects::addObjectFlags(const int objno, int flags)
 
 void ComObjects::setObjectFlags(const int objno, const int flags)
 {
-    byte* flagsPtr = objectFlagsTable();
+    uint8_t* flagsPtr = objectFlagsTable();
     if (flagsPtr == nullptr)
     {
         return;
@@ -264,7 +264,7 @@ void ComObjects::setObjectFlags(const int objno, const int flags)
 unsigned int ComObjects::objectRead(const int objno)
 {
     int sz = objectSize(objno);
-    const byte* ptr = objectValuePtr(objno) + sz;
+    const uint8_t* ptr = objectValuePtr(objno) + sz;
     unsigned int value = *--ptr;
 
     while (--sz > 0)
@@ -277,7 +277,7 @@ unsigned int ComObjects::objectRead(const int objno)
 
 void ComObjects::_objectWrite(const int objno, unsigned int value, const int flags)
 {
-    byte* ptr = objectValuePtr(objno);
+    uint8_t* ptr = objectValuePtr(objno);
     if (ptr == nullptr)
     {
         return;
@@ -302,9 +302,9 @@ void ComObjects::_objectWrite(const int objno, unsigned int value, const int fla
     setObjectFlags(objno, flags); //clear any pending ram com object flags and set new flags
 }
 
-void ComObjects::_objectWriteBytes(const int objno, const byte* value, const int flags)
+void ComObjects::_objectWriteBytes(const int objno, const uint8_t* value, const int flags)
 {
-    byte* ptr = objectValuePtr(objno);
+    uint8_t* ptr = objectValuePtr(objno);
     int sz = objectSize(objno);
 
     for (; sz > 0; --sz)
@@ -321,8 +321,8 @@ inline int ComObjects::objectCount()
 
 int ComObjects::firstObjectAddr(const int objno) const
 {
-    const byte* assocTab = bcu->addrTables->assocTable();
-    const byte* assocTabEnd = assocTab + (*assocTab << 1);
+    const uint8_t* assocTab = bcu->addrTables->assocTable();
+    const uint8_t* assocTabEnd = assocTab + (*assocTab << 1);
 
     for (++assocTab; assocTab < assocTabEnd; assocTab += 2)
     {
@@ -337,7 +337,7 @@ int ComObjects::firstObjectAddr(const int objno) const
             continue;
         }
 
-        const byte* addr = bcu->addrTables->addrTable() + 1 + (assocTab[0] << 1);
+        const uint8_t* addr = bcu->addrTables->addrTable() + 1 + (assocTab[0] << 1);
         return ((addr[0] << 8) | addr[1]);
     }
     return (0);
@@ -358,9 +358,9 @@ void ComObjects::sendGroupReadTelegram(const int objno, const int addr)
 
 void ComObjects::sendGroupWriteTelegram(const int objno, const int addr, const bool isResponse)
 {
-    const byte* valuePtr = objectValuePtr(objno);
+    const uint8_t* valuePtr = objectValuePtr(objno);
     const int objSize = telegramObjectSize(objno);
-    byte addData = 0;
+    uint8_t addData = 0;
     ApciCommand cmd;
 
     const auto sendBuffer = bcu->acquireSendBuffer();
@@ -387,7 +387,7 @@ void ComObjects::sendGroupWriteTelegram(const int objno, const int addr, const b
 
 bool ComObjects::sendNextGroupTelegram()
 {
-    byte* flagsTab = objectFlagsTable();
+    uint8_t* flagsTab = objectFlagsTable();
     if (flagsTab == nullptr)
     {
         return (false);
@@ -491,7 +491,7 @@ bool ComObjects::sendNextGroupTelegram()
 
 int ComObjects::nextUpdatedObject()
 {
-    byte* flagsTab = objectFlagsTable();
+    uint8_t* flagsTab = objectFlagsTable();
     if (flagsTab == nullptr)
     {
         return (INVALID_OBJECT_NUMBER);
@@ -533,9 +533,9 @@ int ComObjects::nextUpdatedObject()
     return INVALID_OBJECT_NUMBER;
 }
 
-void ComObjects::processGroupWriteTelegram(const int objno, const byte* tel)
+void ComObjects::processGroupWriteTelegram(const int objno, const uint8_t* tel)
 {
-    byte* valuePtr = objectValuePtr(objno);
+    uint8_t* valuePtr = objectValuePtr(objno);
 
     if (valuePtr == nullptr)
     {

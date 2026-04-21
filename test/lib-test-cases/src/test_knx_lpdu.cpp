@@ -31,7 +31,7 @@ unsigned char testTelegram[testTelLength];
 
 TEST_CASE("LPDU processing","[SBLIB][KNX][LPDU]")
 {
-    byte testByte;
+    uint8_t testByte;
     char msg[200];
 
     for (int i = 0; i <= 0xFF; i++)
@@ -124,8 +124,8 @@ TEST_CASE("LPDU processing","[SBLIB][KNX][LPDU]")
 TEST_CASE("LPDU sender/destination address processing","[SBLIB][KNX][LPDU]")
 {
     unsigned short addr;
-    byte highByte;
-    byte lowByte;
+    uint8_t highByte;
+    uint8_t lowByte;
 
     for (int i = 0; i <= 255; i++)
     {

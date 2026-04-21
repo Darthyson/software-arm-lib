@@ -45,9 +45,9 @@ public:
 
     void printObjectConfigTable();
 protected:
-    byte* objectValuePtr(int objno) override;
-    byte* objectConfigTable() override;
-    byte* objectFlagsTable() override;
+    uint8_t* objectValuePtr(int objno) override;
+    uint8_t* objectConfigTable() override;
+    uint8_t* objectFlagsTable() override;
     const ComConfig& objectConfig(int objno) override;
 
 private:

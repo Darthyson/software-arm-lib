@@ -30,7 +30,8 @@
  *
  * @return new LoadState of the interface object objectIdx
  */
-LoadState PropertiesSYSTEMB::handleAllocAbsDataSegment([[maybe_unused]] const int objectIdx, const byte* payLoad, [[maybe_unused]] const int len)
+LoadState PropertiesSYSTEMB::handleAllocAbsDataSegment([[maybe_unused]] const int objectIdx, const uint8_t* payLoad,
+    [[maybe_unused]] const int len)
 {
     /*
      *  from KNX Spec. 06 Profiles 4.2.9 RAM cleared
@@ -133,7 +134,8 @@ LoadState PropertiesSYSTEMB::handleAllocAbsDataSegment([[maybe_unused]] const in
  *
  * @return new LoadState of the interface object objectIdx
  */
-LoadState PropertiesSYSTEMB::handleDataRelativeAllocation(const int objectIdx, const byte* payLoad, [[maybe_unused]] const int len)
+LoadState PropertiesSYSTEMB::handleDataRelativeAllocation(const int objectIdx, const uint8_t* payLoad,
+    [[maybe_unused]] const int len)
 {
     // payLoad[0..3] : requested memory size
     // payLoad[4]    : mode (0x00)
@@ -159,7 +161,7 @@ LoadState PropertiesSYSTEMB::handleDataRelativeAllocation(const int objectIdx, c
 
     const UserEepromSYSTEMB* userEeprom = (UserEepromSYSTEMB*)bcu->userEeprom;
 
-    byte* tableSize[] = {
+    uint8_t* tableSize[] = {
         &userEeprom->addrTabMcb()[0], &userEeprom->assocTabMcb()[0], &userEeprom->commsTabMcb()[0],
         &userEeprom->eibObjMcb()[0], &userEeprom->commsSeg0Mcb()[0]
     };
@@ -171,7 +173,7 @@ LoadState PropertiesSYSTEMB::handleDataRelativeAllocation(const int objectIdx, c
             virtMemAddr = *tableAddress[i];
     }
     *tableAddress[objectIdx - 1] = virtMemAddr - reqMemSize;
-    byte* tabSiz = tableSize[objectIdx - 1];
+    uint8_t* tabSiz = tableSize[objectIdx - 1];
     tabSiz[0] = payLoad[0];
     tabSiz[1] = payLoad[1];
     tabSiz[2] = payLoad[2];
@@ -180,8 +182,8 @@ LoadState PropertiesSYSTEMB::handleDataRelativeAllocation(const int objectIdx, c
     // Mode = 0x01 => fill allocated memory
     if (payLoad[4] > 0)
     {
-        byte* physMemAddr = (byte*)(bcu->userEeprom->userEepromData + (virtMemAddr - bcu->userEeprom->startAddr()));
-        const byte fillByte = payLoad[5];
+        uint8_t* physMemAddr = (uint8_t*)(bcu->userEeprom->userEepromData + (virtMemAddr - bcu->userEeprom->startAddr()));
+        const uint8_t fillByte = payLoad[5];
         for (uint32_t i = 0; i < reqMemSize; i++)
             physMemAddr[i] = fillByte;
     }
@@ -211,7 +213,7 @@ uint16_t PropertiesSYSTEMB::crc16(uint8_t* ptr, int len)
     return crc;
 }
 
-int PropertiesSYSTEMB::loadProperty(const int objectIdx, const byte* data, int len)
+int PropertiesSYSTEMB::loadProperty(const int objectIdx, const uint8_t* data, int len)
 {
     // See KNX 3/5/2, 3.27 DM_LoadStateMachineWrite
     // See KNX 6/6 Profiles, p. 101 for load states
@@ -231,17 +233,17 @@ int PropertiesSYSTEMB::loadProperty(const int objectIdx, const byte* data, int l
     if (newLoadState == LS_LOADED)
     {
         const PropertyDef* def = propertyDef(objectIdx, PID_TABLE_REFERENCE);
-        const byte* valuePtr = def->valuePointer(bcu);
+        const uint8_t* valuePtr = def->valuePointer(bcu);
         const uint16_t virtMemStart = ((valuePtr[1] << 8) + valuePtr[0]);
-        byte* memStart = (byte*)(bcu->userEeprom->userEepromData + (virtMemStart - bcu->userEeprom->startAddr()));
+        uint8_t* memStart = (uint8_t*)(bcu->userEeprom->userEepromData + (virtMemStart - bcu->userEeprom->startAddr()));
 
         def = propertyDef(objectIdx, PID_MCB_TABLE);
-        byte* mcbPtr = def->valuePointer(bcu);
+        uint8_t* mcbPtr = def->valuePointer(bcu);
         const uint16_t memSize = (mcbPtr[2] << 8) + mcbPtr[3];
 
         const uint16_t crc = crc16(memStart, memSize);
-        mcbPtr[6] = (byte)(crc >> 8);
-        mcbPtr[7] = (byte)crc;
+        mcbPtr[6] = (uint8_t)(crc >> 8);
+        mcbPtr[7] = (uint8_t)crc;
 
         return newLoadState;
     }
@@ -250,7 +252,7 @@ int PropertiesSYSTEMB::loadProperty(const int objectIdx, const byte* data, int l
     {
         // clear table reference address on unload
         const PropertyDef* def = propertyDef(objectIdx, PID_TABLE_REFERENCE);
-        byte* valuePtr = def->valuePointer(bcu);
+        uint8_t* valuePtr = def->valuePointer(bcu);
         valuePtr[1] = 0;
         valuePtr[0] = 0;
         return newLoadState;
@@ -268,7 +270,7 @@ int PropertiesSYSTEMB::loadProperty(const int objectIdx, const byte* data, int l
     //
     const int segmentType = data[1]; // this is in both versions of DMP_LoadStateMachineWrite_RCo always the 2.octet
 
-    byte payloadOffset;
+    uint8_t payloadOffset;
     const bool apciPropertyValueWrite = (len == DMP_LOADSTATE_MACHINE_WRITE_RCO_IO_LENGTH); // determine the realization type of DMP_LoadStateMachineWrite_RCo
     if (apciPropertyValueWrite)
         payloadOffset = DMP_LOADSTATE_MACHINE_WRITE_RCO_IO_PAYLOAD_OFFSET; // offset for RCo_IO mode, where the real data for Additional Load Controls starts
@@ -276,7 +278,7 @@ int PropertiesSYSTEMB::loadProperty(const int objectIdx, const byte* data, int l
         payloadOffset = DMP_LOADSTATE_MACHINE_WRITE_RCO_MEM_PAYLOAD_OFFSET; // offset for RCo_Mem mode, where the real data for Additional Load Controls starts
 
 
-    const byte* payload = data + payloadOffset; // "move" to start of payload data
+    const uint8_t* payload = data + payloadOffset; // "move" to start of payload data
     len -= payloadOffset;                       // reduce len by payloadOffset
 
     switch (segmentType)
@@ -315,7 +317,7 @@ bool PropertiesSYSTEMB::propertyValueReadTelegram(const int objectIdx, const Pro
         return false; // not found
 
     const auto type = (PropertyDataType)(def->control & PC_TYPE_MASK);
-    const byte* valuePtr = def->valuePointer(bcu);
+    const uint8_t* valuePtr = def->valuePointer(bcu);
 
     --start;
     const int size = def->size();
@@ -356,9 +358,9 @@ bool PropertiesSYSTEMB::propertyValueWriteTelegram(const int objectIdx, const Pr
     }
 
     const PropertyDataType type = def->type();
-    byte* valuePtr = def->valuePointer(bcu);
+    uint8_t* valuePtr = def->valuePointer(bcu);
 
-    const byte* data = bcu->bus->telegram + 12;
+    const uint8_t* data = bcu->bus->telegram + 12;
     int len;
 
     if (type == PDT_CONTROL)

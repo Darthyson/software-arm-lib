@@ -147,7 +147,7 @@ public:
      * The received telegram.
      * The higher layer process should not change the telegram data in the buffer!
      */
-    byte* telegram = new byte[TelegramBufferSize]{};
+    uint8_t* telegram = new uint8_t[TelegramBufferSize]{};
 
     /**
       * The total length of the received telegram in telegram[].
@@ -259,8 +259,8 @@ private:
     uint16_t nextByteIndex = 0;                      //!< The number of the next byte in the telegram
     uint16_t currentByte = 0;        //!< The current byte that is received/sent, including the parity bit
     uint16_t sendTelegramLen = 0;    //!< The size of the to be sent telegram in bytes (including the checksum).
-    byte* sendCurTelegram = nullptr; //!< The telegram that is currently being sent.
-    byte* rx_telegram = new byte[TelegramBufferSize]{}; //!< Telegram buffer for the L1/L2 receiving process
+    uint8_t* sendCurTelegram = nullptr; //!< The telegram that is currently being sent.
+    uint8_t* rx_telegram = new uint8_t[TelegramBufferSize]{}; //!< Telegram buffer for the L1/L2 receiving process
     uint16_t bitMask = 0;            //!< Bit mask for the current byte
     uint32_t bitTime = 0;            //!< The bit-time within a byte when receiving
     bool parity = false;             //!< Parity bit of the current byte

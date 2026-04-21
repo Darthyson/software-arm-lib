@@ -20,10 +20,10 @@ class PropertiesSYSTEMB : public PropertiesMASK0701
 public:
     explicit PropertiesSYSTEMB(SYSTEMB* bcuInstance) : PropertiesMASK0701((MASK0701*)bcuInstance), bcu(bcuInstance) {}
 
-    LoadState handleAllocAbsDataSegment(const int objectIdx, const byte* payLoad, const int len) override;
-    LoadState handleDataRelativeAllocation(const int objectIdx, const byte* payLoad, const int len) override;
+    LoadState handleAllocAbsDataSegment(const int objectIdx, const uint8_t* payLoad, const int len) override;
+    LoadState handleDataRelativeAllocation(const int objectIdx, const uint8_t* payLoad, const int len) override;
     virtual uint16_t crc16(uint8_t* ptr, int len);
-    int loadProperty(int objectIdx, const byte* data, int len) override;
+    int loadProperty(int objectIdx, const uint8_t* data, int len) override;
     bool propertyValueReadTelegram(int objectIdx, PropertyID propertyId, int count, int start, uint8_t* sendBuffer) override;
     bool propertyValueWriteTelegram(int objectIdx, PropertyID propertyId, int count, int start, uint8_t* sendBuffer) override;
 

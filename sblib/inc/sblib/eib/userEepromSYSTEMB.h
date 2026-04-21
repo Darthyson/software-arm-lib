@@ -25,11 +25,11 @@ public:
 
     [[nodiscard]] word& addrTabAddr() const override { return *(word*)&userEepromData[addrTabAddrOffset]; }
     [[nodiscard]] word& assocTabAddr() const override { return *(word*)&userEepromData[assocTabAddrOffset]; }
-    [[nodiscard]] virtual byte* addrTabMcb() const { return &userEepromData[addrTabMcbOffset]; }
-    [[nodiscard]] virtual byte* assocTabMcb() const { return &userEepromData[assocTabMcbOffset]; }
-    [[nodiscard]] virtual byte* commsTabMcb() const { return &userEepromData[commsTabMcbOffset]; }
-    [[nodiscard]] virtual byte* commsSeg0Mcb() const { return &userEepromData[commsSeg0McbOffset]; }
-    [[nodiscard]] virtual byte* eibObjMcb() const { return &userEepromData[eibObjMcbOffset]; }
+    [[nodiscard]] virtual uint8_t* addrTabMcb() const { return &userEepromData[addrTabMcbOffset]; }
+    [[nodiscard]] virtual uint8_t* assocTabMcb() const { return &userEepromData[assocTabMcbOffset]; }
+    [[nodiscard]] virtual uint8_t* commsTabMcb() const { return &userEepromData[commsTabMcbOffset]; }
+    [[nodiscard]] virtual uint8_t* commsSeg0Mcb() const { return &userEepromData[commsSeg0McbOffset]; }
+    [[nodiscard]] virtual uint8_t* eibObjMcb() const { return &userEepromData[eibObjMcbOffset]; }
 
 protected:
     UserEepromSYSTEMB(const uint32_t start, const uint32_t size, const uint32_t flashSize)

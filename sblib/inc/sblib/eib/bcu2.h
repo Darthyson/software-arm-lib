@@ -111,7 +111,7 @@ public:
      * @param hardwareType  Buffer containing the hardware type
      * @param size          Size of the provided buffer
      */
-    virtual void setHardwareType(const byte* hardwareType, uint8_t size);
+    virtual void setHardwareType(const uint8_t* hardwareType, uint8_t size);
 
     UserRamBCU2* userRam;
 

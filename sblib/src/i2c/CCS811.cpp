@@ -35,13 +35,13 @@ bool CCS811Class::begin(const uint8_t I2C_ADDR, const int WAKE_PIN) {
     i2c_lpcopen_init();
     pinMode(_WAKE_PIN, OUTPUT); // set WAKE pin as OUTPUT
 
-    byte hw_id = readHW_ID();
+    uint8_t hw_id = readHW_ID();
     if (hw_id != 0x81) // this is the expected hardware ID
     {
         return false;
     }
 
-    byte status = readStatus();
+    uint8_t status = readStatus();
     uint8_t bit = (status & (1 << 4)) != 0; // black magic to read APP_VALID bit from STATUS register
     if (bit != 1)
     {

@@ -308,14 +308,14 @@ private:
     /**
      * A buffer for the telegram to send.
      */
-    byte* sendTelegram;
+    uint8_t* sendTelegram;
 
     /**
      * Two buffers for connection-oriented telegrams to send. Separate from @ref sendTelegram as repeated sending
      * can be necessary after seconds, while other telegrams can be received and transmitted.
      */
-    byte* sendConnectedTelegram;
-    byte* sendConnectedTelegram2;
+    uint8_t* sendConnectedTelegram;
+    uint8_t* sendConnectedTelegram2;
 
     enum SendTelegramBufferState
     {

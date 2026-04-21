@@ -94,7 +94,7 @@ public:
      * @param objno - the ID of the communication object.
      * @return The value of the com-object.
      */
-    virtual byte* objectValuePtr(int objno) = 0;
+    virtual uint8_t* objectValuePtr(int objno) = 0;
 
     /**
      * Get the size of the communication object's value in bytes.
@@ -130,7 +130,7 @@ public:
      * @param objno - the ID of the communication object.
      * @param value - the new value of the communication object.
      */
-    void objectWrite(int objno, const byte* value);
+    void objectWrite(int objno, const uint8_t* value);
 
     /**
      * Set the value of a communication object. Calling this function triggers the
@@ -173,7 +173,7 @@ public:
      * @param objno - the ID of the communication object.
      * @param value - the new value of the communication object.
      */
-    void objectUpdate(int objno, const byte* value);
+    void objectUpdate(int objno, const uint8_t* value);
 
     /**
      * Set the value of a communication object and mark the communication object
@@ -221,7 +221,7 @@ public:
      */
     virtual const ComConfig& objectConfig(int objno) = 0;
 
-    void processGroupTelegram(int addr, int apci, byte* tel);
+    void processGroupTelegram(int addr, int apci, uint8_t* tel);
 
     /**
      * Process a multicast group telegram received from bus or requested by the application.
@@ -239,7 +239,7 @@ public:
      *                  if called from app, we have the triggering object as additional parameter
      * @param trg_objno Object number triggering the group telegram from the application layer
      */
-    virtual void processGroupTelegram(uint16_t addr, int apci, byte* tel, int trg_objno) = 0;
+    virtual void processGroupTelegram(uint16_t addr, int apci, uint8_t* tel, int trg_objno) = 0;
 
     /**
      * Get the communication object configuration table ("COMMS" table). This is the table
@@ -252,7 +252,7 @@ public:
      *
      * @return Pointer to com-objects configuration table.
      */
-    virtual byte* objectConfigTable() = 0;
+    virtual uint8_t* objectConfigTable() = 0;
 
     /**
      * Get the communication object status flags table. This is the table with the
@@ -263,7 +263,7 @@ public:
      * @brief The whole table consists of the status flags - 4 bits per communication
      * object.
      */
-    virtual byte* objectFlagsTable() = 0;
+    virtual uint8_t* objectFlagsTable() = 0;
 
     /**
      *  Send next Group read/write telegram based on RAM flag status and handle bus rx/tx status
@@ -311,7 +311,7 @@ protected:
      */
     void setObjectFlags(int objno, int flags);
     void _objectWrite(int objno, unsigned int value, int flags);
-    void _objectWriteBytes(int objno, const byte* value, int flags);
+    void _objectWriteBytes(int objno, const uint8_t* value, int flags);
 
     /**
      * @return The number of communication objects.
@@ -349,7 +349,7 @@ protected:
      * @param isResponse - true if response telegram, false if write telegram
      */
     void sendGroupWriteTelegram(int objno, int addr, bool isResponse);
-    void processGroupWriteTelegram(int objno, const byte* tel);
+    void processGroupWriteTelegram(int objno, const uint8_t* tel);
 
     BcuBase* bcu;
     int le_ptr;
@@ -368,7 +368,7 @@ inline void ComObjects::objectEndian(const int val)
     le_ptr = val;
 }
 
-inline void ComObjects::processGroupTelegram(const int addr, const int apci, byte* tel)
+inline void ComObjects::processGroupTelegram(const int addr, const int apci, uint8_t* tel)
 {
     // call with neg/invalid object
 
@@ -400,7 +400,7 @@ inline void ComObjects::objectWrite(const int objno, const unsigned int value)
     _objectWrite(objno, value, COMFLAG_TRANSREQ);
 }
 
-inline void ComObjects::objectWrite(const int objno, const byte* value)
+inline void ComObjects::objectWrite(const int objno, const uint8_t* value)
 {
     _objectWriteBytes(objno, value, COMFLAG_TRANSREQ);
 }
@@ -415,7 +415,7 @@ inline void ComObjects::objectUpdate(const int objno, const unsigned int value)
     _objectWrite(objno, value, COMFLAG_UPDATE);
 }
 
-inline void ComObjects::objectUpdate(const int objno, const byte* value)
+inline void ComObjects::objectUpdate(const int objno, const uint8_t* value)
 {
     _objectWriteBytes(objno, value, COMFLAG_UPDATE);
 }

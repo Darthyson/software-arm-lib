@@ -121,7 +121,7 @@ Timer timer32_0(TIMER32_0);
 Timer timer32_1(TIMER32_1);
 
 
-Timer::Timer(const byte aTimerNum)
+Timer::Timer(const uint8_t aTimerNum)
 {
     timerNum = aTimerNum;
     timer = timers[aTimerNum];

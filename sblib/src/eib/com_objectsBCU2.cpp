@@ -9,30 +9,30 @@
 #include <sblib/eib/bcu2.h>
 #include <sblib/bits.h>
 
-byte* ComObjectsBCU2::objectValuePtr(const int objno)
+uint8_t* ComObjectsBCU2::objectValuePtr(const int objno)
 {
     // The object configuration
     const ComConfigBCU2* cfg = objectConfigBCU2(objno);
 
     // TODO Should handle userRam.segment0addr and userRam.segment1addr here
     // if (cfg.config & COMCONF_VALUE_TYPE) // 0 if segment 0, !=0 if segment 1
-    const auto addr = reinterpret_cast<const byte*>(&cfg->dataPtr);
+    const auto addr = reinterpret_cast<const uint8_t*>(&cfg->dataPtr);
     if (le_ptr == LITTLE_ENDIAN)
         return ((BcuDefault*)bcu)->userMemoryPtr(makeWord(addr[1], addr[0]));
     else
         return ((BcuDefault*)bcu)->userMemoryPtr(makeWord(addr[0], addr[1]));
 }
 
-byte* ComObjectsBCU2::objectConfigTable()
+uint8_t* ComObjectsBCU2::objectConfigTable()
 {
-    const byte* addr = (byte*) &((BCU2*)bcu)->userEeprom->commsTabAddr();
+    const uint8_t* addr = (uint8_t*) &((BCU2*)bcu)->userEeprom->commsTabAddr();
     const uint16_t comObjTableAddr = makeWord(*(addr + 1), *addr);
     return ((BcuDefault*)bcu)->userMemoryPtr(comObjTableAddr);
 }
 
-byte* ComObjectsBCU2::objectFlagsTable()
+uint8_t* ComObjectsBCU2::objectFlagsTable()
 {
-    const byte* configTable = objectConfigTable();
+    const uint8_t* configTable = objectConfigTable();
     uint16_t flagsTableAddress;
 
     if (le_ptr == LITTLE_ENDIAN)
@@ -48,7 +48,7 @@ byte* ComObjectsBCU2::objectFlagsTable()
 
 const ComConfigBCU2* ComObjectsBCU2::objectConfigBCU2(const int objno)
 {
-    const byte* configTable = objectConfigTable();
+    const uint8_t* configTable = objectConfigTable();
     if (configTable == nullptr)
     {
         return (nullptr);
@@ -65,7 +65,7 @@ const ComConfig& ComObjectsBCU2::objectConfig(const int objno)
 void ComObjectsBCU2::printObjectConfigTable()
 {
 #ifdef DUMP_COM_OBJ
-        byte * addr = (byte* ) & ((BCU2*)bcu)->userEeprom->commsTabAddr();
+        uint8_t * addr = (uint8_t*) & ((BCU2*)bcu)->userEeprom->commsTabAddr();
         uint16_t comObjTableAddr = makeWord(*(addr + 1), * addr);
         serial.println("ObjectConfigTable:");
         serial.println("   address      : 0x", comObjTableAddr, HEX, 4);
@@ -74,8 +74,8 @@ void ComObjectsBCU2::printObjectConfigTable()
             serial.println("invalid address!");
             return;
         }
-        byte* currentTablePosition = ((BcuDefault*)bcu)->userMemoryPtr(comObjTableAddr);
-        byte currentSize = *currentTablePosition;
+        uint8_t* currentTablePosition = ((BcuDefault*)bcu)->userMemoryPtr(comObjTableAddr);
+        uint8_t currentSize = *currentTablePosition;
         serial.println("   #com objects : ", currentSize, DEC, 3);
         currentTablePosition++; // 1 byte #com objects
         uint16_t ramFlagsTablePointer;

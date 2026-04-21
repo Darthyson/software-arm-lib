@@ -62,7 +62,7 @@ public:
      *
      * @return true if successfully written, otherwise false
      */
-    virtual bool processApciMemoryWritePDU(int addressStart, byte* payLoad, int lengthPayLoad);
+    virtual bool processApciMemoryWritePDU(int addressStart, uint8_t* payLoad, int lengthPayLoad);
 
     /**
      * Process a APCI_MEMORY_READ_PDU
@@ -74,7 +74,7 @@ public:
      *
      * @return true if successfully read, otherwise false
      */
-    virtual bool processApciMemoryReadPDU(int addressStart, byte* payLoad, int lengthPayLoad);
+    virtual bool processApciMemoryReadPDU(int addressStart, uint8_t* payLoad, int lengthPayLoad);
 
     /**
      * Process a APCI_MEMORY_READ_PDU or APCI_MEMORY_WRITE_PDU depending on
@@ -86,7 +86,7 @@ public:
      *
      * @return true if successfully, otherwise false
      */
-    bool processApciMemoryOperation(unsigned int addressStart, byte* payLoad, unsigned int lengthPayLoad, const bool& readMem) const;
+    bool processApciMemoryOperation(unsigned int addressStart, uint8_t* payLoad, unsigned int lengthPayLoad, const bool& readMem) const;
 
     /**
      * Process a APCI_MASTER_RESET_PDU
@@ -128,7 +128,7 @@ public:
 
     UserEeprom* userEeprom;
 
-    byte* userMemoryPtr(unsigned int addr) const;
+    uint8_t* userMemoryPtr(unsigned int addr) const;
 
     /**
      * Returns a pointer to the instance of the MemMapper object of the BCU

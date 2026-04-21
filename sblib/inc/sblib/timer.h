@@ -159,7 +159,7 @@ public:
      *
      * @param aTimerNum - the number of the timer: TIMER16_0, TIMER32_1, ...
      */
-    explicit Timer(byte aTimerNum);
+    explicit Timer(uint8_t aTimerNum);
 
     /**
      * Begin using the timer.
@@ -489,7 +489,7 @@ public:
 
 protected:
     LPC_TMR_TypeDef* timer;
-    byte timerNum;
+    uint8_t timerNum;
 };
 
 

@@ -33,8 +33,8 @@ public:
 
     uint16_t getMaskVersion() const override { return 0x701; }
 
-    bool processApciMemoryReadPDU(int addressStart, byte* payLoad, int lengthPayLoad) override;
-    bool processApciMemoryWritePDU(int addressStart, byte* payLoad, int lengthPayLoad) override;
+    bool processApciMemoryReadPDU(int addressStart, uint8_t* payLoad, int lengthPayLoad) override;
+    bool processApciMemoryWritePDU(int addressStart, uint8_t* payLoad, int lengthPayLoad) override;
 
     /** Start address of the user RAM when ETS talks with us. */
     const int userRamStartDefault = 0x5FC;

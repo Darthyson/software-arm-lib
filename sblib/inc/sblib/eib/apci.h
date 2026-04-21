@@ -143,7 +143,7 @@ enum class RestartType : uint8_t
 };
 
 ApciCommand apciCommand(unsigned char* telegram);
-void setApciCommand(unsigned char* telegram, ApciCommand newApciCommand, byte additionalData);
+void setApciCommand(unsigned char* telegram, ApciCommand newApciCommand, uint8_t additionalData);
 
 
 #endif /* SBLIB_KNX_APCI_H_ */

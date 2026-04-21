@@ -27,7 +27,7 @@ public:
 
     // Implement dummy abstract methods,
     // [[maybe_unused]] is used to avoid warnings about unused parameters, as these methods are not actually tested.
-    byte& operator[]([[maybe_unused]] const uint32_t address) override { return dummyByte; }
+    uint8_t& operator[]([[maybe_unused]] const uint32_t address) override { return dummyByte; }
     [[nodiscard]] uint8_t getUInt8([[maybe_unused]] uint32_t address) const override { return 0;}
     [[nodiscard]] uint16_t getUInt16([[maybe_unused]] uint32_t address) const override { return 0;}
 

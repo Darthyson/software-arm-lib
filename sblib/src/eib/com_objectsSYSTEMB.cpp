@@ -15,7 +15,7 @@ int ComObjectsSYSTEMB::objectSize(const int objno)
 {
     // KNX spec v2.1 3/5/1 p. 178 (section 4.12.5.2.4.1.4)
     // The size of the object types 6...20 in bytes
-    const byte objectTypeSizes[15] = {1, 1, 2, 3, 4, 6, 8, 10, 14, 5, 7, 9, 11, 12, 13};
+    const uint8_t objectTypeSizes[15] = {1, 1, 2, 3, 4, 6, 8, 10, 14, 5, 7, 9, 11, 12, 13};
 
     const int type = objectType(objno);
     if (type < BIT_7)
@@ -27,7 +27,7 @@ int ComObjectsSYSTEMB::objectSize(const int objno)
     return 252;
 }
 
-byte* ComObjectsSYSTEMB::objectValuePtr(const int objno)
+uint8_t* ComObjectsSYSTEMB::objectValuePtr(const int objno)
 {
     int ramAddr = bcu->userRam->startAddr() + 2;
     for (int i = 1; i < objno; i++)
@@ -51,13 +51,13 @@ byte* ComObjectsSYSTEMB::objectValuePtr(const int objno)
  *  @return void
  *
  */
-void ComObjectsSYSTEMB::processGroupTelegram(const uint16_t addr, const int apci, byte* tel, const int trg_objno)
+void ComObjectsSYSTEMB::processGroupTelegram(const uint16_t addr, const int apci, uint8_t* tel, const int trg_objno)
 {
     //
     // Spec: Resources 4.11.4 Group Object Association Table - Realization Type 6
     //
     const ComConfig* configTab = &objectConfig(0);
-    const byte* assocTab = bcu->addrTables->assocTable();
+    const uint8_t* assocTab = bcu->addrTables->assocTable();
     const int endAssoc = 2 + makeWord(assocTab[0], assocTab[1]) * 4; // length field has 2 octets and each entry has 4 octets on SYSTEM B
 
     // Convert the group address into the index into the group address table
@@ -97,15 +97,15 @@ void ComObjectsSYSTEMB::processGroupTelegram(const uint16_t addr, const int apci
     }
 }
 
-byte* ComObjectsSYSTEMB::objectConfigTable()
+uint8_t* ComObjectsSYSTEMB::objectConfigTable()
 {
-    const byte* addr = (byte*) &((SYSTEMB*)bcu)->userEeprom->commsTabAddr();
+    const uint8_t* addr = (uint8_t*) &((SYSTEMB*)bcu)->userEeprom->commsTabAddr();
     return ((BcuDefault*)bcu)->userMemoryPtr(makeWord(*(addr + 1), *addr));
 }
 
-byte* ComObjectsSYSTEMB::objectFlagsTable()
+uint8_t* ComObjectsSYSTEMB::objectFlagsTable()
 {
-    const byte* configTable = objectConfigTable();
+    const uint8_t* configTable = objectConfigTable();
     if (le_ptr == LITTLE_ENDIAN)
         return ((BcuDefault*)bcu)->userMemoryPtr(makeWord(configTable[2], configTable[1]));
 

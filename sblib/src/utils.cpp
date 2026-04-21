@@ -18,7 +18,7 @@
 static int fatalErrorPin = PIN_PROG;
 static int eibTxPin = PIN_EIB_TX; ///\todo make it universal
 
-void reverseCopy(byte* dest, const byte* src, int len)
+void reverseCopy(uint8_t* dest, const uint8_t* src, int len)
 {
     src += len - 1;
     while (len > 0)
@@ -70,7 +70,7 @@ void setKNX_TX_Pin(const int newTxPin)
     eibTxPin = newTxPin;
 }
 
-int hashUID(byte* uid, const int len_uid, byte* hash, const int len_hash)
+int hashUID(uint8_t* uid, const int len_uid, uint8_t* hash, const int len_hash)
 {
     constexpr int MAX_HASH_WIDE = 16;
     constexpr uint64_t BigPrime48 = 281474976710597u; // FF FF FF FF FF C5

@@ -30,7 +30,8 @@
  *
  * @return new LoadState of the interface object objectIdx
  */
-LoadState PropertiesMASK0701::handleAllocAbsDataSegment([[maybe_unused]] const int objectIdx, const byte* payLoad, [[maybe_unused]] const int len)
+LoadState PropertiesMASK0701::handleAllocAbsDataSegment([[maybe_unused]] const int objectIdx, const uint8_t* payLoad,
+    [[maybe_unused]] const int len)
 {
     /*
      *  from KNX Spec. 06 Profiles 4.2.9 RAM cleared
@@ -132,7 +133,7 @@ LoadState PropertiesMASK0701::handleAllocAbsDataSegment([[maybe_unused]] const i
  *
  * @return new LoadState of the interface object objectIdx
  */
-LoadState PropertiesMASK0701::handleAllocAbsTaskSegment(const int objectIdx, const byte* payLoad, const int len)
+LoadState PropertiesMASK0701::handleAllocAbsTaskSegment(const int objectIdx, const uint8_t* payLoad, const int len)
 {
     // payLoad[0..1] : start address        (SSSS)
     // payLoad[2]    : PEI type

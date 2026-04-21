@@ -40,9 +40,9 @@ struct sDS18x20
     eDsType type; // Device type
 #endif
     uint8_t res_type; // Resolution type 0 or 1
-    byte data[12];    // Read data
+    uint8_t data[12];    // Read data
     // Device ROM. 64bit Lasered ROM-Code to detect the Family Code
-    byte addr[8];
+    uint8_t addr[8];
     bool crcOK;                // Last read crc state
     bool lastReadOK;           // Read state of last received value
     float current_temperature; // Current temperature

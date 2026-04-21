@@ -101,7 +101,7 @@ struct PropertyDef
     /**
      * The ID of the property.
      */
-    byte id;
+    uint8_t id;
 
     /**
      * The control byte contains bits that define the characteristics of a property.
@@ -111,7 +111,7 @@ struct PropertyDef
      * Bit 6: the property is an array
      * Bit 7: the property is writable
      */
-    byte control;
+    uint8_t control;
 
     /**
      * Address of the property value, or the value itself if bit 5 of control is unset.
@@ -127,7 +127,7 @@ struct PropertyDef
      *
      * @return The pointer to the property value.
      */
-    byte* valuePointer(BcuBase* bcu) const;
+    uint8_t* valuePointer(BcuBase* bcu) const;
 
     /**
      * Test if the valuePointer() points to the userEeprom.

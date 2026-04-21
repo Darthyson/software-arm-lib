@@ -70,7 +70,7 @@ void initLpdu(uint8_t* telegram, KNXPriority newPriority, bool newRepeated, KNXF
  * @param telegram Pointer to the telegram buffer
  * @return The control byte value
  */
-byte controlByte(const uint8_t* telegram);
+uint8_t controlByte(const uint8_t* telegram);
 
 /**
  * Check if a telegram is repeated

@@ -13,9 +13,11 @@
 #include "sblib/always_inline.h"
 #include <cstdint>
 
+
 /**
  * An unsigned 1 byte value.
  */
+[[deprecated("sblib typedef byte is deprecated, use uint8_t instead")]]
 typedef unsigned char byte;
 
 /**

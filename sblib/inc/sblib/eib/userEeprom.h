@@ -39,32 +39,32 @@ public:
 
     explicit UserEeprom(uint32_t start, uint32_t size, uint32_t flashSize);
 
-    alignas(FLASH_RAM_BUFFER_ALIGNMENT) byte* userEepromData; // must be word aligned, otherwise iapProgram will fail
+    alignas(FLASH_RAM_BUFFER_ALIGNMENT) uint8_t* userEepromData; // must be word aligned, otherwise iapProgram will fail
 
-    [[nodiscard]] virtual byte& optionReg() const = 0;
-    [[nodiscard]] virtual byte& manuDataH() const = 0;
-    [[nodiscard]] virtual byte& manuDataL() const = 0;
-    [[nodiscard]] virtual byte& manufacturerH() const = 0;
-    [[nodiscard]] virtual byte& manufacturerL() const = 0;
-    [[nodiscard]] virtual byte& deviceTypeH() const = 0;
-    [[nodiscard]] virtual byte& deviceTypeL() const = 0;
-    [[nodiscard]] virtual byte& version() const = 0;
-    [[nodiscard]] virtual byte& checkLimit() const = 0;
-    [[nodiscard]] virtual byte& appPeiType() const = 0;
-    [[nodiscard]] virtual byte& syncRate() const = 0;
-    [[nodiscard]] virtual byte& portCDDR() const = 0;
-    [[nodiscard]] virtual byte& portADDR() const = 0;
-    [[nodiscard]] virtual byte& runError() const = 0;
-    [[nodiscard]] virtual byte& routeCnt() const = 0;
-    [[nodiscard]] virtual byte& maxRetransmit() const = 0;
-    [[nodiscard]] virtual byte& confDesc() const = 0;
-    [[nodiscard]] virtual byte& assocTabPtr() const = 0;
-    [[nodiscard]] virtual byte& commsTabPtr() const = 0;
-    [[nodiscard]] virtual byte& usrInitPtr() const = 0;
-    [[nodiscard]] virtual byte& usrProgPtr() const = 0;
+    [[nodiscard]] virtual uint8_t& optionReg() const = 0;
+    [[nodiscard]] virtual uint8_t& manuDataH() const = 0;
+    [[nodiscard]] virtual uint8_t& manuDataL() const = 0;
+    [[nodiscard]] virtual uint8_t& manufacturerH() const = 0;
+    [[nodiscard]] virtual uint8_t& manufacturerL() const = 0;
+    [[nodiscard]] virtual uint8_t& deviceTypeH() const = 0;
+    [[nodiscard]] virtual uint8_t& deviceTypeL() const = 0;
+    [[nodiscard]] virtual uint8_t& version() const = 0;
+    [[nodiscard]] virtual uint8_t& checkLimit() const = 0;
+    [[nodiscard]] virtual uint8_t& appPeiType() const = 0;
+    [[nodiscard]] virtual uint8_t& syncRate() const = 0;
+    [[nodiscard]] virtual uint8_t& portCDDR() const = 0;
+    [[nodiscard]] virtual uint8_t& portADDR() const = 0;
+    [[nodiscard]] virtual uint8_t& runError() const = 0;
+    [[nodiscard]] virtual uint8_t& routeCnt() const = 0;
+    [[nodiscard]] virtual uint8_t& maxRetransmit() const = 0;
+    [[nodiscard]] virtual uint8_t& confDesc() const = 0;
+    [[nodiscard]] virtual uint8_t& assocTabPtr() const = 0;
+    [[nodiscard]] virtual uint8_t& commsTabPtr() const = 0;
+    [[nodiscard]] virtual uint8_t& usrInitPtr() const = 0;
+    [[nodiscard]] virtual uint8_t& usrProgPtr() const = 0;
 
-    [[nodiscard]] virtual byte& addrTabSize() const = 0;
-    [[nodiscard]] virtual byte* addrTab() const = 0;
+    [[nodiscard]] virtual uint8_t& addrTabSize() const = 0;
+    [[nodiscard]] virtual uint8_t* addrTab() const = 0;
 
     /**
      * Access the user EEPROM like an ordinary array. The @ref startAddress is subtracted
@@ -73,7 +73,7 @@ public:
      * @param address - the address of the data byte to access.
      * @return The data byte.
      */
-    byte& operator[](uint32_t address) override;
+    uint8_t& operator[](uint32_t address) override;
     [[nodiscard]] uint8_t getUInt8(uint32_t address) const override;
     [[nodiscard]] uint16_t getUInt16(uint32_t address) const override;
 
@@ -96,8 +96,8 @@ public:
     [[nodiscard]] uint32_t flashSize() const;
 
     [[nodiscard]] unsigned int numEepromPages() const;
-    [[nodiscard]] byte* lastEepromPage() const;
-    [[nodiscard]] byte* flashSectorAddress() const;
+    [[nodiscard]] uint8_t* lastEepromPage() const;
+    [[nodiscard]] uint8_t* flashSectorAddress() const;
 
     /**
      * If user-eeprom is modified, changes are written to the mcu's flash
@@ -114,7 +114,7 @@ protected:
      *
      * @return If successful: number of the last valid flash page, otherwise 0
      */
-    [[nodiscard]] byte* findValidPage() const;
+    [[nodiscard]] uint8_t* findValidPage() const;
 
     bool userEepromModified = false;
     unsigned int writeUserEepromTime = 0;

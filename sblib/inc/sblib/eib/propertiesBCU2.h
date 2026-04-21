@@ -233,7 +233,7 @@ public:
      *
      * @return The new load state.
      */
-    virtual int loadProperty(int objectIdx, const byte* data, int len);
+    virtual int loadProperty(int objectIdx, const uint8_t* data, int len);
 
     /**
      * Find a property definition in a properties table.
@@ -267,7 +267,7 @@ public:
      * @param len - the length of the data
      * @return the new LoadState of the interface object
      */
-    virtual LoadState handleLoadStateMachine(const int objectIdx, const byte* data, const int len);
+    virtual LoadState handleLoadStateMachine(const int objectIdx, const uint8_t* data, const int len);
 
     /**
      * handles Additional Load Control: LoadEvent: AllocAbsTaskSeg (segment type 2) of a
@@ -281,7 +281,7 @@ public:
      *
      * @return new LoadState of the interface object objectIdx
      */
-    virtual LoadState handleAllocAbsTaskSegment(const int objectIdx, const byte* payLoad, const int len);
+    virtual LoadState handleAllocAbsTaskSegment(const int objectIdx, const uint8_t* payLoad, const int len);
 
     /**
      * NOT IMPLEMENTED!
@@ -296,7 +296,7 @@ public:
      *
      * @return new LoadState of the interface object objectIdx
      */
-    virtual LoadState handleAllocAbsDataSegment(const int objectIdx, const byte* payLoad, const int len);
+    virtual LoadState handleAllocAbsDataSegment(const int objectIdx, const uint8_t* payLoad, const int len);
 
     /**
      * NOT IMPLEMENTED!
@@ -311,7 +311,7 @@ public:
      *
      * @return new LoadState of the interface object objectIdx
      */
-    virtual LoadState handleAllocAbsStackSeg(const int objectIdx, const byte* payLoad, const int len);
+    virtual LoadState handleAllocAbsStackSeg(const int objectIdx, const uint8_t* payLoad, const int len);
 
     /**
      * NOT IMPLEMENTED!
@@ -326,7 +326,7 @@ public:
      *
      * @return new LoadState of the interface object objectIdx
      */
-    virtual LoadState handleTaskPtr(const int objectIdx, const byte* payLoad, const int len);
+    virtual LoadState handleTaskPtr(const int objectIdx, const uint8_t* payLoad, const int len);
 
     /**
      * NOT IMPLEMENTED!
@@ -343,7 +343,7 @@ public:
      *
      * @return new LoadState of the interface object objectIdx
      */
-    virtual LoadState handleTaskCtrl1(const int objectIdx, const byte* payLoad, const int len);
+    virtual LoadState handleTaskCtrl1(const int objectIdx, const uint8_t* payLoad, const int len);
 
     /**
      * ONLY PARTLY IMPLEMENTED!
@@ -358,7 +358,7 @@ public:
      *
      * @return new LoadState of the interface object objectIdx
      */
-    virtual LoadState handleTaskCtrl2(const int objectIdx, const byte* payLoad, const int len);
+    virtual LoadState handleTaskCtrl2(const int objectIdx, const uint8_t* payLoad, const int len);
 
     /**
      * NOT IMPLEMENTED!
@@ -373,7 +373,7 @@ public:
      *
      * @return new LoadState of the interface object objectIdx
      */
-    virtual LoadState handleRelativeAllocation(const int objectIdx, const byte* payLoad, const int len);
+    virtual LoadState handleRelativeAllocation(const int objectIdx, const uint8_t* payLoad, const int len);
 
     /**
      * PARTIALLY IMPLEMENTED for System_B !
@@ -388,7 +388,7 @@ public:
      *
      * @return new LoadState of the interface object objectIdx
      */
-    virtual LoadState handleDataRelativeAllocation(const int objectIdx, const byte* payLoad, const int len);
+    virtual LoadState handleDataRelativeAllocation(const int objectIdx, const uint8_t* payLoad, const int len);
 
     virtual bool propertyValueReadTelegram(int objectIdx, PropertyID propertyId, int count, int start, uint8_t* sendBuffer);
 
@@ -431,7 +431,7 @@ public:
      * @param data - pointer to data to print
      * @param len - length of data
      */
-    virtual void printData(const byte* data, int len);
+    virtual void printData(const uint8_t* data, int len);
 
 #endif /*DUMP_PROPERTIES*/
 

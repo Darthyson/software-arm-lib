@@ -37,7 +37,7 @@ ApciCommand apciCommand(unsigned char* telegram)
     }
 }
 
-void setApciCommand(unsigned char* telegram, const ApciCommand newApciCommand, const byte additionalData)
+void setApciCommand(unsigned char* telegram, const ApciCommand newApciCommand, const uint8_t additionalData)
 {
     telegram[APCI_HIGH_BYTE] = HIGH_BYTE(newApciCommand);
     telegram[APCI_LOW_BYTE] = lowByte(newApciCommand);

@@ -57,22 +57,22 @@ public:
     [[nodiscard]] virtual int orderSize() const { return 10; };
     [[nodiscard]] virtual int orderInfoSize() const { return 10; };
 
-    [[nodiscard]] virtual byte& appType() const { return userEepromData[appTypeOffset]; }
-    [[nodiscard]] virtual byte* loadState() const { return &userEepromData[loadStateOffset]; }
+    [[nodiscard]] virtual uint8_t& appType() const { return userEepromData[appTypeOffset]; }
+    [[nodiscard]] virtual uint8_t* loadState() const { return &userEepromData[loadStateOffset]; }
     [[nodiscard]] virtual word& commsTabAddr() const { return *(word*)&userEepromData[commsTabAddrOffset]; }
     [[nodiscard]] virtual word& commsSeg0Addr() const { return *(word*)&userEepromData[commsSeg0AddrOffset]; }
     [[nodiscard]] virtual word& commsSeg1Addr() const { return *(word*)&userEepromData[commsSeg1AddrOffset]; }
     [[nodiscard]] virtual word& eibObjAddr() const { return *(word*)&userEepromData[eibObjAddrOffset]; }
-    [[nodiscard]] virtual byte& eibObjCount() const { return userEepromData[eibObjCountOffset]; }
+    [[nodiscard]] virtual uint8_t& eibObjCount() const { return userEepromData[eibObjCountOffset]; }
     [[nodiscard]] virtual word& addrTabAddr() const { return *(word*)&userEepromData[addrTabAddrOffset]; }
     [[nodiscard]] virtual word& assocTabAddr() const { return *(word*)&userEepromData[assocTabAddrOffset]; }
-    [[nodiscard]] virtual byte* serial() const { return &userEepromData[serialOffset]; }
-    [[nodiscard]] virtual byte* order() const { return &userEepromData[orderOffset]; }
+    [[nodiscard]] virtual uint8_t* serial() const { return &userEepromData[serialOffset]; }
+    [[nodiscard]] virtual uint8_t* order() const { return &userEepromData[orderOffset]; }
 
-    [[nodiscard]] virtual byte& padding1() const { return userEepromData[padding1Offset]; }
-    [[nodiscard]] virtual byte& serviceControl() const { return userEepromData[serviceControlOffset]; }
-    [[nodiscard]] virtual byte& padding2() const { return userEepromData[padding2Offset]; }
-    [[nodiscard]] virtual byte* orderInfo() const { return &userEepromData[orderInfoOffset]; }
+    [[nodiscard]] virtual uint8_t& padding1() const { return userEepromData[padding1Offset]; }
+    [[nodiscard]] virtual uint8_t& serviceControl() const { return userEepromData[serviceControlOffset]; }
+    [[nodiscard]] virtual uint8_t& padding2() const { return userEepromData[padding2Offset]; }
+    [[nodiscard]] virtual uint8_t* orderInfo() const { return &userEepromData[orderInfoOffset]; }
 
 protected:
     // BCU2 has no variable EEPROM start or size, so make this constructor protected

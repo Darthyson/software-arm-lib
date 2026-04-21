@@ -203,7 +203,7 @@ void Bus::prepareTelegram(uint8_t* telegram, const uint16_t length) const
  * @param telegram - the telegram to be sent.
  * @param length - the length of the telegram in sbSendTelegram[], without the checksum
  */
-void Bus::sendTelegram(byte* telegram, const uint16_t length)
+void Bus::sendTelegram(uint8_t* telegram, const uint16_t length)
 {
     prepareTelegram(telegram, length);
 

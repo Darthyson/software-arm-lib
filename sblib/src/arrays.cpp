@@ -33,7 +33,7 @@ short indexOf(const unsigned short val, const unsigned short* arr, const short c
     return -1;
 }
 
-short indexOf(const byte val, const byte* arr, const short count)
+short indexOf(const uint8_t val, const uint8_t* arr, const short count)
 {
     for (short idx = 0; idx < count; ++idx)
     {

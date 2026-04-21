@@ -40,7 +40,7 @@ public:
      * @brief The first byte of the table contains the number of entries. The rest of
      * the table consists of the addresses: 2 bytes per address.
      */
-    byte* addrTable() override;
+    uint8_t* addrTable() override;
 
     /**
      * Get the association table. The association table connects group addresses
@@ -52,7 +52,7 @@ public:
      * the table consists of the associations - 2 bytes per association:
      * 1 byte addr-table index, 1 byte com-object number.
      */
-    byte* assocTable() override;
+    uint8_t* assocTable() override;
 
 private:
     UserEeprom* userEeprom;

@@ -169,7 +169,7 @@ bool DS18x20::readResult(const int deviceIdx)
     }
     else
     {
-        byte cfg = (sDev->data[4] & 0x60);
+        uint8_t cfg = (sDev->data[4] & 0x60);
 
         // at lower res, the low bits are undefined, so let's zero them
         if (cfg == 0x00)

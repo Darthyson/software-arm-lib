@@ -51,7 +51,7 @@ const PropertyDef* PropertiesBCU2::propertyDef(const int objectIdx, const Proper
     return findProperty(propertyId, propertiesTab()[objectIdx]);
 }
 
-LoadState PropertiesBCU2::handleLoadStateMachine([[maybe_unused]] const int objectIdx, const byte* data, const int len)
+LoadState PropertiesBCU2::handleLoadStateMachine([[maybe_unused]] const int objectIdx, const uint8_t* data, const int len)
 {
     // FIXME at least these "interface objects" should support their load states.
     // userEeprom->loadState[OT_ADDR_TABLE]
@@ -98,7 +98,7 @@ LoadState PropertiesBCU2::handleLoadStateMachine([[maybe_unused]] const int obje
     return newLoadState;
 }
 
-LoadState PropertiesBCU2::handleAllocAbsTaskSegment(const int objectIdx, const byte* payLoad, const int len)
+LoadState PropertiesBCU2::handleAllocAbsTaskSegment(const int objectIdx, const uint8_t* payLoad, const int len)
 {
     // payLoad[0..1] : start address        (SSSS)
     // payLoad[2]    : PEI type
@@ -159,7 +159,7 @@ LoadState PropertiesBCU2::handleAllocAbsTaskSegment(const int objectIdx, const b
     return LS_LOADING;
 }
 
-LoadState PropertiesBCU2::handleAllocAbsDataSegment([[maybe_unused]] const int objectIdx, const byte* payLoad, [[maybe_unused]] const int len)
+LoadState PropertiesBCU2::handleAllocAbsDataSegment([[maybe_unused]] const int objectIdx, const uint8_t* payLoad, [[maybe_unused]] const int len)
 {
     /*
      *  from KNX Spec. 06 Profiles 4.2.9 RAM cleared
@@ -255,7 +255,7 @@ LoadState PropertiesBCU2::handleAllocAbsDataSegment([[maybe_unused]] const int o
 }
 
 LoadState PropertiesBCU2::handleAllocAbsStackSeg([[maybe_unused]] const int objectIdx,
-     [[maybe_unused]] const byte* payLoad, [[maybe_unused]] const int len)
+     [[maybe_unused]] const uint8_t* payLoad, [[maybe_unused]] const int len)
 {
     // payLoad[0..1] : start address        (SSSS)
     // payLoad[2..3] : length               (EEEE-SSSS+1)
@@ -279,7 +279,8 @@ LoadState PropertiesBCU2::handleAllocAbsStackSeg([[maybe_unused]] const int obje
     return LS_LOADING;
 }
 
-LoadState PropertiesBCU2::handleTaskPtr([[maybe_unused]] const int objectIdx, [[maybe_unused]] const byte* payLoad, [[maybe_unused]] const int len)
+LoadState PropertiesBCU2::handleTaskPtr([[maybe_unused]] const int objectIdx, [[maybe_unused]] const uint8_t* payLoad,
+    [[maybe_unused]] const int len)
 {
     // payLoad[0..1] : app init address           (IIII)
     // payLoad[2..3] : app save address           (SSSS)
@@ -299,7 +300,8 @@ LoadState PropertiesBCU2::handleTaskPtr([[maybe_unused]] const int objectIdx, [[
     return LS_LOADING;
 }
 
-LoadState PropertiesBCU2::handleTaskCtrl1([[maybe_unused]] const int objectIdx, const byte* payLoad, [[maybe_unused]] const int len)
+LoadState PropertiesBCU2::handleTaskCtrl1([[maybe_unused]] const int objectIdx, const uint8_t* payLoad,
+    [[maybe_unused]] const int len)
 {
     // payLoad[0..1] : interface object address
     // payLoad[2]    : nr. of interface objects
@@ -319,7 +321,8 @@ LoadState PropertiesBCU2::handleTaskCtrl1([[maybe_unused]] const int objectIdx, 
     return LS_LOADING;
 }
 
-LoadState PropertiesBCU2::handleTaskCtrl2([[maybe_unused]] const int objectIdx, const byte* payLoad, [[maybe_unused]] const int len)
+LoadState PropertiesBCU2::handleTaskCtrl2([[maybe_unused]] const int objectIdx, const uint8_t* payLoad,
+    [[maybe_unused]] const int len)
 {
     // payLoad[0..1] : app callbackAddr (CCCC)
     // payLoad[2..3] : CommObjPtr (OOOO)
@@ -361,7 +364,7 @@ LoadState PropertiesBCU2::handleTaskCtrl2([[maybe_unused]] const int objectIdx, 
 }
 
 LoadState PropertiesBCU2::handleRelativeAllocation([[maybe_unused]] const int objectIdx,
-     [[maybe_unused]] const byte* payLoad, [[maybe_unused]] const int len)
+     [[maybe_unused]] const uint8_t* payLoad, [[maybe_unused]] const int len)
 {
     // payLoad[0..1] : data
     // payLoad[2..7] : fill octects (0x00)
@@ -378,7 +381,7 @@ LoadState PropertiesBCU2::handleRelativeAllocation([[maybe_unused]] const int ob
 }
 
 LoadState PropertiesBCU2::handleDataRelativeAllocation([[maybe_unused]] const int objectIdx,
-    [[maybe_unused]] const byte* payLoad, [[maybe_unused]] const int len)
+    [[maybe_unused]] const uint8_t* payLoad, [[maybe_unused]] const int len)
 {
     // payLoad[0..3] : requested memory size
     // payLoad[4]    : mode (0x00)
@@ -399,7 +402,7 @@ LoadState PropertiesBCU2::handleDataRelativeAllocation([[maybe_unused]] const in
     return LS_LOADING;
 }
 
-int PropertiesBCU2::loadProperty(const int objectIdx, const byte* data, int len)
+int PropertiesBCU2::loadProperty(const int objectIdx, const uint8_t* data, int len)
 {
     // See KNX 3/5/2, 3.27 DM_LoadStateMachineWrite
     // See KNX 6/6 Profiles, p. 101 for load states
@@ -427,7 +430,7 @@ int PropertiesBCU2::loadProperty(const int objectIdx, const byte* data, int len)
     //
     const int segmentType = data[1]; // this is in both versions of DMP_LoadStateMachineWrite_RCo always the 2.octet
 
-    byte payloadOffset;
+    uint8_t payloadOffset;
     bool apciPropertyValueWrite = (len == DMP_LOADSTATE_MACHINE_WRITE_RCO_IO_LENGTH); // determine the realization type of DMP_LoadStateMachineWrite_RCo
     if (apciPropertyValueWrite)
         payloadOffset = DMP_LOADSTATE_MACHINE_WRITE_RCO_IO_PAYLOAD_OFFSET; // offset for RCo_IO mode, where the real data for Additional Load Controls starts
@@ -435,7 +438,7 @@ int PropertiesBCU2::loadProperty(const int objectIdx, const byte* data, int len)
         payloadOffset = DMP_LOADSTATE_MACHINE_WRITE_RCO_MEM_PAYLOAD_OFFSET; // offset for RCo_Mem mode, where the real data for Additional Load Controls starts
 
 
-    const byte* payload = data + payloadOffset; // "move" to start of payload data
+    const uint8_t* payload = data + payloadOffset; // "move" to start of payload data
     len -= payloadOffset;                       // reduce len by payloadOffset
 
     switch (segmentType)
@@ -480,7 +483,7 @@ bool PropertiesBCU2::propertyValueReadTelegram(const int objectIdx, const Proper
         return false; // not found
 
     const auto type = (PropertyDataType)(def->control & PC_TYPE_MASK);
-    const byte* valuePtr = def->valuePointer(bcu);
+    const uint8_t* valuePtr = def->valuePointer(bcu);
 
     --start;
     const int size = def->size();
@@ -515,9 +518,9 @@ bool PropertiesBCU2::propertyValueWriteTelegram(const int objectIdx, const Prope
     }
 
     const PropertyDataType type = def->type();
-    byte* valuePtr = def->valuePointer(bcu);
+    uint8_t* valuePtr = def->valuePointer(bcu);
 
-    const byte* data = bcu->bus->telegram + 12;
+    const uint8_t* data = bcu->bus->telegram + 12;
     int len;
     if (type == PDT_CONTROL)
     {
@@ -642,7 +645,7 @@ void PropertiesBCU2::printPropertyID(const int propertyid)
     }
 }
 
-void PropertiesBCU2::printData(const byte* data, const int len)
+void PropertiesBCU2::printData(const uint8_t* data, const int len)
 {
     serial.print("Data: ");
     for (int i = 0; i < len; i++)

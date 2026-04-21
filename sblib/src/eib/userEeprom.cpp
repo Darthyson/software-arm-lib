@@ -5,16 +5,17 @@
  *      Author: dridders
  */
 
-#include <cstring>
 #include <sblib/eib/userEeprom.h>
 #include <sblib/internal/iap.h>
 #include <sblib/interrupt.h>
 #include <sblib/timer.h>
 #include <sblib/bits.h>
+#include <cstring>
+
 
 uint32_t UserEeprom::flashSize() const
 {
-    return (userEepromFlashSize);
+    return userEepromFlashSize;
 }
 
 unsigned int UserEeprom::numEepromPages() const
@@ -22,20 +23,20 @@ unsigned int UserEeprom::numEepromPages() const
     return FLASH_SECTOR_SIZE / flashSize();
 }
 
-byte* UserEeprom::lastEepromPage() const
+uint8_t* UserEeprom::lastEepromPage() const
 {
     return flashSectorAddress() + flashSize() * (numEepromPages() - 1);
 }
 
-byte* UserEeprom::flashSectorAddress() const
+uint8_t* UserEeprom::flashSectorAddress() const
 {
     return (FLASH_BASE_ADDRESS + iapFlashSize() - FLASH_SECTOR_SIZE);
 }
 
-byte* UserEeprom::findValidPage() const
+uint8_t* UserEeprom::findValidPage() const
 {
-    const byte* firstPage = FLASH_BASE_ADDRESS + iapFlashSize() - FLASH_SECTOR_SIZE;
-    byte* page = lastEepromPage();
+    const uint8_t* firstPage = FLASH_BASE_ADDRESS + iapFlashSize() - FLASH_SECTOR_SIZE;
+    uint8_t* page = lastEepromPage();
 
     while (page >= firstPage)
     {
@@ -50,7 +51,7 @@ byte* UserEeprom::findValidPage() const
 
 void UserEeprom::readUserEeprom()
 {
-    byte* page = findValidPage();
+    uint8_t* page = findValidPage();
 
     if (page)
         memcpy(userEepromData, page, size());
@@ -69,7 +70,7 @@ void UserEeprom::writeUserEeprom()
 
     noInterrupts();
 
-    byte* page = findValidPage();
+    uint8_t* page = findValidPage();
     if (page == lastEepromPage())
     {
         page = flashSectorAddress();
@@ -114,13 +115,13 @@ void UserEeprom::writeUserEeprom()
 
 UserEeprom::UserEeprom(const uint32_t start, const uint32_t size, const uint32_t flashSize) :
     Memory(start, size),
-    userEepromData(new byte[size]()),
+    userEepromData(new uint8_t[size]()),
     userEepromFlashSize(flashSize)
 {
     readUserEeprom();
 }
 
-byte& UserEeprom::operator[](uint32_t address)
+uint8_t& UserEeprom::operator[](uint32_t address)
 {
     normalizeAddress(&address);
     return userEepromData[address];

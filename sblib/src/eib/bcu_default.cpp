@@ -153,7 +153,7 @@ void BcuDefault::end()
     BcuBase::end();
 }
 
-byte* BcuDefault::userMemoryPtr(const unsigned int addr) const
+uint8_t* BcuDefault::userMemoryPtr(const unsigned int addr) const
 {
     if (userEeprom->inRange(addr))
     {
@@ -217,7 +217,7 @@ bool BcuDefault::processBroadCastTelegram(const ApciCommand apciCmd, unsigned ch
     return handleIndividualAddressBroadcast(apciCmd, telegram);
 }
 
-bool BcuDefault::processApciMemoryWritePDU(const int addressStart, byte* payLoad, const int lengthPayLoad)
+bool BcuDefault::processApciMemoryWritePDU(const int addressStart, uint8_t* payLoad, const int lengthPayLoad)
 {
     DB_MEM_OPS(
         serial.print("ApciMemoryWritePDU: 0x", addressStart, HEX, 4);
@@ -231,7 +231,7 @@ bool BcuDefault::processApciMemoryWritePDU(const int addressStart, byte* payLoad
     return processApciMemoryOperation(addressStart, payLoad, lengthPayLoad, false);
 }
 
-bool BcuDefault::processApciMemoryReadPDU(const int addressStart, byte* payLoad, const int lengthPayLoad)
+bool BcuDefault::processApciMemoryReadPDU(const int addressStart, uint8_t* payLoad, const int lengthPayLoad)
 {
     DB_MEM_OPS(
         serial.print("ApciMemoryReadPDU : 0x", addressStart, HEX, 4);
@@ -255,7 +255,7 @@ bool BcuDefault::processApciMemoryReadPDU(const int addressStart, byte* payLoad,
     return result;
 }
 
-bool BcuDefault::processApciMemoryOperation(unsigned int addressStart, byte* payLoad, unsigned int lengthPayLoad, const bool& readMem) const
+bool BcuDefault::processApciMemoryOperation(unsigned int addressStart, uint8_t* payLoad, unsigned int lengthPayLoad, const bool& readMem) const
 {
     if (lengthPayLoad == 0)
     {

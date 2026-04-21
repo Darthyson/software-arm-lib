@@ -9,7 +9,7 @@
 
 int AddrTablesBCU1::indexOfAddr(const int addr)
 {
-    byte* tab = addrTable();
+    uint8_t* tab = addrTable();
     int num = 0;
 
     if (tab)
@@ -28,12 +28,12 @@ int AddrTablesBCU1::indexOfAddr(const int addr)
     return -1;
 }
 
-byte* AddrTablesBCU1::addrTable()
+uint8_t* AddrTablesBCU1::addrTable()
 {
-    return (byte*) &userEeprom->addrTabSize();
+    return (uint8_t*) &userEeprom->addrTabSize();
 }
 
-byte* AddrTablesBCU1::assocTable()
+uint8_t* AddrTablesBCU1::assocTable()
 {
     return userEeprom->userEepromData + userEeprom->assocTabPtr();
 }

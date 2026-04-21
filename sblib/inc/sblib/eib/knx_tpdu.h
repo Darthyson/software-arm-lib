@@ -63,9 +63,9 @@ enum
     T_GROUP_ADDRESS_FLAG_Msk = (1UL << T_GROUP_ADDRESS_FLAG_Pos) //!< Bitmask to check for an group address
 };
 
-inline byte sequenceNumber(const unsigned char* telegram)
+inline uint8_t sequenceNumber(const unsigned char* telegram)
 {
-    byte tpci = telegram[TPDU_LOW_BYTE];
+    uint8_t tpci = telegram[TPDU_LOW_BYTE];
     if (tpci != 0xFF)
     {
         return ((tpci & T_SEQUENCE_NUMBER_Msk) >> T_SEQUENCE_NUMBER_FIRST_BIT_Pos);
@@ -76,10 +76,10 @@ inline byte sequenceNumber(const unsigned char* telegram)
     }
 }
 
-inline void setSequenceNumber(unsigned char* telegram, const byte newSequenceNumber)
+inline void setSequenceNumber(unsigned char* telegram, const uint8_t newSequenceNumber)
 {
-    telegram[TPDU_LOW_BYTE] &= static_cast<byte>(~T_SEQUENCE_NUMBER_Msk);
-    telegram[TPDU_LOW_BYTE] |= static_cast<byte>(newSequenceNumber << T_SEQUENCE_NUMBER_FIRST_BIT_Pos);
+    telegram[TPDU_LOW_BYTE] &= static_cast<uint8_t>(~T_SEQUENCE_NUMBER_Msk);
+    telegram[TPDU_LOW_BYTE] |= static_cast<uint8_t>(newSequenceNumber << T_SEQUENCE_NUMBER_FIRST_BIT_Pos);
     telegram[TPDU_LOW_BYTE] |= T_SEQUENCED_COMMAND; // set sequenced flag
 }
 

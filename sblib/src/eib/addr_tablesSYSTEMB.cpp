@@ -11,7 +11,7 @@
 
 int AddrTablesSYSTEMB::indexOfAddr(const int addr)
 {
-    byte* tab = addrTable();
+    uint8_t* tab = addrTable();
     int num = 0;
 
     if (tab)

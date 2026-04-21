@@ -50,7 +50,7 @@ constexpr uint8_t IapBlockSizesCount = sizeof(IapBlockSize) / sizeof(IapBlockSiz
  * @param address - the address inside the FLASH
  * @return The sector index of the address.
  */
-unsigned int iapSectorOfAddress(const byte* address);
+unsigned int iapSectorOfAddress(const uint8_t* address);
 
 /**
  * Get the index of the FLASH page for the passed address.
@@ -58,7 +58,7 @@ unsigned int iapSectorOfAddress(const byte* address);
  * @param address - the address inside the FLASH
  * @return The sector index of the address.
  */
-unsigned int iapPageOfAddress(const byte* address);
+unsigned int iapPageOfAddress(const uint8_t* address);
 
 /**
  * Get the address of the given FLASH page index.
@@ -122,7 +122,7 @@ IAP_Status iapErasePageRange(const unsigned int startPageNumber, const unsigned 
  *                      Use 'alignas(FLASH_RAM_BUFFER_ALIGNMENT)' to force correct alignment even with compiler optimization -Ox
  * @warning             The function calls no_interrupts().
  */
-IAP_Status iapProgram(byte* rom, const byte* ram, unsigned int size);
+IAP_Status iapProgram(uint8_t* rom, const uint8_t* ram, unsigned int size);
 
 /**
  * Read the unique ID of the CPU. The ID is 16 bytes long.
@@ -132,7 +132,7 @@ IAP_Status iapProgram(byte* rom, const byte* ram, unsigned int size);
  * @return      @ref IAP_Status status code (0 == OK)
  * @warning     The function calls no_interrupts().
  */
-IAP_Status iapReadUID(byte* uid);
+IAP_Status iapReadUID(uint8_t* uid);
 
 /**
  * Read the 32 bit part identification number of the CPU.

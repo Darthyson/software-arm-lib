@@ -19,7 +19,7 @@
 /**
  * PropertyDataType sizes in bytes
  */
-const byte propertySizes[] =
+const uint8_t propertySizes[] =
 {
     1, 1, 1, 2, 2, 2, 3, 3, 4, 4,                                          // PDT_CONTROL -> PDT_UNSIGNED_LONG
     4, 8, 10, 3, 5, 8, 0,                                                  // PDT_FLOAT - >PDT_VARIABLE_LENGTH
@@ -33,11 +33,11 @@ const byte propertySizes[] =
 
 int PropertyDef::size() const
 {
-    extern const byte propertySizes[];
+    extern const uint8_t propertySizes[];
     return propertySizes[control & PC_TYPE_MASK];
 }
 
-byte* PropertyDef::valuePointer(BcuBase* bcu) const
+uint8_t* PropertyDef::valuePointer(BcuBase* bcu) const
 {
     if (control & PC_POINTER)
     {
@@ -57,5 +57,5 @@ byte* PropertyDef::valuePointer(BcuBase* bcu) const
         }
     }
 
-    return (byte*) &valAddr;
+    return (uint8_t*) &valAddr;
 }

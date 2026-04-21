@@ -21,7 +21,7 @@
  *
  * On most sensor boards, it was 0x76
  */
-BH1750::BH1750(const byte addr)
+BH1750::BH1750(const uint8_t addr)
 {
     i2c_lpcopen_init();
     BH1750_I2CADDR = addr;
@@ -32,7 +32,7 @@ BH1750::BH1750(const byte addr)
  * @param mode Measurement mode
  * @param addr Address of the sensor
  */
-bool BH1750::begin(const Mode mode, const byte addr)
+bool BH1750::begin(const Mode mode, const uint8_t addr)
 {
     LOG("begin");
     i2c_lpcopen_init();
@@ -79,7 +79,7 @@ bool BH1750::configure(Mode mode)
     LOG("configure %d", mode);
 
     // default transmission result to a value out of normal range
-    byte ack = 5;
+    uint8_t ack = 5;
     I2C_XFER_T xfer = {0};
 
     // Check measurement mode is valid
@@ -130,7 +130,7 @@ bool BH1750::configure(Mode mode)
  * @return bool true if MTReg successful set
  *         false if MTreg not changed or parameter out of range
  */
-bool BH1750::setMTreg(const byte MTreg)
+bool BH1750::setMTreg(const uint8_t MTreg)
 {
     LOG("setMTreg %d", MTreg);
     // Bug: lowest value seems to be 32!
@@ -139,7 +139,7 @@ bool BH1750::setMTreg(const byte MTreg)
         LOG("[BH1750] ERROR: MTreg out of range");
         return false;
     }
-    byte ack = 5;
+    uint8_t ack = 5;
     // Send MTreg and the current mode to the sensor
     //   High bit: 01000_MT[7,6,5]
     //    Low bit: 011_MT[4,3,2,1,0]
@@ -191,15 +191,15 @@ bool BH1750::measurementReady(const bool maxWait) const
         case BH1750::ONE_TIME_HIGH_RES_MODE:
         case BH1750::ONE_TIME_HIGH_RES_MODE_2:
             maxWait
-                ? delaytime = (180 * BH1750_MTreg / (byte)BH1750_DEFAULT_MTREG)
-                : delaytime = (120 * BH1750_MTreg / (byte)BH1750_DEFAULT_MTREG);
+                ? delaytime = (180 * BH1750_MTreg / (uint8_t)BH1750_DEFAULT_MTREG)
+                : delaytime = (120 * BH1750_MTreg / (uint8_t)BH1750_DEFAULT_MTREG);
             break;
         case BH1750::CONTINUOUS_LOW_RES_MODE:
         case BH1750::ONE_TIME_LOW_RES_MODE:
             // Send mode to sensor
             maxWait
-                ? delaytime = (24 * BH1750_MTreg / (byte)BH1750_DEFAULT_MTREG)
-                : delaytime = (16 * BH1750_MTreg / (byte)BH1750_DEFAULT_MTREG);
+                ? delaytime = (24 * BH1750_MTreg / (uint8_t)BH1750_DEFAULT_MTREG)
+                : delaytime = (16 * BH1750_MTreg / (uint8_t)BH1750_DEFAULT_MTREG);
             break;
         default:
             break;
@@ -257,7 +257,7 @@ float BH1750::readLightLevel()
 
         if (BH1750_MTreg != BH1750_DEFAULT_MTREG)
         {
-            level *= (float)((byte)BH1750_DEFAULT_MTREG / (float)BH1750_MTreg);
+            level *= (float)((uint8_t)BH1750_DEFAULT_MTREG / (float)BH1750_MTreg);
             // Print MTreg factor if debug enabled
 #ifdef BH1750_DEBUG
       LOG("[BH1750] MTreg factor: %d",

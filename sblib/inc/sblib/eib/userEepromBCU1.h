@@ -50,32 +50,32 @@ public:
     static constexpr int user230bytesStartOffset = 0x19; //!< 0x0119: User EEPROM: 230 bytes (BCU1)
     static constexpr int checksumOffset = 0xff;          //!< 0x01ff: EEPROM checksum (BCU1 only)
 
-    [[nodiscard]] byte& optionReg() const override { return userEepromData[optionRegOffset]; }
-    [[nodiscard]] byte& manuDataH() const override { return userEepromData[manuDataHOffset]; }
-    [[nodiscard]] byte& manuDataL() const override { return userEepromData[manuDataLOffset]; }
-    [[nodiscard]] byte& manufacturerH() const override { return userEepromData[manufacturerHOffset]; }
-    [[nodiscard]] byte& manufacturerL() const override { return userEepromData[manufacturerLOffset]; }
-    [[nodiscard]] byte& deviceTypeH() const override { return userEepromData[deviceTypeHOffset]; }
-    [[nodiscard]] byte& deviceTypeL() const override { return userEepromData[deviceTypeLOffset]; }
-    [[nodiscard]] byte& version() const override { return userEepromData[versionOffset]; }
-    [[nodiscard]] byte& checkLimit() const override { return userEepromData[checkLimitOffset]; }
-    [[nodiscard]] byte& appPeiType() const override { return userEepromData[appPeiTypeOffset]; }
-    [[nodiscard]] byte& syncRate() const override { return userEepromData[syncRateOffset]; }
-    [[nodiscard]] byte& portCDDR() const override { return userEepromData[portCDDROffset]; }
-    [[nodiscard]] byte& portADDR() const override { return userEepromData[portADDROffset]; }
-    [[nodiscard]] byte& runError() const override { return userEepromData[runErrorOffset]; }
-    [[nodiscard]] byte& routeCnt() const override { return userEepromData[routeCntOffset]; }
-    [[nodiscard]] byte& maxRetransmit() const override { return userEepromData[maxRetransmitOffset]; }
-    [[nodiscard]] byte& confDesc() const override { return userEepromData[confDescOffset]; }
-    [[nodiscard]] byte& assocTabPtr() const override { return userEepromData[assocTabPtrOffset]; }
-    [[nodiscard]] byte& commsTabPtr() const override { return userEepromData[commsTabPtrOffset]; };
-    [[nodiscard]] byte& usrInitPtr() const override { return userEepromData[usrInitPtrOffset]; }
-    [[nodiscard]] byte& usrProgPtr() const override { return userEepromData[usrProgPtrOffset]; }
-    [[nodiscard]] virtual byte& usrSavePtr() const { return userEepromData[usrSavePtrOffset]; }
-    [[nodiscard]] byte& addrTabSize() const override { return userEepromData[addrTabSizeOffset]; }
-    [[nodiscard]] byte* addrTab() const override { return &userEepromData[addrTabOffset]; }
-    [[nodiscard]] virtual byte* user230bytesStart() const { return &userEepromData[user230bytesStartOffset]; }
-    [[nodiscard]] virtual byte& checksum() const { return userEepromData[checksumOffset]; }
+    [[nodiscard]] uint8_t& optionReg() const override { return userEepromData[optionRegOffset]; }
+    [[nodiscard]] uint8_t& manuDataH() const override { return userEepromData[manuDataHOffset]; }
+    [[nodiscard]] uint8_t& manuDataL() const override { return userEepromData[manuDataLOffset]; }
+    [[nodiscard]] uint8_t& manufacturerH() const override { return userEepromData[manufacturerHOffset]; }
+    [[nodiscard]] uint8_t& manufacturerL() const override { return userEepromData[manufacturerLOffset]; }
+    [[nodiscard]] uint8_t& deviceTypeH() const override { return userEepromData[deviceTypeHOffset]; }
+    [[nodiscard]] uint8_t& deviceTypeL() const override { return userEepromData[deviceTypeLOffset]; }
+    [[nodiscard]] uint8_t& version() const override { return userEepromData[versionOffset]; }
+    [[nodiscard]] uint8_t& checkLimit() const override { return userEepromData[checkLimitOffset]; }
+    [[nodiscard]] uint8_t& appPeiType() const override { return userEepromData[appPeiTypeOffset]; }
+    [[nodiscard]] uint8_t& syncRate() const override { return userEepromData[syncRateOffset]; }
+    [[nodiscard]] uint8_t& portCDDR() const override { return userEepromData[portCDDROffset]; }
+    [[nodiscard]] uint8_t& portADDR() const override { return userEepromData[portADDROffset]; }
+    [[nodiscard]] uint8_t& runError() const override { return userEepromData[runErrorOffset]; }
+    [[nodiscard]] uint8_t& routeCnt() const override { return userEepromData[routeCntOffset]; }
+    [[nodiscard]] uint8_t& maxRetransmit() const override { return userEepromData[maxRetransmitOffset]; }
+    [[nodiscard]] uint8_t& confDesc() const override { return userEepromData[confDescOffset]; }
+    [[nodiscard]] uint8_t& assocTabPtr() const override { return userEepromData[assocTabPtrOffset]; }
+    [[nodiscard]] uint8_t& commsTabPtr() const override { return userEepromData[commsTabPtrOffset]; };
+    [[nodiscard]] uint8_t& usrInitPtr() const override { return userEepromData[usrInitPtrOffset]; }
+    [[nodiscard]] uint8_t& usrProgPtr() const override { return userEepromData[usrProgPtrOffset]; }
+    [[nodiscard]] virtual uint8_t& usrSavePtr() const { return userEepromData[usrSavePtrOffset]; }
+    [[nodiscard]] uint8_t& addrTabSize() const override { return userEepromData[addrTabSizeOffset]; }
+    [[nodiscard]] uint8_t* addrTab() const override { return &userEepromData[addrTabOffset]; }
+    [[nodiscard]] virtual uint8_t* user230bytesStart() const { return &userEepromData[user230bytesStartOffset]; }
+    [[nodiscard]] virtual uint8_t& checksum() const { return userEepromData[checksumOffset]; }
 
 protected:
     // BCU1 has no variable EEPROM start or size, so make this constructor protected

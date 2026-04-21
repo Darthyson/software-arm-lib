@@ -22,7 +22,6 @@
 #define SBLIB_KNX_MEMORY_H_
 
 #include <cstdint>
-#include <sblib/types.h>
 
 /**
  * Class for basic memory operations.
@@ -41,7 +40,7 @@ public:
      * @return The data byte at the given address.
      * @note @ref startAddress will be subtracted from @ref address
      */
-    virtual byte& operator[](uint32_t address) = 0;
+    virtual uint8_t& operator[](uint32_t address) = 0;
 
     /**
      * Gets a byte from the memory at given @ref address

@@ -11,7 +11,7 @@
 
 int AddrTablesBCU2::indexOfAddr(const int addr)
 {
-    byte* tab = addrTable();
+    uint8_t* tab = addrTable();
     int num = 0;
 
     if (tab)
@@ -30,23 +30,23 @@ int AddrTablesBCU2::indexOfAddr(const int addr)
     return -1;
 }
 
-byte* AddrTablesBCU2::addrTable()
+uint8_t* AddrTablesBCU2::addrTable()
 {
-    const byte* addr = (byte*) &bcu->userEeprom->addrTabAddr();
+    const uint8_t* addr = (uint8_t*) &bcu->userEeprom->addrTabAddr();
     const unsigned short memAddr = makeWord(*(addr + 1), *addr);
 
     return bcu->userMemoryPtr(memAddr);
 }
 
-byte* AddrTablesBCU2::assocTable()
+uint8_t* AddrTablesBCU2::assocTable()
 {
-    const byte* addr = (byte*) &bcu->userEeprom->assocTabAddr();
+    const uint8_t* addr = (uint8_t*) &bcu->userEeprom->assocTabAddr();
     return bcu->userMemoryPtr(makeWord(*(addr + 1), *addr));
 }
 
 uint16_t AddrTablesBCU2::addrCount()
 {
-    const byte* ptrAddrTable = addrTable();
+    const uint8_t* ptrAddrTable = addrTable();
     const uint16_t count = makeWord(*(ptrAddrTable + 1), *ptrAddrTable);
     return (count);
 }

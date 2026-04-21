@@ -18,7 +18,7 @@
 int ComObjectsBCU1::objectSize(const int objno)
 {
     // The size of the object types BIT_7...VARDATA in bytes
-    const byte objectTypeSizes[10] = {1, 1, 2, 3, 4, 6, 8, 10, 14, 14};
+    const uint8_t objectTypeSizes[10] = {1, 1, 2, 3, 4, 6, 8, 10, 14, 14};
 
     const int type = objectType(objno);
     if (type < BIT_7)
@@ -28,7 +28,7 @@ int ComObjectsBCU1::objectSize(const int objno)
     return -1;
 }
 
-byte* ComObjectsBCU1::objectValuePtr(const int objno)
+uint8_t* ComObjectsBCU1::objectValuePtr(const int objno)
 {
     // The object configuration
     const ComConfigBCU1* cfg = objectConfigBCU1(objno);
@@ -66,12 +66,12 @@ byte* ComObjectsBCU1::objectValuePtr(const int objno)
  *  @return void
  *
  */
-void ComObjectsBCU1::processGroupTelegram(const uint16_t addr, const int apci, byte* tel, const int trg_objno)
+void ComObjectsBCU1::processGroupTelegram(const uint16_t addr, const int apci, uint8_t* tel, const int trg_objno)
 {
     /**
      * Spec: Resources 4.11.2 Group Object Association Table - Realization Type 1
      */
-    const byte* assocTab = bcu->addrTables->assocTable();
+    const uint8_t* assocTab = bcu->addrTables->assocTable();
     const int endAssoc = 1 + (*assocTab) * 2;
 
     DB_COM_OBJ(
@@ -149,7 +149,7 @@ void ComObjectsBCU1::processGroupTelegram(const uint16_t addr, const int apci, b
     }
 }
 
-byte* ComObjectsBCU1::objectConfigTable() // stored in eeprom
+uint8_t* ComObjectsBCU1::objectConfigTable() // stored in eeprom
 {
     uint16_t commsTabPtr = ((BcuDefault*)bcu)->userEeprom->commsTabPtr();
     if (commsTabPtr == 0)
@@ -161,7 +161,7 @@ byte* ComObjectsBCU1::objectConfigTable() // stored in eeprom
     return ((BcuDefault*)bcu)->userMemoryPtr(commsTabPtr);
 }
 
-byte* ComObjectsBCU1::objectFlagsTable() // stored in RAM
+uint8_t* ComObjectsBCU1::objectFlagsTable() // stored in RAM
 {
     const uint8_t* objCfgTablePtr = objectConfigTable();
     if (objCfgTablePtr == 0)
@@ -176,7 +176,7 @@ inline const ComConfig& ComObjectsBCU1::objectConfig(const int objno) { return o
 
 inline const ComConfigBCU1* ComObjectsBCU1::objectConfigBCU1(const int objno)
 {
-    const byte* objConfigTable = objectConfigTable();
+    const uint8_t* objConfigTable = objectConfigTable();
     if (objConfigTable == nullptr)
     {
         return (nullptr);
@@ -196,8 +196,8 @@ void ComObjectsBCU1::printObjectConfigTable()
         serial.println("invalid address!");
         return;
     }
-    byte* currentTablePosition = ((BcuDefault*)bcu)->userMemoryPtr(comObjTableAddr);
-    byte currentSize = *currentTablePosition;
+    uint8_t* currentTablePosition = ((BcuDefault*)bcu)->userMemoryPtr(comObjTableAddr);
+    uint8_t currentSize = *currentTablePosition;
     serial.println("   #com objects : ", currentSize, DEC, 3);
     currentTablePosition++; // 1 byte #com objects
     uint16_t ramFlagsTablePointer;

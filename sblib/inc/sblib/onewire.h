@@ -34,7 +34,7 @@ class OneWire
 private:
     int pin = 0;
 #if ONEWIRE_SEARCH                     // Global search state
-    byte ROM_NO[8] = {0}; // Device ROM. 64bit Lasered ROM-Code to detect the Family Code
+    uint8_t ROM_NO[8] = {0}; // Device ROM. 64bit Lasered ROM-Code to detect the Family Code
     uint8_t lastDiscrepancy = 0;
     uint8_t lastFamilyDiscrepancy = 0;
     bool _bLastDeviceFlag = false;

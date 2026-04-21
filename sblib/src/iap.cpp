@@ -206,7 +206,7 @@ IAP_Status iapProgram(uint8_t* rom, const uint8_t* ram, const unsigned int size)
     return (IAP_Status) p.stat;
 }
 
-IAP_Status iapReadUID(byte* uid)
+IAP_Status iapReadUID(uint8_t* uid)
 {
     IAP_Parameter p;
     p.cmd = CMD_READ_UID;

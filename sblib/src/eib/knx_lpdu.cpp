@@ -26,7 +26,7 @@ void initLpdu(uint8_t* telegram, const KNXPriority newPriority, const bool newRe
     setFrameType(telegram, newFrameType);
 }
 
-byte controlByte(const uint8_t* telegram)
+uint8_t controlByte(const uint8_t* telegram)
 {
     return telegram[LPDU_CONTROL_BYTE];
 }

@@ -67,16 +67,16 @@ public:
         ONE_TIME_LOW_RES_MODE = 0x23
     };
 
-    explicit BH1750(byte addr = BH1750_DEFAULT_I2CADDR);
-    bool begin(Mode mode = CONTINUOUS_HIGH_RES_MODE, byte addr = BH1750_DEFAULT_I2CADDR);
+    explicit BH1750(uint8_t addr = BH1750_DEFAULT_I2CADDR);
+    bool begin(Mode mode = CONTINUOUS_HIGH_RES_MODE, uint8_t addr = BH1750_DEFAULT_I2CADDR);
     bool configure(Mode mode);
-    bool setMTreg(byte MTreg);
+    bool setMTreg(uint8_t MTreg);
     bool measurementReady(bool maxWait = false) const;
     float readLightLevel();
 
 private:
-    byte BH1750_I2CADDR;
-    byte BH1750_MTreg = (byte)BH1750_DEFAULT_MTREG;
+    uint8_t BH1750_I2CADDR;
+    uint8_t BH1750_MTreg = (uint8_t)BH1750_DEFAULT_MTREG;
     // Correction factor used to calculate lux. Typical value is 1.2 but can
     // range from 0.96 to 1.44. See the data sheet (p.2, Measurement Accuracy)
     // for more information.
