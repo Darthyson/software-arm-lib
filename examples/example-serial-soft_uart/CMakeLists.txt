@@ -51,8 +51,8 @@ add_compile_definitions(
 
 if(CMAKE_CROSSCOMPILING)
     message(NOTICE "Configuring ${PROJECT_NAME} for ARM architecture.")
-    #target_link_options(${TARGET_ARM} PRIVATE -T ${SBLPC_DIR}/LPC1115.ld)
     target_link_options(${TARGET_ARM} PRIVATE -T ${CMAKE_CURRENT_SOURCE_DIR}/linkscripts/example-serial-soft_uart_Debug_complete.ld)
+    target_link_options(${TARGET_ARM} PRIVATE -Xlinker -Map=$<TARGET_FILE_DIR:${TARGET_ARM}>/${TARGET_ARM}.map)
 
     add_custom_command(TARGET ${TARGET_ARM} POST_BUILD
         COMMAND ${CMAKE_OBJCOPY} -O ihex $<TARGET_FILE:${TARGET_ARM}> $<TARGET_FILE_DIR:${TARGET_ARM}>/${TARGET_ARM}.hex

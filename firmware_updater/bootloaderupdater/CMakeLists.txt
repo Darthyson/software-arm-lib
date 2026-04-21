@@ -91,7 +91,7 @@ if(CMAKE_CROSSCOMPILING)
     )
 
     target_link_options(${TARGET_ARM} PRIVATE -T ${CMAKE_CURRENT_SOURCE_DIR}/linkscripts/bootloaderupdater_Flashstart_0x3000_combined.ld)
-
+    target_link_options(${TARGET_ARM} PRIVATE -Xlinker -Map=$<TARGET_FILE_DIR:${TARGET_ARM}>/${TARGET_ARM}.map)
     add_custom_command(TARGET ${TARGET_ARM} POST_BUILD
         COMMAND ${CMAKE_OBJCOPY} -O ihex $<TARGET_FILE:${TARGET_ARM}> $<TARGET_FILE_DIR:${TARGET_ARM}>/${TARGET_ARM}.hex
     )
