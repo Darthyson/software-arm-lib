@@ -23,13 +23,13 @@ public:
     static constexpr int eibObjVerOffset = 0x75;    //!< 0x3375-0x3379 Application program 1 version
     static constexpr int commsSeg0VerOffset = 0x7A; //!< 0x337A-0x337E Application program 2 version
 
-    word& addrTabAddr() const override { return *(word*)&userEepromData[addrTabAddrOffset]; }
-    word& assocTabAddr() const override { return *(word*)&userEepromData[assocTabAddrOffset]; }
-    virtual byte* addrTabMcb() const { return &userEepromData[addrTabMcbOffset]; }
-    virtual byte* assocTabMcb() const { return &userEepromData[assocTabMcbOffset]; }
-    virtual byte* commsTabMcb() const { return &userEepromData[commsTabMcbOffset]; }
-    virtual byte* commsSeg0Mcb() const { return &userEepromData[commsSeg0McbOffset]; }
-    virtual byte* eibObjMcb() const { return &userEepromData[eibObjMcbOffset]; }
+    [[nodiscard]] word& addrTabAddr() const override { return *(word*)&userEepromData[addrTabAddrOffset]; }
+    [[nodiscard]] word& assocTabAddr() const override { return *(word*)&userEepromData[assocTabAddrOffset]; }
+    [[nodiscard]] virtual byte* addrTabMcb() const { return &userEepromData[addrTabMcbOffset]; }
+    [[nodiscard]] virtual byte* assocTabMcb() const { return &userEepromData[assocTabMcbOffset]; }
+    [[nodiscard]] virtual byte* commsTabMcb() const { return &userEepromData[commsTabMcbOffset]; }
+    [[nodiscard]] virtual byte* commsSeg0Mcb() const { return &userEepromData[commsSeg0McbOffset]; }
+    [[nodiscard]] virtual byte* eibObjMcb() const { return &userEepromData[eibObjMcbOffset]; }
 
 protected:
     UserEepromSYSTEMB(const unsigned int start, const unsigned int size, const unsigned int flashSize) : UserEepromMASK0701(start, size, flashSize) {};

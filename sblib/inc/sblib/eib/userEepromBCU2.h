@@ -45,26 +45,26 @@ public:
     static constexpr int commsSeg0VerOffset = 0x3D1; //!< 0x04D1-0x04D5: Application program 2 version
     // end todo
 
-    virtual int serialSize() const { return 6; };
-    virtual int orderSize() const { return 10; };
-    virtual int orderInfoSize() const { return 10; };
+    [[nodiscard]] virtual int serialSize() const { return 6; };
+    [[nodiscard]] virtual int orderSize() const { return 10; };
+    [[nodiscard]] virtual int orderInfoSize() const { return 10; };
 
-    virtual byte& appType() const { return userEepromData[appTypeOffset]; }
-    virtual byte* loadState() const { return &userEepromData[loadStateOffset]; }
-    virtual word& commsTabAddr() const { return *(word*)&userEepromData[commsTabAddrOffset]; }
-    virtual word& commsSeg0Addr() const { return *(word*)&userEepromData[commsSeg0AddrOffset]; }
-    virtual word& commsSeg1Addr() const { return *(word*)&userEepromData[commsSeg1AddrOffset]; }
-    virtual word& eibObjAddr() const { return *(word*)&userEepromData[eibObjAddrOffset]; }
-    virtual byte& eibObjCount() const { return userEepromData[eibObjCountOffset]; }
-    virtual word& addrTabAddr() const { return *(word*)&userEepromData[addrTabAddrOffset]; }
-    virtual word& assocTabAddr() const { return *(word*)&userEepromData[assocTabAddrOffset]; }
-    virtual byte* serial() const { return &userEepromData[serialOffset]; }
-    virtual byte* order() const { return &userEepromData[orderOffset]; }
+    [[nodiscard]] virtual byte& appType() const { return userEepromData[appTypeOffset]; }
+    [[nodiscard]] virtual byte* loadState() const { return &userEepromData[loadStateOffset]; }
+    [[nodiscard]] virtual word& commsTabAddr() const { return *(word*)&userEepromData[commsTabAddrOffset]; }
+    [[nodiscard]] virtual word& commsSeg0Addr() const { return *(word*)&userEepromData[commsSeg0AddrOffset]; }
+    [[nodiscard]] virtual word& commsSeg1Addr() const { return *(word*)&userEepromData[commsSeg1AddrOffset]; }
+    [[nodiscard]] virtual word& eibObjAddr() const { return *(word*)&userEepromData[eibObjAddrOffset]; }
+    [[nodiscard]] virtual byte& eibObjCount() const { return userEepromData[eibObjCountOffset]; }
+    [[nodiscard]] virtual word& addrTabAddr() const { return *(word*)&userEepromData[addrTabAddrOffset]; }
+    [[nodiscard]] virtual word& assocTabAddr() const { return *(word*)&userEepromData[assocTabAddrOffset]; }
+    [[nodiscard]] virtual byte* serial() const { return &userEepromData[serialOffset]; }
+    [[nodiscard]] virtual byte* order() const { return &userEepromData[orderOffset]; }
 
-    virtual byte& padding1() const { return userEepromData[padding1Offset]; }
-    virtual byte& serviceControl() const { return userEepromData[serviceControlOffset]; }
-    virtual byte& padding2() const { return userEepromData[padding2Offset]; }
-    virtual byte* orderInfo() const { return &userEepromData[orderInfoOffset]; }
+    [[nodiscard]] virtual byte& padding1() const { return userEepromData[padding1Offset]; }
+    [[nodiscard]] virtual byte& serviceControl() const { return userEepromData[serviceControlOffset]; }
+    [[nodiscard]] virtual byte& padding2() const { return userEepromData[padding2Offset]; }
+    [[nodiscard]] virtual byte* orderInfo() const { return &userEepromData[orderInfoOffset]; }
 
 protected:
     UserEepromBCU2(const unsigned int start, const unsigned int size, const unsigned int flashSize) : UserEepromBCU1(start, size, flashSize) {};
