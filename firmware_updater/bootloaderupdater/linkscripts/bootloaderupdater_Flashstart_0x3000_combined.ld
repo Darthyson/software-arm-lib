@@ -6,23 +6,21 @@
  * Generated linker script file for LPC1115/303
  * Created from linkscript.ldt by FMCreateLinkLibraries
  * Using Freemarker v2.3.30
- * MCUXpresso IDE v25.6 [Build 136] [2025-06-27] on 18.03.2026, 16:58:17
+ * MCUXpresso IDE v25.6 [Build 136] [2025-06-27] on 21.04.2026, 03:20:31
  */
 
-/* INCLUDE "bootloaderupdater_Flashstart_0x3000_Release_library.ld" */
 GROUP (
   "libgcc.a"
   "libc_nano.a"
   "libstdc++_nano.a"
   "libm.a"
+  "libcr_newlib_nohost.a"
   "crti.o"
   "crtn.o"
   "crtbegin.o"
   "crtend.o"
-  "libcr_newlib_none.a"
 )
 
-/* INCLUDE "bootloaderupdater_Flashstart_0x3000_Release_memory.ld" */
 MEMORY
 {
     /* Define each memory region */
@@ -51,7 +49,6 @@ MEMORY
       __base_RAM = 0x100000c0; /* RAM */
       __top_RamLoc8 = 0x100000c0 + 0x1f00 - 0xc0;
       __top_RAM = 0x100000c0 + 0x1f00 - 0xc0;
-
 
 ENTRY(ResetISR)
 
