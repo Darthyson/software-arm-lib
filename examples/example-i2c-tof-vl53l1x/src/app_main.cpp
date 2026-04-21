@@ -60,7 +60,7 @@ BcuBase* setup()
     serial.setRxPin(PIO1_6);
     serial.setTxPin(PIO1_7);
 
-    serial.begin(115200);
+    serial.begin(SERIAL_BAUD_RATE_115200);
     serial.println("Selfbus I2C VL53L1X Time of Flight (ToF) sensor example");
 
     uint8_t bootState;
