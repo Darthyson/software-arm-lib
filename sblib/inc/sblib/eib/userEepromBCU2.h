@@ -9,12 +9,20 @@
  *          userEeprom[addr]. Please note that the @ref startAddress is subtracted.
  *          E.g. userEeprom[0x107] is the correct address for userEeprom.version() not userEeprom[0x07].
  *
- * @note see KNX Spec. 2.1
- *       - BCU 2 (992 bytes) : 9/4/1 5.1.2.12.5 p.45ff
+ * @note KNX Spec. 3.0 9/4/1 Basic and System Components 5.1.2.12 Memory Map p.43ff
+ *       - EEPROM: 0x100 - 0x4df (992 bytes)
+ *       - single chip protected EEPROM: 0x4e0 - 0x4ff (32 bytes)
+ *       - total: 0x100 - 0x4ff (1024 bytes)
+ * @note KNX Spec. 3.0 06 Profiles 4.2.10 User EEPROM p. 41
+ *       - User EEPROM: 0x119 - 0x46f (855 bytes)
  */
 class UserEepromBCU2 : public UserEepromBCU1
 {
 public:
+    /// The total BCU2 EEPROM range is 0x100-0x4ff (System EEPROM, single chip protected EEPROM, User EEPROM combined).
+    /// UserEepromBCU2 is implemented with this total BCU2 EEPROM range, which is fine,
+    /// but exposes BCU2 system EEPROM to the user, which is not great.
+
     UserEepromBCU2() : UserEepromBCU1(0x100, 1024, 1024) {}
 
     static constexpr int appTypeOffset = 0x015; //!< 0x0115: \todo Application program type: 0=BCU2, else BCU1
@@ -66,8 +74,10 @@ public:
     [[nodiscard]] virtual byte& padding2() const { return userEepromData[padding2Offset]; }
     [[nodiscard]] virtual byte* orderInfo() const { return &userEepromData[orderInfoOffset]; }
 
-protected:
-    UserEepromBCU2(const unsigned int start, const unsigned int size, const unsigned int flashSize) : UserEepromBCU1(start, size, flashSize) {};
+protected: ///\todo Access specifier does not change accessibility level
+    UserEepromBCU2(const unsigned int start, const unsigned int size, const unsigned int flashSize)
+       :
+        UserEepromBCU1(start, size, flashSize) {}
 };
 
 #endif /* SBLIB_KNX_USEREEPROM_BCU2_H_ */

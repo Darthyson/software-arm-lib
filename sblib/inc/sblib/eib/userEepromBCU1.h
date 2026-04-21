@@ -9,12 +9,17 @@
  *          userEeprom[addr]. Please note that the @ref startAddress is subtracted.
  *          E.g. userEeprom[0x107] is the correct address for userEeprom.version() not userEeprom[0x07].
  *
- * @note see KNX Spec. 2.1
- *       - BCU 1 (256 bytes) : 9/4/1 3.1.10.3.1 p.13ff
+ * @note KNX Spec. 3.0 9/4/1 Basic and System Components 3.1.10.3.1 p.13ff
+ *       - EEPROM: 0x100 - 0x1ff (256 bytes)
+ * @note KNX Spec. 3.0 06 Profiles 4.2.10 User EEPROM p. 41
+ *       - User EEPROM: 0x119 - 0x1fe (230 bytes)
  */
 class UserEepromBCU1 : public UserEeprom
 {
 public:
+    // The total BCU1 EEPROM range is 0x100-0x1ff (System EEPROM and User EEPROM combined).
+    // UserEepromBCU1 is implemented with this total BCU1 EEPROM range, which is fine,
+    // but exposes BCU1 system EEPROM to the user, which is not great.
     UserEepromBCU1() : UserEeprom(0x100, 256, 256) {}
 
     static constexpr int optionRegOffset = 0x00;         //!< 0x0100: EEPROM option register
@@ -71,8 +76,10 @@ public:
     [[nodiscard]] virtual byte* user230bytesStart() const { return &userEepromData[user230bytesStartOffset]; }
     [[nodiscard]] virtual byte& checksum() const { return userEepromData[checksumOffset]; }
 
-protected:
-    UserEepromBCU1(const unsigned int start, const unsigned int size, const unsigned int flashSize) : UserEeprom(start, size, flashSize) {};
+protected: ///\todo Access specifier does not change accessibility level
+    UserEepromBCU1(const unsigned int start, const unsigned int size, const unsigned int flashSize)
+       :
+        UserEeprom(start, size, flashSize) {}
 };
 
 #endif /* SBLIB_KNX_USEREEPROM_BCU1_H_ */

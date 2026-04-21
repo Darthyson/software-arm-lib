@@ -20,10 +20,14 @@
  *          userEeprom[addr]. Please note that the @ref startAddress is subtracted.
  *          E.g. userEeprom[0x107] is the correct address for userEeprom.version() not userEeprom[0x07].
  *
- * @note see KNX Spec. 2.1
- *       - BCU 1 (256 bytes) : 9/4/1 3.1.10.3.1 p.13ff
- *       - BCU 2 (992 bytes) : 9/4/1 5.1.2.12.5 p.45ff
- *       - BIM112            : not in Spec. 2.1 some information in 06 Profiles 4.2.10 p.36
+ * @note KNX Spec. 3.0 9/4/1 Basic and System Components
+ *      - BCU 1 (256 bytes), 3.1.10.3.1 p.13ff
+ *      - BCU 2 (1024 bytes), 5.1.2.12.5 p.45ff
+ *      - BIM M112, not in Spec. 3.0 some information in 06 Profiles 4.2.10 User EEPROM p. 41
+ * @note KNX Spec. 3.0 06 Profiles 4.2.10 User EEPROM p. 41
+ *      - BCU 1 0x119 - 0x1fe (only the range of the UserEEPROM, not the whole EEPROM)
+ *      - BCU 2 0x119 - 0x46f (only the range of the UserEEPROM, not the whole EEPROM)
+ *      - BIM M112 0x4000 - 0xcfff
  */
 class UserEeprom : public Memory
 {

@@ -31,8 +31,10 @@ public:
     [[nodiscard]] virtual byte* commsSeg0Mcb() const { return &userEepromData[commsSeg0McbOffset]; }
     [[nodiscard]] virtual byte* eibObjMcb() const { return &userEepromData[eibObjMcbOffset]; }
 
-protected:
-    UserEepromSYSTEMB(const unsigned int start, const unsigned int size, const unsigned int flashSize) : UserEepromMASK0701(start, size, flashSize) {};
+protected: ///\todo Access specifier does not change accessibility level
+    UserEepromSYSTEMB(const unsigned int start, const unsigned int size, const unsigned int flashSize)
+       :
+        UserEepromMASK0701(start, size, flashSize) {}
 };
 
 #endif /* SBLIB_KNX_USEREEPROM_SYSTEMB_H_ */
