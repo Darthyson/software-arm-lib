@@ -386,6 +386,6 @@ void serPrintf(const char *fmt, ...) {
 void initLogger(const uint32_t txPin , const uint32_t rxPin) {
     serial.setRxPin(static_cast<int32_t>(rxPin));
     serial.setTxPin(static_cast<int32_t>(txPin));
-    serial.begin(115200);
+    serial.begin(SERIAL_BAUD_RATE_115200);
     serPrintf("Logging enabled");
 }

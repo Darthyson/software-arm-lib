@@ -56,7 +56,7 @@ BcuBase* setup()
         bcu.userRam->status() ^= BCU_STATUS_LINK_LAYER | BCU_STATUS_PARITY;
     }
 
-    serial.begin(115200); // Tx: PIO1.7, Rx: PIO1.6
+    serial.begin(SERIAL_BAUD_RATE_115200); // Tx: PIO1.7, Rx: PIO1.6
     serial.println("Selfbus Bus Monitor");
 
     pinMode(PIN_INFO, OUTPUT); // Info LED

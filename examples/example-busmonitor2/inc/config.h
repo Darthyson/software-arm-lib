@@ -22,7 +22,7 @@
 
 #include <sblib/io_pin_names.h>
 
-#define SERIAL_BAUD_RATE 576000
+#define SERIAL_BAUD_RATE SERIAL_BAUD_RATE_576000
 
 #define BLINK_TIME_MS 1000
 

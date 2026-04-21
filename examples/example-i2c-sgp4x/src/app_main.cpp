@@ -144,7 +144,7 @@ BcuBase* setup()
     // serial.setRxPin(PIO2_7); // @ 4TE-ARM Controller pin 1 on connector SV3 (ID_SEL)
     // serial.setTxPin(PIO2_8); // @ 4TE-ARM Controller pin 2 on connector SV3 (ID_SEL)
 
-    serial.begin(115200);
+    serial.begin(SERIAL_BAUD_RATE_115200);
     serial.println("Selfbus I2C SGP4x sensor example");
 
     // LED Initialize

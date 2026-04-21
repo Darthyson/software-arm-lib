@@ -100,7 +100,7 @@ BcuBase* setup()
 #   endif
     if (!serial.enabled())
     {
-        serial.begin(115200);
+        serial.begin(SERIAL_BAUD_RATE_115200);
     }
 #endif
 

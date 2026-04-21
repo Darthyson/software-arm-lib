@@ -57,7 +57,7 @@ BcuBase* setup()
     {
         serial.setRxPin(PIO2_7); // ID_SEL/SV3 on a 4TE-Controller
         serial.setTxPin(PIO2_8);
-        serial.begin(115200);
+        serial.begin(SERIAL_BAUD_RATE_115200);
     }
     serial.print("Example heliovent-bim112 started: ");
     serial.println((const char*)getAppVersion());

@@ -47,7 +47,7 @@
 //#define PIN_SERIAL_RX PIO3_1            //!< serial Rx-Pin on PIO3.1
 //#define PIN_SERIAL_TX PIO3_0            //!< serial Tx-Pin on PIO3.0
 
-#define DEFAULT_SERIAL_SPEED 115200      //!< serial speed in baud
+#define DEFAULT_SERIAL_SPEED SERIAL_BAUD_RATE_115200 //!< serial speed in baud
 
 #define UID_BYTES_FOR_BUSUPDATER 12     //!< number of byte the bus-updater needs for option -uid
 

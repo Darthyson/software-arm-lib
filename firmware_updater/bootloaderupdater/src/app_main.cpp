@@ -36,7 +36,7 @@ void setup()
         {
             serial.setRxPin(PIO1_6);
             serial.setTxPin(PIO1_7);
-            serial.begin(115200);
+            serial.begin(SERIAL_BAUD_RATE_115200);
         }
         serial.println();
         serial.print("Selfbus BootloaderUpdater v", BOOTLOADERUPDATER_MAJOR_VERSION);

@@ -53,7 +53,7 @@ void loop_noapp()
     blinky.start (1000);
     serial.setRxPin(PIO1_6);
     serial.setTxPin(PIO1_7);
-    serial.begin(115200); // Tx: PIO1.7, Rx: PIO1.6
+    serial.begin(SERIAL_BAUD_RATE_115200); // Tx: PIO1.7, Rx: PIO1.6
     serial.println("Hello World via KNX download!");
     // TODO: insert code here
 

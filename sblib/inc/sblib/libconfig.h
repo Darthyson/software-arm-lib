@@ -9,7 +9,7 @@
  *           or set it in your application
  *           serial.setRxPin(PIO2_7);
  *           serial.setTxPin(PIO2_8);
- *           serial.begin(1500000);  1.5Mbaud
+ *           serial.begin(SERIAL_BAUD_RATE_1500000);  1.5Mbaud
  *           serial object is defined in serial.h
  *
  * @{

@@ -43,7 +43,7 @@ BcuBase* setup()
     // TS_ARM Tx: PIO3.0, Rx: PIO3.1
     // serial.setRxPin(PIO3_1);
     // serial.setTxPin(PIO3_0);
-    serial.begin(115200);
+    serial.begin(SERIAL_BAUD_RATE_115200);
     serial.println("Analog read example");
 
     return (&bcu);

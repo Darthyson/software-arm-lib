@@ -48,7 +48,7 @@ BcuBase* setup()
 {
     serial.setTxPin(PIO1_7);
     serial.setRxPin(PIO1_6);
-    serial.begin(115200);
+    serial.begin(SERIAL_BAUD_RATE_115200);
     bcu.begin(0,0,0);
     serial.println("example-sht11 started.");
     serial.flush();
