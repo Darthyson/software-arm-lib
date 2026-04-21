@@ -59,4 +59,4 @@ uint32_t floatToDpt14(float value);
  */
 float dpt14ToFloat(uint32_t dptValue);
 
-#endif /*sblib_datapoint_types_h*/
+#endif /* SBLIB_KNX_DATAPOINT_TYPES_H_ */
