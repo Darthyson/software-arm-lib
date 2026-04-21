@@ -114,7 +114,7 @@ int main()
 
     for (const uint8_t * i = incbin_bl_start; i < incbin_bl_end; i += FLASH_SECTOR_SIZE)
     {
-        __attribute__ ((aligned (FLASH_RAM_BUFFER_ALIGNMENT))) byte buf[FLASH_SECTOR_SIZE]; // Address of buf must be word aligned, see iapProgram(..) hint.
+        alignas(FLASH_RAM_BUFFER_ALIGNMENT) uint8_t buf[FLASH_SECTOR_SIZE]; // Address of buf must be word aligned, see iapProgram(..) hint.
         memset(buf, 0xFF, FLASH_SECTOR_SIZE);
         uint32_t len = incbin_bl_end - i;
         if (len > FLASH_SECTOR_SIZE)
