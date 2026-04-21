@@ -329,9 +329,9 @@ LoadState PropertiesBCU2::handleTaskCtrl2([[maybe_unused]] const int objectIdx, 
     // payLoad[4..5] : CommObjSegPtr1 (1111h)
     // payLoad[6..7] : CommObjSegPtr2 (2222h)
 
-    const word addr = makeWord(payLoad[2], payLoad[3]);
+    const uint16_t addr = makeWord(payLoad[2], payLoad[3]);
     // we need this newAddress workaround, see comment @void BcuBase::begin(...) in bcu_base.h
-    word newAddress = bcu->getCommObjectTableAddressStatic();
+    uint16_t newAddress = bcu->getCommObjectTableAddressStatic();
     if (newAddress == 0) // set newAddress, in case bcu doesn't provide a read-only address
     {
         newAddress = addr;

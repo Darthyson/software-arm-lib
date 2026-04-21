@@ -59,13 +59,13 @@ public:
 
     [[nodiscard]] virtual uint8_t& appType() const { return userEepromData[appTypeOffset]; }
     [[nodiscard]] virtual uint8_t* loadState() const { return &userEepromData[loadStateOffset]; }
-    [[nodiscard]] virtual word& commsTabAddr() const { return *(word*)&userEepromData[commsTabAddrOffset]; }
-    [[nodiscard]] virtual word& commsSeg0Addr() const { return *(word*)&userEepromData[commsSeg0AddrOffset]; }
-    [[nodiscard]] virtual word& commsSeg1Addr() const { return *(word*)&userEepromData[commsSeg1AddrOffset]; }
-    [[nodiscard]] virtual word& eibObjAddr() const { return *(word*)&userEepromData[eibObjAddrOffset]; }
+    [[nodiscard]] virtual uint16_t& commsTabAddr() const { return *(uint16_t*)&userEepromData[commsTabAddrOffset]; }
+    [[nodiscard]] virtual uint16_t& commsSeg0Addr() const { return *(uint16_t*)&userEepromData[commsSeg0AddrOffset]; }
+    [[nodiscard]] virtual uint16_t& commsSeg1Addr() const { return *(uint16_t*)&userEepromData[commsSeg1AddrOffset]; }
+    [[nodiscard]] virtual uint16_t& eibObjAddr() const { return *(uint16_t*)&userEepromData[eibObjAddrOffset]; }
     [[nodiscard]] virtual uint8_t& eibObjCount() const { return userEepromData[eibObjCountOffset]; }
-    [[nodiscard]] virtual word& addrTabAddr() const { return *(word*)&userEepromData[addrTabAddrOffset]; }
-    [[nodiscard]] virtual word& assocTabAddr() const { return *(word*)&userEepromData[assocTabAddrOffset]; }
+    [[nodiscard]] virtual uint16_t& addrTabAddr() const { return *(uint16_t*)&userEepromData[addrTabAddrOffset]; }
+    [[nodiscard]] virtual uint16_t& assocTabAddr() const { return *(uint16_t*)&userEepromData[assocTabAddrOffset]; }
     [[nodiscard]] virtual uint8_t* serial() const { return &userEepromData[serialOffset]; }
     [[nodiscard]] virtual uint8_t* order() const { return &userEepromData[orderOffset]; }
 

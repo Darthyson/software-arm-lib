@@ -154,7 +154,7 @@ LoadState PropertiesSYSTEMB::handleDataRelativeAllocation(const int objectIdx, c
     );
 
     const unsigned int reqMemSize = ((payLoad[0] << 24) | (payLoad[1] << 16) | (payLoad[2] << 8) | payLoad[3]);
-    word* tableAddress[] = {
+    uint16_t* tableAddress[] = {
         &bcu->userEeprom->addrTabAddr(), &bcu->userEeprom->assocTabAddr(), &bcu->userEeprom->commsTabAddr(),
         &bcu->userEeprom->eibObjAddr(), &bcu->userEeprom->commsSeg0Addr()
     };
@@ -166,7 +166,7 @@ LoadState PropertiesSYSTEMB::handleDataRelativeAllocation(const int objectIdx, c
         &userEeprom->eibObjMcb()[0], &userEeprom->commsSeg0Mcb()[0]
     };
 
-    word virtMemAddr = 0x3A9E; ///\todo get rid of magic number USER_EEPROM_START + USER_EEPROM_SIZE
+    uint16_t virtMemAddr = 0x3A9E; ///\todo get rid of magic number USER_EEPROM_START + USER_EEPROM_SIZE
     for (int i = 0; i < 5; i++)
     {
         if ((*tableAddress[i] != 0) && (*tableAddress[i] < virtMemAddr))

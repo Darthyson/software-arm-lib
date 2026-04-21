@@ -120,7 +120,7 @@ struct PropertyDef
      *
      * See valuePointer() below.
      */
-    word valAddr;
+    uint16_t valAddr;
 
     /**
      * Get the value pointer.

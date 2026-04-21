@@ -23,6 +23,7 @@ typedef unsigned char byte;
 /**
  * An unsigned 2 byte value.
  */
+[[deprecated("sblib typedef word is deprecated, use uint16_t instead")]]
 typedef unsigned short word;
 
 /**

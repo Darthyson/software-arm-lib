@@ -52,7 +52,7 @@ public:
      *                                         in case HHHH != WWWW ,
      *                                         use bcu.begin(MANUFACTURER, DEVICETYPE, APPVERSION, 0xHHHH) to set the correct read-only ComObjectTable address (HHHH)
      */
-    virtual void begin(int manufacturer, int deviceType, int version, word readOnlyCommObjectTableAddress);
+    virtual void begin(int manufacturer, int deviceType, int version, uint16_t readOnlyCommObjectTableAddress);
 
     /**
      * Begin using the EIB bus coupling unit, and set the manufacturer-ID, device type,
@@ -87,7 +87,7 @@ public:
      * Get the read-only CommObjectTable address, which can be set calling Begin(...)
      * @return The read-only CommObjectTable address which can't be changed by KNX telegrams
      */
-    word getCommObjectTableAddressStatic() const;
+    uint16_t getCommObjectTableAddressStatic() const;
 
     /** Start address of the user RAM when ETS talks with us. */
     const int userRamStartDefault = 0;
@@ -137,7 +137,7 @@ protected:
 
     void sendApciIndividualAddressSerialNumberReadResponse();
 
-    word commObjectTableAddressStatic = 0; //!> The read-only CommObjectTable address which can't be changed by KNX telegrams
+    uint16_t commObjectTableAddressStatic = 0; //!> The read-only CommObjectTable address which can't be changed by KNX telegrams
 };
 
 #endif /* SBLIB_KNX_BCU2_H_ */

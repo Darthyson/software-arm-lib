@@ -27,7 +27,7 @@ void BCU2::setOwnAddress(const uint16_t addr)
     }
 }
 
-inline void BCU2::begin(const int manufacturer, const int deviceType, const int version, const word readOnlyCommObjectTableAddress)
+inline void BCU2::begin(const int manufacturer, const int deviceType, const int version, const uint16_t readOnlyCommObjectTableAddress)
 {
     BcuDefault::begin(manufacturer, deviceType, version);
 
@@ -153,7 +153,7 @@ bool BCU2::processApci(const ApciCommand apciCmd, unsigned char* telegram, const
     }
 }
 
-word BCU2::getCommObjectTableAddressStatic() const
+uint16_t BCU2::getCommObjectTableAddressStatic() const
 {
     return commObjectTableAddressStatic;
 }

@@ -23,8 +23,8 @@ public:
     static constexpr int eibObjVerOffset = 0x75;    //!< 0x3375-0x3379 Application program 1 version
     static constexpr int commsSeg0VerOffset = 0x7A; //!< 0x337A-0x337E Application program 2 version
 
-    [[nodiscard]] word& addrTabAddr() const override { return *(word*)&userEepromData[addrTabAddrOffset]; }
-    [[nodiscard]] word& assocTabAddr() const override { return *(word*)&userEepromData[assocTabAddrOffset]; }
+    [[nodiscard]] uint16_t& addrTabAddr() const override { return *(uint16_t*)&userEepromData[addrTabAddrOffset]; }
+    [[nodiscard]] uint16_t& assocTabAddr() const override { return *(uint16_t*)&userEepromData[assocTabAddrOffset]; }
     [[nodiscard]] virtual uint8_t* addrTabMcb() const { return &userEepromData[addrTabMcbOffset]; }
     [[nodiscard]] virtual uint8_t* assocTabMcb() const { return &userEepromData[assocTabMcbOffset]; }
     [[nodiscard]] virtual uint8_t* commsTabMcb() const { return &userEepromData[commsTabMcbOffset]; }
