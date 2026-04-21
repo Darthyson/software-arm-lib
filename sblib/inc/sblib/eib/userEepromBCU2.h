@@ -23,7 +23,7 @@ public:
     /// UserEepromBCU2 is implemented with this total BCU2 EEPROM range, which is fine,
     /// but exposes BCU2 system EEPROM to the user, which is not great.
 
-    UserEepromBCU2() : UserEepromBCU1(0x100, 1024, 1024) {}
+    explicit UserEepromBCU2() : UserEepromBCU2(0x100, 1024, 1024) {}
 
     static constexpr int appTypeOffset = 0x015; //!< 0x0115: \todo Application program type: 0=BCU2, else BCU1
 
@@ -74,8 +74,9 @@ public:
     [[nodiscard]] virtual byte& padding2() const { return userEepromData[padding2Offset]; }
     [[nodiscard]] virtual byte* orderInfo() const { return &userEepromData[orderInfoOffset]; }
 
-protected: ///\todo Access specifier does not change accessibility level
-    UserEepromBCU2(const unsigned int start, const unsigned int size, const unsigned int flashSize)
+protected:
+    // BCU2 has no variable EEPROM start or size, so make this constructor protected
+    UserEepromBCU2(const uint32_t start, const uint32_t size, const uint32_t flashSize)
        :
         UserEepromBCU1(start, size, flashSize) {}
 };

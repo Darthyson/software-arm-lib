@@ -3,6 +3,10 @@
 
 #include <sblib/eib/userEepromBCU2.h>
 
+
+/** Number of interface objects supported */
+constexpr uint8_t INTERFACE_OBJECT_COUNT = 8;
+
 /**
  * The BCU BIM M112 MaskVersion 0x0701 User EEPROM
  * @details Can be accessed by name, like userEeprom.manuDataH() and as an array, like
@@ -16,10 +20,11 @@ class UserEepromMASK0701 : public UserEepromBCU2
 {
 public:
     ///\todo make start at 0x4000, right now 0x4000-0x100= 0x3f00 is chosen to avoid address-offset calculations to a BCU1
-    UserEepromMASK0701() : UserEepromBCU2(0x3f00, 3072, 4096) {}
+    explicit UserEepromMASK0701() : UserEepromMASK0701(0x3f00, 3072, 4096) {}
 
-protected: ///\todo Access specifier does not change accessibility level
-    UserEepromMASK0701(const unsigned int start, const unsigned int size, const unsigned int flashSize)
+protected:
+    // BIM M112 (Mask 0x0701) has a fixed start and size of the EEPROM, so make constructor protected
+    UserEepromMASK0701(const uint32_t start, const uint32_t size, const uint32_t flashSize)
        :
         UserEepromBCU2(start, size, flashSize) {}
 };

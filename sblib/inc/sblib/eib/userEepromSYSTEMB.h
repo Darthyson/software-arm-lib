@@ -10,7 +10,7 @@ class UserEepromSYSTEMB : public UserEepromMASK0701
 {
 public:
     ///\todo check start of 0x3300, maybe the same reason like for 0x0701 -> -0x100 is chosen to avoid address-offset calculations to a BCU1
-    UserEepromSYSTEMB() : UserEepromMASK0701(0x3300, 3072, 4096) {}
+    explicit UserEepromSYSTEMB() : UserEepromSYSTEMB(0x3300, 3072, 4096) {}
 
     static constexpr int addrTabAddrOffset = 0x21;  //!< 0x3321-0x3322
     static constexpr int assocTabAddrOffset = 0x23; //!< 0x3323-0x3324
@@ -31,8 +31,8 @@ public:
     [[nodiscard]] virtual byte* commsSeg0Mcb() const { return &userEepromData[commsSeg0McbOffset]; }
     [[nodiscard]] virtual byte* eibObjMcb() const { return &userEepromData[eibObjMcbOffset]; }
 
-protected: ///\todo Access specifier does not change accessibility level
-    UserEepromSYSTEMB(const unsigned int start, const unsigned int size, const unsigned int flashSize)
+protected:
+    UserEepromSYSTEMB(const uint32_t start, const uint32_t size, const uint32_t flashSize)
        :
         UserEepromMASK0701(start, size, flashSize) {}
 };

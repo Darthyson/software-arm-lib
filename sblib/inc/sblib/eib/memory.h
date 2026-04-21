@@ -50,7 +50,7 @@ public:
      * @return          Content as byte at the given @ref address
      * @note @ref startAddress will be subtracted from @ref address
      */
-    virtual uint8_t getUInt8(uint32_t address) const = 0;
+    [[nodiscard]] virtual uint8_t getUInt8(uint32_t address) const = 0;
 
     /**
      * Gets a word from the memory at given @ref address and address + 1
@@ -59,45 +59,45 @@ public:
      * @return          Content as word at the @ref address
      * @note @ref startAddress will be subtracted from @ref address
      */
-    virtual uint16_t getUInt16(uint32_t address) const = 0;
+    [[nodiscard]] virtual uint16_t getUInt16(uint32_t address) const = 0;
 
     /**
-     * Checks, if a @ref address is accessible in the memory
+     * Checks, if an @ref address is accessible in the memory
      *
      * @param address   Address to check for valid access
      * @return          True if @ref address is accessible, otherwise false
      */
-    virtual bool inRange(uint32_t address) const;
+    [[nodiscard]] virtual bool inRange(uint32_t address) const;
 
     /**
      * Checks, if a given address range is accessible in the memory
      *
      * @param start     Start address of the range to check
      * @param end       End address of the range to check
-     * @return          True if range is accesible, otherwise false
+     * @return          True if range is accessible, otherwise false
      */
-    virtual bool inRange(uint32_t start, uint32_t end) const;
+    [[nodiscard]] virtual bool inRange(uint32_t start, uint32_t end) const;
 
     /**
      * Get the start address of the memory
      *
      * @return Start address of the memory
      */
-    uint32_t startAddr() const;
+    [[nodiscard]] uint32_t startAddr() const;
 
     /**
      * Get the end address of the memory
      *
      * @return end address of the memory
      */
-    uint32_t endAddr() const;
+    [[nodiscard]] uint32_t endAddr() const;
 
     /**
      * Get the size of the memory
      *
      * @return size of the memory in bytes
      */
-    uint32_t size() const;
+    [[nodiscard]] uint32_t size() const;
 
 protected:
     uint32_t startAddress; //!< virtual start address of the memory

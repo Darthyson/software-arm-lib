@@ -112,7 +112,7 @@ void UserEeprom::writeUserEeprom()
     interrupts();
 }
 
-UserEeprom::UserEeprom(const unsigned int start, const unsigned int size, const unsigned int flashSize) :
+UserEeprom::UserEeprom(const uint32_t start, const uint32_t size, const uint32_t flashSize) :
     Memory(start, size),
     userEepromData(new byte[size]()),
     userEepromFlashSize(flashSize)

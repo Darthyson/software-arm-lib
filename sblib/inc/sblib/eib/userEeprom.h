@@ -11,8 +11,6 @@
 #include <sblib/eib/memory.h>
 #include <sblib/platform.h>
 
-/** number of interface objects supported */
-#define INTERFACE_OBJECT_COUNT 8
 
 /**
  * The user EEPROM
@@ -32,8 +30,14 @@
 class UserEeprom : public Memory
 {
 public:
+    // Delete default and assigment constructors
     UserEeprom() = delete;
-    UserEeprom(unsigned int start, unsigned int size, unsigned int flashSize);
+    UserEeprom(const UserEeprom&) = delete;
+    UserEeprom(UserEeprom&&) = delete;
+    UserEeprom& operator=(const UserEeprom&) = delete;
+    UserEeprom& operator=(UserEeprom&&) = delete;
+
+    explicit UserEeprom(uint32_t start, uint32_t size, uint32_t flashSize);
 
     alignas(FLASH_RAM_BUFFER_ALIGNMENT) byte* userEepromData; // must be word aligned, otherwise iapProgram will fail
 

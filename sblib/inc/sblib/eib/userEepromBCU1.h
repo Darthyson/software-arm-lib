@@ -3,6 +3,7 @@
 
 #include <sblib/eib/userEeprom.h>
 
+
 /**
  * The BCU 1 user EEPROM
  * @details Can be accessed by name, like userEeprom.manuDataH() and as an array, like
@@ -20,7 +21,7 @@ public:
     // The total BCU1 EEPROM range is 0x100-0x1ff (System EEPROM and User EEPROM combined).
     // UserEepromBCU1 is implemented with this total BCU1 EEPROM range, which is fine,
     // but exposes BCU1 system EEPROM to the user, which is not great.
-    UserEepromBCU1() : UserEeprom(0x100, 256, 256) {}
+    explicit UserEepromBCU1() : UserEeprom(0x100, 256, 256) {}
 
     static constexpr int optionRegOffset = 0x00;         //!< 0x0100: EEPROM option register
     static constexpr int manuDataHOffset = 0x01;         //!< 0x0101: Manufacturing data high byte
@@ -76,8 +77,9 @@ public:
     [[nodiscard]] virtual byte* user230bytesStart() const { return &userEepromData[user230bytesStartOffset]; }
     [[nodiscard]] virtual byte& checksum() const { return userEepromData[checksumOffset]; }
 
-protected: ///\todo Access specifier does not change accessibility level
-    UserEepromBCU1(const unsigned int start, const unsigned int size, const unsigned int flashSize)
+protected:
+    // BCU1 has no variable EEPROM start or size, so make this constructor protected
+    UserEepromBCU1(const uint32_t start, const uint32_t size, const uint32_t flashSize)
        :
         UserEeprom(start, size, flashSize) {}
 };
