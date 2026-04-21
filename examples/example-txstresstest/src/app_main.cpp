@@ -47,7 +47,7 @@ Timeout sendTimeout;
 
 APP_VERSION("SBSTRES", "0", "01");
 
-byte testTelegram[TEST_TELEGRAM_SIZE];
+uint8_t testTelegram[TEST_TELEGRAM_SIZE];
 unsigned int testTelegramSize = sizeof(testTelegram)/sizeof(testTelegram[0]) - 2; // last 2 bytes reserved for KNX checksum and trailing 0x00 byte
 
 void initTestTelegram()

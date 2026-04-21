@@ -85,7 +85,7 @@ BcuBase* setup()
 
     // test UserRAM
     const int testSize = 12;
-    byte payLoad[testSize] = {0x00, 0x01, 0x02, 0x03, 0x04, 0x05, 0x06, 0x07, 0x08, 0x09, 0x0A, 0x0B};
+    uint8_t payLoad[testSize] = {0x00, 0x01, 0x02, 0x03, 0x04, 0x05, 0x06, 0x07, 0x08, 0x09, 0x0A, 0x0B};
     for (int i = 0; i < testSize; i++)
     {
         {
@@ -96,8 +96,8 @@ BcuBase* setup()
 
     // test USER_EEPROM
     const int testSize2 = 12;
-    byte payLoad2[testSize2];
-    byte readLoad2[testSize2];
+    uint8_t payLoad2[testSize2];
+    uint8_t readLoad2[testSize2];
     for (int f = 0; f < testSize2; f++)
     {
         payLoad2[f] = f;

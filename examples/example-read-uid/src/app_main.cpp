@@ -60,7 +60,7 @@ APP_VERSION("SBuid   ", "1", "01"); //!< Create APP_VERSION, its used in the bus
 
 BCU1 bcu = BCU1();
 
-void sendBytesInHexToSerialPort(Serial &serialPort, byte* buffer, unsigned int length, char separator='\0');
+void sendBytesInHexToSerialPort(Serial &serialPort, uint8_t* buffer, unsigned int length, char separator='\0');
 
 /**
  * @brief This function is called by the Selfbus's library main
@@ -151,8 +151,8 @@ void loop_noapp()
     serial.print(" 0x", imageEndAddress, HEX, 6);
     serial.println(" 0x", imageSize, HEX, 6);
 
-    byte uniqueID[IAP_UID_LENGTH]; // buffer for the UID/GUID of the processsor
-    byte knxSerial[KNX_SERIAL_NUMBER_LENGTH]; // buffer for the KNX serial number
+    uint8_t uniqueID[IAP_UID_LENGTH]; // buffer for the UID/GUID of the processsor
+    uint8_t knxSerial[KNX_SERIAL_NUMBER_LENGTH]; // buffer for the KNX serial number
 
     if (iapReadUID(&uniqueID[0]) == IAP_SUCCESS)
     {
@@ -199,7 +199,7 @@ void loop()
  * @param length        length of buffer
  * @param separator     optional separator which will be placed between the bytes
  */
-void sendBytesInHexToSerialPort(Serial &serialPort, byte* buffer, unsigned int length, char separator)
+void sendBytesInHexToSerialPort(Serial &serialPort, uint8_t* buffer, unsigned int length, char separator)
 {
     for (unsigned int i = 0; i < length; ++i)
     {
