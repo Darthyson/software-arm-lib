@@ -19,7 +19,10 @@ constexpr uint8_t INTERFACE_OBJECT_COUNT = 8;
 class UserEepromMASK0701 : public UserEepromBCU2
 {
 public:
-    ///\todo make start at 0x4000, right now 0x4000-0x100= 0x3f00 is chosen to avoid address-offset calculations to a BCU1
+    /// BIM112 UserEeprom range is always 0x4000 - 0xcfff and in most cases starts with the group address table
+    /// We add 0x100 before it (0x3f00-0x3fff) to save e.g. load states, table addresses, ...
+    ///\todo offset addresses are currently broken, see Issue #112
+    ///      https://github.com/selfbus/software-arm-lib/issues/112
     explicit UserEepromMASK0701() : UserEepromMASK0701(0x3f00, 3072, 4096) {}
 
 protected:

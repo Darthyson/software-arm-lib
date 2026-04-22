@@ -9,19 +9,8 @@
 class UserEepromSYSTEMB : public UserEepromMASK0701
 {
 public:
-    ///\todo check start of 0x3300, maybe the same reason like for 0x0701 -> -0x100 is chosen to avoid address-offset calculations to a BCU1
+    ///\todo check start of 0x3300, SYSTEM B has typically dynamic memory allocation
     explicit UserEepromSYSTEMB() : UserEepromSYSTEMB(0x3300, 3072, 4096) {}
-
-    static constexpr uint32_t addrTabAddrOffset = 0x21;  //!< 0x3321-0x3322
-    static constexpr uint32_t assocTabAddrOffset = 0x23; //!< 0x3323-0x3324
-
-    static constexpr uint32_t addrTabMcbOffset = 0x4D;   //!< 0x334D-0x3354
-    static constexpr uint32_t assocTabMcbOffset = 0x55;  //!< 0x3355-0x335C
-    static constexpr uint32_t commsTabMcbOffset = 0x5D;  //!< 0x335D-0x3364
-    static constexpr uint32_t eibObjMcbOffset = 0x65;    //!< 0x3365-0x336C
-    static constexpr uint32_t commsSeg0McbOffset = 0x6D; //!< 0x336D-0x3374
-    static constexpr uint32_t eibObjVerOffset = 0x75;    //!< 0x3375-0x3379 Application program 1 version
-    static constexpr uint32_t commsSeg0VerOffset = 0x7A; //!< 0x337A-0x337E Application program 2 version
 
     [[nodiscard]] uint16_t& addrTabAddr() const override { return directAccess_16(addrTabAddrOffset); }
     [[nodiscard]] uint16_t& assocTabAddr() const override { return directAccess_16(assocTabAddrOffset); }
@@ -36,6 +25,17 @@ protected:
        :
         UserEepromMASK0701(start, size, flashSize) {}
 
+private:
+    static constexpr uint32_t addrTabAddrOffset = 0x21;  //!< 0x3321-0x3322
+    static constexpr uint32_t assocTabAddrOffset = 0x23; //!< 0x3323-0x3324
+
+    static constexpr uint32_t addrTabMcbOffset = 0x4D;   //!< 0x334D-0x3354
+    static constexpr uint32_t assocTabMcbOffset = 0x55;  //!< 0x3355-0x335C
+    static constexpr uint32_t commsTabMcbOffset = 0x5D;  //!< 0x335D-0x3364
+    static constexpr uint32_t eibObjMcbOffset = 0x65;    //!< 0x3365-0x336C
+    static constexpr uint32_t commsSeg0McbOffset = 0x6D; //!< 0x336D-0x3374
+    static constexpr uint32_t eibObjVerOffset = 0x75;    //!< 0x3375-0x3379 Application program 1 version
+    static constexpr uint32_t commsSeg0VerOffset = 0x7A; //!< 0x337A-0x337E Application program 2 version
 
     ///\todo These two asserts fail, see UserEeprom::directAccess_16 for details.
     ///      The offset must be 2-byte aligned to avoid unaligned memory access.

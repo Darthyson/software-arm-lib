@@ -9,10 +9,13 @@
 class UserEepromMASK0705 : public UserEepromMASK0701
 {
 public:
-    ///\todo make start at 0x4000, right now 0x4000-0x100= 0x3f00 is chosen to avoid address-offset calculations to a BCU1
+    /// BIM112 UserEeprom range is always 0x4000 - 0xcfff and in most cases starts with the group address table
+    /// We add 0x100 before it (0x3f00-0x3fff) to save e.g. load states, table addresses, ...
+    ///\todo offset addresses are currently broken, see Issue #112
+    ///      https://github.com/selfbus/software-arm-lib/issues/112
     explicit UserEepromMASK0705() : UserEepromMASK0705(0x3f00, 3072, 4096) {}
 
-protected: ///\todo Access specifier does not change accessibility level
+protected:
     // BIM M112 (Mask 0x0705) has a fixed start and size of the EEPROM, so make constructor protected
     UserEepromMASK0705(const uint32_t start, const uint32_t size, const uint32_t flashSize)
        :
