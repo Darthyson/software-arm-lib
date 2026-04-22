@@ -121,12 +121,18 @@ UserEeprom::UserEeprom(const uint32_t start, const uint32_t size, const uint32_t
     readUserEeprom();
 }
 
-uint8_t& UserEeprom::operator[](uint32_t address)
+uint8_t& UserEeprom::operator[](uint32_t address) const
 {
     normalizeAddress(&address);
     return userEepromData[address];
 }
 
+uint8_t& UserEeprom::operator[](const uint32_t address)
+{
+    /// 1. cast is static_cast<const UserEeprom&> to call operator[](..) const
+    /// 2. cast is const_cast<uint8_t&>(..) to remove the const from the return of the operator[](...) const
+    return const_cast<uint8_t&>(static_cast<const UserEeprom&>(*this).operator[](address));
+}
 
 uint8_t UserEeprom::getUInt8(uint32_t address) const
 {

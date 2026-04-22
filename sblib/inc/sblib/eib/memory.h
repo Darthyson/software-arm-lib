@@ -36,7 +36,16 @@ public:
     /**
      * Access the memory like an ordinary array
      *
-     * @param address - the address of the data byte to access.
+     * @param address  The address of the data byte to access.
+     * @return The data byte at the given address.
+     * @note @ref startAddress will be subtracted from @ref address
+     */
+    virtual uint8_t& operator[](uint32_t address) const = 0;
+
+    /**
+     * Access the memory like an ordinary array
+     *
+     * @param address  The address of the data byte to access.
      * @return The data byte at the given address.
      * @note @ref startAddress will be subtracted from @ref address
      */

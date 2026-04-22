@@ -71,7 +71,9 @@ public:
 
     void setUserRamStart(const uint32_t& newRamStart);
 
+    uint8_t& operator[](uint32_t address) const override;
     uint8_t& operator[](uint32_t address) override;
+
     [[nodiscard]] uint8_t getUInt8(uint32_t address) const override;
     [[nodiscard]] uint16_t getUInt16(uint32_t address) const override;
 

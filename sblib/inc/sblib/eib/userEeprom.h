@@ -67,13 +67,21 @@ public:
     [[nodiscard]] virtual uint8_t* addrTab() const = 0;
 
     /**
-     * Access the user EEPROM like an ordinary array. The @ref startAddress is subtracted
-     * when accessing the EEPROM. So use userEeprom[0x107] to access e.g. userEeprom.version.
+     * Access the user EEPROM like an ordinary array.
      *
-     * @param address - the address of the data byte to access.
+     * @param address  The address of the data byte to access.
+     * @return The data byte.
+     */
+    uint8_t& operator[](uint32_t address) const override;
+
+    /**
+     * Access the user EEPROM like an ordinary array.
+     *
+     * @param address  The address of the data byte to access.
      * @return The data byte.
      */
     uint8_t& operator[](uint32_t address) override;
+
     [[nodiscard]] uint8_t getUInt8(uint32_t address) const override;
     [[nodiscard]] uint16_t getUInt16(uint32_t address) const override;
 

@@ -112,10 +112,17 @@ void UserRam::setUserRamStart(const uint32_t& newRamStart)
     endAddress = startAddress + sizeTotal - 1;
 }
 
-uint8_t& UserRam::operator[](uint32_t address)
+uint8_t& UserRam::operator[](uint32_t address) const
 {
     normalizeAddress(&address);
     return userRamData[address];
+}
+
+uint8_t& UserRam::operator[](const uint32_t address)
+{
+    /// 1. cast is static_cast<const UserRam&> to call operator[](..) const
+    /// 2. cast is const_cast<uint8_t&>(..) to remove the const from the return of the operator[](...) const
+    return const_cast<uint8_t&>(static_cast<const UserRam&>(*this).operator[](address));
 }
 
 uint8_t UserRam::getUInt8(uint32_t address) const
