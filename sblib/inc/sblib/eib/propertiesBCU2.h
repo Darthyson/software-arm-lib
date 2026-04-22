@@ -590,7 +590,7 @@ private:
      */
     const PropertyDef knxAssocTabObjectProps[6] =
     {
-        // XXX check correct properties for object OT_KNX_OBJECT_ASSOCIATATION_TABLE
+        // XXX check correct properties for object OT_KNX_OBJECT_ASSOCIATION_TABLE
         /** Interface object type: 2 bytes */
         {PID_OBJECT_TYPE, PDT_UNSIGNED_INT, OT_KNX_OBJECT_ASSOCIATATION_TABLE},
 
