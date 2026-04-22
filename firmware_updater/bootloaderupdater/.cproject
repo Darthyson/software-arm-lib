@@ -50,18 +50,18 @@
 								<option id="gnu.cpp.compiler.option.warnings.extrawarn.1974217296" name="Extra warnings (-Wextra)" superClass="gnu.cpp.compiler.option.warnings.extrawarn" useByScannerDiscovery="false" value="true" valueType="boolean"/>
 								<option id="gnu.cpp.compiler.option.warnings.wconversion.1771167202" name="Implicit conversion warnings (-Wconversion)" superClass="gnu.cpp.compiler.option.warnings.wconversion" useByScannerDiscovery="false" value="false" valueType="boolean"/>
 								<option id="com.crt.advproject.cpp.lto.916485503" name="Enable Link-time optimization (-flto)" superClass="com.crt.advproject.cpp.lto" useByScannerDiscovery="false" value="true" valueType="boolean"/>
-								<option id="gnu.cpp.compiler.option.warnings.wcastqual.86530137" superClass="gnu.cpp.compiler.option.warnings.wcastqual" value="true" valueType="boolean"/>
-								<option id="gnu.cpp.compiler.option.warnings.wctordtorprivacy.1861921201" superClass="gnu.cpp.compiler.option.warnings.wctordtorprivacy" value="true" valueType="boolean"/>
-								<option id="gnu.cpp.compiler.option.warnings.wlogicalop.565691484" superClass="gnu.cpp.compiler.option.warnings.wlogicalop" value="true" valueType="boolean"/>
-								<option id="gnu.cpp.compiler.option.warnings.wmissingincdir.1647484713" superClass="gnu.cpp.compiler.option.warnings.wmissingincdir" value="true" valueType="boolean"/>
-								<option id="gnu.cpp.compiler.option.warnings.woverloadedvirtual.1839979860" superClass="gnu.cpp.compiler.option.warnings.woverloadedvirtual" value="true" valueType="boolean"/>
-								<option id="gnu.cpp.compiler.option.warnings.wredundantdecl.564100134" superClass="gnu.cpp.compiler.option.warnings.wredundantdecl" value="true" valueType="boolean"/>
-								<option id="gnu.cpp.compiler.option.warnings.wshadow.739853055" superClass="gnu.cpp.compiler.option.warnings.wshadow" value="true" valueType="boolean"/>
-								<option id="gnu.cpp.compiler.option.warnings.wsignpromo.1143061687" superClass="gnu.cpp.compiler.option.warnings.wsignpromo" value="true" valueType="boolean"/>
-								<option id="gnu.cpp.compiler.option.warnings.wstrictnullsent.470025492" superClass="gnu.cpp.compiler.option.warnings.wstrictnullsent" value="true" valueType="boolean"/>
-								<option id="gnu.cpp.compiler.option.warnings.wswitchdef.1459045216" superClass="gnu.cpp.compiler.option.warnings.wswitchdef" value="true" valueType="boolean"/>
-								<option id="gnu.cpp.compiler.option.warnings.wundef.230036059" superClass="gnu.cpp.compiler.option.warnings.wundef" value="true" valueType="boolean"/>
-								<option id="gnu.cpp.compiler.option.warnings.wfloatequal.328636659" superClass="gnu.cpp.compiler.option.warnings.wfloatequal" value="true" valueType="boolean"/>
+								<option id="gnu.cpp.compiler.option.warnings.wcastqual.86530137" superClass="gnu.cpp.compiler.option.warnings.wcastqual" useByScannerDiscovery="false" value="true" valueType="boolean"/>
+								<option id="gnu.cpp.compiler.option.warnings.wctordtorprivacy.1861921201" superClass="gnu.cpp.compiler.option.warnings.wctordtorprivacy" useByScannerDiscovery="false" value="true" valueType="boolean"/>
+								<option id="gnu.cpp.compiler.option.warnings.wlogicalop.565691484" superClass="gnu.cpp.compiler.option.warnings.wlogicalop" useByScannerDiscovery="false" value="true" valueType="boolean"/>
+								<option id="gnu.cpp.compiler.option.warnings.wmissingincdir.1647484713" superClass="gnu.cpp.compiler.option.warnings.wmissingincdir" useByScannerDiscovery="false" value="true" valueType="boolean"/>
+								<option id="gnu.cpp.compiler.option.warnings.woverloadedvirtual.1839979860" superClass="gnu.cpp.compiler.option.warnings.woverloadedvirtual" useByScannerDiscovery="false" value="true" valueType="boolean"/>
+								<option id="gnu.cpp.compiler.option.warnings.wredundantdecl.564100134" superClass="gnu.cpp.compiler.option.warnings.wredundantdecl" useByScannerDiscovery="false" value="true" valueType="boolean"/>
+								<option id="gnu.cpp.compiler.option.warnings.wshadow.739853055" superClass="gnu.cpp.compiler.option.warnings.wshadow" useByScannerDiscovery="false" value="true" valueType="boolean"/>
+								<option id="gnu.cpp.compiler.option.warnings.wsignpromo.1143061687" superClass="gnu.cpp.compiler.option.warnings.wsignpromo" useByScannerDiscovery="false" value="true" valueType="boolean"/>
+								<option id="gnu.cpp.compiler.option.warnings.wstrictnullsent.470025492" superClass="gnu.cpp.compiler.option.warnings.wstrictnullsent" useByScannerDiscovery="false" value="true" valueType="boolean"/>
+								<option id="gnu.cpp.compiler.option.warnings.wswitchdef.1459045216" superClass="gnu.cpp.compiler.option.warnings.wswitchdef" useByScannerDiscovery="false" value="true" valueType="boolean"/>
+								<option id="gnu.cpp.compiler.option.warnings.wundef.230036059" superClass="gnu.cpp.compiler.option.warnings.wundef" useByScannerDiscovery="false" value="true" valueType="boolean"/>
+								<option id="gnu.cpp.compiler.option.warnings.wfloatequal.328636659" superClass="gnu.cpp.compiler.option.warnings.wfloatequal" useByScannerDiscovery="false" value="true" valueType="boolean"/>
 								<inputType id="com.crt.advproject.compiler.cpp.input.1940320367" superClass="com.crt.advproject.compiler.cpp.input"/>
 							</tool>
 							<tool id="com.crt.advproject.gcc.exe.debug.1979592788" name="MCU C Compiler" superClass="com.crt.advproject.gcc.exe.debug">
@@ -198,19 +198,19 @@
 								<option id="com.crt.advproject.cpp.lto.1465734855" name="Enable Link-time optimization (-flto)" superClass="com.crt.advproject.cpp.lto" useByScannerDiscovery="false" value="true" valueType="boolean"/>
 								<option id="com.crt.advproject.cpp.exe.release.option.debugging.level.183151190" name="Debug Level" superClass="com.crt.advproject.cpp.exe.release.option.debugging.level" useByScannerDiscovery="false" value="gnu.cpp.compiler.debugging.level.none" valueType="enumerated"/>
 								<option id="com.crt.advproject.cpp.specs.395567698" name="Specs" superClass="com.crt.advproject.cpp.specs" useByScannerDiscovery="false" value="com.crt.advproject.cpp.specs.newlibnano" valueType="enumerated"/>
-								<option id="gnu.cpp.compiler.option.warnings.pedantic.881668704" superClass="gnu.cpp.compiler.option.warnings.pedantic" value="true" valueType="boolean"/>
-								<option id="gnu.cpp.compiler.option.warnings.wcastqual.2113516493" superClass="gnu.cpp.compiler.option.warnings.wcastqual" value="true" valueType="boolean"/>
-								<option id="gnu.cpp.compiler.option.warnings.wctordtorprivacy.1172494416" superClass="gnu.cpp.compiler.option.warnings.wctordtorprivacy" value="true" valueType="boolean"/>
-								<option id="gnu.cpp.compiler.option.warnings.wlogicalop.549094843" superClass="gnu.cpp.compiler.option.warnings.wlogicalop" value="true" valueType="boolean"/>
-								<option id="gnu.cpp.compiler.option.warnings.wmissingincdir.1961002638" superClass="gnu.cpp.compiler.option.warnings.wmissingincdir" value="true" valueType="boolean"/>
-								<option id="gnu.cpp.compiler.option.warnings.woverloadedvirtual.968031499" superClass="gnu.cpp.compiler.option.warnings.woverloadedvirtual" value="true" valueType="boolean"/>
-								<option id="gnu.cpp.compiler.option.warnings.wredundantdecl.1868342584" superClass="gnu.cpp.compiler.option.warnings.wredundantdecl" value="true" valueType="boolean"/>
-								<option id="gnu.cpp.compiler.option.warnings.wshadow.1978268170" superClass="gnu.cpp.compiler.option.warnings.wshadow" value="true" valueType="boolean"/>
-								<option id="gnu.cpp.compiler.option.warnings.wsignpromo.6706833" superClass="gnu.cpp.compiler.option.warnings.wsignpromo" value="true" valueType="boolean"/>
-								<option id="gnu.cpp.compiler.option.warnings.wstrictnullsent.517849549" superClass="gnu.cpp.compiler.option.warnings.wstrictnullsent" value="true" valueType="boolean"/>
-								<option id="gnu.cpp.compiler.option.warnings.wswitchdef.1690000065" superClass="gnu.cpp.compiler.option.warnings.wswitchdef" value="true" valueType="boolean"/>
-								<option id="gnu.cpp.compiler.option.warnings.wundef.1452482549" superClass="gnu.cpp.compiler.option.warnings.wundef" value="true" valueType="boolean"/>
-								<option id="gnu.cpp.compiler.option.warnings.wfloatequal.38814405" superClass="gnu.cpp.compiler.option.warnings.wfloatequal" value="true" valueType="boolean"/>
+								<option id="gnu.cpp.compiler.option.warnings.pedantic.881668704" superClass="gnu.cpp.compiler.option.warnings.pedantic" useByScannerDiscovery="false" value="true" valueType="boolean"/>
+								<option id="gnu.cpp.compiler.option.warnings.wcastqual.2113516493" superClass="gnu.cpp.compiler.option.warnings.wcastqual" useByScannerDiscovery="false" value="true" valueType="boolean"/>
+								<option id="gnu.cpp.compiler.option.warnings.wctordtorprivacy.1172494416" superClass="gnu.cpp.compiler.option.warnings.wctordtorprivacy" useByScannerDiscovery="false" value="true" valueType="boolean"/>
+								<option id="gnu.cpp.compiler.option.warnings.wlogicalop.549094843" superClass="gnu.cpp.compiler.option.warnings.wlogicalop" useByScannerDiscovery="false" value="true" valueType="boolean"/>
+								<option id="gnu.cpp.compiler.option.warnings.wmissingincdir.1961002638" superClass="gnu.cpp.compiler.option.warnings.wmissingincdir" useByScannerDiscovery="false" value="true" valueType="boolean"/>
+								<option id="gnu.cpp.compiler.option.warnings.woverloadedvirtual.968031499" superClass="gnu.cpp.compiler.option.warnings.woverloadedvirtual" useByScannerDiscovery="false" value="true" valueType="boolean"/>
+								<option id="gnu.cpp.compiler.option.warnings.wredundantdecl.1868342584" superClass="gnu.cpp.compiler.option.warnings.wredundantdecl" useByScannerDiscovery="false" value="true" valueType="boolean"/>
+								<option id="gnu.cpp.compiler.option.warnings.wshadow.1978268170" superClass="gnu.cpp.compiler.option.warnings.wshadow" useByScannerDiscovery="false" value="true" valueType="boolean"/>
+								<option id="gnu.cpp.compiler.option.warnings.wsignpromo.6706833" superClass="gnu.cpp.compiler.option.warnings.wsignpromo" useByScannerDiscovery="false" value="true" valueType="boolean"/>
+								<option id="gnu.cpp.compiler.option.warnings.wstrictnullsent.517849549" superClass="gnu.cpp.compiler.option.warnings.wstrictnullsent" useByScannerDiscovery="false" value="true" valueType="boolean"/>
+								<option id="gnu.cpp.compiler.option.warnings.wswitchdef.1690000065" superClass="gnu.cpp.compiler.option.warnings.wswitchdef" useByScannerDiscovery="false" value="true" valueType="boolean"/>
+								<option id="gnu.cpp.compiler.option.warnings.wundef.1452482549" superClass="gnu.cpp.compiler.option.warnings.wundef" useByScannerDiscovery="false" value="true" valueType="boolean"/>
+								<option id="gnu.cpp.compiler.option.warnings.wfloatequal.38814405" superClass="gnu.cpp.compiler.option.warnings.wfloatequal" useByScannerDiscovery="false" value="true" valueType="boolean"/>
 								<inputType id="com.crt.advproject.compiler.cpp.input.1148880151" superClass="com.crt.advproject.compiler.cpp.input"/>
 							</tool>
 							<tool id="com.crt.advproject.gcc.exe.release.1894671388" name="MCU C Compiler" superClass="com.crt.advproject.gcc.exe.release">
@@ -341,19 +341,19 @@
 								<option id="com.crt.advproject.cpp.lto.2050009397" name="Enable Link-time optimization (-flto)" superClass="com.crt.advproject.cpp.lto" useByScannerDiscovery="false" value="true" valueType="boolean"/>
 								<option id="com.crt.advproject.cpp.exe.release.option.debugging.level.598365409" name="Debug Level" superClass="com.crt.advproject.cpp.exe.release.option.debugging.level" useByScannerDiscovery="false" value="gnu.cpp.compiler.debugging.level.none" valueType="enumerated"/>
 								<option id="com.crt.advproject.cpp.specs.2069248322" name="Specs" superClass="com.crt.advproject.cpp.specs" useByScannerDiscovery="false" value="com.crt.advproject.cpp.specs.newlibnano" valueType="enumerated"/>
-								<option id="gnu.cpp.compiler.option.warnings.pedantic.513068813" superClass="gnu.cpp.compiler.option.warnings.pedantic" value="true" valueType="boolean"/>
-								<option id="gnu.cpp.compiler.option.warnings.wcastqual.532910869" superClass="gnu.cpp.compiler.option.warnings.wcastqual" value="true" valueType="boolean"/>
-								<option id="gnu.cpp.compiler.option.warnings.wctordtorprivacy.1370265953" superClass="gnu.cpp.compiler.option.warnings.wctordtorprivacy" value="true" valueType="boolean"/>
-								<option id="gnu.cpp.compiler.option.warnings.wlogicalop.1816438419" superClass="gnu.cpp.compiler.option.warnings.wlogicalop" value="true" valueType="boolean"/>
-								<option id="gnu.cpp.compiler.option.warnings.wmissingincdir.1088556284" superClass="gnu.cpp.compiler.option.warnings.wmissingincdir" value="true" valueType="boolean"/>
-								<option id="gnu.cpp.compiler.option.warnings.woverloadedvirtual.693577062" superClass="gnu.cpp.compiler.option.warnings.woverloadedvirtual" value="true" valueType="boolean"/>
-								<option id="gnu.cpp.compiler.option.warnings.wredundantdecl.1029830581" superClass="gnu.cpp.compiler.option.warnings.wredundantdecl" value="true" valueType="boolean"/>
-								<option id="gnu.cpp.compiler.option.warnings.wshadow.162445820" superClass="gnu.cpp.compiler.option.warnings.wshadow" value="true" valueType="boolean"/>
-								<option id="gnu.cpp.compiler.option.warnings.wsignpromo.2056138576" superClass="gnu.cpp.compiler.option.warnings.wsignpromo" value="true" valueType="boolean"/>
-								<option id="gnu.cpp.compiler.option.warnings.wstrictnullsent.1454819084" superClass="gnu.cpp.compiler.option.warnings.wstrictnullsent" value="true" valueType="boolean"/>
-								<option id="gnu.cpp.compiler.option.warnings.wswitchdef.700161878" superClass="gnu.cpp.compiler.option.warnings.wswitchdef" value="true" valueType="boolean"/>
-								<option id="gnu.cpp.compiler.option.warnings.wundef.968671379" superClass="gnu.cpp.compiler.option.warnings.wundef" value="true" valueType="boolean"/>
-								<option id="gnu.cpp.compiler.option.warnings.wfloatequal.1543627921" superClass="gnu.cpp.compiler.option.warnings.wfloatequal" value="true" valueType="boolean"/>
+								<option id="gnu.cpp.compiler.option.warnings.pedantic.513068813" superClass="gnu.cpp.compiler.option.warnings.pedantic" useByScannerDiscovery="false" value="true" valueType="boolean"/>
+								<option id="gnu.cpp.compiler.option.warnings.wcastqual.532910869" superClass="gnu.cpp.compiler.option.warnings.wcastqual" useByScannerDiscovery="false" value="true" valueType="boolean"/>
+								<option id="gnu.cpp.compiler.option.warnings.wctordtorprivacy.1370265953" superClass="gnu.cpp.compiler.option.warnings.wctordtorprivacy" useByScannerDiscovery="false" value="true" valueType="boolean"/>
+								<option id="gnu.cpp.compiler.option.warnings.wlogicalop.1816438419" superClass="gnu.cpp.compiler.option.warnings.wlogicalop" useByScannerDiscovery="false" value="true" valueType="boolean"/>
+								<option id="gnu.cpp.compiler.option.warnings.wmissingincdir.1088556284" superClass="gnu.cpp.compiler.option.warnings.wmissingincdir" useByScannerDiscovery="false" value="true" valueType="boolean"/>
+								<option id="gnu.cpp.compiler.option.warnings.woverloadedvirtual.693577062" superClass="gnu.cpp.compiler.option.warnings.woverloadedvirtual" useByScannerDiscovery="false" value="true" valueType="boolean"/>
+								<option id="gnu.cpp.compiler.option.warnings.wredundantdecl.1029830581" superClass="gnu.cpp.compiler.option.warnings.wredundantdecl" useByScannerDiscovery="false" value="true" valueType="boolean"/>
+								<option id="gnu.cpp.compiler.option.warnings.wshadow.162445820" superClass="gnu.cpp.compiler.option.warnings.wshadow" useByScannerDiscovery="false" value="true" valueType="boolean"/>
+								<option id="gnu.cpp.compiler.option.warnings.wsignpromo.2056138576" superClass="gnu.cpp.compiler.option.warnings.wsignpromo" useByScannerDiscovery="false" value="true" valueType="boolean"/>
+								<option id="gnu.cpp.compiler.option.warnings.wstrictnullsent.1454819084" superClass="gnu.cpp.compiler.option.warnings.wstrictnullsent" useByScannerDiscovery="false" value="true" valueType="boolean"/>
+								<option id="gnu.cpp.compiler.option.warnings.wswitchdef.700161878" superClass="gnu.cpp.compiler.option.warnings.wswitchdef" useByScannerDiscovery="false" value="true" valueType="boolean"/>
+								<option id="gnu.cpp.compiler.option.warnings.wundef.968671379" superClass="gnu.cpp.compiler.option.warnings.wundef" useByScannerDiscovery="false" value="true" valueType="boolean"/>
+								<option id="gnu.cpp.compiler.option.warnings.wfloatequal.1543627921" superClass="gnu.cpp.compiler.option.warnings.wfloatequal" useByScannerDiscovery="false" value="true" valueType="boolean"/>
 								<inputType id="com.crt.advproject.compiler.cpp.input.210848090" superClass="com.crt.advproject.compiler.cpp.input"/>
 							</tool>
 							<tool id="com.crt.advproject.gcc.exe.release.1040801711" name="MCU C Compiler" superClass="com.crt.advproject.gcc.exe.release">
@@ -486,18 +486,18 @@
 								<option id="gnu.cpp.compiler.option.warnings.extrawarn.2067334715" name="Extra warnings (-Wextra)" superClass="gnu.cpp.compiler.option.warnings.extrawarn" useByScannerDiscovery="false" value="true" valueType="boolean"/>
 								<option id="gnu.cpp.compiler.option.warnings.wconversion.546864118" name="Implicit conversion warnings (-Wconversion)" superClass="gnu.cpp.compiler.option.warnings.wconversion" useByScannerDiscovery="false" value="false" valueType="boolean"/>
 								<option id="com.crt.advproject.cpp.lto.373123347" name="Enable Link-time optimization (-flto)" superClass="com.crt.advproject.cpp.lto" useByScannerDiscovery="false" value="true" valueType="boolean"/>
-								<option id="gnu.cpp.compiler.option.warnings.wcastqual.1473090882" superClass="gnu.cpp.compiler.option.warnings.wcastqual" value="true" valueType="boolean"/>
-								<option id="gnu.cpp.compiler.option.warnings.wctordtorprivacy.83989098" superClass="gnu.cpp.compiler.option.warnings.wctordtorprivacy" value="true" valueType="boolean"/>
-								<option id="gnu.cpp.compiler.option.warnings.wlogicalop.1250410174" superClass="gnu.cpp.compiler.option.warnings.wlogicalop" value="true" valueType="boolean"/>
-								<option id="gnu.cpp.compiler.option.warnings.wmissingincdir.444082687" superClass="gnu.cpp.compiler.option.warnings.wmissingincdir" value="true" valueType="boolean"/>
-								<option id="gnu.cpp.compiler.option.warnings.woverloadedvirtual.519906378" superClass="gnu.cpp.compiler.option.warnings.woverloadedvirtual" value="true" valueType="boolean"/>
-								<option id="gnu.cpp.compiler.option.warnings.wredundantdecl.950023043" superClass="gnu.cpp.compiler.option.warnings.wredundantdecl" value="true" valueType="boolean"/>
-								<option id="gnu.cpp.compiler.option.warnings.wshadow.1240312378" superClass="gnu.cpp.compiler.option.warnings.wshadow" value="true" valueType="boolean"/>
-								<option id="gnu.cpp.compiler.option.warnings.wsignpromo.1096127479" superClass="gnu.cpp.compiler.option.warnings.wsignpromo" value="true" valueType="boolean"/>
-								<option id="gnu.cpp.compiler.option.warnings.wstrictnullsent.1621905219" superClass="gnu.cpp.compiler.option.warnings.wstrictnullsent" value="true" valueType="boolean"/>
-								<option id="gnu.cpp.compiler.option.warnings.wswitchdef.739043610" superClass="gnu.cpp.compiler.option.warnings.wswitchdef" value="true" valueType="boolean"/>
-								<option id="gnu.cpp.compiler.option.warnings.wundef.164331075" superClass="gnu.cpp.compiler.option.warnings.wundef" value="true" valueType="boolean"/>
-								<option id="gnu.cpp.compiler.option.warnings.wfloatequal.718339322" superClass="gnu.cpp.compiler.option.warnings.wfloatequal" value="true" valueType="boolean"/>
+								<option id="gnu.cpp.compiler.option.warnings.wcastqual.1473090882" superClass="gnu.cpp.compiler.option.warnings.wcastqual" useByScannerDiscovery="false" value="true" valueType="boolean"/>
+								<option id="gnu.cpp.compiler.option.warnings.wctordtorprivacy.83989098" superClass="gnu.cpp.compiler.option.warnings.wctordtorprivacy" useByScannerDiscovery="false" value="true" valueType="boolean"/>
+								<option id="gnu.cpp.compiler.option.warnings.wlogicalop.1250410174" superClass="gnu.cpp.compiler.option.warnings.wlogicalop" useByScannerDiscovery="false" value="true" valueType="boolean"/>
+								<option id="gnu.cpp.compiler.option.warnings.wmissingincdir.444082687" superClass="gnu.cpp.compiler.option.warnings.wmissingincdir" useByScannerDiscovery="false" value="true" valueType="boolean"/>
+								<option id="gnu.cpp.compiler.option.warnings.woverloadedvirtual.519906378" superClass="gnu.cpp.compiler.option.warnings.woverloadedvirtual" useByScannerDiscovery="false" value="true" valueType="boolean"/>
+								<option id="gnu.cpp.compiler.option.warnings.wredundantdecl.950023043" superClass="gnu.cpp.compiler.option.warnings.wredundantdecl" useByScannerDiscovery="false" value="true" valueType="boolean"/>
+								<option id="gnu.cpp.compiler.option.warnings.wshadow.1240312378" superClass="gnu.cpp.compiler.option.warnings.wshadow" useByScannerDiscovery="false" value="true" valueType="boolean"/>
+								<option id="gnu.cpp.compiler.option.warnings.wsignpromo.1096127479" superClass="gnu.cpp.compiler.option.warnings.wsignpromo" useByScannerDiscovery="false" value="true" valueType="boolean"/>
+								<option id="gnu.cpp.compiler.option.warnings.wstrictnullsent.1621905219" superClass="gnu.cpp.compiler.option.warnings.wstrictnullsent" useByScannerDiscovery="false" value="true" valueType="boolean"/>
+								<option id="gnu.cpp.compiler.option.warnings.wswitchdef.739043610" superClass="gnu.cpp.compiler.option.warnings.wswitchdef" useByScannerDiscovery="false" value="true" valueType="boolean"/>
+								<option id="gnu.cpp.compiler.option.warnings.wundef.164331075" superClass="gnu.cpp.compiler.option.warnings.wundef" useByScannerDiscovery="false" value="true" valueType="boolean"/>
+								<option id="gnu.cpp.compiler.option.warnings.wfloatequal.718339322" superClass="gnu.cpp.compiler.option.warnings.wfloatequal" useByScannerDiscovery="false" value="true" valueType="boolean"/>
 								<inputType id="com.crt.advproject.compiler.cpp.input.1297850956" superClass="com.crt.advproject.compiler.cpp.input"/>
 							</tool>
 							<tool id="com.crt.advproject.gcc.exe.debug.2012485530" name="MCU C Compiler" superClass="com.crt.advproject.gcc.exe.debug">
@@ -634,19 +634,19 @@
 								<option id="com.crt.advproject.cpp.lto.1613146031" name="Enable Link-time optimization (-flto)" superClass="com.crt.advproject.cpp.lto" useByScannerDiscovery="false" value="true" valueType="boolean"/>
 								<option id="com.crt.advproject.cpp.exe.release.option.debugging.level.1401811779" name="Debug Level" superClass="com.crt.advproject.cpp.exe.release.option.debugging.level" useByScannerDiscovery="false" value="gnu.cpp.compiler.debugging.level.none" valueType="enumerated"/>
 								<option id="com.crt.advproject.cpp.specs.203233811" name="Specs" superClass="com.crt.advproject.cpp.specs" useByScannerDiscovery="false" value="com.crt.advproject.cpp.specs.newlibnano" valueType="enumerated"/>
-								<option id="gnu.cpp.compiler.option.warnings.pedantic.1823551213" superClass="gnu.cpp.compiler.option.warnings.pedantic" value="true" valueType="boolean"/>
-								<option id="gnu.cpp.compiler.option.warnings.wcastqual.280073539" superClass="gnu.cpp.compiler.option.warnings.wcastqual" value="true" valueType="boolean"/>
-								<option id="gnu.cpp.compiler.option.warnings.wctordtorprivacy.1599813083" superClass="gnu.cpp.compiler.option.warnings.wctordtorprivacy" value="true" valueType="boolean"/>
-								<option id="gnu.cpp.compiler.option.warnings.wlogicalop.1668073711" superClass="gnu.cpp.compiler.option.warnings.wlogicalop" value="true" valueType="boolean"/>
-								<option id="gnu.cpp.compiler.option.warnings.wmissingincdir.359500165" superClass="gnu.cpp.compiler.option.warnings.wmissingincdir" value="true" valueType="boolean"/>
-								<option id="gnu.cpp.compiler.option.warnings.woverloadedvirtual.2137167242" superClass="gnu.cpp.compiler.option.warnings.woverloadedvirtual" value="true" valueType="boolean"/>
-								<option id="gnu.cpp.compiler.option.warnings.wredundantdecl.2123055984" superClass="gnu.cpp.compiler.option.warnings.wredundantdecl" value="true" valueType="boolean"/>
-								<option id="gnu.cpp.compiler.option.warnings.wshadow.1532125712" superClass="gnu.cpp.compiler.option.warnings.wshadow" value="true" valueType="boolean"/>
-								<option id="gnu.cpp.compiler.option.warnings.wsignpromo.74729286" superClass="gnu.cpp.compiler.option.warnings.wsignpromo" value="true" valueType="boolean"/>
-								<option id="gnu.cpp.compiler.option.warnings.wstrictnullsent.806128955" superClass="gnu.cpp.compiler.option.warnings.wstrictnullsent" value="true" valueType="boolean"/>
-								<option id="gnu.cpp.compiler.option.warnings.wswitchdef.1161148959" superClass="gnu.cpp.compiler.option.warnings.wswitchdef" value="true" valueType="boolean"/>
-								<option id="gnu.cpp.compiler.option.warnings.wundef.47381886" superClass="gnu.cpp.compiler.option.warnings.wundef" value="true" valueType="boolean"/>
-								<option id="gnu.cpp.compiler.option.warnings.wfloatequal.587696820" superClass="gnu.cpp.compiler.option.warnings.wfloatequal" value="true" valueType="boolean"/>
+								<option id="gnu.cpp.compiler.option.warnings.pedantic.1823551213" superClass="gnu.cpp.compiler.option.warnings.pedantic" useByScannerDiscovery="false" value="true" valueType="boolean"/>
+								<option id="gnu.cpp.compiler.option.warnings.wcastqual.280073539" superClass="gnu.cpp.compiler.option.warnings.wcastqual" useByScannerDiscovery="false" value="true" valueType="boolean"/>
+								<option id="gnu.cpp.compiler.option.warnings.wctordtorprivacy.1599813083" superClass="gnu.cpp.compiler.option.warnings.wctordtorprivacy" useByScannerDiscovery="false" value="true" valueType="boolean"/>
+								<option id="gnu.cpp.compiler.option.warnings.wlogicalop.1668073711" superClass="gnu.cpp.compiler.option.warnings.wlogicalop" useByScannerDiscovery="false" value="true" valueType="boolean"/>
+								<option id="gnu.cpp.compiler.option.warnings.wmissingincdir.359500165" superClass="gnu.cpp.compiler.option.warnings.wmissingincdir" useByScannerDiscovery="false" value="true" valueType="boolean"/>
+								<option id="gnu.cpp.compiler.option.warnings.woverloadedvirtual.2137167242" superClass="gnu.cpp.compiler.option.warnings.woverloadedvirtual" useByScannerDiscovery="false" value="true" valueType="boolean"/>
+								<option id="gnu.cpp.compiler.option.warnings.wredundantdecl.2123055984" superClass="gnu.cpp.compiler.option.warnings.wredundantdecl" useByScannerDiscovery="false" value="true" valueType="boolean"/>
+								<option id="gnu.cpp.compiler.option.warnings.wshadow.1532125712" superClass="gnu.cpp.compiler.option.warnings.wshadow" useByScannerDiscovery="false" value="true" valueType="boolean"/>
+								<option id="gnu.cpp.compiler.option.warnings.wsignpromo.74729286" superClass="gnu.cpp.compiler.option.warnings.wsignpromo" useByScannerDiscovery="false" value="true" valueType="boolean"/>
+								<option id="gnu.cpp.compiler.option.warnings.wstrictnullsent.806128955" superClass="gnu.cpp.compiler.option.warnings.wstrictnullsent" useByScannerDiscovery="false" value="true" valueType="boolean"/>
+								<option id="gnu.cpp.compiler.option.warnings.wswitchdef.1161148959" superClass="gnu.cpp.compiler.option.warnings.wswitchdef" useByScannerDiscovery="false" value="true" valueType="boolean"/>
+								<option id="gnu.cpp.compiler.option.warnings.wundef.47381886" superClass="gnu.cpp.compiler.option.warnings.wundef" useByScannerDiscovery="false" value="true" valueType="boolean"/>
+								<option id="gnu.cpp.compiler.option.warnings.wfloatequal.587696820" superClass="gnu.cpp.compiler.option.warnings.wfloatequal" useByScannerDiscovery="false" value="true" valueType="boolean"/>
 								<inputType id="com.crt.advproject.compiler.cpp.input.1840287191" superClass="com.crt.advproject.compiler.cpp.input"/>
 							</tool>
 							<tool id="com.crt.advproject.gcc.exe.release.1835665294" name="MCU C Compiler" superClass="com.crt.advproject.gcc.exe.release">
