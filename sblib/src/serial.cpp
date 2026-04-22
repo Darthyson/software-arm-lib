@@ -261,6 +261,11 @@ void Serial::begin(const SerialBaudRate baudRate)
 
 void Serial::end()
 {
+    if (!enabled_)
+    {
+        return;
+    }
+
     // Wait for write buffer to drain into UART Tx FIFO
     flush();
 
