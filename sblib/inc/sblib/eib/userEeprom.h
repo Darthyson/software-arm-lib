@@ -39,6 +39,8 @@ public:
 
     explicit UserEeprom(uint32_t start, uint32_t size, uint32_t flashSize);
 
+    ///\todo Enable deprecation warning after making userEepromData private
+    //[[deprecated("Use getUInt8, getUInt16, getUInt32 or the [] operator.")]]
     alignas(FLASH_RAM_BUFFER_ALIGNMENT) uint8_t* userEepromData; // must be word aligned, otherwise iapProgram will fail
 
     [[nodiscard]] virtual uint8_t& optionReg() const = 0;
@@ -123,6 +125,47 @@ protected:
      * @return If successful: number of the last valid flash page, otherwise 0
      */
     [[nodiscard]] uint8_t* findValidPage() const;
+
+    /**
+     * @brief Access the internal @ref userEepromData array directly by raw index, without
+     *        any @ref startAddress offset subtraction.
+     *
+     * @param index  Zero-based index into @ref userEepromData. Must satisfy
+     *               <tt>startAddress + index</tt> within the valid array range,
+     *               otherwise @ref fatalError() is called.
+     * @return Reference to the byte at @ref userEepromData[index].
+     * @warning This method is intended for internal use only.
+     */
+    [[nodiscard]] uint8_t& directAccess_8(uint32_t index) const;
+
+    /**
+     * @brief Access the internal @ref userEepromData array directly by raw index, without
+     *        any @ref startAddress offset subtraction.
+     *
+     * @note  Internally delegates to @ref directAccess_8() and reinterprets the result
+     *        as a 16-bit reference via @c reinterpret_cast (little-endian).
+     *
+     * @warning **Alignment is mandatory.**
+     *          The target platform (ARM Cortex-M0 / LPC11xx) does **not** support
+     *          unaligned multibyte memory accesses. Passing an odd @p index will
+     *          cause a **HardFault** at runtime, and is also Undefined Behavior
+     *          in C++ (strict aliasing / alignment rules).\n
+     *          Always verify the offset with a compile-time check before use, e.g.:
+     *          @code
+     *          static_assert(myOffset % 2 == 0, "myOffset must be 2-byte aligned");
+     *          @endcode
+     *          The base pointer @ref userEepromData is guaranteed to be aligned to
+     *          @ref FLASH_RAM_BUFFER_ALIGNMENT, so only @p index itself needs to be even.
+     *
+     * @param index  Zero-based, **even** index into @ref userEepromData pointing to the
+     *               low byte of the 16-bit value. Must satisfy
+     *               <tt>startAddress + index</tt> within the valid address range,
+     *               otherwise @ref fatalError() is called.
+     * @return       Reference to the two bytes at @ref userEepromData[index] interpreted
+     *               as @c uint16_t.
+     * @warning This method is intended for internal use only.
+     */
+    [[nodiscard]] uint16_t& directAccess_16(uint32_t index) const;
 
     bool userEepromModified = false;
     uint32_t writeUserEepromTime = 0;

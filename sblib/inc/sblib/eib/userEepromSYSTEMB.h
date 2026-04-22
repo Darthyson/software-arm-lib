@@ -23,18 +23,24 @@ public:
     static constexpr uint32_t eibObjVerOffset = 0x75;    //!< 0x3375-0x3379 Application program 1 version
     static constexpr uint32_t commsSeg0VerOffset = 0x7A; //!< 0x337A-0x337E Application program 2 version
 
-    [[nodiscard]] uint16_t& addrTabAddr() const override { return *(uint16_t*)&userEepromData[addrTabAddrOffset]; }
-    [[nodiscard]] uint16_t& assocTabAddr() const override { return *(uint16_t*)&userEepromData[assocTabAddrOffset]; }
-    [[nodiscard]] virtual uint8_t* addrTabMcb() const { return &userEepromData[addrTabMcbOffset]; }
-    [[nodiscard]] virtual uint8_t* assocTabMcb() const { return &userEepromData[assocTabMcbOffset]; }
-    [[nodiscard]] virtual uint8_t* commsTabMcb() const { return &userEepromData[commsTabMcbOffset]; }
-    [[nodiscard]] virtual uint8_t* commsSeg0Mcb() const { return &userEepromData[commsSeg0McbOffset]; }
-    [[nodiscard]] virtual uint8_t* eibObjMcb() const { return &userEepromData[eibObjMcbOffset]; }
+    [[nodiscard]] uint16_t& addrTabAddr() const override { return directAccess_16(addrTabAddrOffset); }
+    [[nodiscard]] uint16_t& assocTabAddr() const override { return directAccess_16(assocTabAddrOffset); }
+    [[nodiscard]] virtual uint8_t* addrTabMcb() const { return &directAccess_8(addrTabMcbOffset); }
+    [[nodiscard]] virtual uint8_t* assocTabMcb() const { return &directAccess_8(assocTabMcbOffset); }
+    [[nodiscard]] virtual uint8_t* commsTabMcb() const { return &directAccess_8(commsTabMcbOffset); }
+    [[nodiscard]] virtual uint8_t* commsSeg0Mcb() const { return &directAccess_8(commsSeg0McbOffset); }
+    [[nodiscard]] virtual uint8_t* eibObjMcb() const { return &directAccess_8(eibObjMcbOffset); }
 
 protected:
     UserEepromSYSTEMB(const uint32_t start, const uint32_t size, const uint32_t flashSize)
        :
         UserEepromMASK0701(start, size, flashSize) {}
+
+
+    ///\todo These two asserts fail, see UserEeprom::directAccess_16 for details.
+    ///      The offset must be 2-byte aligned to avoid unaligned memory access.
+    //static_assert(addrTabAddrOffset   % 2 == 0, "addrTabAddrOffset must be 2-byte aligned");
+    //static_assert(assocTabAddrOffset   % 2 == 0, "assocTabAddrOffset must be 2-byte aligned");
 };
 
 #endif /* SBLIB_KNX_USEREEPROM_SYSTEMB_H_ */

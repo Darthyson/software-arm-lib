@@ -57,28 +57,38 @@ public:
     [[nodiscard]] virtual uint32_t orderSize() const { return 10; };
     [[nodiscard]] virtual uint32_t orderInfoSize() const { return 10; };
 
-    [[nodiscard]] virtual uint8_t& appType() const { return userEepromData[appTypeOffset]; }
-    [[nodiscard]] virtual uint8_t* loadState() const { return &userEepromData[loadStateOffset]; }
-    [[nodiscard]] virtual uint16_t& commsTabAddr() const { return *(uint16_t*)&userEepromData[commsTabAddrOffset]; }
-    [[nodiscard]] virtual uint16_t& commsSeg0Addr() const { return *(uint16_t*)&userEepromData[commsSeg0AddrOffset]; }
-    [[nodiscard]] virtual uint16_t& commsSeg1Addr() const { return *(uint16_t*)&userEepromData[commsSeg1AddrOffset]; }
-    [[nodiscard]] virtual uint16_t& eibObjAddr() const { return *(uint16_t*)&userEepromData[eibObjAddrOffset]; }
-    [[nodiscard]] virtual uint8_t& eibObjCount() const { return userEepromData[eibObjCountOffset]; }
-    [[nodiscard]] virtual uint16_t& addrTabAddr() const { return *(uint16_t*)&userEepromData[addrTabAddrOffset]; }
-    [[nodiscard]] virtual uint16_t& assocTabAddr() const { return *(uint16_t*)&userEepromData[assocTabAddrOffset]; }
-    [[nodiscard]] virtual uint8_t* serial() const { return &userEepromData[serialOffset]; }
-    [[nodiscard]] virtual uint8_t* order() const { return &userEepromData[orderOffset]; }
+    [[nodiscard]] virtual uint8_t& appType() const { return directAccess_8(appTypeOffset); }
+    [[nodiscard]] virtual uint8_t* loadState() const { return &directAccess_8(loadStateOffset); }
+    [[nodiscard]] virtual uint16_t& commsTabAddr() const { return directAccess_16(commsTabAddrOffset); }
+    [[nodiscard]] virtual uint16_t& commsSeg0Addr() const { return directAccess_16(commsSeg0AddrOffset); }
+    [[nodiscard]] virtual uint16_t& commsSeg1Addr() const { return directAccess_16(commsSeg1AddrOffset); }
+    [[nodiscard]] virtual uint16_t& eibObjAddr() const { return directAccess_16(eibObjAddrOffset); }
+    [[nodiscard]] virtual uint8_t& eibObjCount() const { return directAccess_8(eibObjCountOffset); }
+    [[nodiscard]] virtual uint16_t& addrTabAddr() const { return directAccess_16(addrTabAddrOffset); }
+    [[nodiscard]] virtual uint16_t& assocTabAddr() const { return directAccess_16(assocTabAddrOffset); }
+    [[nodiscard]] virtual uint8_t* serial() const { return &directAccess_8(serialOffset); }
+    [[nodiscard]] virtual uint8_t* order() const { return &directAccess_8(orderOffset); }
 
-    [[nodiscard]] virtual uint8_t& padding1() const { return userEepromData[padding1Offset]; }
-    [[nodiscard]] virtual uint8_t& serviceControl() const { return userEepromData[serviceControlOffset]; }
-    [[nodiscard]] virtual uint8_t& padding2() const { return userEepromData[padding2Offset]; }
-    [[nodiscard]] virtual uint8_t* orderInfo() const { return &userEepromData[orderInfoOffset]; }
+    [[nodiscard]] virtual uint8_t& padding1() const { return directAccess_8(padding1Offset); }
+    [[nodiscard]] virtual uint8_t& serviceControl() const { return directAccess_8(serviceControlOffset); }
+    [[nodiscard]] virtual uint8_t& padding2() const { return directAccess_8(padding2Offset); }
+    [[nodiscard]] virtual uint8_t* orderInfo() const { return &directAccess_8(orderInfoOffset); }
 
 protected:
     // BCU2 has no variable EEPROM start or size, so make this constructor protected
     UserEepromBCU2(const uint32_t start, const uint32_t size, const uint32_t flashSize)
        :
         UserEepromBCU1(start, size, flashSize) {}
+
+    // Ensure all uint16_t fields are 2-byte aligned within the EEPROM array.
+    // The array index is (offset - startAddress); since startAddress=0x100 (even),
+    // it is sufficient to check that each offset itself is 2-byte aligned.
+    static_assert(addrTabAddrOffset   % 2 == 0, "addrTabAddrOffset must be 2-byte aligned");
+    static_assert(assocTabAddrOffset  % 2 == 0, "assocTabAddrOffset must be 2-byte aligned");
+    static_assert(commsTabAddrOffset  % 2 == 0, "commsTabAddrOffset must be 2-byte aligned");
+    static_assert(commsSeg0AddrOffset % 2 == 0, "commsSeg0AddrOffset must be 2-byte aligned");
+    static_assert(commsSeg1AddrOffset % 2 == 0, "commsSeg1AddrOffset must be 2-byte aligned");
+    static_assert(eibObjAddrOffset    % 2 == 0, "eibObjAddrOffset must be 2-byte aligned");
 };
 
 #endif /* SBLIB_KNX_USEREEPROM_BCU2_H_ */

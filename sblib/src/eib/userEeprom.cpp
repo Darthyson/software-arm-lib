@@ -121,6 +121,20 @@ UserEeprom::UserEeprom(const uint32_t start, const uint32_t size, const uint32_t
     readUserEeprom();
 }
 
+uint8_t& UserEeprom::directAccess_8(const uint32_t index) const
+{
+    if (!inRange(startAddr() + index))
+    {
+        fatalError();
+    }
+    return this->userEepromData[index];
+}
+
+uint16_t& UserEeprom::directAccess_16(const uint32_t index) const
+{
+    return reinterpret_cast<uint16_t&>(directAccess_8(index));
+}
+
 uint8_t& UserEeprom::operator[](uint32_t address) const
 {
     normalizeAddress(&address);
