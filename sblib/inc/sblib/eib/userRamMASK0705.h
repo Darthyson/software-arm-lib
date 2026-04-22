@@ -17,10 +17,11 @@
 class UserRamMASK0705 : public UserRamMASK0701
 {
 public:
-    UserRamMASK0705() : UserRamMASK0701(0x5FC, 0x304, 3) {}
+    explicit UserRamMASK0705() : UserRamMASK0705(0x5FC, 0x304, 3) {}
 
 protected:
-    UserRamMASK0705(const uint32_t start, const uint32_t size, const uint32_t shadowSize) : UserRamMASK0701(start, size, shadowSize) {}
+    UserRamMASK0705(const uint32_t start, const uint32_t size, const uint32_t shadowSize)
+        : UserRamMASK0701(start, size, shadowSize) {}
 };
 
 #endif /* SBLIB_KNX_USERRAM_MASK0705_H_ */

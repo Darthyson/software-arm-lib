@@ -34,14 +34,20 @@ enum DeviceControl
 class UserRam : public Memory
 {
 public:
+    // Delete default and assigment constructors
     UserRam() = delete;
-    UserRam(uint32_t start, uint32_t size, uint32_t shadowSize);
+    UserRam(const UserRam&) = delete;
+    UserRam(UserRam&&) = delete;
+    UserRam& operator=(const UserRam&) = delete;
+    UserRam& operator=(UserRam&&) = delete;
+
+    explicit UserRam(uint32_t start, uint32_t size, uint32_t shadowSize);
 
     /**
      * System status. See enum @ref BcuStatus
      * @details In some modes (BCU2 in compatibility mode as BCU1) this part of the RAM
      *          is used for communication objects as well.
-     *          Therefore the real status is at the end of the user ram.
+     *          Therefore, the real status is at the end of the user ram.
      */
     uint8_t& status();
     uint8_t& runState();
@@ -54,34 +60,43 @@ public:
      *
      * @return Pointer to the device control byte
      */
-    virtual uint8_t& deviceControl() const = 0;
+    [[nodiscard]] virtual uint8_t& deviceControl() const = 0;
 
     /**
      * PEI type
      * @details This is the type of the physical external interface that is connected to the device.
      * @warning not implemented
      */
-    virtual uint8_t& peiType() const = 0;
+    [[nodiscard]] virtual uint8_t& peiType() const = 0;
 
     void setUserRamStart(const uint32_t& newRamStart);
 
     uint8_t& operator[](uint32_t address) override;
-    uint8_t getUInt8(uint32_t address) const override;
-    uint16_t getUInt16(uint32_t address) const override;
+    [[nodiscard]] uint8_t getUInt8(uint32_t address) const override;
+    [[nodiscard]] uint16_t getUInt16(uint32_t address) const override;
 
     void cpyFromUserRam(uint32_t address, unsigned char* buffer, uint32_t count) const;
     void cpyToUserRam(uint32_t address, const unsigned char* buffer, uint32_t count);
 
-    bool isStatusAddress(uint32_t address) const;
+    [[nodiscard]] bool isStatusAddress(uint32_t address) const;
 
-    uint8_t* userRamData = 0;
+    uint8_t* userRamData = nullptr;
 
 protected:
-    virtual uint32_t statusOffset() const = 0;
-    virtual uint32_t runStateOffset() const = 0;
+    [[nodiscard]] virtual uint32_t statusOffset() const = 0;
+    [[nodiscard]] virtual uint32_t runStateOffset() const = 0;
 
-    uint8_t _status;   //!< some BCU 1 & 2 (e.g. out8-bcu1) override the real status @ 0x060 with comObjects in RAM, so we place it outside of the real RAM
-    uint8_t _runState; //!< some BCU 1 & 2 (e.g. out8-bcu1) override the real runState @ 0x061 with comObjects in RAM, so we place it outside of the real RAM
+    /**
+     * Some BCU 1 & 2 (e.g. out8-bcu1) override the real status @ 0x060 with comObjects in RAM,
+     * so we place it outside the real RAM
+     */
+    uint8_t _status;
+
+    /**
+     * Some BCU 1 & 2 (e.g. out8-bcu1) override the real runState @ 0x061 with comObjects in RAM,
+     * so we place it outside the real RAM
+     */
+    uint8_t _runState;
 
 private:
     uint32_t shadowSize;

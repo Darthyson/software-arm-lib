@@ -21,7 +21,7 @@
 class UserRamBCU1 : public UserRam
 {
 public:
-    UserRamBCU1() : UserRam(0, 0x100, 3) {}
+    explicit UserRamBCU1() : UserRamBCU1(0, 0x100, 3) {}
 
 
     static constexpr uint32_t _runStateOffset = 0x61; ///\todo properties still need this to be public
@@ -32,14 +32,15 @@ public:
     static constexpr uint32_t _peiTypeOffset = 0x63;       ///\todo properties still need this to be public
     static constexpr uint32_t _user2Offset = 0xC8;         ///\todo properties still need this to be public
 
-    uint8_t& deviceControl() const override { return userRamData[_deviceControlOffset]; }
-    uint8_t& peiType() const override { return userRamData[_peiTypeOffset]; }
+    [[nodiscard]] uint8_t& deviceControl() const override { return userRamData[_deviceControlOffset]; }
+    [[nodiscard]] uint8_t& peiType() const override { return userRamData[_peiTypeOffset]; }
 
 protected:
-    UserRamBCU1(const unsigned int start, const unsigned int size, const unsigned int shadowSize) : UserRam(start, size, shadowSize) {}
+    UserRamBCU1(const uint32_t start, const uint32_t size, const uint32_t shadowSize)
+        : UserRam(start, size, shadowSize) {}
 
-    uint32_t statusOffset() const override { return _statusOffset; }
-    uint32_t runStateOffset() const override { return _runStateOffset; }
+    [[nodiscard]] uint32_t statusOffset() const override { return _statusOffset; }
+    [[nodiscard]] uint32_t runStateOffset() const override { return _runStateOffset; }
 
     /**
      * BCU 1 system status (address 0x60). See enum @ref BcuStatus
@@ -59,7 +60,7 @@ protected:
             /**
              * 0x0060: BCU1 system status. See enum BcuStatus below.
              *         In some modes (BCU2 as BCU1) this part of the RAM
-             *         is sued for com objects as well. Therefore the real
+             *         is sued for com objects as well. Therefore, the real
              *         status is at the end of the user ram.
              */
             byte _status;
@@ -73,7 +74,7 @@ protected:
              * 3 = the program is terminated
              *
              *         In some modes (BCU2 as BCU1) this part of the RAM
-             *         is used for com objects as well. Therefore the real
+             *         is used for com objects as well. Therefore, the real
              *         runState is at the end of the user ram.
              */
             byte _runState;

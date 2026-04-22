@@ -17,10 +17,11 @@
 class UserRamSYSTEMB : public UserRamMASK0701
 {
 public:
-    UserRamSYSTEMB() : UserRamMASK0701(0x5FC, 0x304, 3) {}
+    explicit UserRamSYSTEMB() : UserRamSYSTEMB(0x5FC, 0x304, 3) {}
 
 protected:
-    UserRamSYSTEMB(const uint32_t start, const uint32_t size, const uint32_t shadowSize) : UserRamMASK0701(start, size, shadowSize) {}
+    UserRamSYSTEMB(const uint32_t start, const uint32_t size, const uint32_t shadowSize)
+        : UserRamMASK0701(start, size, shadowSize) {}
 };
 
 #endif /* SBLIB_KNX_USERRAM_SYSTEMB_H_ */
