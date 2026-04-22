@@ -50,7 +50,7 @@
 #define DEVICETYPE 0x002    //!< Device Type
 #define APPVERSION 0x10     //!< Application Version
 
-const byte hardwareVersion[6] = { 0, 0, 0, 0, 0, 0 }; // The hardware identification number hardwareVersion
+const uint8_t hardwareVersion[6] = { 0, 0, 0, 0, 0, 0 }; // The hardware identification number hardwareVersion
 
 #define EE_PARAMETER_0014_STOSSLUEFTUNG_INTERVALLZEIT_MIN     0x0014 //!< relative Addr: 0x0014, Size: 0x0010, Stoßlüftung - Intervallzeit (min)
 #define EE_PARAMETER_0016_KAMINFUNKTION_INTERVALLZEIT_MIN     0x0016 //!< relative Addr: 0x0016, Size: 0x0010, Kaminfunktion - Intervallzeit (min)

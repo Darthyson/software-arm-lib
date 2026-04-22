@@ -37,7 +37,7 @@
 #ifndef KNXPRODEDITORHEADER_H
 #define KNXPRODEDITORHEADER_H
 
-const byte hardwareVersion[6] = { 0, 0, 0, 0, 0, 0 }; // The hardware identification number hardwareVersion
+const uint8_t hardwareVersion[6] = { 0, 0, 0, 0, 0, 0 }; // The hardware identification number hardwareVersion
 
 #define MANUFACTURER 274 //!< Manufacturer ID
 #define DEVICETYPE 1 //!< Device Type
