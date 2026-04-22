@@ -95,7 +95,7 @@ public:
 
     [[nodiscard]] uint32_t flashSize() const;
 
-    [[nodiscard]] unsigned int numEepromPages() const;
+    [[nodiscard]] uint32_t numEepromPages() const;
     [[nodiscard]] uint8_t* lastEepromPage() const;
     [[nodiscard]] uint8_t* flashSectorAddress() const;
 
@@ -117,9 +117,9 @@ protected:
     [[nodiscard]] uint8_t* findValidPage() const;
 
     bool userEepromModified = false;
-    unsigned int writeUserEepromTime = 0;
+    uint32_t writeUserEepromTime = 0;
 
-    const unsigned int userEepromFlashSize;
+    const uint32_t userEepromFlashSize;
 };
 
 

@@ -18,7 +18,7 @@ uint32_t UserEeprom::flashSize() const
     return userEepromFlashSize;
 }
 
-unsigned int UserEeprom::numEepromPages() const
+uint32_t UserEeprom::numEepromPages() const
 {
     return FLASH_SECTOR_SIZE / flashSize();
 }
@@ -95,7 +95,7 @@ void UserEeprom::writeUserEeprom()
 
     userEepromData[size() - 1] = 0; // mark the page as in use
 
-    for (unsigned int i = 0; i < size(); i += 1024)
+    for (uint32_t i = 0; i < size(); i += 1024)
     {
         int chunk = size() - i;
         if (chunk > 1024)
