@@ -62,30 +62,32 @@ private:
 
     static constexpr uint32_t appTypeOffset = 0x015; //!< 0x0115: \todo Application program type: 0=BCU2, else BCU1
 
-    static constexpr uint32_t loadStateOffset = 0x370;      //!< 0x0470: Load state of the system interface objects
-    static constexpr uint32_t addrTabAddrOffset = 0x378;    //!< 0x0478: Address of the address table
-    static constexpr uint32_t assocTabAddrOffset = 0x37A;   //!< 0x047a: Address of the association table
-    static constexpr uint32_t commsTabAddrOffset = 0x37C;   //!< 0x047c: Address of the communication object table
-    static constexpr uint32_t commsSeg0AddrOffset = 0x37E;  //!< 0x047e: Address of communication object memory segment 0 // TODO needs implementation, see handleTaskCtrl2(...) in properties.cpp
-    static constexpr uint32_t commsSeg1AddrOffset = 0x380;  //!< 0x0480: Address of communication object memory segment 1 // TODO needs implementation, see handleTaskCtrl2(...) in properties.cpp
-    static constexpr uint32_t eibObjAddrOffset = 0x382;     //!< 0x0482: Address of the application program EIB objects, 0 if unused. // TODO needs implementation, see handleTaskCtrl1(...) in properties.cpp
-    static constexpr uint32_t eibObjCountOffset = 0x384;    //!< 0x0484: Number of application program EIB objects. // TODO needs implementation, see handleTaskCtrl1(...) in properties.cpp
-    static constexpr uint32_t padding1Offset = 0x385;       //!< 0x0485: Padding 1
-    static constexpr uint32_t serviceControlOffset = 0x386; //!< 0x0486: Service control
-    static constexpr uint32_t padding2Offset = 0x388;       //!< 0x0488: Padding 2
-    static constexpr uint32_t serialOffset = 0x38A;         //!< 0x048A-0x48f: Hardware serial number (4 byte aligned)
+    ///\todo implement propper fix for Issue #112
+    ///      https://github.com/selfbus/software-arm-lib/issues/112
+    static constexpr uint32_t loadStateOffset = 0x70;      //!< 0x0470: Load state of the system interface objects
+    static constexpr uint32_t addrTabAddrOffset = 0x78;    //!< 0x0478: Address of the address table
+    static constexpr uint32_t assocTabAddrOffset = 0x7A;   //!< 0x047a: Address of the association table
+    static constexpr uint32_t commsTabAddrOffset = 0x7C;   //!< 0x047c: Address of the communication object table
+    static constexpr uint32_t commsSeg0AddrOffset = 0x7E;  //!< 0x047e: Address of communication object memory segment 0 // TODO needs implementation, see handleTaskCtrl2(...) in properties.cpp
+    static constexpr uint32_t commsSeg1AddrOffset = 0x80;  //!< 0x0480: Address of communication object memory segment 1 // TODO needs implementation, see handleTaskCtrl2(...) in properties.cpp
+    static constexpr uint32_t eibObjAddrOffset = 0x82;     //!< 0x0482: Address of the application program EIB objects, 0 if unused. // TODO needs implementation, see handleTaskCtrl1(...) in properties.cpp
+    static constexpr uint32_t eibObjCountOffset = 0x84;    //!< 0x0484: Number of application program EIB objects. // TODO needs implementation, see handleTaskCtrl1(...) in properties.cpp
+    static constexpr uint32_t padding1Offset = 0x85;       //!< 0x0485: Padding 1
+    static constexpr uint32_t serviceControlOffset = 0x86; //!< 0x0486: Service control
+    static constexpr uint32_t padding2Offset = 0x88;       //!< 0x0488: Padding 2
+    static constexpr uint32_t serialOffset = 0x8A;         //!< 0x048A-0x48f: Hardware serial number (4 byte aligned)
 
-    static constexpr uint32_t orderOffset = 0x390;     //!< 0x0490-0x0499: Hardware Type
-    static constexpr uint32_t orderInfoOffset = 0x39A; //!< 0x049A-0x04A3: Ordering information
+    static constexpr uint32_t orderOffset = 0x90;     //!< 0x0490-0x0499: Hardware Type
+    static constexpr uint32_t orderInfoOffset = 0x9A; //!< 0x049A-0x04A3: Ordering information
 
     ///\todo It's here (and maybe invalid offsets) because PropertiesBCU2 needs them, which also needs to be refactored
-    static constexpr uint32_t addrTabMcbOffset = 0x3A4;   //!< 0x04A4-0x04AB:
-    static constexpr uint32_t assocTabMcbOffset = 0x3AC;  //!< 0x04AC-0x04B3:
-    static constexpr uint32_t commsTabMcbOffset = 0x3B4;  //!< 0x04B4-0x04BB:
-    static constexpr uint32_t eibObjMcbOffset = 0x3BC;    //!< 0x04BC-0x04C3:
-    static constexpr uint32_t commsSeg0McbOffset = 0x3C3; //!< 0x04C4-0x04CB: ///\todo address missmatch?
-    static constexpr uint32_t eibObjVerOffset = 0x3CC;    //!< 0x04CC-0x04D0: Application program 1 version
-    static constexpr uint32_t commsSeg0VerOffset = 0x3D1; //!< 0x04D1-0x04D5: Application program 2 version
+    static constexpr uint32_t addrTabMcbOffset = 0xA4;   //!< 0x04A4-0x04AB:
+    static constexpr uint32_t assocTabMcbOffset = 0xAC;  //!< 0x04AC-0x04B3:
+    static constexpr uint32_t commsTabMcbOffset = 0xB4;  //!< 0x04B4-0x04BB:
+    static constexpr uint32_t eibObjMcbOffset = 0xBC;    //!< 0x04BC-0x04C3:
+    static constexpr uint32_t commsSeg0McbOffset = 0xC3; //!< 0x04C4-0x04CB: ///\todo address missmatch?
+    static constexpr uint32_t eibObjVerOffset = 0xCC;    //!< 0x04CC-0x04D0: Application program 1 version
+    static constexpr uint32_t commsSeg0VerOffset = 0xD1; //!< 0x04D1-0x04D5: Application program 2 version
     // end todo
 
     // Ensure all uint16_t fields are 2-byte aligned within the EEPROM array.
