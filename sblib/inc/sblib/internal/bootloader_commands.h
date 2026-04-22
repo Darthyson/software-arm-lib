@@ -7,8 +7,11 @@
 #ifndef SBLIB_INTERNAL_BOOTLOADER_COMMANDS_H_
 #define SBLIB_INTERNAL_BOOTLOADER_COMMANDS_H_
 
-
 #include <cstdint>
+
+
+ /** Default bootloader KNX address (15.15.192) */
+constexpr uint16_t DEFAULT_BL_KNX_ADDRESS = (((15 << 12) | (15 << 8) | 192));
 
 enum class BootState : uint8_t
 {

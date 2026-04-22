@@ -50,9 +50,6 @@ constexpr uint8_t BL_DEFAULT_VECTOR_TABLE_COUNT = BL_DEFAULT_VECTOR_TABLE_SIZE_I
 
 constexpr uint16_t APP_START_DELAY_MS = 250; //!< Time in milliseconds the programming led will light before the app is started
 
-// KNX/EIB specific settings
-constexpr uint16_t DEFAULT_BL_KNX_ADDRESS = (((15 << 12) | (15 << 8) | 192)); //!< 15.15.192 default updater KNX-address
-
 BcuUpdate bcu; //!< @ref BcuUpdate instance used for bus communication of the bootloader
 
 Timeout runModeTimeout; //!< running mode LED blinking timeout

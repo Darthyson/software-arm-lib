@@ -21,13 +21,15 @@
 constexpr uint8_t BOOTLOADERUPDATER_MAJOR_VERSION = 1;  //!< BootloaderUpdater major version @note change also in @ref APP_VERSION
 constexpr uint8_t BOOTLOADERUPDATER_MINOR_VERSION = 20; //!< BootloaderUpdater minor Version @note change also in @ref APP_VERSION
 
+constexpr uint16_t BOOTLOADERUPDATER_VERSION = (BOOTLOADERUPDATER_MAJOR_VERSION << 8) | (BOOTLOADERUPDATER_MINOR_VERSION);
+
 // changes of the app version string must also be done in BootloaderUpdater.java of the Selfbus-Updater
 APP_VERSION("SBblu   ", "1", "20");
 
 extern const __attribute__((aligned(16))) uint8_t incbin_bl_start[];
 extern const uint8_t incbin_bl_end[];
 
-uint32_t gpioProgButton = PIN_PROG;
+const BootloaderDescriptor* blDescriptor = nullptr;
 
 void setup()
 {
@@ -49,19 +51,18 @@ void setup()
     );
 
     // Check for BootloaderDescriptor in RAM
-    const BootloaderDescriptor* blDescriptor = getBootloaderDescriptor();
+    blDescriptor = getBootloaderDescriptor();
 
     dump(serial.print("BootloaderDescriptor ");)
     if (blDescriptor != nullptr)
     {
         dump(serial.println("valid");)
-        gpioProgButton = blDescriptor->programmingButton;
     }
     else
     {
         dump(
             serial.println("INVALID");
-            serial.flush();
+            serial.flush(); ///\todo delete on release
             const BootloaderDescriptor* debugOnlyDescriptor = debugOnlyBootloaderDescriptor();
             serial.println("debugOnlyDescriptor 0x", &debugOnlyDescriptor);
             if (debugOnlyDescriptor != nullptr)
@@ -74,14 +75,18 @@ void setup()
                 serial.println("appVersion 0x", debugOnlyDescriptor->applicationVersion, HEX);
             }
         )
-        gpioProgButton = PIN_PROG;
+        initBootloaderDescriptor(BootState::BootLoader, DEFAULT_BL_KNX_ADDRESS,
+                PIN_PROG, 0, BOOTLOADERUPDATER_VERSION); ///\todo Set correct BLU application ID
+        blDescriptor = getBootloaderDescriptor();
     }
-    pinMode(gpioProgButton, OUTPUT);
-    digitalWrite(gpioProgButton, false);
+    pinMode(blDescriptor->programmingButton, OUTPUT);
+    digitalWrite(blDescriptor->programmingButton, false);
 }
 
 void SystemReset()
 {
+    initBootloaderDescriptor(BootState::BootLoader, blDescriptor->physicalAddress,
+            blDescriptor->programmingButton, blDescriptor->applicationId, blDescriptor->applicationVersion);
     dump(
         serial.println("RESET");
         serial.flush();
@@ -150,7 +155,7 @@ int main()
             SystemReset();
         }
         dump(serial.println(" done");)
-        digitalWrite(gpioProgButton, !digitalRead(gpioProgButton));
+        digitalWrite(blDescriptor->programmingButton, !digitalRead(blDescriptor->programmingButton));
     }
 
     // Make sure that the current boot descriptor of the BLU is erased,
@@ -164,7 +169,6 @@ int main()
     else
     {
         dump(serial.println(" done");)
-        BootloaderDescriptor();
     }
 
     SystemReset();
