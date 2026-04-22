@@ -75,6 +75,12 @@ void ComObjectsBCU2::printObjectConfigTable()
             return;
         }
         uint8_t* currentTablePosition = ((BcuDefault*)bcu)->userMemoryPtr(comObjTableAddr);
+        if (currentTablePosition == nullptr)
+        {
+            serial.println("invalid currentTablePosition!");
+            return;
+        }
+
         uint8_t currentSize = *currentTablePosition;
         serial.println("   #com objects : ", currentSize, DEC, 3);
         currentTablePosition++; // 1 byte #com objects
