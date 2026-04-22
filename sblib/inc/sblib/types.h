@@ -17,13 +17,13 @@
 /**
  * An unsigned 1 byte value.
  */
-[[deprecated("sblib typedef byte is deprecated, use uint8_t instead")]]
+[[deprecated("use uint8_t instead of byte")]]
 typedef unsigned char byte;
 
 /**
  * An unsigned 2 byte value.
  */
-[[deprecated("sblib typedef word is deprecated, use uint16_t instead")]]
+[[deprecated("use uint16_t instead of word")]]
 typedef unsigned short word;
 
 /**
