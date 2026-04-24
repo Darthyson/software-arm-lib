@@ -67,16 +67,18 @@ endif()
 
 # common compile options for all targets and builds
 add_compile_options(
-    -Wall -Wlogical-op -Woverloaded-virtual -Wextra -pedantic -Wconversion
+    -Wall -Wlogical-op -Woverloaded-virtual -Wextra -pedantic
     -Wshadow -Wpointer-arith -Wwrite-strings -Wunreachable-code
-    -Wno-unused-parameter -Wctor-dtor-privacy -Wold-style-cast
+    -Wno-unused-parameter -Wctor-dtor-privacy
     -Wmissing-include-dirs -Wshadow=local -Wdouble-promotion
-    #-Wsign-conversion
     -Wformat=2 -Wno-missing-field-initializers
-    -Wswitch-default -Wfloat-equal -Weffc++ -Wundef
+    -Wswitch-default -Wfloat-equal -Wundef
     -Wstrict-null-sentinel -Wsign-promo
     -Wredundant-decls
     -Wcast-qual
+    # todo enable warnings, after they are fixed in the sblib    
+    #-Wconversion -Wold-style-cast -Wsign-conversion -Weffc++
+    # todo enable warnings, and fix in bootloader
     #-Wcast-align
     -g3
 )
