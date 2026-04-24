@@ -23,6 +23,7 @@ enum class BootState : uint8_t
 
 /**
  * Bootloader descriptor structure stored in RAM to pass parameters to the bootloader.
+ * \note Total size is 20 bytes and must be reserved by the link script of the application
  */
 struct BootloaderDescriptor
 {
@@ -33,6 +34,8 @@ struct BootloaderDescriptor
     uint32_t applicationId;         //!< Application ID of the application
     uint32_t applicationVersion;    //!< Application version of the application
 };
+
+constexpr uint32_t BOOTLOADER_DESCRIPTOR_SIZE = 20;
 
 /**
  * Initialize the BootloaderDescriptor in RAM.

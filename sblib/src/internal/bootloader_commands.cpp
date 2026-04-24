@@ -33,7 +33,7 @@ constexpr uint32_t UID_BOOTLOADER_DESCRIPTOR = 0x5E1FB055;
  *          The application RAM must start behind the bootLoaderDescriptor to avoid overwriting it.
  * @def bootLoaderDescriptor
  */
-#ifdef IAP_EMULATION ///\todo must be #ifdef on release! fix before release!
+#ifdef IAP_EMULATION
     uint32_t data;
     uint32_t * magicWord = &data; // I'm here for the unit-tests
     BootloaderDescriptor testBootLoaderDescriptor;
@@ -41,11 +41,34 @@ constexpr uint32_t UID_BOOTLOADER_DESCRIPTOR = 0x5E1FB055;
 #else
     auto magicWord = reinterpret_cast<uint32_t*>(0x10000000UL);
     auto bootLoaderDescriptor = reinterpret_cast<BootloaderDescriptor*>(0x100000C0UL);
+    extern uint8_t __base_RAM; // NOLINT(*-reserved-identifier)
 #endif
+
+bool isRAMReserved()
+{
+#ifndef IAP_EMULATION
+    const auto ramBaseAddress = reinterpret_cast<uintptr_t>(&__base_RAM);
+    if (ramBaseAddress >= (reinterpret_cast<uintptr_t>(bootLoaderDescriptor) + BOOTLOADER_DESCRIPTOR_SIZE))
+    {
+        return true;
+    }
+    else
+    {
+        return false;
+    }
+#else
+    return true;
+#endif
+}
 
 void initBootloaderDescriptor(const BootState newBootState, const uint16_t physicalAddressToUse,
     const uint32_t programmingButton, const uint32_t applicationId, const uint32_t applicationVersion)
 {
+    if (!isRAMReserved())
+    {
+        return;
+    }
+
     bootLoaderDescriptor->bootState = newBootState;
     bootLoaderDescriptor->physicalAddress = physicalAddressToUse;
     bootLoaderDescriptor->programmingButton = programmingButton;
@@ -69,6 +92,11 @@ void initBootloaderDescriptor(const BootState newBootState, const uint16_t physi
 
 const BootloaderDescriptor* getBootloaderDescriptor()
 {
+    if (!isRAMReserved())
+    {
+        return nullptr;
+    }
+
     if (*magicWord != UID_BOOTLOADER_DESCRIPTOR)
     {
         return nullptr;
