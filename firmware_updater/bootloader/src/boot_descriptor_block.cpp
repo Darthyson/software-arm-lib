@@ -23,44 +23,43 @@
 #include <memory>
 
 
-#ifndef IAP_EMULATION
     /**
-     * Marks the beginning of the flash memory (inserted by the linker).
+     * Marks the beginning of the flash memory (inserted by the linkscript).
      * Used to protect the updater from killing itself with a new application downloaded over the bus.
      */
-    extern uint8_t __base_Flash[];
+    extern uint8_t __base_Flash; // NOLINT(*-reserved-identifier)
 
     /**
-     * Marks the end of the flash memory (inserted by the linker).
+     * Marks the end of the flash memory (inserted by the linkscript).
      * Used to protect the updater from killing itself with a new application downloaded over the bus
      */
-    extern uint8_t __top_Flash[];
+    extern uint8_t __top_Flash; // NOLINT(*-reserved-identifier)
 
     /**
-     * Marks the beginning of the bootloader firmware (inserted by the linker).
+     * Marks the beginning of the bootloader firmware (inserted by the linkscript).
      * Used to protect the updater from killing itself with a new application downloaded over the bus.
      */
-    extern uint8_t _image_start[];
+    extern uint8_t _image_start; // NOLINT(*-reserved-identifier)
 
     /**
-     * Marks the end of the bootloader firmware (inserted by the linker).
+     * Marks the end of the bootloader firmware (inserted by the linkscript).
      * Used to protect the updater from killing itself with a new application downloaded over the bus.
      */
-    extern uint8_t _image_end[];
+    extern uint8_t _image_end; // NOLINT(*-reserved-identifier)
 
     /**
-     * Marks the size of the bootloader firmware (inserted by the linker).
+     * Marks the size of the bootloader firmware (inserted by the linkscript).
      * Used to protect the updater from killing itself with a new application downloaded over the bus.
      */
-    extern uint32_t _image_size;
-#else
-    // for catch unit tests ///\todo move this to cpu-emulation
-    uint8_t * __base_Flash = &FLASH[0x0000];
-    uint8_t * __top_Flash = &FLASH[0x10000];
-    uint8_t * _image_start = &FLASH[0x0000];
-    uint8_t * _image_end = &FLASH[0x2F00];
-    uint32_t _image_size = _image_end - _image_start;
-#endif
+    extern uint32_t _image_size; // NOLINT(*-reserved-identifier)
+
+
+    ///\todo Implement these for unit tests in cpu-emulation (untested)
+    // uint8_t __base_Flash = FLASH[0x0000]; // NOLINT(*-reserved-identifier)
+    // uint8_t __top_Flash = FLASH[0x10000]; // NOLINT(*-reserved-identifier)
+    // uint8_t _image_start = FLASH[0x0000]; // NOLINT(*-reserved-identifier)
+    // uint8_t _image_end = FLASH[0x2F00]; // NOLINT(*-reserved-identifier)
+    // uint32_t _image_size = _image_end - _image_start;
 
 char bl_id_string[BL_ID_STRING_LENGTH] = BL_ID_STRING;
 
@@ -105,7 +104,7 @@ bool checkApplication(const AppDescriptionBlock* block)
         return false;
     }
 
-    const uint32_t blockSize = static_cast<uint32_t>(block->endAddress - block->startAddress + 1);
+    const int32_t blockSize = block->endAddress - block->startAddress + 1;
     uint32_t crc = crc32(0xFFFFFFFF, block->startAddress, blockSize);
 
     if (crc == block->crc)
@@ -148,13 +147,15 @@ uint8_t * getFirmwareStartAddress(const AppDescriptionBlock * block)
 
 uint8_t * bootLoaderFirstAddress()
 {
-    return _image_start;
+    ///\todo refactor to return uintptr_t and delete cast to uint8_t*
+    return reinterpret_cast<uint8_t *>(reinterpret_cast<uintptr_t>((&_image_start)));
 }
 
 uint8_t * bootLoaderLastAddress()
 {
+    ///\todo refactor to return uintptr_t and delete cast to uint8_t*
     // The linker sets this not correctly, so we need the -1
-    return _image_end - 1;
+    return reinterpret_cast<uint8_t *>(reinterpret_cast<uintptr_t>(&_image_end) - 1);
 }
 
 uint32_t bootLoaderSize()
@@ -165,19 +166,21 @@ uint32_t bootLoaderSize()
 
 uint8_t * flashFirstAddress()
 {
-    return __base_Flash;
+    ///\todo refactor to return uintptr_t and delete cast to uint8_t*
+    return reinterpret_cast<uint8_t *>(reinterpret_cast<uintptr_t>(&__base_Flash));
 }
 
 uint8_t * flashLastAddress()
 {
+    ///\todo refactor to return uintptr_t and delete cast to uint8_t*
     // The linker sets this not correctly, so we need the -1
-    return __top_Flash - 1;
+    return reinterpret_cast<uint8_t *>(reinterpret_cast<uintptr_t>(&__top_Flash) - 1);
 }
 
 uint32_t flashSize()
 {
     // add the -1 from flashLastAddress(void) back to size
-    return static_cast<uint32_t>(flashLastAddress() - flashFirstAddress() + 1);
+    return flashLastAddress() - flashFirstAddress() + 1;
 }
 
 uint8_t * applicationFirstAddress()

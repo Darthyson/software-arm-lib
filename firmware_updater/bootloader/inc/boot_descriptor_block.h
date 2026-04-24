@@ -25,6 +25,8 @@
 #include <sblib/platform.h>
 
 
+///\todo Refactor all functions which return a address to return the address as uintptr_t instead of uint8_t*.
+
 #ifdef DEBUG
     constexpr uint16_t BL_FEATURES = 0x8100; //!< Feature list of bootloader in the Debug version
 #else
