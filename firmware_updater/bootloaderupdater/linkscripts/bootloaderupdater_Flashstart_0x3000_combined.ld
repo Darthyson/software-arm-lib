@@ -31,7 +31,7 @@ MEMORY
     /****************************************************************
      * Selfbus RAM configuration using build config: Flashstart 0x3000 Debug *
     /****************************************************************/
-    RamLoc8 (rwx) : ORIGIN = 0x100000c0, LENGTH = 0x1f00 - 0xc0
+    RamLoc8 (rwx) : ORIGIN = 0x100000d4, LENGTH = 0x1f00 - 0xd4
 }
 
       /* Define a symbol for the top of each memory region */
@@ -45,10 +45,10 @@ MEMORY
       /****************************************************************
        * Selfbus RAM configuration using build config: Flashstart 0x3000 Debug *
       /****************************************************************/
-      __base_RamLoc8 = 0x100000c0; /* RamLoc8 */
-      __base_RAM = 0x100000c0; /* RAM */
-      __top_RamLoc8 = 0x100000c0 + 0x1f00 - 0xc0;
-      __top_RAM = 0x100000c0 + 0x1f00 - 0xc0;
+      __base_RamLoc8 = 0x100000d4; /* RamLoc8 */
+      __base_RAM = 0x100000d4; /* RAM */
+      __top_RamLoc8 = 0x100000d4 + 0x1f00 - 0xd4;
+      __top_RAM = 0x100000d4 + 0x1f00 - 0xd4;
 
 ENTRY(ResetISR)
 
