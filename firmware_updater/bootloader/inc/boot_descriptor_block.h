@@ -22,10 +22,11 @@
 #ifndef SB_BOOTLOADER_BOOT_DESCRIPTOR_BLOCK_H_
 #define SB_BOOTLOADER_BOOT_DESCRIPTOR_BLOCK_H_
 
+///\todo Refactor all functions which return a address to return the address as uintptr_t instead of uint8_t*.
+
 #include <sblib/platform.h>
 
 
-///\todo Refactor all functions which return a address to return the address as uintptr_t instead of uint8_t*.
 
 #ifdef DEBUG
     constexpr uint16_t BL_FEATURES = 0x8100; //!< Feature list of bootloader in the Debug version
@@ -41,9 +42,7 @@ constexpr uint16_t BOOT_BLOCK_DESC_SIZE = FLASH_PAGE_SIZE; //!< 1 flash page, an
 extern char bl_id_string[BL_ID_STRING_LENGTH]; //!< default bootloader identity "string" used in @ref getAppVersion()
 
 /**
- * @struct AppDescriptionBlock
- * Application Description Block struct
- *
+ * Application Description Block
  */
 typedef struct AppDescriptionBlock
 {

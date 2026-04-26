@@ -45,10 +45,10 @@
 constexpr uint16_t RUN_MODE_BLINK_CONNECTED_MS = 250; //!< while connected, programming and run led blinking time in milliseconds
 constexpr uint16_t RUN_MODE_BLINK_IDLE_MS = 1000;     //!< while idle/disconnected, programming and run led blinking time in milliseconds
 constexpr uint32_t BL_RESERVED_RAM_START = 0x10000000UL;       //!< RAM start address for bootloader
-constexpr uint8_t BL_DEFAULT_VECTOR_TABLE_SIZE_IN_BYTES = 192; //!< vectortable size in bytes
+constexpr uint8_t BL_DEFAULT_VECTOR_TABLE_SIZE_IN_BYTES = 192; //!< vector table size in bytes
 constexpr uint8_t BL_DEFAULT_VECTOR_TABLE_COUNT = BL_DEFAULT_VECTOR_TABLE_SIZE_IN_BYTES / sizeof(uintptr_t); //!< vector count to copy prior application start
 
-constexpr uint16_t APP_START_DELAY_MS = 250; //!< Time in milliseconds the programming led will light before the app is started
+constexpr uint16_t APP_START_DELAY_MS = 250; //!< Time in milliseconds the programming LED will light before the app is started
 
 BcuUpdate bcu; //!< @ref BcuUpdate instance used for bus communication of the bootloader
 
@@ -92,8 +92,8 @@ BcuBase* setup()
         serial.setRxPin(PIO3_1);
         serial.setTxPin(PIO3_0);
 #   else
-        serial.setRxPin(PIO1_6);
-        serial.setTxPin(PIO1_7);
+        serial.setRxPin(PIO1_6); // on swd connector
+        serial.setTxPin(PIO1_7); // on swd connector
 #   endif
     if (!serial.enabled())
     {

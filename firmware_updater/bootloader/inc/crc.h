@@ -27,9 +27,9 @@
 /**
  * Calculates the crc32 of provided buffer data.
  *
- * @param startCrc32 crc to start with (if unsure use 0xFFFFFFFF)
- * @param data       Buffer to calculate the crc32 of
- * @param count      Length of data
+ * @param crc    crc to start with (if unsure use 0xFFFFFFFF)
+ * @param data   Buffer to calculate the crc32 of
+ * @param count  Length of data
  * @return crc32 of data
  */
 uint32_t crc32(uint32_t crc, const uint8_t * data, uint32_t count);
