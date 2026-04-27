@@ -36,8 +36,8 @@ public:
     [[nodiscard]] uint8_t& peiType() const override { return userRamData[_peiTypeOffset]; }
 
 protected:
-    UserRamBCU1(const uint32_t start, const uint32_t size, const uint32_t shadowSize)
-        : UserRam(start, size, shadowSize) {}
+    UserRamBCU1(const uint32_t start, const uint32_t size, const uint32_t shadowSizeToSet)
+        : UserRam(start, size, shadowSizeToSet) {}
 
     [[nodiscard]] uint32_t statusOffset() const override { return _statusOffset; }
     [[nodiscard]] uint32_t runStateOffset() const override { return _runStateOffset; }
