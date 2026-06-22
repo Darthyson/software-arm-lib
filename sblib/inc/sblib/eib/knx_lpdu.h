@@ -22,7 +22,6 @@
 #ifndef SBLIB_KNX_LPDU_H_
 #define SBLIB_KNX_LPDU_H_
 
-#include "sblib/types.h"
 #include <cstdint>
 
 
@@ -168,21 +167,21 @@ uint8_t physAddressToDevice(uint16_t address);
  * @param address Group KNX address
  * @return The main group of the group address
  */ 
-uint8_t mainGroupAddress(const uint16_t address);
+uint8_t mainGroupAddress(uint16_t address);
 
 /**
  * Return the middle group of a given KNX group address
  * @param address Group KNX address
  * @return The middle group of the group address
  */
-uint8_t middleGroupAddress(const uint16_t address);
+uint8_t middleGroupAddress(uint16_t address);
 
 /**
  * Return the low group of a given KNX group address
  * @param address Group KNX address
  * @return The low group of the group address
  */
-uint8_t lowGroupAddress(const uint16_t address);
+uint8_t lowGroupAddress(uint16_t address);
 
 #endif /* SBLIB_KNX_LPDU_H_ */
 /** @}*/

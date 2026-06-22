@@ -209,7 +209,10 @@ void Bus::sendTelegram(uint8_t* telegram, const uint16_t length)
 
     // Wait until there is space in the sending queue
     while (sendCurTelegram != nullptr)
+    {
+        // ReSharper disable once CppRedundantEmptyStatement
         ;
+    }
 
     sendCurTelegram = telegram;
 
