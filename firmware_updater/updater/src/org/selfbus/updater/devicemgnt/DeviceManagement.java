@@ -24,7 +24,9 @@ import tuwien.auto.calimero.mgmt.ManagementProceduresImpl;
 
 import java.net.UnknownHostException;
 import java.time.Duration;
+import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.List;
 import java.util.Optional;
 
 import static org.fusesource.jansi.Ansi.*;
@@ -88,42 +90,61 @@ public class DeviceManagement implements AutoCloseable {
         else {
             logger.info("Reconnecting now");
         }
-        open();
+        openLink();
+        openDevice(progDevice);
     }
 
     public void reconnect() throws KNXException, UpdaterException, UnknownHostException, InterruptedException {
         reconnect(cliOptions.getReconnectMs());
     }
 
-    public void open() throws KNXException, UpdaterException, UnknownHostException, InterruptedException {
+    public void openLink() throws KNXException, UpdaterException, UnknownHostException, InterruptedException {
         close();
         this.link = new SBKNXLink(this.cliOptions).openLink();
-        this.progDevice = cliOptions.getProgDevicePhysicalAddress();
         this.mc = new SBManagementClientImpl(this.link);
         this.mc.setPriority(cliOptions.getPriority());
+    }
+
+    public void closeLink() {
+        if (mc != null) {
+            logger.debug("Releasing mc {}", mc);
+            mc.close(); // mc.close calls already mc.detach()
+        }
+        mc = null;
+
+        if (link != null) {
+            logger.debug("Releasing link {}", link);
+            link.close();
+        }
+        link = null;
+    }
+
+    public void openDevice(IndividualAddress address) throws KNXException, UpdaterException, UnknownHostException,
+            InterruptedException {
+        closeDevice();
+        if ((link != null) && (!link.isOpen())) {
+            openLink();
+        }
+        else if (link == null) {
+            openLink();
+        }
+        this.progDevice = address;
         this.progDestination = this.mc.createDestination(progDevice, true, false, false);
     }
 
-    @Override
-    public void close() {
+    public void closeDevice() {
         logger.debug("Closing {}", this.getClass().getSimpleName());
         if (progDestination != null) {
             logger.debug("Releasing progDestination {}", progDestination);
             progDestination.close();
         }
-
-        if (mc != null) {
-            logger.debug("Releasing mc {}", mc);
-            mc.close(); // mc.close calls already mc.detach()
-        }
-        if (link != null) {
-            logger.debug("Releasing link {}", link);
-            link.close();
-        }
         progDestination = null;
-        progDevice = null;
-        mc = null;
-        link = null;
+    }
+
+    @Override
+    public void close() {
+        closeDevice();
+        closeLink();
     }
 
     public void restartProgrammingDevice()
@@ -484,51 +505,101 @@ public class DeviceManagement implements AutoCloseable {
         }
     }
 
-    public void checkDeviceInProgrammingMode(IndividualAddress progDeviceAddr) throws UpdaterException,
-            InterruptedException {
+    public IndividualAddress[] listDevicesInProgrammingMode() throws UpdaterException, InterruptedException  {
         try {
             if (isLinkDead()) {
                 reconnect();
             }
 
             ManagementProcedures mgmt = new ManagementProceduresImpl(link);
-            IndividualAddress[] devices = mgmt.readAddress();
+            IndividualAddress[] devicesInProgMode = mgmt.readAddress();
             mgmt.close();
-            if ((devices.length == 0) && (progDeviceAddr == null)) { // no device in prog mode
-            	return;
-            }
-            else if ((devices.length == 1) && (progDeviceAddr != null) && (progDeviceAddr.equals(devices[0]))) { // correct device in prog mode
-            	return;
-            }
-
-            throw new UpdaterException(getExceptionMessage(devices, progDeviceAddr));
+            return devicesInProgMode;
         } catch (KNXException | UnknownHostException e ) {
-            throw new UpdaterException(String.format("checkDevicesInProgrammingMode failed. %s", e.getMessage()), e);
+            throw new UpdaterException(String.format("listDevicesInProgrammingMode failed. %s", e.getMessage()), e);
         }
     }
 
-    private static String getExceptionMessage(IndividualAddress[] devicesInProgMode, IndividualAddress progDeviceAddr) {
+    public IndividualAddress checkDevicesInProgrammingMode(IndividualAddress... exceptedDeviceList)
+            throws UpdaterException, InterruptedException {
+        IndividualAddress[] devices = listDevicesInProgrammingMode();
+        if (devices.length == 0) {
+            if (exceptedDeviceList == null || exceptedDeviceList.length == 0) {
+                return null; // no device in prog mode
+            }
+        }
+        else if (devices.length == 1) {
+            if (exceptedDeviceList != null) {
+                for (IndividualAddress address : exceptedDeviceList) {
+                    if (devices[0].equals(address)) {
+                        return address; // correct device in prog mode
+                    }
+                }
+            }
+        }
+        throw new UpdaterException(getExceptionMessage(devices, exceptedDeviceList));
+    }
+
+    public static String getExceptionMessage(IndividualAddress[] devicesInProgMode,
+                                              IndividualAddress[] exceptedDeviceList) {
         String exceptionMessage;
         if (devicesInProgMode.length == 0) {
             exceptionMessage = "No device in programming mode.";
         }
         else if (devicesInProgMode.length == 1) {
-            exceptionMessage = String.format("Device %s is already in bootloader/programming mode.",
-                    Arrays.toString(devicesInProgMode));
+            exceptionMessage = String.format("Device %s is already in bootloader/programming mode.", devicesInProgMode[0]);
         }
         else {
             exceptionMessage = String.format("%d other devices %s are already in bootloader/programming mode.",
                     devicesInProgMode.length, Arrays.toString(devicesInProgMode));
         }
-        String expectedDeviceAddr;
-        if (progDeviceAddr == null) {
-            expectedDeviceAddr = "none";
-
+        String expectedDevices;
+        if (exceptedDeviceList == null) {
+            expectedDevices = "none";
+        }
+        else if (exceptedDeviceList.length == 0) {
+            expectedDevices = "none";
         }
         else  {
-            expectedDeviceAddr = progDeviceAddr.toString();
+            expectedDevices = Arrays.toString(exceptedDeviceList);
         }
-        return String.format("%s Expected [%s]", exceptionMessage, expectedDeviceAddr);
+        return String.format("%s Expected %s", exceptionMessage, expectedDevices);
+    }
+
+    public boolean isAddressOccupied(IndividualAddress searchAddress) throws UpdaterException,
+            InterruptedException {
+        if (searchAddress == null) {
+            logger.debug("{}Device null is NOT responding.{}", ansi().fgBright(WARN), ansi().reset());
+            return false;
+        }
+        try {
+            if (isLinkDead()) {
+                reconnect();
+            }
+
+            boolean isReachable = mc.isAddressOccupied(searchAddress);
+            if (isReachable) {
+                logger.debug("{}Device {} is responding.{}", ansi().fgBright(INFO), searchAddress, ansi().reset());
+            }
+            else {
+                logger.debug("{}Device {} is NOT responding.{}", ansi().fgBright(WARN), searchAddress, ansi().reset());
+            }
+            return isReachable;
+        }
+        catch (KNXException | UnknownHostException e) {
+            throw new UpdaterException(String.format("deviceReachable failed. %s", e.getMessage()), e);
+        }
+    }
+
+    public IndividualAddress[] checkDevicesReachable(IndividualAddress... searchDeviceList) throws UpdaterException,
+            InterruptedException {
+        List<IndividualAddress> reachableDevices = new ArrayList<>();
+        for (IndividualAddress searchAddress : searchDeviceList) {
+            if (isAddressOccupied(searchAddress)) {
+                reachableDevices.add(searchAddress);
+            }
+        }
+        return reachableDevices.toArray(IndividualAddress[]::new);
     }
 
     public UDPProtocolVersion getProtocolVersion() {

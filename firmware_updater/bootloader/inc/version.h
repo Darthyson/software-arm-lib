@@ -31,5 +31,7 @@ constexpr uint8_t BOOTLOADER_MINOR_VERSION = 20; //!< Bootloader minor version @
 constexpr uint8_t UPDATER_MIN_MAJOR_VERSION = 1; //!< minimum required major version of the Selfbus Updater we are talking to
 constexpr uint8_t UPDATER_MIN_MINOR_VERSION = 0; //!< minimum required minor version of the Selfbus Updater we are talking to
 
+constexpr uint16_t BOOTLOADER_VERSION = (BOOTLOADER_MAJOR_VERSION << 8) | BOOTLOADER_MINOR_VERSION;
+
 #endif /* SB_BOOTLOADER_VERSION_H_ */
 /** @}*/

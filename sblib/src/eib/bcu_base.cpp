@@ -51,6 +51,7 @@ void BcuBase::_begin()
 #endif
 
     TLayer4::_begin();
+    setBootloaderNewPhysicalAddress(ownAddress());
     bus->begin(ownAddress());
     progButtonDebouncer.init(1);
 #if defined(INCLUDE_SERIAL)
@@ -216,12 +217,10 @@ void BcuBase::softSystemReset()
 {
     bus->end();
 
-    // Set magicWord to start in bootloader mode after reset.
-    // As this overwrites the start of the interrupt vector table, disable interrupts.
     if (restartType == RestartType::MasterIntoBootloader)
     {
-        noInterrupts();
-        initBootloaderDescriptor(BootState::BootLoader , ownAddress(), progPin, 0, 0); ///\todo set appId and appVersion);
+        initBootloaderDescriptor(BootState::BootLoader , ownAddress(), progPin, 0xDEAD, 0xBEEF);
+        disableInterruptsAndSetLegacyMagicWord(); // Needed for legacy bootloader
     }
 
     NVIC_SystemReset();
@@ -231,10 +230,12 @@ void BcuBase::setProgPin(const int prgPin)
 {
     progPin = prgPin;
     setFatalErrorPin(progPin);
+    setBootloaderNewProgrammingPin(progPin);
 }
 
 void BcuBase::setOwnAddress(const uint16_t addr)
 {
     bus->setOwnAddress(addr);
+    setBootloaderNewPhysicalAddress(addr);
     TLayer4::setOwnAddress(addr);
 }

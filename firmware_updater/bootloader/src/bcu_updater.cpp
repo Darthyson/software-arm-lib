@@ -150,7 +150,8 @@ bool BcuUpdate::processBroadCastTelegram(const ApciCommand apciCmd, unsigned cha
             // The next telegram will be an APCI_BASIC_RESTART_PDU
             // See KNX Spec. 3.0 3/5/2 2.3 NM_IndividualAddress_Write
             ///\todo set appId and appVersion
-            initBootloaderDescriptor(BootState::BootLoader, ownAddress(), static_cast<uint32_t>(progPin), 0, 0);
+            setBootloaderNewBootState(BootState::BootLoader);
+            setBootloaderNewPhysicalAddress(ownAddress());
         }
     }
 

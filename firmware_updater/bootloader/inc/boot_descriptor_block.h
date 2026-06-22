@@ -27,14 +27,27 @@
 #include <sblib/platform.h>
 
 
+/**
+ * Supports physical KNX address programming.
+ * \note KNX Spec 3.0 3/5/2 2.3 p.13 NM_IndividualAddress_Write
+ */
+constexpr uint16_t BL_FEATURE_LINE_PHYS_ADDR_PROGRAMMING = 1 << 0;
+
+/** Legacy bit. Was always set and has no real meaning, but is kept for compatibility with older bootloader versions. */
+constexpr uint16_t BL_FEATURE_LEGACY = 1 << 8;
 
 #ifdef DEBUG
-    constexpr uint16_t BL_FEATURES = 0x8100; //!< Feature list of bootloader in the Debug version
+    constexpr uint16_t BL_FEATURE_DEBUG_ENABLED  = 1 << 15; ///< Is debug build
 #else
-    constexpr uint16_t BL_FEATURES = 0x0100; //!< Feature list of bootloader in the Release version
+    constexpr uint16_t BL_FEATURE_DEBUG_ENABLED  = 0; ///< Is release build
 #endif
 
-#define BL_ID_STRING         "[SB KNX BL ]" //!< boot loader identity string for getAppVersion()
+/** Feature list of the bootloader */
+constexpr uint16_t BL_FEATURES = BL_FEATURE_LINE_PHYS_ADDR_PROGRAMMING |
+                                 BL_FEATURE_LEGACY |
+                                 BL_FEATURE_DEBUG_ENABLED;
+
+#define BL_ID_STRING         "[SB KNX BL ]" //!< bootloader identity string for getAppVersion()
 constexpr uint8_t BL_ID_STRING_LENGTH = 13; //!< length of the bootloader identity string
 
 constexpr uint16_t BOOT_BLOCK_DESC_SIZE = FLASH_PAGE_SIZE; //!< 1 flash page, any changes must also be done in the BLU's app_main.cpp

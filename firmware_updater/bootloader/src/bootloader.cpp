@@ -23,6 +23,7 @@
 #include "boot_descriptor_block.h"
 #include "bcu_updater.h"
 #include "dump.h"
+#include "version.h"
 #include <sblib/main.h>
 #include <sblib/interrupt.h>
 #include <sblib/io_pin_names.h>
@@ -33,13 +34,11 @@
 #include <cstring>
 
 #ifdef DEBUG
-#   include "flash.h"
-#   include "version.h"
 #   include <sblib/serial.h>
 #   include <sblib/version.h>
 #   include <sblib/bits.h>
 #endif
-
+//#define TS_ARM ///\todo delete on release
 
 // bootloader specific settings
 constexpr uint16_t RUN_MODE_BLINK_CONNECTED_MS = 250; //!< while connected, programming and run led blinking time in milliseconds
@@ -55,7 +54,18 @@ BcuUpdate bcu; //!< @ref BcuUpdate instance used for bus communication of the bo
 Timeout runModeTimeout; //!< running mode LED blinking timeout
 bool blinky = false;
 
-const BootloaderDescriptor* startup();
+[[nodiscard]] BootState startup();
+void dumpBootState(BootState bootState);
+
+/**
+ * \brief Boot descriptor set by the application
+ *
+ * \note The boot descriptor is stored in RAM at 0x100000C0.
+ *       The application RAM must start behind the boot descriptor to avoid overwriting it.
+ *       The first 100 RAM bytes are reserved in MCUxpresso .cproject and in the link script bootloader_combined.ld
+ *       for the cmake build
+ */
+const BootloaderDescriptor* blDescriptor = nullptr;
 
 uint32_t getProgrammingButton()
 {
@@ -94,38 +104,14 @@ BcuBase* setup()
 #   else
         serial.setRxPin(PIO1_6); // on swd connector
         serial.setTxPin(PIO1_7); // on swd connector
+//        serial.setRxPin(PIO2_7);
+//        serial.setTxPin(PIO2_8);
 #   endif
     if (!serial.enabled())
     {
         serial.begin(SERIAL_BAUD_RATE_115200);
     }
 #endif
-
-    uint16_t physAddr;
-    uint32_t progButton;
-    const BootloaderDescriptor* blDescriptor = startup();
-    if (blDescriptor != nullptr)
-    {
-        physAddr = blDescriptor->physicalAddress;
-        progButton = blDescriptor->programmingButton;
-        ///\todo After reset the application will be started (old behavior).
-        ///      We need to find the right place to clear the BootloaderDescriptor.
-        ///      Here it's too early. Best place would be, if we are 100% sure that the application is startable.
-        ///      But keep in mind, that a simple UPD_REQUEST_UID can also restart the bootloader.
-        clearBootloaderDescriptor();
-    }
-    else
-    {
-        physAddr = DEFAULT_BL_KNX_ADDRESS;
-        progButton = getProgrammingButton();
-    }
-    bcu.setOwnAddress(physAddr);
-    bcu.setProgPin(progButton);
-    runModeTimeout.start(1);
-
-    // finally start the bcu
-    bcu.begin();
-
     dump(
         serial.print("Selfbus KNX Bootloader v", BOOTLOADER_MAJOR_VERSION);
         serial.print(".", BOOTLOADER_MINOR_VERSION, DEC);
@@ -138,6 +124,7 @@ BcuBase* setup()
         serial.println(".", lowByte(SBLIB_VERSION), HEX);
         serial.println("Features                    : 0x", BL_FEATURES, HEX);
         serial.println("bootLoaderDescriptor addr.  : 0x", reinterpret_cast<uintptr_t>(debugOnlyBootloaderDescriptor()), HEX);
+        serial.println("bootLoaderDescriptor size   : ", sizeof(BootloaderDescriptor));
         serial.print("Flash      (start,end,size) : 0x", flashFirstAddress());
         serial.print(" 0x", flashLastAddress());
         serial.println(" 0x", flashSize(), HEX);
@@ -148,6 +135,33 @@ BcuBase* setup()
         serial.println("Boot descriptor (start)     : 0x", bootDescriptorBlockAddress());
         serial.println("Boot descriptor page        : 0x", bootDescriptorBlockPage(), HEX);
         serial.println("Boot descriptor size        : 0x", BOOT_BLOCK_DESC_SIZE, HEX);
+    )
+
+    BootState requestedBootstate = startup();
+    dump(serial.print("requestedBootstate->"))
+    dumpBootState(requestedBootstate);
+    setBootloaderNewBootState(requestedBootstate);
+
+    // Configure BCU
+    if (blDescriptor->physicalAddress != 0)
+    {
+        bcu.setOwnAddress(blDescriptor->physicalAddress);
+    }
+    else
+    {
+        bcu.setOwnAddress(DEFAULT_BL_KNX_ADDRESS);
+    }
+
+    if (blDescriptor->programmingButton != 0)
+    {
+        bcu.setProgPin(static_cast<int32_t>(blDescriptor->programmingButton));
+    }
+    else
+    {
+        bcu.setProgPin(static_cast<int32_t>(getProgrammingButton()));
+    }
+
+    dump(
         uint16_t physicalAddress = bcu.ownAddress();
         serial.print("physical address            : ");
         serial.print(physAddressToArea(physicalAddress));
@@ -155,6 +169,11 @@ BcuBase* setup()
         serial.println(".", physAddressToDevice(physicalAddress));
         serial.println();
     )
+
+    // LED timer
+    runModeTimeout.start(1);
+    // finally start the bcu
+    bcu.begin();
 
     return &bcu;
 }
@@ -225,7 +244,7 @@ static void finalize()
  * @param applicationStartAddress Pointer to the start address of the application in flash. 
  * @note This function does not return. Control is transferred to the application.
  */
-[[noreturn]] static void jumpToApplication(uint8_t * applicationStartAddress)
+[[noreturn]] static void jumpToApplication(const uint8_t * applicationStartAddress)
 {
     finalize(); // restore changes made and turn the programming led on
     const auto* rom = reinterpret_cast<const uint32_t*>(applicationStartAddress);
@@ -236,7 +255,7 @@ static void finalize()
     dump(
         serial.print("Vectortable size: ", BL_DEFAULT_VECTOR_TABLE_SIZE_IN_BYTES);
         serial.println(" bytes, #Vectors: ", BL_DEFAULT_VECTOR_TABLE_COUNT);
-        serial.flush();
+        serial.end();
     );
 
     // copy the first 192 bytes (vector table) of the application
@@ -264,42 +283,114 @@ static void finalize()
  *          3. Attempts to start the main application if it exists and is valid
  *          4. Falls back to updater mode if no valid application is found
  * 
- * @return Pointer to BootloaderDescriptor if updater mode was requested by application, 
- *         nullptr if updater mode should be entered (button pressed or no valid application),
- *         or does not return if a valid application is started (jumps to application)
+ * @return The new requested Bootstate
  * 
  * @note If a valid application is found, this function does not return and instead 
  *       transfers control to the application via @ref jumpToApplication().
  */
-const BootloaderDescriptor* startup()
+BootState startup()
 {
-    dump(serial.print("Bootloader startup -> ");)
-    // Updater request from application by setting BootloaderDescriptor
-    const BootloaderDescriptor* blDescriptor = getBootloaderDescriptor();
-    if (blDescriptor != nullptr)
+    dump(serial.print("startup()->blDescriptor->");)
+    blDescriptor = getBootloaderDescriptor();
+    if (blDescriptor == nullptr)
     {
-        dump(serial.println("BootloaderDescriptor valid");)
-        return blDescriptor;
+        dump(serial.println("INVALID->defaults");)
+        // We land here after a power outage/reset
+        initBootloaderDescriptor(BootState::Application, DEFAULT_BL_KNX_ADDRESS,
+            getProgrammingButton(), 0, BOOTLOADER_VERSION); ///\todo set bootloader application id
+        blDescriptor = getBootloaderDescriptor(); // Now it's valid
+        if (blDescriptor == nullptr)
+        {
+            // If you land here, no RAM was reserved for the descriptor, check BootloaderDescriptor documentation
+            fatalError();
+        }
+    }
+    else
+    {
+        dump(serial.println("valid");)
+    }
+
+    dump(
+        serial.println("guid       0x", blDescriptor->guid, HEX);
+        serial.println("bootState  0x", blDescriptor->bootState, HEX);
+        serial.println("phys.Addr  0x", blDescriptor->physicalAddress, HEX);
+        serial.println("prog.Btn   0x", blDescriptor->programmingButton, HEX);
+        serial.println("appId      0x", blDescriptor->applicationId, HEX);
+        serial.println("appVersion 0x", blDescriptor->applicationVersion, HEX);
+    )
+
+    dump(serial.print("BootState::");)
+    BootState requestedBootState = blDescriptor->bootState;
+    switch (requestedBootState)
+    {
+        case BootState::BootLoader:
+            dump(serial.println("Bootloader");)
+            break;
+
+        case BootState::Application:
+            dump(serial.println("Application");)
+            break;
+
+        default:
+            dump(serial.println("unknown");)
+#ifdef DEBUG
+            fatalError();
+#endif
+            requestedBootState = BootState::Application;
+            break;
     }
 
     // Enter Updater when programming button was pressed at power up
-    pinMode(getProgrammingButton(), INPUT | PULL_UP);
-    if (!digitalRead(getProgrammingButton()))
+    pinMode(blDescriptor->programmingButton , INPUT | PULL_UP);
+    if (!digitalRead(blDescriptor->programmingButton))
     {
         dump(serial.println("Programming Button pressed");)
-        return nullptr;
+        requestedBootState = BootState::BootLoader;
     }
 
-    // Start main application at address
-    const auto* block = reinterpret_cast<const AppDescriptionBlock*>(bootDescriptorBlockAddress());
-    if (checkApplication(block))
+    if (requestedBootState == BootState::Application)
     {
-        dump(serial.println("Application valid");)
-        jumpToApplication(block->startAddress);
+        dump(serial.print("Application ");)
+        // Start main application at address
+        const auto* block = reinterpret_cast<const AppDescriptionBlock*>(bootDescriptorBlockAddress());
+        if (checkApplication(block))
+        {
+            dump(serial.println("valid");)
+            setBootloaderNewBootState(BootState::Application);
+            jumpToApplication(block->startAddress);
+        }
+        else
+        {
+
+            dump(serial.println("INVALID");)
+            requestedBootState = BootState::BootLoader;
+        }
     }
+
     // Start updater in case of error
-    dump(serial.println("Application INVALID");)
-    return nullptr;
+    return BootState::BootLoader;
 }
 
+
+void dumpBootState([[maybe_unused]] BootState bootState)
+{
+    dump(
+        //serial.print("BootState::");
+        switch (bootState)
+        {
+
+            case BootState::BootLoader:
+                serial.println("Bootloader");
+                break;
+
+            case BootState::Application:
+                serial.println("Application");
+                break;
+
+            default:
+                serial.println("unknown");
+                break;
+        }
+    )
+}
 /** @}*/

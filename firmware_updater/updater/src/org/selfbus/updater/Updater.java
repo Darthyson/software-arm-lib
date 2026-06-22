@@ -17,6 +17,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import static org.fusesource.jansi.Ansi.*;
+import static org.selfbus.updater.devicemgnt.DeviceManagement.getExceptionMessage;
 import static org.selfbus.updater.logging.Color.*;
 import static org.selfbus.updater.logging.LoggingManager.CONSOLE_APPENDER_NAME;
 import static org.selfbus.updater.Utils.shortenPath;
@@ -211,16 +212,15 @@ public class Updater implements Runnable {
             dm = DeviceManagementFactory.getDeviceManagement(cliOptions);
 
             logger.debug("Telegram priority: {}", cliOptions.getPriority());
-            dm.open();
+            dm.openLink();
             logger.info("KNX connection: {}", dm.getLinkInfo());
 
-            //for option --device restart the device in bootloader mode
-            if (cliOptions.getDevicePhysicalAddress() != null) { // phys. knx address of the device in normal operation
-                dm.checkDeviceInProgrammingMode(null); // check that before no device is in programming mode
-                dm.restartDeviceToBootloader(cliOptions.getDevicePhysicalAddress());
-            }
+            IndividualAddress deviceAddress = cliOptions.getDevicePhysicalAddress();
+            IndividualAddress progDeviceAddress = cliOptions.getProgDevicePhysicalAddress();
+            IndividualAddress deviceInProgMode = startIntoBootLoader(deviceAddress, progDeviceAddress);
 
-            dm.checkDeviceInProgrammingMode(cliOptions.getProgDevicePhysicalAddress());
+            dm.openDevice(deviceInProgMode);
+
             String uid = cliOptions.getUid();
             if (uid.isEmpty()) {
                 uid = dm.requestUIDFromDevice();
@@ -255,7 +255,7 @@ public class Updater implements Runnable {
 
             //  From here on we need a valid firmware
             if (newFirmware == null) {
-                if (cliOptions.getDevicePhysicalAddress() != null) {
+                if (deviceAddress != null) {
                     dm.restartProgrammingDevice();
                 }
                 // to get here `uid == null` must be true, so it's fine to exit with no-error
@@ -345,25 +345,18 @@ public class Updater implements Runnable {
                     newFirmware.endAddress(), (int) newFirmware.crc32(), newFirmware.getAppVersionAddress());
             logger.info("Updating boot descriptor with {}", newBootDescriptor);
             dm.programBootDescriptor(newBootDescriptor, cliOptions.getDelayMs());
-            String deviceInfo = cliOptions.getProgDevicePhysicalAddress().toString();
-            if (cliOptions.getDevicePhysicalAddress() != null) {
-                deviceInfo = cliOptions.getDevicePhysicalAddress().toString();
-            }
             logger.info("Finished programming device {}{}{} with '{}{}{}'",
-                    ansi().fgBright(INFO), deviceInfo, ansi().reset(),
+                    ansi().fgBright(INFO), deviceInProgMode, ansi().reset(),
                     ansi().fgBright(INFO), shortenPath(cliOptions.getFileName(), 1), ansi().reset());
             dm.restartProgrammingDevice();
             dm.close();
 
-            if (newFirmware.getAppVersion().contains(BootloaderUpdater.BOOTLOADER_UPDATER_ID_STRING)) {
-                logger.info("{}Wait {} second(s) for Bootloader Updater to finish its job{}",
-                        ansi().fgBright(OK),
-                        String.format("%.2f", BootloaderUpdater.BOOTLOADER_UPDATER_MAX_RESTART_TIME_MS / 1000.0f),
-                        ansi().reset());
-                Thread.sleep(BootloaderUpdater.BOOTLOADER_UPDATER_MAX_RESTART_TIME_MS);
-            }
+            logger.debug("Wait {} second(s) for potential Bootloader Updater to finish its job",
+                    String.format("%.2f", BootloaderUpdater.BOOTLOADER_UPDATER_MAX_RESTART_TIME_MS / 1000.0f));
+            Thread.sleep(BootloaderUpdater.BOOTLOADER_UPDATER_MAX_RESTART_TIME_MS);
 
-            logger.info("Update finished successfully.");
+            logger.info("Device {}{}{} update completed {}successfully{}.",
+                    ansi().fgBright(OK), deviceInProgMode, ansi().reset(), ansi().fgBright(OK), ansi().reset());
         }
         catch (final InterruptedException | IllegalStateException e) {
             Thread.currentThread().interrupt();
@@ -399,15 +392,13 @@ public class Updater implements Runnable {
     public String requestUid() throws KNXException, UpdaterException, UnknownHostException {
         try {
             DeviceManagement dm = new DeviceManagement(cliOptions);
-            dm.open();
+            dm.openLink();
 
-            //for option --device restart the device in bootloader mode
-            if (cliOptions.getDevicePhysicalAddress() != null) { // phys. knx address of the device in normal operation
-                dm.checkDeviceInProgrammingMode(null); // check that before no device is in programming mode
-                dm.restartDeviceToBootloader(cliOptions.getDevicePhysicalAddress());
-            }
+            final IndividualAddress deviceAddress = cliOptions.getDevicePhysicalAddress();
+            final IndividualAddress progDeviceAddress = cliOptions.getProgDevicePhysicalAddress();
 
-            dm.checkDeviceInProgrammingMode(cliOptions.getProgDevicePhysicalAddress());
+            final IndividualAddress deviceInProgMode = startIntoBootLoader(deviceAddress, progDeviceAddress);
+            dm.openDevice(deviceInProgMode);
 
             String uid = dm.requestUIDFromDevice();
 
@@ -421,7 +412,7 @@ public class Updater implements Runnable {
                 logger.info("APP_VERSION: {}{}{}", ansi().fgBright(OK), appVersion, ansi().reset());
             }
 
-            if (cliOptions.getDevicePhysicalAddress() != null) {
+            if (deviceAddress != null) {
                 dm.restartProgrammingDevice();
             }
             dm.close();
@@ -448,5 +439,50 @@ public class Updater implements Runnable {
                     cause.getClass().getSimpleName());
         }
         logger.debug("", e); // todo see logback issue https://github.com/qos-ch/logback/issues/876
+    }
+
+    public IndividualAddress startIntoBootLoader(IndividualAddress device, IndividualAddress progDevice)
+            throws KNXException, UpdaterException, InterruptedException {
+        IndividualAddress deviceInProgMode;
+        if (device == null) {
+            // Only option --progDevice is set => check if device is already in programming mode
+            logger.debug("Check if progDevice {} is in programming mode", progDevice);
+            deviceInProgMode = dm.checkDevicesInProgrammingMode(progDevice);
+            return deviceInProgMode;
+        }
+
+        // Option --device handling
+//        if (dm.isAddressOccupied(device)) {
+//            logger.debug("device {} responded to APCI_DEVICEDESCRIPTOR_READ_PDU", device);
+            IndividualAddress[] devicesInProgMode = dm.listDevicesInProgrammingMode();
+            if  (devicesInProgMode.length == 0) {
+                // No devices in progMode
+                logger.debug("Starting device {} into bootloader mode", device);
+                dm.restartDeviceToBootloader(device); // Try to restart the device into bootloader mode
+                deviceInProgMode = dm.checkDevicesInProgrammingMode(device, progDevice);
+            }
+            else if ((devicesInProgMode.length == 1) &&
+                    ((devicesInProgMode[0].equals(device)) || (devicesInProgMode[0].equals(progDevice)))) {
+                logger.debug("device/progDevice {} is already in programming mode", devicesInProgMode[0]);
+                deviceInProgMode = devicesInProgMode[0];
+            }
+            else {
+                // Multiple devices are in progMode or device/progDevice is not in progMode
+                throw new UpdaterException(getExceptionMessage(devicesInProgMode,
+                        new IndividualAddress[]{device, progDevice}));
+            }
+//        }
+//        else {
+//            logger.info("{}Device {} is not responding or is running legacy bootloader!{}",
+//                    ansi().fgBright(INFO), device, ansi().reset());
+//            // todo this is old behavior, but in case of the wrong --device we can also land here with new behavior
+//            dm.restartDeviceToBootloader(device);
+//            deviceInProgMode = dm.checkDevicesInProgrammingMode(progDevice);
+//            if (deviceInProgMode == progDevice) {
+//                logger.warn("{}Falling back to --progDevice {}!{}", ansi().fgBright(WARN), progDevice, ansi().reset());
+//            }
+//        }
+
+        return deviceInProgMode;
     }
 }

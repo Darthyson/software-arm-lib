@@ -5,6 +5,7 @@
  ---------------------------------------------------------------------------*/
 
 #include "sblib/internal/bootloader_commands.h"
+#include "sblib/interrupt.h"
 #include "sblib/eib/apci.h"
 #include "sblib/platform.h"
 
@@ -69,25 +70,12 @@ void initBootloaderDescriptor(const BootState newBootState, const uint16_t physi
         return;
     }
 
+    bootLoaderDescriptor->guid = UID_BOOTLOADER_DESCRIPTOR;
     bootLoaderDescriptor->bootState = newBootState;
     bootLoaderDescriptor->physicalAddress = physicalAddressToUse;
     bootLoaderDescriptor->programmingButton = programmingButton;
     bootLoaderDescriptor->applicationId = applicationId;
     bootLoaderDescriptor->applicationVersion = applicationVersion;
-
-    switch (bootLoaderDescriptor->bootState)
-    {
-        case BootState::BootLoader:
-        case BootState::BootLoaderUpdater:
-        case BootState::Reset:
-            *magicWord = UID_BOOTLOADER_DESCRIPTOR;
-            break;
-
-        case BootState::Application:
-        default:
-            *magicWord = 0;
-            break;
-    }
 }
 
 const BootloaderDescriptor* getBootloaderDescriptor()
@@ -97,19 +85,56 @@ const BootloaderDescriptor* getBootloaderDescriptor()
         return nullptr;
     }
 
-    if (*magicWord != UID_BOOTLOADER_DESCRIPTOR)
+    if (bootLoaderDescriptor->guid == UID_BOOTLOADER_DESCRIPTOR)
     {
-        return nullptr;
+        return bootLoaderDescriptor;
     }
-    return bootLoaderDescriptor;
+
+    if (*magicWord == UID_BOOTLOADER_DESCRIPTOR)
+    {
+        // Stay compatible with old applications which don't have the setting of the BootloaderDescriptor
+        // Use old behavior values, e.g. 15.15.192 as bootloader address
+        initBootloaderDescriptor(BootState::BootLoader, DEFAULT_BL_KNX_ADDRESS, 0, 0, 0);
+        clearDeprecatedMagicWord();
+        return bootLoaderDescriptor;
+    }
+
+    return nullptr;
 }
 
-void clearBootloaderDescriptor()
+void disableInterruptsAndSetLegacyMagicWord()
 {
-    initBootloaderDescriptor(BootState::Application, 0, 0, 0, 0);
+    noInterrupts();
+    *magicWord = UID_BOOTLOADER_DESCRIPTOR;
 }
 
-const BootloaderDescriptor* debugOnlyBootloaderDescriptor()
+void clearDeprecatedMagicWord()
+{
+    *magicWord = 0;
+}
+
+void setBootloaderNewBootState(const BootState newBootState)
+{
+    initBootloaderDescriptor(newBootState, bootLoaderDescriptor->physicalAddress,
+        bootLoaderDescriptor->programmingButton, bootLoaderDescriptor->applicationId,
+        bootLoaderDescriptor->applicationVersion);
+}
+
+void setBootloaderNewPhysicalAddress(const uint16_t newPhysicalAddress)
+{
+    initBootloaderDescriptor(bootLoaderDescriptor->bootState, newPhysicalAddress,
+        bootLoaderDescriptor->programmingButton, bootLoaderDescriptor->applicationId,
+        bootLoaderDescriptor->applicationVersion);
+}
+
+void setBootloaderNewProgrammingPin(const uint32_t newProgrammingPin)
+{
+    initBootloaderDescriptor(bootLoaderDescriptor->bootState, bootLoaderDescriptor->physicalAddress,
+        newProgrammingPin, bootLoaderDescriptor->applicationId,
+        bootLoaderDescriptor->applicationVersion);
+}
+
+BootloaderDescriptor* debugOnlyBootloaderDescriptor()
 {
     return bootLoaderDescriptor;
 }

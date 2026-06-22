@@ -30,6 +30,7 @@
 #include <sblib/bits.h>
 #include <sblib/eib/apci.h>
 #include <sblib/internal/iap.h>
+#include <sblib/internal/bootloader_commands.h>
 #include <sblib/version.h>
 #include <cstring>
 
@@ -393,6 +394,7 @@ void updEraseAddressRange(const uint8_t * data)
     setLastError(eraseAddressRange(startAddress, endAddress));
     bcu.bus->resume();
     resetUPDProtocol();
+    setBootloaderNewBootState(BootState::BootLoader);
 }
 
 /**
@@ -806,8 +808,16 @@ void updUpdateBootDescriptorBlock(const uint8_t * data)
     if (!checkApplication(reinterpret_cast<AppDescriptionBlock*>(ramBuffer)))
     {
         dump(serial.println("-->UDP_APPLICATION_NOT_STARTABLE");)
-        setLastError(UDP_APPLICATION_NOT_STARTABLE);
-        return;
+        result = UDP_APPLICATION_NOT_STARTABLE;
+        setBootloaderNewBootState(BootState::BootLoader);
+    }
+    else
+    {
+        if (result == UDP_IAP_SUCCESS)
+        {
+            dump(serial.println("-->set BootState::Application");)
+            setBootloaderNewBootState(BootState::Application);
+        }
     }
 
     setLastError(result);
@@ -975,6 +985,7 @@ void handleApciUsermsgManufacturerInternal(uint8_t * data, uint16_t size)
 
         case UPD_PROGRAM:
             updProgram(data);
+            setBootloaderNewBootState(BootState::BootLoader);
             break;
 
         case UPD_SEND_DATA_TO_DECOMPRESS:
@@ -983,14 +994,17 @@ void handleApciUsermsgManufacturerInternal(uint8_t * data, uint16_t size)
 
         case UPD_PROGRAM_DECOMPRESSED_DATA:
             updProgramDecompressedDataToFlash(data);
+            setBootloaderNewBootState(BootState::BootLoader);
             break;
 
         case UPD_ERASE_COMPLETE_FLASH:
             updEraseFullFlash();
+            setBootloaderNewBootState(BootState::BootLoader);
             break;
 
         case UPD_ERASE_ADDRESS_RANGE:
             updEraseAddressRange(data);
+            setBootloaderNewBootState(BootState::BootLoader);
             break;
 
         case UPD_DUMP_FLASH:
@@ -1011,6 +1025,10 @@ void handleApciUsermsgManufacturerInternal(uint8_t * data, uint16_t size)
 
         case UPD_REQUEST_BL_IDENTITY:
             updRequestBootloaderIdentity(data);
+            ///\todo This is a workaround for compatibility with old Updater <= v1.27
+            ///      Device gets stuck in BootState::BootLoader,
+            ///      if the old Updater just wants to read the identity or uid
+            setBootloaderNewBootState(BootState::Application);
             break;
 
         case UPD_REQ_DATA:

@@ -15,10 +15,8 @@ constexpr uint16_t DEFAULT_BL_KNX_ADDRESS = (((15 << 12) | (15 << 8) | 192));
 
 enum class BootState : uint8_t
 {
-    Reset = 0,
-    BootLoader = 1,
-    BootLoaderUpdater = 2,
-    Application = 3,
+    BootLoader = 0,
+    Application = 1,
 };
 
 /**
@@ -27,12 +25,13 @@ enum class BootState : uint8_t
  */
 struct BootloaderDescriptor
 {
-    BootState bootState;            //!< The current boot state
-    uint8_t reserved;               //!< Reserved for alignment, feel free to use
-    uint16_t physicalAddress;       //!< Physical address to use in bootloader
-    uint32_t programmingButton;     //!< GPIO of the programming button to use in bootloader
-    uint32_t applicationId;         //!< Application ID of the application
-    uint32_t applicationVersion;    //!< Application version of the application
+    uint32_t guid;               //!< The unique identifier of the BootloaderDescriptor
+    BootState bootState;         //!< The next requested boot state
+    uint8_t reserved;            //!< Reserved for alignment, feel free to use
+    uint16_t physicalAddress;    //!< Physical address to use in bootloader
+    uint32_t programmingButton;  //!< GPIO of the programming button to use in bootloader
+    uint32_t applicationId;      //!< Application ID of the application
+    uint32_t applicationVersion; //!< Application version of the application
 };
 
 constexpr uint32_t BOOTLOADER_DESCRIPTOR_SIZE = 20;
@@ -61,11 +60,33 @@ void initBootloaderDescriptor(BootState newBootState, uint16_t physicalAddressTo
 const BootloaderDescriptor* getBootloaderDescriptor();
 
 /**
- * Clears the BootloaderDescriptor in RAM.
- * @warning The BootloaderDescriptor is stored in RAM at 0x10000000. 
- *          The application RAM must start at 0x10000100 or higher to avoid overwriting this structure.
+ * Sets the deprecated magic word in RAM for legacy support of the old bootloader.
+ * \warning Disables all interrupts, as the magicWord overwrites the start of the interrupt vector table
  */
-void clearBootloaderDescriptor();
+void disableInterruptsAndSetLegacyMagicWord();
+
+/**
+ * Clears the deprecated magic word from RAM.
+ */
+void clearDeprecatedMagicWord();
+
+/**
+ * @brief Sets the new requested boot state.
+ * @param newBootState  The new boot state to set.
+ */
+void setBootloaderNewBootState(BootState newBootState);
+
+/**
+ * @brief Sets the new physical KNX address.
+ * @param newPhysicalAddress  The new physical KNX address.
+ */
+void setBootloaderNewPhysicalAddress(uint16_t newPhysicalAddress);
+
+/**
+ * @brief Sets the new programming pin.
+ * @param newProgrammingPin  The new programming pin to set.
+ */
+void setBootloaderNewProgrammingPin(uint32_t newProgrammingPin);
 
 /**
  * Debug-only function to retrieve the BootloaderDescriptor from RAM.
@@ -73,7 +94,7 @@ void clearBootloaderDescriptor();
  * @return Pointer to the BootloaderDescriptor in RAM
  * @warning Use of this function is intended for debugging purposes only.
  */
-const BootloaderDescriptor* debugOnlyBootloaderDescriptor();
+BootloaderDescriptor* debugOnlyBootloaderDescriptor();
 
 /**
  * Checks a APCI for the bus-updater Magic word

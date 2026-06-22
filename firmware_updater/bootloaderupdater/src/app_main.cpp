@@ -4,6 +4,7 @@
 #include <sblib/version.h>
 #include <sblib/internal/bootloader_commands.h>
 #include <sblib/platform.h>
+#include <sblib/utils.h>
 #include <cstdint>
 #include <cstring>
 
@@ -47,37 +48,48 @@ void setup()
         serial.print(__DATE__);
         serial.print(" ");
         serial.println(__TIME__);
-        serial.flush();
     );
 
     // Check for BootloaderDescriptor in RAM
     blDescriptor = getBootloaderDescriptor();
 
-    dump(serial.print("BootloaderDescriptor ");)
+    dump(
+        serial.println("BootloaderDescriptor ");
+        extern uint32_t* magicWord;
+        extern BootloaderDescriptor* bootLoaderDescriptor;
+        serial.print("magicWord 0x", magicWord);
+        serial.println(" *magicWord 0x", *magicWord);
+        serial.println("bootLoaderDescriptor 0x", bootLoaderDescriptor);
+
+        const BootloaderDescriptor* debugOnlyDescriptor = debugOnlyBootloaderDescriptor();
+        serial.println("debugOnlyDescriptor 0x", debugOnlyDescriptor);
+        if (debugOnlyDescriptor != nullptr)
+        {
+            serial.println("guid      0x", debugOnlyDescriptor->guid, HEX);
+            serial.println("bootState 0x", debugOnlyDescriptor->bootState, HEX);
+            serial.println("reserved 0x", debugOnlyDescriptor->reserved, HEX);
+            serial.println("physicalAddress 0x", debugOnlyDescriptor->physicalAddress, HEX);
+            serial.println("progButton 0x", debugOnlyDescriptor->programmingButton, HEX);
+            serial.println("appId 0x", debugOnlyDescriptor->applicationId, HEX);
+            serial.println("appVersion 0x", debugOnlyDescriptor->applicationVersion, HEX);
+        }
+    )
+
     if (blDescriptor != nullptr)
     {
         dump(serial.println("valid");)
     }
     else
     {
-        dump(
-            serial.println("INVALID");
-            serial.flush(); ///\todo delete on release
-            const BootloaderDescriptor* debugOnlyDescriptor = debugOnlyBootloaderDescriptor();
-            serial.println("debugOnlyDescriptor 0x", &debugOnlyDescriptor);
-            if (debugOnlyDescriptor != nullptr)
-            {
-                serial.println("bootState 0x", debugOnlyDescriptor->bootState, HEX);
-                serial.println("reserved 0x", debugOnlyDescriptor->reserved, HEX);
-                serial.println("physicalAddress 0x", debugOnlyDescriptor->physicalAddress, HEX);
-                serial.println("progButton 0x", debugOnlyDescriptor->programmingButton, HEX);
-                serial.println("appId 0x", debugOnlyDescriptor->applicationId, HEX);
-                serial.println("appVersion 0x", debugOnlyDescriptor->applicationVersion, HEX);
-            }
-        )
+        dump(serial.println("INVALID");)
         initBootloaderDescriptor(BootState::BootLoader, DEFAULT_BL_KNX_ADDRESS,
                 PIN_PROG, 0, BOOTLOADERUPDATER_VERSION); ///\todo Set correct BLU application ID
         blDescriptor = getBootloaderDescriptor();
+        if (blDescriptor == nullptr)
+        {
+            // If you land here, no RAM was reserved for the descriptor, check BootloaderDescriptor documentation
+            fatalError();
+        }
     }
     pinMode(blDescriptor->programmingButton, OUTPUT);
     digitalWrite(blDescriptor->programmingButton, false);
@@ -85,11 +97,11 @@ void setup()
 
 void SystemReset()
 {
-    initBootloaderDescriptor(BootState::BootLoader, blDescriptor->physicalAddress,
+    initBootloaderDescriptor(BootState::Application, blDescriptor->physicalAddress,
             blDescriptor->programmingButton, blDescriptor->applicationId, blDescriptor->applicationVersion);
     dump(
         serial.println("RESET");
-        serial.flush();
+        serial.end();
     )
     NVIC_SystemReset();
 }

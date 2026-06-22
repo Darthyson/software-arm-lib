@@ -8,6 +8,7 @@
 
 #include <sblib/internal/bootloader_commands.h>
 #include <sblib/eib/apci.h>
+#include <vector>
 #include <catch.hpp> // If possible, include catch.hpp as the last header
 
 // Note: The magic word is stored separately in memory, not in the descriptor struct itself
@@ -37,11 +38,11 @@ TEST_CASE("initBootloaderDescriptor", "[bootloader_commands]")
 
     SECTION("Initialize with zero values")
     {
-        initBootloaderDescriptor(BootState::Reset, 0, 0, 0, 0);
+        initBootloaderDescriptor(BootState::BootLoader, 0, 0, 0, 0);
 
         const BootloaderDescriptor* descriptor = getBootloaderDescriptor();
         REQUIRE(descriptor != nullptr);
-        REQUIRE(descriptor->bootState == BootState::Reset);
+        REQUIRE(descriptor->bootState == BootState::BootLoader);
         REQUIRE(descriptor->physicalAddress == 0);
         REQUIRE(descriptor->programmingButton == 0);
         REQUIRE(descriptor->applicationId == 0);
@@ -50,11 +51,11 @@ TEST_CASE("initBootloaderDescriptor", "[bootloader_commands]")
 
     SECTION("Initialize with maximum values")
     {
-        initBootloaderDescriptor(BootState::BootLoaderUpdater, 0xFFFF, 0xFFFFFFFF, 0xFFFFFFFF, 0xFFFFFFFF);
+        initBootloaderDescriptor(BootState::Application, 0xFFFF, 0xFFFFFFFF, 0xFFFFFFFF, 0xFFFFFFFF);
 
         const BootloaderDescriptor* descriptor = getBootloaderDescriptor();
         REQUIRE(descriptor != nullptr);
-        REQUIRE(descriptor->bootState == BootState::BootLoaderUpdater);
+        REQUIRE(descriptor->bootState == BootState::Application);
         REQUIRE(descriptor->physicalAddress == 0xFFFF);
         REQUIRE(descriptor->programmingButton == 0xFFFFFFFF);
         REQUIRE(descriptor->applicationId == 0xFFFFFFFF);
@@ -72,31 +73,15 @@ TEST_CASE("initBootloaderDescriptor", "[bootloader_commands]")
         REQUIRE(descriptor_1->physicalAddress == 0x1111);
 
         // Second initialization - should overwrite
-        initBootloaderDescriptor(BootState::Reset, 0x5555, 0x6666, 0x7777, 0x8888);
+        initBootloaderDescriptor(BootState::Application, 0x5555, 0x6666, 0x7777, 0x8888);
 
         const BootloaderDescriptor* descriptor_2 = getBootloaderDescriptor();
         REQUIRE(descriptor_2 != nullptr);
-        REQUIRE(descriptor_2->bootState == BootState::Reset);
+        REQUIRE(descriptor_2->bootState == BootState::Application);
         REQUIRE(descriptor_2->physicalAddress == 0x5555);
         REQUIRE(descriptor_2->programmingButton == 0x6666);
         REQUIRE(descriptor_2->applicationId == 0x7777);
         REQUIRE(descriptor_2->applicationVersion == 0x8888);
-    }
-
-    SECTION("Initialize with Application state - descriptor becomes invalid")
-    {
-        initBootloaderDescriptor(BootState::Application, 0x1234, 0x5678, 0xABCD, 0xEF01);
-
-        // With Application state, the magic word is cleared, making descriptor invalid
-        const BootloaderDescriptor* descriptor = getBootloaderDescriptor();
-        REQUIRE(descriptor == nullptr);
-
-        // But we can still read the data using debugOnlyBootloaderDescriptor
-        const BootloaderDescriptor* debugDesc = debugOnlyBootloaderDescriptor();
-        REQUIRE(debugDesc != nullptr);
-        REQUIRE(debugDesc->bootState == BootState::Application);
-        REQUIRE(debugDesc->physicalAddress == 0x1234);
-        REQUIRE(debugDesc->programmingButton == 0x5678);
     }
 }
 
@@ -111,21 +96,9 @@ TEST_CASE("getBootloaderDescriptor", "[bootloader_commands]")
         REQUIRE(descriptor->bootState == BootState::BootLoader);
     }
 
-    SECTION("Get descriptor returns nullptr after clear")
-    {
-        initBootloaderDescriptor(BootState::BootLoader, 0x1234, 0x5678, 0xABCD, 0xEF01);
-        REQUIRE(getBootloaderDescriptor() != nullptr);
-        REQUIRE(getBootloaderDescriptor()->bootState == BootState::BootLoader);
-
-        clearBootloaderDescriptor();
-        REQUIRE(getBootloaderDescriptor() == nullptr);
-        // After clear, bootState is set to Application
-        REQUIRE(debugOnlyBootloaderDescriptor()->bootState == BootState::Application);
-    }
-
     SECTION("Multiple calls return consistent data")
     {
-        initBootloaderDescriptor(BootState::Reset, 0x9999, 0x8888, 0x7777, 0x6666);
+        initBootloaderDescriptor(BootState::Application, 0x9999, 0x8888, 0x7777, 0x6666);
 
         const BootloaderDescriptor* desc1 = getBootloaderDescriptor();
         const BootloaderDescriptor* desc2 = getBootloaderDescriptor();
@@ -136,62 +109,6 @@ TEST_CASE("getBootloaderDescriptor", "[bootloader_commands]")
         REQUIRE(desc1->programmingButton == desc2->programmingButton);
         REQUIRE(desc1->applicationId == desc2->applicationId);
         REQUIRE(desc1->applicationVersion == desc2->applicationVersion);
-    }
-
-    SECTION("Get descriptor returns nullptr with Application state")
-    {
-        initBootloaderDescriptor(BootState::Application, 0x1234, 0x5678, 0xABCD, 0xEF01);
-
-        // Application state clears the magic word, so descriptor is invalid
-        const BootloaderDescriptor* descriptor = getBootloaderDescriptor();
-        REQUIRE(descriptor == nullptr);
-    }
-}
-
-TEST_CASE("clearBootloaderDescriptor", "[bootloader_commands]")
-{
-    SECTION("Clear is idempotent")
-    {
-        initBootloaderDescriptor(BootState::BootLoader, 0x1111, 0x2222, 0x3333, 0x4444);
-        clearBootloaderDescriptor();
-        REQUIRE(getBootloaderDescriptor() == nullptr);
-
-        // Clearing again should not cause issues
-        clearBootloaderDescriptor();
-        REQUIRE(getBootloaderDescriptor() == nullptr);
-    }
-
-    SECTION("Re-initialize after clear")
-    {
-        initBootloaderDescriptor(BootState::BootLoader, 0x1234, 0x5678, 0xABCD, 0xEF01);
-        clearBootloaderDescriptor();
-        REQUIRE(getBootloaderDescriptor() == nullptr);
-
-        // Re-initialize with different values
-        initBootloaderDescriptor(BootState::BootLoaderUpdater, 0x9999, 0x8888, 0x7777, 0x6666);
-
-        const BootloaderDescriptor* descriptor = getBootloaderDescriptor();
-        REQUIRE(descriptor != nullptr);
-        REQUIRE(descriptor->bootState == BootState::BootLoaderUpdater);
-        REQUIRE(descriptor->physicalAddress == 0x9999);
-        REQUIRE(descriptor->programmingButton == 0x8888);
-        REQUIRE(descriptor->applicationId == 0x7777);
-        REQUIRE(descriptor->applicationVersion == 0x6666);
-    }
-
-    SECTION("Clear sets bootState to Application")
-    {
-        initBootloaderDescriptor(BootState::Reset, 0x1111, 0x2222, 0x3333, 0x4444);
-        REQUIRE(getBootloaderDescriptor() != nullptr);
-
-        clearBootloaderDescriptor();
-
-        // Descriptor is now invalid via getBootloaderDescriptor
-        REQUIRE(getBootloaderDescriptor() == nullptr);
-
-        // But we can verify the bootState was set to Application
-        const BootloaderDescriptor* debugDesc = debugOnlyBootloaderDescriptor();
-        REQUIRE(debugDesc->bootState == BootState::Application);
     }
 }
 
@@ -205,7 +122,7 @@ TEST_CASE("debugOnlyBootloaderDescriptor", "[bootloader_commands]")
 
     SECTION("Returns pointer even when descriptor is invalid")
     {
-        clearBootloaderDescriptor();
+        debugOnlyBootloaderDescriptor()->guid = 0;
         REQUIRE(getBootloaderDescriptor() == nullptr);
 
         // debugOnlyBootloaderDescriptor should still return a pointer
@@ -215,7 +132,7 @@ TEST_CASE("debugOnlyBootloaderDescriptor", "[bootloader_commands]")
 
     SECTION("Points to same location as getBootloaderDescriptor when valid")
     {
-        initBootloaderDescriptor(BootState::Reset, 0x1234, 0x5678, 0xABCD, 0xEF01);
+        initBootloaderDescriptor(BootState::BootLoader, 0x1234, 0x5678, 0xABCD, 0xEF01);
 
         const BootloaderDescriptor* validDesc = getBootloaderDescriptor();
         const BootloaderDescriptor* debugDesc = debugOnlyBootloaderDescriptor();
@@ -230,10 +147,10 @@ TEST_CASE("debugOnlyBootloaderDescriptor", "[bootloader_commands]")
         constexpr uint32_t appId = 0x87654321;
         constexpr uint32_t appVer = 0x01020304;
 
-        initBootloaderDescriptor(BootState::BootLoaderUpdater, physAddr, gpioButton, appId, appVer);
+        initBootloaderDescriptor(BootState::BootLoader, physAddr, gpioButton, appId, appVer);
 
         const BootloaderDescriptor* debugDesc = debugOnlyBootloaderDescriptor();
-        REQUIRE(debugDesc->bootState == BootState::BootLoaderUpdater);
+        REQUIRE(debugDesc->bootState == BootState::BootLoader);
         REQUIRE(debugDesc->physicalAddress == physAddr);
         REQUIRE(debugDesc->programmingButton == gpioButton);
         REQUIRE(debugDesc->applicationId == appId);
@@ -243,22 +160,19 @@ TEST_CASE("debugOnlyBootloaderDescriptor", "[bootloader_commands]")
 
 TEST_CASE("BootloaderDescriptor lifecycle", "[bootloader_commands]")
 {
-    SECTION("Multiple init-clear cycles")
+    SECTION("Multiple init cycles")
     {
-        const BootState states[] = {BootState::Reset, BootState::BootLoader, BootState::BootLoaderUpdater, BootState::Reset, BootState::BootLoader};
-        
-        for (uint8_t i = 0; i < 5; i++)
+        const std::vector states = { BootState::BootLoader, BootState::Application, BootState::BootLoader };
+
+        for (size_t i = 0; i < states.size(); i++)
         {
-            initBootloaderDescriptor(states[i], i * 0x1000, i * 0x100, i * 0x10, i);
+            initBootloaderDescriptor(states.at(i), i * 0x1000, i * 0x100, i * 0x10, i);
 
             const BootloaderDescriptor* desc = getBootloaderDescriptor();
             REQUIRE(desc != nullptr);
-            REQUIRE(desc->bootState == states[i]);
+            REQUIRE(desc->bootState == states.at(i));
             REQUIRE(desc->physicalAddress == i * 0x1000);
             REQUIRE(desc->applicationVersion == static_cast<uint32_t>(i));
-
-            clearBootloaderDescriptor();
-            REQUIRE(getBootloaderDescriptor() == nullptr);
         }
     }
 }
@@ -290,37 +204,27 @@ TEST_CASE("checkApciForMagicWord", "[bootloader_commands]")
     }
 }
 
+TEST_CASE("magicWord behavior", "[bootloader_commands]")
+{
+    extern uint32_t * magicWord;
+    SECTION("disableInterruptsAndSetLegacyMagicWord sets magic word")
+    {
+        disableInterruptsAndSetLegacyMagicWord();
+        initBootloaderDescriptor(BootState::BootLoader, 0x1234, 0x5678, 0xABCD, 0xEF01);
+        REQUIRE(*magicWord == UID_BOOTLOADER_DESCRIPTOR);
+    }
+
+    SECTION("clearDeprecatedMagicWord clears magic word")
+    {
+        initBootloaderDescriptor(BootState::Application, 0x1234, 0x5678, 0xABCD, 0xEF01);
+        disableInterruptsAndSetLegacyMagicWord();
+        clearDeprecatedMagicWord();
+        REQUIRE(*magicWord == 0);
+    }
+}
+
 TEST_CASE("BootState behavior", "[bootloader_commands]")
 {
-    SECTION("BootLoader state sets magic word")
-    {
-        initBootloaderDescriptor(BootState::BootLoader, 0x1234, 0x5678, 0xABCD, 0xEF01);
-        REQUIRE(getBootloaderDescriptor() != nullptr);
-    }
-
-    SECTION("BootLoaderUpdater state sets magic word")
-    {
-        initBootloaderDescriptor(BootState::BootLoaderUpdater, 0x1234, 0x5678, 0xABCD, 0xEF01);
-        REQUIRE(getBootloaderDescriptor() != nullptr);
-    }
-
-    SECTION("Reset state sets magic word")
-    {
-        initBootloaderDescriptor(BootState::Reset, 0x1234, 0x5678, 0xABCD, 0xEF01);
-        REQUIRE(getBootloaderDescriptor() != nullptr);
-    }
-
-    SECTION("Application state clears magic word")
-    {
-        // First set a valid descriptor
-        initBootloaderDescriptor(BootState::BootLoader, 0x1234, 0x5678, 0xABCD, 0xEF01);
-        REQUIRE(getBootloaderDescriptor() != nullptr);
-
-        // Switch to Application state
-        initBootloaderDescriptor(BootState::Application, 0x1234, 0x5678, 0xABCD, 0xEF01);
-        REQUIRE(getBootloaderDescriptor() == nullptr);
-    }
-
     SECTION("Transition between bootloader states")
     {
         // Start with BootLoader
@@ -329,29 +233,28 @@ TEST_CASE("BootState behavior", "[bootloader_commands]")
         REQUIRE(desc1 != nullptr);
         REQUIRE(desc1->bootState == BootState::BootLoader);
 
-        // Switch to BootLoaderUpdater
-        initBootloaderDescriptor(BootState::BootLoaderUpdater, 0x5555, 0x6666, 0x7777, 0x8888);
+        // Switch to Application
+        initBootloaderDescriptor(BootState::Application, 0x5555, 0x6666, 0x7777, 0x8888);
         const BootloaderDescriptor* desc2 = getBootloaderDescriptor();
         REQUIRE(desc2 != nullptr);
-        REQUIRE(desc2->bootState == BootState::BootLoaderUpdater);
+        REQUIRE(desc2->bootState == BootState::Application);
         REQUIRE(desc2->physicalAddress == 0x5555);
 
-        // Switch to Reset
-        initBootloaderDescriptor(BootState::Reset, 0x9999, 0xAAAA, 0xBBBB, 0xCCCC);
+        // Switch to BootLoader
+        initBootloaderDescriptor(BootState::BootLoader, 0x9999, 0xAAAA, 0xBBBB, 0xCCCC);
         const BootloaderDescriptor* desc3 = getBootloaderDescriptor();
         REQUIRE(desc3 != nullptr);
-        REQUIRE(desc3->bootState == BootState::Reset);
+        REQUIRE(desc3->bootState == BootState::BootLoader);
         REQUIRE(desc3->physicalAddress == 0x9999);
     }
 
     SECTION("Each BootState preserves descriptor data")
     {
-        const BootState states[] = {BootState::Reset, BootState::BootLoader, BootState::BootLoaderUpdater};
-        
+        const std::vector states = { BootState::Application, BootState::BootLoader, BootState::Application };
+
         for (const auto state : states)
         {
             initBootloaderDescriptor(state, 0xABCD, 0x12345678, 0x87654321, 0x01020304);
-            
             const BootloaderDescriptor* desc = getBootloaderDescriptor();
             REQUIRE(desc != nullptr);
             REQUIRE(desc->bootState == state);
