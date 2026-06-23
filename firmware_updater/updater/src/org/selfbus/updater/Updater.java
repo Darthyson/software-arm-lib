@@ -391,7 +391,7 @@ public class Updater implements Runnable {
 
     public String requestUid() throws KNXException, UpdaterException, UnknownHostException {
         try {
-            DeviceManagement dm = new DeviceManagement(cliOptions);
+            dm = new DeviceManagement(cliOptions);
             dm.openLink();
 
             final IndividualAddress deviceAddress = cliOptions.getDevicePhysicalAddress();
