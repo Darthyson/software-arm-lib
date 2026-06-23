@@ -8,6 +8,8 @@ import org.selfbus.updater.devicemgnt.DeviceManagement;
 import org.selfbus.updater.devicemgnt.DeviceManagementFactory;
 import org.selfbus.updater.logging.LoggingManager;
 import org.selfbus.updater.progress.AnsiCursor;
+import org.selfbus.updater.upd.UPDCommand;
+import org.selfbus.updater.upd.UPDProtocol;
 import tuwien.auto.calimero.*;
 import org.selfbus.updater.bootloader.BootDescriptor;
 import org.selfbus.updater.bootloader.BootloaderIdentity;
@@ -221,9 +223,14 @@ public class Updater implements Runnable {
 
             dm.openDevice(deviceInProgMode);
 
-            String uid = cliOptions.getUid();
-            if (uid.isEmpty()) {
+            byte[] uid;
+            if (cliOptions.getUid().isEmpty()) {
                 uid = dm.requestUIDFromDevice();
+            } else {
+                uid = UPDProtocol.uidToByteArray(cliOptions.getUid());
+                if (uid == null) {
+                    uid = dm.requestUIDFromDevice();
+                }
             }
 
             dm.unlockDeviceWithUID(uid);
@@ -400,7 +407,7 @@ public class Updater implements Runnable {
             final IndividualAddress deviceInProgMode = startIntoBootLoader(deviceAddress, progDeviceAddress);
             dm.openDevice(deviceInProgMode);
 
-            String uid = dm.requestUIDFromDevice();
+            byte[] uid = dm.requestUIDFromDevice();
 
             dm.unlockDeviceWithUID(uid);
             dm.requestBootloaderIdentity();
@@ -416,7 +423,7 @@ public class Updater implements Runnable {
                 dm.restartProgrammingDevice();
             }
             dm.close();
-            return uid;
+            return UPDProtocol.byteArrayToHex(uid);
         }
         catch (final InterruptedException e) {
             logger.info("requestUid canceled.");

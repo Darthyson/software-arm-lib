@@ -22,6 +22,7 @@ import tuwien.auto.calimero.mgmt.KNXDisconnectException;
 import tuwien.auto.calimero.mgmt.ManagementProcedures;
 import tuwien.auto.calimero.mgmt.ManagementProceduresImpl;
 
+import java.io.ByteArrayOutputStream;
 import java.net.UnknownHostException;
 import java.time.Duration;
 import java.util.ArrayList;
@@ -193,28 +194,47 @@ public class DeviceManagement implements AutoCloseable {
         }
     }
 
-    public String requestUIDFromDevice()
+    public byte[] requestUIDFromDevice()
             throws KNXTimeoutException, KNXLinkClosedException, InterruptedException, UpdaterException {
         logger.info("Requesting UID from {}", progDestination.getAddress());
-        byte[] result = sendWithRetry(UPDCommand.REQUEST_UID, new byte[0], getMaxUpdCommandRetry()).data();
-        UPDCommand command = UPDCommand.tryFromByteArray(result);
-        if (command != UPDCommand.RESPONSE_UID) {
+
+        // Read first 12 bytes of the UID
+        byte[] response = sendWithRetry(UPDCommand.REQUEST_UID, new byte[0], getMaxUpdCommandRetry()).data();
+        UPDCommand result = UPDCommand.tryFromByteArray(response);
+        if (result != UPDCommand.RESPONSE_UID) {
             restartProgrammingDevice();
-            throw new UpdaterException("Requesting UID failed!");
+            throw new UpdaterException("Requesting first 12 UID bytes failed!");
         }
 
-        byte[] uid;
-        if ((result.length >= UPDProtocol.UID_LENGTH_USED) && (result.length <= UPDProtocol.UID_LENGTH_MAX)){
-            uid = Arrays.copyOfRange(result, DATA_POSITION, UPDProtocol.UID_LENGTH_USED + DATA_POSITION);
-            logger.info("  got: {} length {}", UPDProtocol.byteArrayToHex(uid), uid.length);
-            return UPDProtocol.byteArrayToHex(uid);
-        } else {
-            uid = Arrays.copyOfRange(result, DATA_POSITION, result.length - DATA_POSITION);
-            String errorMsg = String.format("Request UID failed %s result.length=%d, UID_LENGTH_USED=%d, UID_LENGTH_MAX=%d",
-                    UPDProtocol.byteArrayToHex(uid), uid.length, UPDProtocol.UID_LENGTH_USED, UPDProtocol.UID_LENGTH_MAX);
+        if (response.length < DATA_POSITION) {
+            String errorMsg = String.format("Request first 12 UID bytes failed. %s response.length=%d",
+                    UPDProtocol.byteArrayToHex(response), response.length);
             restartProgrammingDevice();
             throw new UpdaterException(errorMsg);
         }
+
+        ByteArrayOutputStream uidBuffer = new ByteArrayOutputStream();
+        uidBuffer.write(response, DATA_POSITION, response.length - DATA_POSITION);
+
+        // Read remaining 4 bytes of the UID
+        byte[] uidOffset = {UPDProtocol.UID_LENGTH_USED};
+        response = sendWithRetry(UPDCommand.REQUEST_UID, uidOffset, getMaxUpdCommandRetry()).data();
+        result = UPDCommand.tryFromByteArray(response);
+
+        if (result == UPDCommand.RESPONSE_UID) {
+            uidBuffer.write(response, DATA_POSITION, response.length - DATA_POSITION);
+        } else {
+            logger.debug("Requesting remaining 4 UID bytes failed!");
+        }
+
+        if (response.length < DATA_POSITION) {
+            logger.debug("Requesting remaining 4 UID bytes failed. {} response.length={}",
+                    UPDProtocol.byteArrayToHex(response), response.length);
+        }
+
+        byte[] uid = uidBuffer.toByteArray();
+        logger.info("  UID: {} length {}", UPDProtocol.byteArrayToHex(uid), uid.length);
+        return uid;
     }
 
     public BootloaderIdentity requestBootloaderIdentity()
@@ -276,13 +296,24 @@ public class DeviceManagement implements AutoCloseable {
             return "";
         }
 
-        return new String(result,DATA_POSITION,result.length - DATA_POSITION);	// Convert 12 bytes to string starting from result[DATA_POSITION];
+        // Convert 12 bytes to string starting from result[DATA_POSITION];
+        return new String(result,DATA_POSITION,result.length - DATA_POSITION);
     }
 
-    public void unlockDeviceWithUID(String uid)
+    public void unlockDeviceWithUID(byte[] uid)
             throws KNXTimeoutException, KNXLinkClosedException, InterruptedException, UpdaterException {
-        logger.info("Unlocking device {} with UID {}", progDestination.getAddress(), uid);
-        byte[] result = sendWithRetry(UPDCommand.UNLOCK_DEVICE, UPDProtocol.uidToByteArray(uid), getMaxUpdCommandRetry()).data();
+        byte[] uidTruncated = new byte[UPDProtocol.UID_LENGTH_USED];
+
+        if (uid.length > uidTruncated.length) {
+            logger.debug("Only first {} bytes of --uid {} are used to unlock device",
+                    uidTruncated.length, UPDProtocol.byteArrayToHex(uid));
+        }
+
+        System.arraycopy(uid, 0, uidTruncated, 0, Math.min(uid.length, UPDProtocol.UID_LENGTH_USED));
+
+        logger.info("Unlocking device {} with UID {} length {}", progDestination.getAddress(),
+                UPDProtocol.byteArrayToHex(uidTruncated), uidTruncated.length);
+        byte[] result = sendWithRetry(UPDCommand.UNLOCK_DEVICE, uidTruncated, getMaxUpdCommandRetry()).data();
         if (UPDProtocol.checkResult(result) != UDPResult.IAP_SUCCESS) {
             restartProgrammingDevice();
             throw new UpdaterException(String.format("Unlocking device %s failed.", progDestination.getAddress()));

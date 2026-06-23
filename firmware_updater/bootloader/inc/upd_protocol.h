@@ -134,7 +134,7 @@ const struct UPD_Command {
     {UPD_RESPONSE_STATISTIC, 4, 4},
     {UPD_SEND_LAST_ERROR, 1, 1},
     {UPD_UNLOCK_DEVICE, UID_LENGTH_USED, UID_LENGTH_USED},
-    {UPD_REQUEST_UID, 0, 0},
+    {UPD_REQUEST_UID, 0, 1},
     {UPD_RESPONSE_UID, UID_LENGTH_USED, UID_LENGTH_USED},
     {UPD_APP_VERSION_REQUEST, 0, 0},
     {UPD_APP_VERSION_RESPONSE, BL_ID_STRING_LENGTH - 1, BL_ID_STRING_LENGTH - 1},
@@ -184,7 +184,7 @@ enum UDP_State : uint8_t
     UDP_ADDRESS_RANGE_NOT_ALLOWED_TO_ERASE = 0x51, //!< address range isn't allowed to erase
     UDP_BYTECOUNT_RECEIVED_TOO_LOW = 0x50,   //!< Number of bytes received with @ref UPD_SEND_DATA is lower than the number of bytes to program with @ref UPD_PROGRAM
     UDP_BYTECOUNT_RECEIVED_TOO_HIGH = 0x4f,  //!< Number of bytes received with @ref UPD_SEND_DATA is greater than the number of bytes to program with @ref UPD_PROGRAM
-
+    UDP_UID_OFFSET_INVALID = 0x4e,           //!< The UID offset is invalid
     UDP_NOT_IMPLEMENTED = 0x02,              //!< this command is not yet implemented
     UDP_INVALID = 0x01                       //!< Unknown error
 };

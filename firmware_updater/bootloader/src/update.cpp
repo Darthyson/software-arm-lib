@@ -675,14 +675,34 @@ void updRequestData()
 
 /**
  * Handles the @ref UPD_REQUEST_UID command.
- * Copies @ref UID_LENGTH_USED bytes to the return telegram.
  *
- * @post    Calls setLastError with @ref UDP_IAP_SUCCESS if successful, otherwise an @ref IAP_Status
- * @note    Device must be unlocked.
+ * Copies maximum @ref UID_LENGTH_USED bytes to the return telegram. Actual byte count depends on data[0] (offset).
+ *
+ * @param data  data[0] contains the byte offset of the uid to receive
+ * @param size  Size of the data buffer
+ *
+ * @post  Calls setLastError on error, otherwise prepares the return telegram with @ref UPD_RESPONSE_UID
  */
-void updRequestUID()
+void updRequestUID(const uint8_t * data, const uint32_t size)
 {
-    uint8_t uid[4 * 4];
+    uint8_t uidOffset;
+    if (size > 0)
+    {
+        uidOffset = data[0];
+    }
+    else
+    {
+        uidOffset = 0;
+    }
+
+    if (uidOffset > (IAP_UID_LENGTH - 1))
+    {
+        dump(serial.println("iapReadUID error uidOffset=", uidOffset);)
+        setLastError(UDP_UID_OFFSET_INVALID);
+        return;
+    }
+
+    uint8_t uid[IAP_UID_LENGTH];
     const UDP_State result = iapResult2UDPState(iapReadUID(uid));
     if (result != UDP_IAP_SUCCESS)
     {
@@ -690,8 +710,19 @@ void updRequestUID()
         setLastError(result);
         return;
     }
-    prepareReturnTelegram(UID_LENGTH_USED, UPD_RESPONSE_UID);
-    memcpy(retTelegram + 9, uid, UID_LENGTH_USED);
+
+    uint8_t uidResponseLength;
+    if (IAP_UID_LENGTH - uidOffset < UID_LENGTH_USED)
+    {
+        uidResponseLength = IAP_UID_LENGTH - uidOffset;
+    }
+    else
+    {
+        uidResponseLength = UID_LENGTH_USED;
+    }
+
+    prepareReturnTelegram(uidResponseLength, UPD_RESPONSE_UID);
+    memcpy(retTelegram + 9, uid + uidOffset, uidResponseLength);
     dump(serial.println(" OK");)
 }
 
@@ -972,7 +1003,7 @@ void handleApciUsermsgManufacturerInternal(uint8_t * data, uint16_t size)
             break;
 
         case UPD_REQUEST_UID:
-            updRequestUID();
+            updRequestUID(data, size);
             break;
 
         case UPD_APP_VERSION_REQUEST:

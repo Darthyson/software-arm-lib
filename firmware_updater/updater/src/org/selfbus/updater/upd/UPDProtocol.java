@@ -51,10 +51,12 @@ public final class UPDProtocol {
 
     public static byte[] uidToByteArray(String str) {
         String[] tokens = str.split(":");
-        if (tokens.length != UPDProtocol.UID_LENGTH_USED) {
-            logger.warn("ignoring --uid {}, wrong size {}, expected {}", str, tokens.length, UPDProtocol.UID_LENGTH_USED);
+        if (tokens.length < UPDProtocol.UID_LENGTH_USED) {
+            logger.warn("{}ignoring --uid {}, wrong size {}, expected {}{}", ansi().fgBright(INFO),
+                    str, tokens.length, UPDProtocol.UID_LENGTH_USED, ansi().reset());
             return null;
         }
+
         byte[] uid = new byte[tokens.length];
         for (int n = 0; n < tokens.length; n++) {
             uid[n] = (byte) Integer.parseUnsignedInt(tokens[n], 16);

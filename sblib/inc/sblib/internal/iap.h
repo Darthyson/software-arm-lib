@@ -12,7 +12,7 @@
 #include <sblib/platform.h>
 #include <sblib/types.h>
 
-#define IAP_UID_LENGTH (16) //!< Buffer size in bytes for @ref iapReadUID
+constexpr uint32_t IAP_UID_LENGTH = 16; //!< Buffer size in bytes for @ref iapReadUID
 
 /**
  * Status code of IAP (In Application Programming (Flash)) commands
