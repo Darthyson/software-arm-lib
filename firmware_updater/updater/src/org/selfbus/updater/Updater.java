@@ -8,7 +8,6 @@ import org.selfbus.updater.devicemgnt.DeviceManagement;
 import org.selfbus.updater.devicemgnt.DeviceManagementFactory;
 import org.selfbus.updater.logging.LoggingManager;
 import org.selfbus.updater.progress.AnsiCursor;
-import org.selfbus.updater.upd.UPDCommand;
 import org.selfbus.updater.upd.UPDProtocol;
 import tuwien.auto.calimero.*;
 import org.selfbus.updater.bootloader.BootDescriptor;
@@ -449,7 +448,7 @@ public class Updater implements Runnable {
     }
 
     public IndividualAddress startIntoBootLoader(IndividualAddress device, IndividualAddress progDevice)
-            throws KNXException, UpdaterException, InterruptedException {
+            throws UpdaterException, InterruptedException {
         IndividualAddress deviceInProgMode;
         if (device == null) {
             // Only option --progDevice is set => check if device is already in programming mode

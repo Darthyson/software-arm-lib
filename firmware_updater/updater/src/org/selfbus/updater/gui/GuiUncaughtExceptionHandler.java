@@ -32,7 +32,7 @@ public class GuiUncaughtExceptionHandler implements Thread.UncaughtExceptionHand
 
         // todo see logback issue #876
         // https://github.com/qos-ch/logback/issues/876
-        // Don´t delete .toString()
+        // Don't delete .toString()
         // Show exception details in a dialog
         SwingUtilities.invokeLater(() -> JOptionPane.showMessageDialog(
                 parentFrame,

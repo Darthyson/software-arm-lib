@@ -33,7 +33,7 @@ public final class Mcu {
 
     /**
      * Maximum execution time for an UPDCommand ERASE_ADDRESS_RANGE.
-     * In the worst case the addressrange 0x0100-0xfeff will be erased,
+     * In the worst case the address range 0x0100-0xfeff will be erased,
      * resulting in 15 sector and 30 page erases taking ~4725ms
      * */
     public static final Duration MAX_FLASH_ERASE_TIMEOUT = Duration.ofSeconds(5);

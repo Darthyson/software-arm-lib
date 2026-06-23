@@ -49,7 +49,7 @@ public class JTextPaneAppender extends AppenderBase<ILoggingEvent> {
         else {
             // Ensure same behavior like ConsoleAppender
             // It gets a new line added to every logging message
-            // by it´s pattern <pattern>%message%n</pattern> (notice the n = new line) in logback.xml
+            // by its pattern <pattern>%message%n</pattern> (notice the n = new line) in logback.xml
             logMessage = eventMessage.append(System.lineSeparator()).toString();
         }
 

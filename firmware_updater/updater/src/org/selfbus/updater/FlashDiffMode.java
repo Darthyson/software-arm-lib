@@ -29,7 +29,7 @@ public final class FlashDiffMode {
     private final static Logger logger = LoggerFactory.getLogger(FlashDiffMode.class);
     // hexCacheDir will be used as a cache directory for the cached *.hex files used by the differential update mode
     // windows: C:\Users\[currentUser]\AppData\Local\Selfbus\Selfbus-Updater\Cache\
-    // linux  : /home/[user-home]]/.cache/Selfbus-Updater/
+    // linux  : /home/[user-home]/.cache/Selfbus-Updater/
     private static final String hexCacheDirectory = AppDirsFactory.getInstance().getUserCacheDir(
             ToolInfo.getTool(), "", ToolInfo.getAuthor());
     private final static String IMAGE_IDENTIFIER = "image";

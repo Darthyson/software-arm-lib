@@ -136,7 +136,7 @@ java -jar SB_updater-x.xx-all.jar <ip address of Loxone GW> --fileName "out8-bcu
   
 For the KNX USB interface to work with the Updater, the interface must use the WinUSB driver under Windows.  
 The WinUSB driver can be installed with e.g. [zadig](https://zadig.akeo.ie).
-- Open zadig and click in the menu *Options->List all devices*
+- Open zadig and click in the menu *Options→List all devices*
 - In the drop-down select the KNX USB-Interface (e.g. KNX-Interface).  
 <img alt="Zadig KNX USB Interface selected" src="images/zadig_knx_interface_selected.png" title="Zadig KNX USB Interface selected" height="80"/>
   
@@ -158,11 +158,11 @@ For Loxone Miniserver Gen 1 `--ip-tunnel-reconnect 247` and `--own x.y.z` are ma
 - Eclipse project is currently not maintained
 
 ### IntelliJ IDEA Settings for Updater GUI development:
-Change these in [**Settings Dialog**](https://www.jetbrains.com/help/idea/settings-preferences-dialog.html) (Menu File->Settings):
-- Editor->[GUI Designer](https://www.jetbrains.com/help/idea/gui-designer.html)->Generate GUI into: Java source code
-- [Plugins](https://www.jetbrains.com/help/idea/plugins-settings.html)->install "Resource Bundle Editor" [(howto)](https://www.jetbrains.com/help/idea/resource-bundle.html#open-bundle-editor)
-- Build, Execution, Deployment->[Build Tools](https://www.jetbrains.com/help/idea/settings-build-tools.html)->Gradle->Build and run using: Intellij IDEA
-- Build, Execution, Deployment->[Build Tools](https://www.jetbrains.com/help/idea/settings-build-tools.html)->Gradle->Run tests using: Intellij IDEA
+Change these in [**Settings Dialog**](https://www.jetbrains.com/help/idea/settings-preferences-dialog.html) (Menu File→Settings):
+- Editor→[GUI Designer](https://www.jetbrains.com/help/idea/gui-designer.html)→Generate GUI into: Java source code
+- [Plugins](https://www.jetbrains.com/help/idea/plugins-settings.html)→install "Resource Bundle Editor" [(howto)](https://www.jetbrains.com/help/idea/resource-bundle.html#open-bundle-editor)
+- Build, Execution, Deployment→[Build Tools](https://www.jetbrains.com/help/idea/settings-build-tools.html)→Gradle→Build and run using: IntelliJ IDEA
+- Build, Execution, Deployment→[Build Tools](https://www.jetbrains.com/help/idea/settings-build-tools.html)→Gradle→Run tests using: IntelliJ IDEA
 
 ### gradle:
 update [gradle wrapper](gradle/wrapper) to the newest version:
@@ -170,7 +170,7 @@ update [gradle wrapper](gradle/wrapper) to the newest version:
 gradlew wrapper
 ```
 
-list of gradle tasks:
+list of Gradle tasks:
 ```
 gradlew tasks
 ```

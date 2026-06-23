@@ -46,7 +46,7 @@ public class DeviceManagement implements AutoCloseable {
      */
     private static final int RESTART_ERASE_CODE = 7;
     /**
-     * Channelnumber for the APCI_MASTER_RESET_PDU
+     * Channel number for the APCI_MASTER_RESET_PDU
      */
     private static final int RESTART_CHANNEL = 255;
 

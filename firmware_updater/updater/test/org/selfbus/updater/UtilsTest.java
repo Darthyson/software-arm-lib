@@ -8,7 +8,7 @@ public class UtilsTest {
     @Test
     public void testStreamToLong() {
         // In 2025 this full test runs in under 6s.
-        // Let´s meet in the "middle" (~1s).
+        // Let's meet in the "middle" (~1s).
         byte[] testStream = new byte[]{0, 0, 0, 0};
         int start0 = 90; // min. 0, max. 255
         int end0 = 150; // min. 0, max. 255

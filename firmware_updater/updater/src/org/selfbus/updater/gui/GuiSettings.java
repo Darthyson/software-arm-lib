@@ -47,7 +47,7 @@ public class GuiSettings {
 
     private void readComponentData(Component component, JsonNode node) {
         String nodeKey;
-        // GuiMain.MainFrame is saved with json root key `ObjectNode`s simple class name
+        // GuiMain.MainFrame is saved with JSON root key `ObjectNode`s simple class name
         // this.getObjectNode() ensures that we set the same nodeKey as in writeComponentsData()
         if (component == parent) {
             nodeKey = this.getObjectNode().getClass().getSimpleName();
