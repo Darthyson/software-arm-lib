@@ -21,6 +21,7 @@ set(SBLIB_CORE_SRC
         inc/sblib/main.h
         inc/sblib/math.h
         inc/sblib/mem_mapper.h
+        inc/sblib/murmur_hash_3.h
         inc/sblib/onewire.h
         inc/sblib/platform.h
         inc/sblib/print.h
@@ -55,6 +56,7 @@ set(SBLIB_CORE_SRC
         src/ioports.cpp
         src/main.cpp
         src/mem_mapper.cpp
+        src/murmur_hash_3.cpp
         src/new.cpp
         src/onewire.cpp
         src/print.cpp
