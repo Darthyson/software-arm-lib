@@ -3,4 +3,10 @@
   <component name="CompilerConfiguration">
     <bytecodeTargetLevel target="17" />
   </component>
+  <component name="JavacSettings">
+    <option name="ADDITIONAL_OPTIONS_OVERRIDE">
+      <module name="SB_updater.main" options="-Xlint:all -Xlint:-serial" />
+      <module name="SB_updater.test" options="-Xlint:all" />
+    </option>
+  </component>
 </project>
