@@ -12,6 +12,4 @@
 
 void murmurHash3_x86_32(const void * key, uint32_t len, uint32_t seed, void * out);
 
-void murmurHash3_x86_128(const void * key, uint32_t len, uint32_t seed, void * out);
-
 #endif /* SBLIB_MURMURHASH3_H_ */
