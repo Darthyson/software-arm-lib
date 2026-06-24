@@ -8,7 +8,6 @@
 
 #include "test_hashing_testcases.h"
 #include <sblib/eib/serial_number.h>
-#include <sblib/utils.h>
 #include <sblib/murmur_hash_3.h>
 #include <array>
 #include <cstring>
@@ -41,7 +40,7 @@ auto toHex = [](const uint8_t* data, const size_t len, const char separator)
     return oss.str();
 };
 
-auto testCaseToString = [](const HashTestCase testCase)
+auto testCaseToString = [](const HashTestCase &testCase)
 {
     std::ostringstream oss;
     oss << "id=" << testCase.id
@@ -51,14 +50,13 @@ auto testCaseToString = [](const HashTestCase testCase)
     return oss.str();
 };
 
-TEST_CASE("Hashing", "hash")
+TEST_CASE("Hashing", "KNX")
 {
     SECTION("Existing uid collision check")
     {
+        // search for collisions in old serials created with hashUID(...)
         std::map<std::array<uint8_t, 6>, const HashTestCase*> serialMap;
-        std::map<std::array<uint8_t, 4>, const HashTestCase*> hashMap;
 
-        // search for collisions in old serial
         for (auto& tc : testCases)
         {
             std::array<uint8_t, 6> s = {};
@@ -74,6 +72,7 @@ TEST_CASE("Hashing", "hash")
         }
 
         // search for collisions in new murmurhash3
+        std::map<std::array<uint8_t, 4>, const HashTestCase*> hashMap;
         for (auto& tc : testCases)
         {
             std::array<uint8_t, 4> h = {};
@@ -129,13 +128,117 @@ TEST_CASE("KNX serial number generation", "KNX")
         REQUIRE(createKNXSerial(nullptr, DATA_SIZE, newSerial, KNX_SERIAL_NUMBER_LENGTH) == false);
         REQUIRE(createKNXSerial(data, DATA_SIZE, nullptr, KNX_SERIAL_NUMBER_LENGTH) == false);
 
-        for (auto [id, uid, serial, murMurHash3_x86_32] : testCases)
+        uint32_t checkedSerialCounter = 0;
+        uint32_t collisionCount = 0;
+        std::map<std::array<uint8_t, 6>, const HashTestCase*> knxSerialMap;
+        for (auto& tc : testCases)
         {
-            REQUIRE(createKNXSerial(uid, 16, newSerial, KNX_SERIAL_NUMBER_LENGTH) == true);
-            REQUIRE(newSerial[0] == KNX_SERIAL_NUMBER_MANUFACTURER_ID_HIGH_BYTE);
-            REQUIRE(newSerial[1] == KNX_SERIAL_NUMBER_MANUFACTURER_ID_LOW_BYTE);
-            REQUIRE(std::vector<uint8_t>(newSerial + 2, newSerial + 6) ==
-                    std::vector<uint8_t>(murMurHash3_x86_32, murMurHash3_x86_32 + 4));
+            /// Checking ~90 guids the last 3 bytes are always 0x1c, 0x00, 0xf5,
+            /// 0xff1x00f5 indicates that the last 4 bytes of the uid are undefined,
+            /// so we iterate over all possible values of byte 12 to check for collisions.
+            bool uidIsMissingLast4Bytes = (tc.uid[12] == 0xff) &&
+                                          (tc.uid[13] == 0x1c) &&
+                                          (tc.uid[14] == 0x00) &&
+                                          (tc.uid[15] == 0xf5);
+            for (int32_t byte12Value = 0; byte12Value <= 0xff; byte12Value++)
+            {
+                if (uidIsMissingLast4Bytes)
+                {
+                    // Last 4 bytes of uid are undefined, so we iterate over all values of byte 12 to find any collisions
+                    tc.uid[12] = static_cast<uint8_t>(byte12Value);
+                }
+
+                REQUIRE(createKNXSerial(tc.uid, 16, newSerial, KNX_SERIAL_NUMBER_LENGTH) == true);
+                REQUIRE(newSerial[0] == KNX_SERIAL_NUMBER_MANUFACTURER_ID_HIGH_BYTE);
+                REQUIRE(newSerial[1] == KNX_SERIAL_NUMBER_MANUFACTURER_ID_LOW_BYTE);
+
+                if (!uidIsMissingLast4Bytes)
+                {
+                    // Compare only against "saved" MurmurHast3 if it's a defined uid
+                    REQUIRE(std::vector<uint8_t>(newSerial + 2, newSerial + 6) ==
+                            std::vector<uint8_t>(tc.murMurHash3_x86_32, tc.murMurHash3_x86_32 + 4));
+                }
+
+                std::array<uint8_t, 6> s = {};
+                std::copy_n(newSerial, 6, s.begin());
+                auto [it, inserted] = knxSerialMap.emplace(s, &tc);
+                if (!inserted)
+                {
+                    WARN("createKNXSerial collision detected:"
+                        << "\n  existing:    " << testCaseToString(*it->second)
+                        << "\n  new:         " << testCaseToString(tc)
+                        << "\n  byte12Value: " << byte12Value);
+                    collisionCount++;
+                }
+                CHECK(inserted == true);
+                if (!uidIsMissingLast4Bytes)
+                {
+                    // If the last 4 bytes of the uid are defined, we don't need to iterate over all byte 12 values
+                    break;
+                }
+                checkedSerialCounter++;
+            }
         }
+        WARN("createKNXSerial() found " << collisionCount << " collisions after checking " << checkedSerialCounter
+             << " KNX serial numbers.");
+        REQUIRE(collisionCount == 0);
+    }
+
+    ///\todo Delete this section after switching to new MurmurHash3 serial generation
+    /// This section is 95% copy & paste of above SECTION("createKNXSerial(...)")
+    SECTION("hashUID(...)")
+    {
+        uint8_t newSerial[KNX_SERIAL_NUMBER_LENGTH];
+
+        uint32_t checkedSerialCounter = 0;
+        uint32_t collisionCount = 0;
+        std::map<std::array<uint8_t, 6>, const HashTestCase*> knxSerialMap;
+        for (auto& tc : testCases)
+        {
+            /// Checking ~90 guids the last 3 bytes are always 0x1c, 0x00, 0xf5,
+            /// 0xff1x00f5 indicates that the last 4 bytes of the uid are undefined,
+            /// so we iterate over all possible values of byte 12 to check for collisions.
+            bool uidIsMissingLast4Bytes = (tc.uid[12] == 0xff) &&
+                                          (tc.uid[13] == 0x1c) &&
+                                          (tc.uid[14] == 0x00) &&
+                                          (tc.uid[15] == 0xf5);
+            for (int32_t byte12Value = 0; byte12Value <= 0xff; byte12Value++)
+            {
+                if (uidIsMissingLast4Bytes)
+                {
+                    // Last 4 bytes of uid are undefined, so we iterate over all values of byte 12 to find any collisions
+                    tc.uid[12] = static_cast<uint8_t>(byte12Value);
+                }
+
+                REQUIRE(hashUID(tc.uid, 16, newSerial, KNX_SERIAL_NUMBER_LENGTH) == true);
+                if (!uidIsMissingLast4Bytes)
+                {
+                    // Compare only against "saved" MurmurHast3 if it's a defined uid
+                    REQUIRE(std::vector<uint8_t>(newSerial, newSerial + 6) ==
+                            std::vector<uint8_t>(tc.serial, tc.serial + 6));
+                }
+
+                std::array<uint8_t, 6> s = {};
+                std::copy_n(newSerial, 6, s.begin());
+                auto [it, inserted] = knxSerialMap.emplace(s, &tc);
+                if (!inserted)
+                {
+                    INFO("hashUID collision detected:"
+                        << "\n  existing:    " << testCaseToString(*it->second)
+                        << "\n  new:         " << testCaseToString(tc)
+                        << "\n  byte12Value: " << byte12Value);
+                    collisionCount++;
+                }
+
+                if (!uidIsMissingLast4Bytes)
+                {
+                    // If the last 4 bytes of the uid are defined, we don't need to iterate over all byte 12 values
+                    break;
+                }
+                checkedSerialCounter++;
+            }
+        }
+        WARN("hashUID() found " << collisionCount << " collisions after checking " << checkedSerialCounter
+             << " KNX serial numbers.");
     }
 }
