@@ -1,7 +1,8 @@
 #ifndef SBLIB_KNX_USEREEPROM_BCU2_H_
 #define SBLIB_KNX_USEREEPROM_BCU2_H_
 
-#include <sblib/eib/userEepromBCU1.h>
+#include "sblib/eib/userEepromBCU1.h"
+#include "sblib/eib/serial_number.h"
 
 /**
  * The BCU 2 user EEPROM
@@ -25,7 +26,7 @@ public:
 
     explicit UserEepromBCU2() : UserEepromBCU2(0x100, 1024, 1024) {}
 
-    [[nodiscard]] virtual uint32_t serialSize() const { return 6; };
+    [[nodiscard]] virtual uint32_t serialSize() const { return KNX_SERIAL_NUMBER_LENGTH; };
     [[nodiscard]] virtual uint32_t orderSize() const { return 10; };
     [[nodiscard]] virtual uint32_t orderInfoSize() const { return 10; };
 

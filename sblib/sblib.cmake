@@ -108,6 +108,7 @@ set(SBLIB_KNX_SRC
         inc/sblib/eib/propertiesMASK0705.h
         inc/sblib/eib/propertiesSYSTEMB.h
         inc/sblib/eib/property_types.h
+        inc/sblib/eib/serial_number.h
         inc/sblib/eib/systemb.h
         inc/sblib/eib/types.h
         inc/sblib/eib/typesBCU1.h
@@ -160,6 +161,7 @@ set(SBLIB_KNX_SRC
         src/eib/propertiesMASK0701.cpp
         src/eib/propertiesSYSTEMB.cpp
         src/eib/property_types.cpp
+        src/eib/serial_number.cpp
         src/eib/systemb.cpp
         src/eib/userEeprom.cpp
         src/eib/userRam.cpp

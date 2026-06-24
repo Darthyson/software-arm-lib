@@ -7,6 +7,7 @@
  */
 
 #include "test_hashing_testcases.h"
+#include <sblib/eib/serial_number.h>
 #include <sblib/utils.h>
 #include <sblib/murmur_hash_3.h>
 #include <array>
@@ -108,6 +109,33 @@ TEST_CASE("Hashing", "hash")
             std::swap(newHash[0], newHash[3]);
             std::swap(newHash[1], newHash[2]);
             REQUIRE(std::vector<uint8_t>(newHash, newHash + 4) == std::vector<uint8_t>(murMurHash3_x86_32, murMurHash3_x86_32 + 4));
+        }
+    }
+}
+
+TEST_CASE("KNX serial number generation", "KNX")
+{
+    REQUIRE(KNX_SERIAL_NUMBER_LENGTH == 6);
+    REQUIRE(KNX_SERIAL_NUMBER_MANUFACTURER_ID_HIGH_BYTE == 0x01);
+    REQUIRE(KNX_SERIAL_NUMBER_MANUFACTURER_ID_LOW_BYTE == 0x3A);
+
+    SECTION("createKNXSerial(...)")
+    {
+        constexpr uint8_t DATA_SIZE = 16;
+        uint8_t data[DATA_SIZE];
+        uint8_t newSerial[KNX_SERIAL_NUMBER_LENGTH];
+        REQUIRE(createKNXSerial(data, 0, newSerial, KNX_SERIAL_NUMBER_LENGTH) == false);
+        REQUIRE(createKNXSerial(data, DATA_SIZE, newSerial, 0) == false);
+        REQUIRE(createKNXSerial(nullptr, DATA_SIZE, newSerial, KNX_SERIAL_NUMBER_LENGTH) == false);
+        REQUIRE(createKNXSerial(data, DATA_SIZE, nullptr, KNX_SERIAL_NUMBER_LENGTH) == false);
+
+        for (auto [id, uid, serial, murMurHash3_x86_32] : testCases)
+        {
+            REQUIRE(createKNXSerial(uid, 16, newSerial, KNX_SERIAL_NUMBER_LENGTH) == true);
+            REQUIRE(newSerial[0] == KNX_SERIAL_NUMBER_MANUFACTURER_ID_HIGH_BYTE);
+            REQUIRE(newSerial[1] == KNX_SERIAL_NUMBER_MANUFACTURER_ID_LOW_BYTE);
+            REQUIRE(std::vector<uint8_t>(newSerial + 2, newSerial + 6) ==
+                    std::vector<uint8_t>(murMurHash3_x86_32, murMurHash3_x86_32 + 4));
         }
     }
 }

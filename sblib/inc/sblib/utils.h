@@ -43,18 +43,6 @@ void setFatalErrorPin(int newPin);
 void setKNX_TX_Pin(int newTxPin);
 
 /**
- * Creates a len_hash wide hash of the uid.
- * Hash will be generated in provided hash buffer
- *
- * @param uid - LPC-serial (128bit GUID) returned by iapReadUID() which will be hashed
- * @param len_uid - size of uid  (normally 16 byte)
- * @param hash - buffer for generated hash
- * @param len_hash - size of provided hash buffer (normally 6byte/48bit for EIB)
- * @return True if hash successfully created, false if not.
- */
-int hashUID(uint8_t* uid, const int len_uid, uint8_t* hash, const int len_hash);
-
-/**
  * Include the C++ code snippet if DEBUG is defined, do not include the code
  * if DEBUG is not defined.
  *

@@ -10,6 +10,7 @@
 
 #include "sblib/eib/bcu2.h"
 #include "sblib/eib/knx_lpdu.h"
+#include "sblib/eib/serial_number.h"
 #include "sblib/internal/iap.h"
 #include "sblib/bits.h"
 #include <cstring>
@@ -59,7 +60,8 @@ inline void BCU2::begin(const int manufacturer, const int deviceType, const int 
         // Thus to ensure there are no collisions with other devices, the full 128 bits should be used.
 
         // create a 48bit serial/hash from the 128bit Guid
-        useOldSerialStyle = !hashUID(&uniqueID[0], sizeof(uniqueID), &userEeprom->serial()[0], userEeprom->serialSize());
+        //useOldSerialStyle = !hashUID(&uniqueID[0], sizeof(uniqueID), &userEeprom->serial()[0], userEeprom->serialSize()); ///\todo delete on release
+        useOldSerialStyle = !createKNXSerial(&uniqueID[0], sizeof(uniqueID), &userEeprom->serial()[0], userEeprom->serialSize());
     }
 
     if (useOldSerialStyle)

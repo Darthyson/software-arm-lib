@@ -70,27 +70,3 @@ void setKNX_TX_Pin(const int newTxPin)
     eibTxPin = newTxPin;
 }
 
-int hashUID(uint8_t* uid, const int len_uid, uint8_t* hash, const int len_hash)
-{
-    constexpr int MAX_HASH_WIDE = 16;
-    constexpr uint64_t BigPrime48 = 281474976710597u; // FF FF FF FF FF C5
-    uint64_t a, b;
-
-    if ((len_uid <= 0) || (len_uid > MAX_HASH_WIDE)) // maximum of 16 bytes can be hashed by this function
-        return 0;
-    if ((len_hash <= 0) || (len_hash > len_uid))
-        return 0;
-
-    const unsigned int mid = len_uid / 2;
-    memcpy(&a, &uid[0], mid);             // copy first half of uid-bytes to a
-    memcpy(&b, &uid[mid], len_uid - mid); // copy second half of uid-bytes to b
-
-    // do some modulo a big primenumber
-    a = a % BigPrime48;
-    b = b % BigPrime48;
-    a = a ^ b;
-    // copy the generated hash to provided buffer
-    for (int i = 0; i < len_hash; i++)
-        hash[i] = uint64_t(a >> (8 * i)) & 0xFF;
-    return 1;
-}
