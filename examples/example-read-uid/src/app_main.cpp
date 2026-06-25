@@ -32,6 +32,7 @@
 #include <sblib/io_pin_names.h>
 #include <sblib/serial.h>
 #include <sblib/timer.h>
+#include <sblib/eib/serial_number.h>
 
 #define PAUSE_MS 1000                   //!< pause in milliseconds between each serial transmission
 
