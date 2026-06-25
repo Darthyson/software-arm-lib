@@ -54,10 +54,17 @@ inline void BCU2::begin(const int manufacturer, const int deviceType, const int 
     bool useOldSerialStyle = true;
     if (iapReadUID(&uniqueID[0]) == IAP_SUCCESS)
     {
-        // https://community.nxp.com/t5/LPC-Microcontrollers/IAP-C-code-example-query/m-p/596139/highlight/true#M22963
-        // Unfortunately the details of what go into the 128-bit GUID cannot be disclosed.
-        // It can be said, however, that the 128-bit GUIDs are not random, nor are they sequential.
-        // Thus to ensure there are no collisions with other devices, the full 128 bits should be used.
+        /// https://community.nxp.com/t5/LPC-Microcontrollers/IAP-C-code-example-query/m-p/596139/highlight/true#M22963
+        /// Unfortunately the details of what go into the 128-bit GUID cannot be disclosed.
+        /// It can be said, however, that the 128-bit GUIDs are not random, nor are they sequential.
+        /// Thus, to ensure there are no collisions with other devices, the full 128 bits should be used.
+        ///
+        /// https://community.nxp.com/t5/LPC-Microcontrollers/IAP-C-code-example-query/m-p/596142/highlight/true#M22966
+        /// Quote:
+        /// In the thread that Zero provided, it shows that the first and third values (result[1] and result[3])
+        /// vary much more than the second and fourth values (result[2] and result[4])
+        /// -- so it was suggested that only these be used to create some kind of hash.
+        /// Even so-- the message from NXP is: "If you don't use all 128-bits, we cannot guarantee collisions".
 
         // create a 48bit serial/hash from the 128bit Guid
         //useOldSerialStyle = !hashUID(&uniqueID[0], sizeof(uniqueID), &userEeprom->serial()[0], userEeprom->serialSize()); ///\todo delete on release
