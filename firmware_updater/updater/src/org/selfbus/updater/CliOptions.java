@@ -4,7 +4,8 @@ import ch.qos.logback.classic.Level;
 import org.apache.commons.cli.CommandLine;
 import org.apache.commons.cli.CommandLineParser;
 import org.apache.commons.cli.DefaultParser;
-import org.apache.commons.cli.HelpFormatter;
+import org.apache.commons.cli.help.HelpFormatter;
+import org.apache.commons.cli.help.TextHelpAppendable;
 import org.apache.commons.cli.Option;
 import org.apache.commons.cli.OptionGroup;
 import org.apache.commons.cli.Options;
@@ -22,7 +23,7 @@ import tuwien.auto.calimero.knxnetip.KNXnetIPConnection;
 import tuwien.auto.calimero.link.medium.KNXMediumSettings;
 import tuwien.auto.calimero.link.medium.TPSettings;
 
-import java.io.PrintWriter;
+import java.io.IOException;
 import java.io.StringWriter;
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -737,29 +738,19 @@ public class CliOptions {
 
     public String helpToString() {
         StringWriter sw = new StringWriter();
-        PrintWriter pw = new PrintWriter(sw);
-
-// todo commons-cli 1.11.0 does not yet support setWidth or Printwriter/StringWriter
-//        import org.apache.commons.cli.help.HelpFormatter
-//        final HelpFormatter helper = org.apache.commons.cli.help.HelpFormatter.builder()
-//                //.setWidth(PRINT_WIDTH)
-//                .setShowSince(false)
-//                .setComparator((optionA, optionB) -> 0) // do not sort options
-//                .get();
-//        try {
-//            // printHelp has no pw (PrintWriter) since 1.10.0
-//            helper.printHelp(pw, helpApplicationName + " <KNX Interface>",
-//                    helpHeader + ":", cliOptions, helpFooter, false);
-//        } catch (IOException e) {
-//            throw new RuntimeException(e);
-//        }
-        final HelpFormatter helper = new org.apache.commons.cli.HelpFormatter();
-        helper.setWidth(PRINT_WIDTH);
-        helper.setOptionComparator(null);
-        helper.printHelp(pw, helper.getWidth(), helpApplicationName + " <KNX Interface>",
-                System.lineSeparator() + helpHeader + ":" + System.lineSeparator(), cliOptions, helper.getLeftPadding(),
-                helper.getDescPadding(), helpFooter, true);
-        pw.flush();
+        final TextHelpAppendable textAppendable = new TextHelpAppendable(sw);
+        textAppendable.setMaxWidth(PRINT_WIDTH);
+        final HelpFormatter helper = HelpFormatter.builder()
+                .setShowSince(false)
+                .setComparator((optionA, optionB) -> 0) // do not sort options
+                .setHelpAppendable(textAppendable)
+                .get();
+        try {
+            helper.printHelp(helpApplicationName + " <KNX Interface>",
+                    System.lineSeparator() + helpHeader + ":" + System.lineSeparator(), cliOptions, helpFooter, true);
+        } catch (IOException e) {
+            throw new RuntimeException(e);
+        }
         return sw.toString();
     }
 

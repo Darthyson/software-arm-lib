@@ -40,69 +40,69 @@ windows: gradlew.bat shadowJar
 ## Usage
 ```
 java -jar SB_updater-x.xx-all.jar <KNX Interface> [-f <filename>] [-m <tp1|rf>] [-s <COM-port> | -t
-       <COM-port> | --usb <vendorId:productId>]   [-d <x.x.x>] [-D <x.x.x>] [-o <x.x.x>] [--priority
-       <SYSTEM|URGENT|NORMAL|LOW>] [-bs <256|512|1024>] [--user <id>] [--user-pwd <password>]
-       [--device-pwd <password>] [-u <uid>] [-f1] [-H <localhost>] [-P <localport>] [-p <port>] [-t2
-       | -t1 | -r]   [-n] [-h | -v]  [--delay <ms>] [-l <TRACE|DEBUG|INFO>] [--reconnect <ms>]
-       [--ip-tunnel-reconnect <#sequence>] [--ERASEFLASH] [--DUMPFLASH <start> <end>] [-f0]
-       [--statistic] [--discover]
+    <COM-port> | --usb <vendorId:productId>] [-d <x.x.x>] [-D <x.x.x>] [-o <x.x.x>] [--priority
+    <SYSTEM|URGENT|NORMAL|LOW>] [-bs <256|512|1024>] [--user <id>] [--user-pwd <password>]
+    [--device-pwd <password>] [-u <uid>] [-f1] [-H <localhost>] [-P <localport>] [-p <port>] [-t2 |
+    -t1 | -r] [-n] [-h | -v] [--delay <ms>] [-l <TRACE|DEBUG|INFO>] [--reconnect <ms>]
+    [--ip-tunnel-reconnect <#sequence>] [--ERASEFLASH] [--DUMPFLASH <start> <end>] [-f0]
+    [--statistic] [--discover]
 
-Selfbus KNX-Firmware update tool options:
- -f,--fileName <filename>                   Filename of hex file to program
- -m,--medium <tp1|rf>                       KNX medium [tp1|rf] (default TP1)
- -s,--serial <COM-port>                     use FT1.2 serial communication
- -t,--tpuart <COM-port>                     use TPUART serial communication (experimental, needs
-                                            serialcom or rxtx library in java.library.path)
-    --usb <vendorId:productId>              use USB-Interface. Specify VendorID and ProductID e.g.
-                                            147B:5120 for the Selfbus USB-Interface (experimental)
- -d,--device <x.x.x>                        KNX device address in normal operating mode (default
-                                            none)
- -D,--progDevice <x.x.x>                    KNX device address in bootloader mode (default
-                                            15.15.192)
- -o,--own <x.x.x>                           own physical KNX tunnel address (default 0.0.0).
-                                            Required for some IP interfaces that also use their own
-                                            address as the tunnel address, e.g. Loxone Miniserver
-                                            Gen 1.
-    --priority <SYSTEM|URGENT|NORMAL|LOW>   KNX telegram priority (default LOW)
- -bs,--blocksize <256|512|1024>             Block size to program (default 1024 bytes)
-    --user <id>                             KNX IP Secure tunneling user identifier (1..127)
-                                            (default -1)
-    --user-pwd <password>                   KNX IP Secure tunneling user password (Commissioning
-                                            password/Inbetriebnahmepasswort), quotation marks (") in
-                                            password may not work
-    --device-pwd <password>                 KNX IP Secure device authentication code (Authentication
-                                            Code/Authentifizierungscode) quotation marks(") in
-                                            password may not work
- -u,--uid <uid>                             send UID to unlock (default: request UID to unlock).
-                                            Only the first 12 bytes of UID are used
- -f1,--full                                 force full upload mode (disables differential mode)
- -H,--localhost <localhost>                 local IP/host name
- -P,--localport <localport>                 local UDP port (default system assigned)
- -p,--port <port>                           UDP port on <KNX Interface> (default 3671)
- -t2,--tunnelingv2                          use KNXnet/IP tunneling v2 (TCP) (experimental)
- -t1,--tunneling                            use KNXnet/IP tunneling v1 (UDP)
- -r,--routing                               use KNXnet/IP routing/multicast (experimental)
- -n,--nat                                   enable Network Address Translation (NAT) (only available
-                                            with tunneling v1)
- -h,--help                                  show this help message
- -v,--version                               show tool/library version
-    --delay <ms>                            delay telegrams during data transmission to reduce bus
-                                            load, valid 0-500ms, default 0
- -l,--logLevel <TRACE|DEBUG|INFO>           Logfile logging level [TRACE|DEBUG|INFO] (default TRACE)
-    --reconnect <ms>                        pause between a KNX connection reconnect, valid 100 -
-                                            12500ms, default 100
-    --ip-tunnel-reconnect <#sequence>       Reconnect KNX IP tunnel on sequence number, valid 100 -
-                                            247, default -1. May help with some IP-Interfaces e.g.
-                                            for Loxone Miniserver Gen 1. set to 245
-    --ERASEFLASH                            USE WITH CAUTION! Erases the complete flash memory
-                                            including the physical KNX address and all settings of
-                                            the device. Only the bootloader is not deleted.
-    --DUMPFLASH <start> <end>               dump a flash range in intel(R) hex to the serial port of
-                                            the MCU. Works only with DEBUG version of the
-                                            bootloader.
- -f0,--NO_FLASH                             for debugging use only, disable flashing firmware!
-    --statistic                             show more statistic data
-    --discover                              List available KNXnet/IP interfaces and USB-Interfaces
+
+    Selfbus KNX-Firmware update tool options:
+
+
+                Options                                           Description                        
+ -f, --fileName <filename>                 Filename of hex file to program                           
+ -m, --medium <tp1|rf>                     KNX medium [tp1|rf] (default TP1)                         
+ -s, --serial <COM-port>                   use FT1.2 serial communication                            
+ -t, --tpuart <COM-port>                   use TPUART serial communication (experimental, needs      
+                                            serialcom or rxtx library in java.library.path)          
+ --usb <vendorId:productId>                use USB-Interface. Specify VendorID and ProductID e.g.    
+                                            147B:5120 for the Selfbus USB-Interface (experimental)   
+ -d, --device <x.x.x>                      KNX device address in normal operating mode (default none)
+ -D, --progDevice <x.x.x>                  KNX device address in bootloader mode (default 15.15.192) 
+ -o, --own <x.x.x>                         own physical KNX tunnel address (default 0.0.0). Required 
+                                           for some IP interfaces that also use their own address as 
+                                            the tunnel address, e.g. Loxone Miniserver Gen 1.        
+ --priority <SYSTEM|URGENT|NORMAL|LOW>     KNX telegram priority (default LOW)                       
+ -bs, --blocksize <256|512|1024>           Block size to program (default 1024 bytes)                
+ --user <id>                               KNX IP Secure tunneling user identifier (1..127) (default 
+                                            -1)                                                      
+ --user-pwd <password>                     KNX IP Secure tunneling user password (Commissioning      
+                                            password/Inbetriebnahmepasswort), quotation marks (") in 
+                                            password may not work                                    
+ --device-pwd <password>                   KNX IP Secure device authentication code (Authentication  
+                                            Code/Authentifizierungscode) quotation marks(") in       
+                                            password may not work                                    
+ -u, --uid <uid>                           send UID to unlock (default: request UID to unlock). Only 
+                                            the first 12 bytes of UID are used                       
+ -f1, --full                               force full upload mode (disables differential mode)       
+ -H, --localhost <localhost>               local IP/host name                                        
+ -P, --localport <localport>               local UDP port (default system assigned)                  
+ -p, --port <port>                         UDP port on <KNX Interface> (default 3671)                
+ -t2, --tunnelingv2                        use KNXnet/IP tunneling v2 (TCP) (experimental)           
+ -t1, --tunneling                          use KNXnet/IP tunneling v1 (UDP)                          
+ -r, --routing                             use KNXnet/IP routing/multicast (experimental)            
+ -n, --nat                                 enable Network Address Translation (NAT) (only available  
+                                            with tunneling v1)                                       
+ -h, --help                                show this help message                                    
+ -v, --version                             show tool/library version                                 
+ --delay <ms>                              delay telegrams during data transmission to reduce bus    
+                                            load, valid 0-500ms, default 0                           
+ -l, --logLevel <TRACE|DEBUG|INFO>         Logfile logging level [TRACE|DEBUG|INFO] (default TRACE)  
+ --reconnect <ms>                          pause between a KNX connection reconnect, valid 100 -     
+                                            12500ms, default 100                                     
+ --ip-tunnel-reconnect <#sequence>         Reconnect KNX IP tunnel on sequence number, valid 100 -   
+                                            247, default -1. May help with some IP-Interfaces e.g.   
+                                            for Loxone Miniserver Gen 1. set to 245                  
+ --ERASEFLASH                              USE WITH CAUTION! Erases the complete flash memory        
+                                            including the physical KNX address and all settings of   
+                                            the device. Only the bootloader is not deleted.          
+ --DUMPFLASH <start> <end>                 dump a flash range in intel(R) hex to the serial port of  
+                                           the MCU. Works only with DEBUG version of the bootloader. 
+ -f0, --NO_FLASH                           for debugging use only, disable flashing firmware!        
+ --statistic                               show more statistic data                                  
+ --discover                                List available KNXnet/IP interfaces and USB-Interfaces
 ```
 ## Common use cases:
 Updater with graphical user interface (**experimental**)
