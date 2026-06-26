@@ -1,5 +1,6 @@
 package org.selfbus.updater.bootloader;
 
+import org.jetbrains.annotations.NotNull;
 import org.selfbus.updater.Utils;
 
 /**
@@ -48,6 +49,7 @@ public record BootloaderIdentity(long versionMajor,
     }
 
     @Override
+    @NotNull
     public String toString() {
         return String.format("v%s, sbLib v%s, Features: 0x%04X, App-start: 0x%04X",
                 getVersion(), getVersionSBLib(), features(), applicationFirstAddress());

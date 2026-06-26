@@ -3,7 +3,7 @@ package org.selfbus.updater;
 import org.selfbus.updater.upd.UPDProtocol;
 import org.junit.jupiter.api.Test;
 import java.util.Arrays;
-//import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.NotNull;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.selfbus.updater.MurmurHash3.murmurHash3_x86_32;
@@ -17,7 +17,7 @@ public class MurmurHash3Test {
 
     private record HashTestCase(int id, String uid, int expectedMurmurHash3) {
         @Override
-        // @NotNull
+        @NotNull
         public String toString() {
             return String.format("id=%d uid=%s MurmurHash3=%08X", id, uid, expectedMurmurHash3);
         }
