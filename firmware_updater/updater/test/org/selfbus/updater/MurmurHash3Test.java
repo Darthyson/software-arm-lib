@@ -1,12 +1,13 @@
 package org.selfbus.updater;
 
-import org.selfbus.updater.upd.UPDProtocol;
+import org.selfbus.updater.devicemgnt.MurmurHash3;
+import org.selfbus.updater.devicemgnt.UidInfo;
 import org.junit.jupiter.api.Test;
 import java.util.Arrays;
 import org.jetbrains.annotations.NotNull;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.selfbus.updater.MurmurHash3.murmurHash3_x86_32;
+import static org.selfbus.updater.devicemgnt.MurmurHash3.murmurHash3_x86_32;
 import static org.selfbus.updater.upd.UPDProtocol.UID_LENGTH_MAX;
 
 /**
@@ -125,7 +126,7 @@ public class MurmurHash3Test {
     @Test
     public void testMurmurHash3_x86_32() {
         for (HashTestCase tc : hashTestCases()) {
-            byte[] uid = UPDProtocol.uidToByteArray(tc.uid());
+            byte[] uid = UidInfo.uidToByteArray(tc.uid());
             assertNotNull(uid, () -> String.format("uid is null for test case %s", tc));
             if (uid.length == UID_LENGTH_MAX - 4) {
                 // UID is too short so append the last 4 bytes FF:1C:00:F5

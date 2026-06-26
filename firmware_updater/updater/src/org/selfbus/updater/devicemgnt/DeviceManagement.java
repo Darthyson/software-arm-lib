@@ -31,13 +31,11 @@ import java.util.List;
 import java.util.Optional;
 
 import static org.fusesource.jansi.Ansi.*;
-import static org.selfbus.updater.MurmurHash3.murmurHash3_x86_32;
 import static org.selfbus.updater.logging.Color.*;
 import static org.selfbus.updater.Mcu.MAX_FLASH_ERASE_TIMEOUT;
 import static org.selfbus.updater.logging.Markers.CONSOLE_GUI_ONLY;
 import static org.selfbus.updater.logging.Markers.CONSOLE_GUI_NO_NEWLINE;
 import static org.selfbus.updater.upd.UPDProtocol.DATA_POSITION;
-import static org.selfbus.updater.upd.UPDProtocol.UID_LENGTH_MAX;
 
 /**
  * Provides methods to send firmware update telegrams to the bootloader (MCU)
@@ -196,18 +194,7 @@ public class DeviceManagement implements AutoCloseable {
         }
     }
 
-    public String getKNXSerialNumberFromUID(byte[] uid) {
-        int knxSerialNumber;
-        if (uid.length == UID_LENGTH_MAX)
-        {
-            knxSerialNumber = murmurHash3_x86_32(uid, 0);
-            return String.format("013A:%08X", knxSerialNumber);
-        }
-
-        return "";
-    }
-
-    public byte[] requestUIDFromDevice()
+    public UidInfo requestUIDFromDevice()
             throws KNXTimeoutException, KNXLinkClosedException, InterruptedException, UpdaterException {
         logger.info("Requesting UID from {}", progDestination.getAddress());
 
@@ -221,7 +208,7 @@ public class DeviceManagement implements AutoCloseable {
 
         if (response.length < DATA_POSITION) {
             String errorMsg = String.format("Request first 12 UID bytes failed. %s response.length=%d",
-                    UPDProtocol.byteArrayToHex(response), response.length);
+                    UidInfo.byteArrayToHex(response), response.length);
             restartProgrammingDevice();
             throw new UpdaterException(errorMsg);
         }
@@ -242,12 +229,12 @@ public class DeviceManagement implements AutoCloseable {
 
         if (response.length < DATA_POSITION) {
             logger.debug("Requesting remaining 4 UID bytes failed. {} response.length={}",
-                    UPDProtocol.byteArrayToHex(response), response.length);
+                    UidInfo.byteArrayToHex(response), response.length);
         }
 
-        byte[] uid = uidBuffer.toByteArray();
-        logger.info("  UID: {} length {}", UPDProtocol.byteArrayToHex(uid), uid.length);
-        return uid;
+        byte[] uidBytes = uidBuffer.toByteArray();
+        logger.info("  UID: {} length {}", UidInfo.byteArrayToHex(uidBytes), uidBytes.length);
+        return new UidInfo(uidBytes);
     }
 
     public BootloaderIdentity requestBootloaderIdentity()
@@ -313,19 +300,20 @@ public class DeviceManagement implements AutoCloseable {
         return new String(result,DATA_POSITION,result.length - DATA_POSITION);
     }
 
-    public void unlockDeviceWithUID(byte[] uid)
+    public void unlockDeviceWithUID(UidInfo uidInfo)
             throws KNXTimeoutException, KNXLinkClosedException, InterruptedException, UpdaterException {
         byte[] uidTruncated = new byte[UPDProtocol.UID_LENGTH_USED];
+        byte[] uidBytes = uidInfo.getUidBytes();
 
-        if (uid.length > uidTruncated.length) {
+        if (uidBytes.length > uidTruncated.length) {
             logger.debug("Only first {} bytes of --uid {} are used to unlock device",
-                    uidTruncated.length, UPDProtocol.byteArrayToHex(uid));
+                    uidTruncated.length, UidInfo.byteArrayToHex(uidBytes));
         }
 
-        System.arraycopy(uid, 0, uidTruncated, 0, Math.min(uid.length, UPDProtocol.UID_LENGTH_USED));
+        System.arraycopy(uidBytes, 0, uidTruncated, 0, Math.min(uidBytes.length, UPDProtocol.UID_LENGTH_USED));
 
         logger.info("Unlocking device {} with UID {} length {}", progDestination.getAddress(),
-                UPDProtocol.byteArrayToHex(uidTruncated), uidTruncated.length);
+                UidInfo.byteArrayToHex(uidTruncated), uidTruncated.length);
         byte[] result = sendWithRetry(UPDCommand.UNLOCK_DEVICE, uidTruncated, getMaxUpdCommandRetry()).data();
         if (UPDProtocol.checkResult(result) != UDPResult.IAP_SUCCESS) {
             restartProgrammingDevice();

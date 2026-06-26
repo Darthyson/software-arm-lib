@@ -5,6 +5,7 @@ import com.intellij.uiDesigner.core.GridLayoutManager;
 import com.intellij.uiDesigner.core.Spacer;
 import org.apache.commons.cli.ParseException;
 import org.selfbus.updater.*;
+import org.selfbus.updater.devicemgnt.UidInfo;
 import org.selfbus.updater.logging.JTextPaneAppender;
 import org.selfbus.updater.logging.LoggingManager;
 import tuwien.auto.calimero.*;
@@ -186,7 +187,7 @@ public class GuiMain extends JFrame {
         jLoggingPane.setText("");
         updaterThread = new Thread(() -> {
             Thread.currentThread().setName("uidRequest");
-            String uid = "";
+            UidInfo uidInfo = null;
             try {
                 CliOptions cliOptions = getCliOptions();
                 cliOptions.setFileName("");
@@ -194,14 +195,14 @@ public class GuiMain extends JFrame {
                 displayCommandLine(cliOptions);
                 final Updater upd = new Updater(cliOptions);
                 SwingUtilities.invokeLater(this::beforeUidRequest);
-                uid = upd.requestUid();
+                uidInfo = upd.requestUid();
             } catch (ParseException | UpdaterException | KNXException | UnknownHostException e) {
                 logger.error("", e); // todo see logback issue https://github.com/qos-ch/logback/issues/876
                 JOptionPane.showMessageDialog(this,
                         String.format(getTranslation("Exception.requestUidAction.Message"), e),
                         getTranslation("Error"), JOptionPane.ERROR_MESSAGE);
             } finally {
-                String finalUid = uid;
+                UidInfo finalUid = uidInfo;
                 SwingUtilities.invokeLater(() -> onRequestUidFinished(finalUid));
             }
         });
@@ -220,9 +221,15 @@ public class GuiMain extends JFrame {
         setUIDComponentsEnabled(false);
     }
 
-    private void onRequestUidFinished(String uid) {
-        textFieldUid.setText(uid);
+    private void onRequestUidFinished(UidInfo uidInfo) {
         setUIDComponentsEnabled(true);
+        if (uidInfo == null) {
+            textFieldUid.setText("error");
+            //labelKNXSerialNumber.setText("error"); // todo add label to KNX serial number
+            return;
+        }
+        textFieldUid.setText(uidInfo.getUIDText());
+        //labelKNXSerialNumber.setText(uid.knxSerial()); // todo add label to KNX serial number
     }
 
     private void handleReloadGatewaysAction() {

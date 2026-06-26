@@ -6,9 +6,9 @@ import org.fusesource.jansi.AnsiConsole;
 import org.selfbus.updater.bootloader.BootloaderStatistic;
 import org.selfbus.updater.devicemgnt.DeviceManagement;
 import org.selfbus.updater.devicemgnt.DeviceManagementFactory;
+import org.selfbus.updater.devicemgnt.UidInfo;
 import org.selfbus.updater.logging.LoggingManager;
 import org.selfbus.updater.progress.AnsiCursor;
-import org.selfbus.updater.upd.UPDProtocol;
 import tuwien.auto.calimero.*;
 import org.selfbus.updater.bootloader.BootDescriptor;
 import org.selfbus.updater.bootloader.BootloaderIdentity;
@@ -222,18 +222,13 @@ public class Updater implements Runnable {
 
             dm.openDevice(deviceInProgMode);
 
-            byte[] uid;
-            if (cliOptions.getUid().isEmpty()) {
-                uid = dm.requestUIDFromDevice();
-            } else {
-                uid = UPDProtocol.uidToByteArray(cliOptions.getUid());
-                if (uid == null) {
-                    uid = dm.requestUIDFromDevice();
-                }
+            UidInfo uidInfo = new UidInfo(cliOptions.getUid());
+            if (uidInfo.getUidBytes() == null) {
+                uidInfo = dm.requestUIDFromDevice();
             }
 
-            logKNXSerialNumber(uid);
-            dm.unlockDeviceWithUID(uid);
+            uidInfo.logKNXSerialNumber();
+            dm.unlockDeviceWithUID(uidInfo);
 
             if ((cliOptions.getDumpFlashStartAddress() >= 0) && (cliOptions.getDumpFlashEndAddress() >= 0)) {
                 logger.warn("{}Dumping flash content range {} to bootloader's serial port.{}",
@@ -396,7 +391,7 @@ public class Updater implements Runnable {
         }
     }
 
-    public String requestUid() throws KNXException, UpdaterException, UnknownHostException {
+    public UidInfo requestUid() throws KNXException, UpdaterException, UnknownHostException {
         try {
             dm = new DeviceManagement(cliOptions);
             dm.openLink();
@@ -407,9 +402,9 @@ public class Updater implements Runnable {
             final IndividualAddress deviceInProgMode = startIntoBootLoader(deviceAddress, progDeviceAddress);
             dm.openDevice(deviceInProgMode);
 
-            byte[] uid = dm.requestUIDFromDevice();
-
-            dm.unlockDeviceWithUID(uid);
+            UidInfo uidInfo = dm.requestUIDFromDevice();
+            uidInfo.logKNXSerialNumber();
+            dm.unlockDeviceWithUID(uidInfo);
             dm.requestBootloaderIdentity();
             dm.requestBootDescriptor();
             String appVersion = dm.requestAppVersionString();
@@ -423,12 +418,12 @@ public class Updater implements Runnable {
                 dm.restartProgrammingDevice();
             }
             dm.close();
-            return UPDProtocol.byteArrayToHex(uid);
+            return uidInfo;
         }
         catch (final InterruptedException e) {
             logger.info("requestUid canceled.");
             Thread.currentThread().interrupt();
-            return "";
+            return null;
         }
         catch (UpdaterException | KNXException e) {
             logger.error("{}An error occurred while retrieving the UID. {}{}{}",
@@ -491,16 +486,5 @@ public class Updater implements Runnable {
 //        }
 
         return deviceInProgMode;
-    }
-
-    void logKNXSerialNumber(byte[] uid){
-        String knxSerialNumber = dm.getKNXSerialNumberFromUID(uid);
-        if (!knxSerialNumber.isEmpty()) {
-            logger.info(" Ser#: {}{}{} (KNX serial number for usage in ETS >= 6.1.1)",
-                    ansi().fgBright(INFO), knxSerialNumber, ansi().reset());
-        }
-        else {
-            logger.info(" Ser#: -");
-        }
     }
 }
