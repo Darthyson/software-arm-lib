@@ -232,6 +232,7 @@ public class Updater implements Runnable {
                 }
             }
 
+            logKNXSerialNumber(uid);
             dm.unlockDeviceWithUID(uid);
 
             if ((cliOptions.getDumpFlashStartAddress() >= 0) && (cliOptions.getDumpFlashEndAddress() >= 0)) {
@@ -490,5 +491,16 @@ public class Updater implements Runnable {
 //        }
 
         return deviceInProgMode;
+    }
+
+    void logKNXSerialNumber(byte[] uid){
+        String knxSerialNumber = dm.getKNXSerialNumberFromUID(uid);
+        if (!knxSerialNumber.isEmpty()) {
+            logger.info(" Ser#: {}{}{} (KNX serial number for usage in ETS >= 6.1.1)",
+                    ansi().fgBright(INFO), knxSerialNumber, ansi().reset());
+        }
+        else {
+            logger.info(" Ser#: -");
+        }
     }
 }

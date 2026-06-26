@@ -31,11 +31,13 @@ import java.util.List;
 import java.util.Optional;
 
 import static org.fusesource.jansi.Ansi.*;
+import static org.selfbus.updater.MurmurHash3.murmurHash3_x86_32;
 import static org.selfbus.updater.logging.Color.*;
 import static org.selfbus.updater.Mcu.MAX_FLASH_ERASE_TIMEOUT;
 import static org.selfbus.updater.logging.Markers.CONSOLE_GUI_ONLY;
 import static org.selfbus.updater.logging.Markers.CONSOLE_GUI_NO_NEWLINE;
 import static org.selfbus.updater.upd.UPDProtocol.DATA_POSITION;
+import static org.selfbus.updater.upd.UPDProtocol.UID_LENGTH_MAX;
 
 /**
  * Provides methods to send firmware update telegrams to the bootloader (MCU)
@@ -192,6 +194,17 @@ public class DeviceManagement implements AutoCloseable {
         finally {
             waitRestartTime(restartProcessTime);
         }
+    }
+
+    public String getKNXSerialNumberFromUID(byte[] uid) {
+        int knxSerialNumber;
+        if (uid.length == UID_LENGTH_MAX)
+        {
+            knxSerialNumber = murmurHash3_x86_32(uid, 0);
+            return String.format("013A:%08X", knxSerialNumber);
+        }
+
+        return "";
     }
 
     public byte[] requestUIDFromDevice()
