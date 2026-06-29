@@ -97,6 +97,9 @@ public class GuiMain extends JFrame {
     private JLabel labelKnxSecureDevicePwdHint;
     private JScrollPane mainScrollPane;
     private JButton reloadGatewaysButton;
+    private JTextField textFieldKNXSerialNumber;
+    private JLabel labelKNXSerialNumber;
+    private JLabel labelKNXSerialNumberInfo;
 
     private Thread updaterThread;
     private final static Logger logger = LoggerFactory.getLogger(GuiMain.class);
@@ -214,10 +217,12 @@ public class GuiMain extends JFrame {
         buttonRequestUid.setEnabled(enabled);
         buttonStartStopFlash.setEnabled(enabled);
         textFieldUid.setEnabled(enabled);
+        textFieldKNXSerialNumber.setEnabled(enabled);
     }
 
     private void beforeUidRequest() {
         textFieldUid.setText("");
+        textFieldKNXSerialNumber.setText("");
         setUIDComponentsEnabled(false);
     }
 
@@ -225,11 +230,11 @@ public class GuiMain extends JFrame {
         setUIDComponentsEnabled(true);
         if (uidInfo == null) {
             textFieldUid.setText("error");
-            //labelKNXSerialNumber.setText("error"); // todo add label to KNX serial number
+            textFieldKNXSerialNumber.setText("error");
             return;
         }
         textFieldUid.setText(uidInfo.getUIDText());
-        //labelKNXSerialNumber.setText(uid.knxSerial()); // todo add label to KNX serial number
+        textFieldKNXSerialNumber.setText(uidInfo.getKNXSerialNumberText());
     }
 
     private void handleReloadGatewaysAction() {
@@ -283,6 +288,7 @@ public class GuiMain extends JFrame {
         comboBoxScenario.setName("Scenario");
         textFieldFileName.setName("FlashFilePath");
         textFieldUid.setName("Uid");
+        textFieldKNXSerialNumber.setName("KNXSerialNumber");
         CheckBoxDiffFlash.setName("DiffFlash");
         eraseCompleteFlashCheckBox.setName("EraseCompleteFlash");
         noFlashCheckBox.setName("NoFlash");
@@ -650,6 +656,9 @@ public class GuiMain extends JFrame {
         GuiObjectsMap.put(labelUid, Arrays.asList(GuiObjsVisOpts.APPDEV, GuiObjsVisOpts.REQUID));
         GuiObjectsMap.put(textFieldUid, Arrays.asList(GuiObjsVisOpts.APPDEV, GuiObjsVisOpts.REQUID));
         GuiObjectsMap.put(labelUidHint, Arrays.asList(GuiObjsVisOpts.APPDEV, GuiObjsVisOpts.REQUID));
+        GuiObjectsMap.put(labelKNXSerialNumber, Arrays.asList(GuiObjsVisOpts.APPDEV, GuiObjsVisOpts.REQUID));
+        GuiObjectsMap.put(textFieldKNXSerialNumber, Arrays.asList(GuiObjsVisOpts.APPDEV, GuiObjsVisOpts.REQUID));
+        GuiObjectsMap.put(labelKNXSerialNumberInfo, Arrays.asList(GuiObjsVisOpts.APPDEV, GuiObjsVisOpts.REQUID));
 
         GuiObjectsMap.put(labelMedium, Arrays.asList(GuiObjsVisOpts.NEWDEV, GuiObjsVisOpts.APPDEV, GuiObjsVisOpts.REQUID, GuiObjsVisOpts.ADVSET));
         GuiObjectsMap.put(comboBoxMedium, Arrays.asList(GuiObjsVisOpts.NEWDEV, GuiObjsVisOpts.APPDEV, GuiObjsVisOpts.REQUID, GuiObjsVisOpts.ADVSET));
@@ -748,12 +757,12 @@ public class GuiMain extends JFrame {
         mainScrollPane = new JScrollPane();
         panelMain.add(mainScrollPane, new GridConstraints(1, 0, 1, 1, GridConstraints.ANCHOR_CENTER, GridConstraints.FILL_BOTH, GridConstraints.SIZEPOLICY_CAN_SHRINK | GridConstraints.SIZEPOLICY_WANT_GROW, GridConstraints.SIZEPOLICY_CAN_SHRINK | GridConstraints.SIZEPOLICY_WANT_GROW, null, null, null, 0, false));
         final JPanel panel1 = new JPanel();
-        panel1.setLayout(new GridLayoutManager(31, 5, new Insets(0, 0, 0, 0), -1, -1));
+        panel1.setLayout(new GridLayoutManager(32, 5, new Insets(0, 0, 0, 0), -1, -1));
         mainScrollPane.setViewportView(panel1);
         final Spacer spacer1 = new Spacer();
-        panel1.add(spacer1, new GridConstraints(0, 4, 30, 1, GridConstraints.ANCHOR_CENTER, GridConstraints.FILL_HORIZONTAL, GridConstraints.SIZEPOLICY_WANT_GROW, 1, null, new Dimension(5, -1), null, 0, false));
+        panel1.add(spacer1, new GridConstraints(0, 4, 31, 1, GridConstraints.ANCHOR_CENTER, GridConstraints.FILL_HORIZONTAL, GridConstraints.SIZEPOLICY_WANT_GROW, 1, null, new Dimension(5, -1), null, 0, false));
         final Spacer spacer2 = new Spacer();
-        panel1.add(spacer2, new GridConstraints(0, 0, 30, 1, GridConstraints.ANCHOR_CENTER, GridConstraints.FILL_HORIZONTAL, GridConstraints.SIZEPOLICY_WANT_GROW, 1, null, new Dimension(5, -1), null, 0, false));
+        panel1.add(spacer2, new GridConstraints(0, 0, 31, 1, GridConstraints.ANCHOR_CENTER, GridConstraints.FILL_HORIZONTAL, GridConstraints.SIZEPOLICY_WANT_GROW, 1, null, new Dimension(5, -1), null, 0, false));
         final JLabel label1 = new JLabel();
         Font label1Font = this.$$$getFont$$$(null, Font.BOLD, 14, label1.getFont());
         if (label1Font != null) label1.setFont(label1Font);
@@ -833,90 +842,99 @@ public class GuiMain extends JFrame {
         panel1.add(labelUidHint, new GridConstraints(14, 3, 1, 1, GridConstraints.ANCHOR_WEST, GridConstraints.FILL_NONE, GridConstraints.SIZEPOLICY_FIXED, GridConstraints.SIZEPOLICY_FIXED, null, null, null, 0, false));
         CheckBoxDiffFlash = new JCheckBox();
         this.$$$loadButtonText$$$(CheckBoxDiffFlash, this.$$$getMessageFromBundle$$$("language/GuiMain", "diffFlash"));
-        panel1.add(CheckBoxDiffFlash, new GridConstraints(15, 2, 1, 1, GridConstraints.ANCHOR_WEST, GridConstraints.FILL_NONE, GridConstraints.SIZEPOLICY_CAN_SHRINK | GridConstraints.SIZEPOLICY_CAN_GROW, GridConstraints.SIZEPOLICY_FIXED, null, null, null, 0, false));
+        panel1.add(CheckBoxDiffFlash, new GridConstraints(16, 2, 1, 1, GridConstraints.ANCHOR_WEST, GridConstraints.FILL_NONE, GridConstraints.SIZEPOLICY_CAN_SHRINK | GridConstraints.SIZEPOLICY_CAN_GROW, GridConstraints.SIZEPOLICY_FIXED, null, null, null, 0, false));
         labelFullFlashHint = new JLabel();
         this.$$$loadLabelText$$$(labelFullFlashHint, this.$$$getMessageFromBundle$$$("language/GuiMain", "diffFlashHint"));
-        panel1.add(labelFullFlashHint, new GridConstraints(15, 3, 1, 1, GridConstraints.ANCHOR_WEST, GridConstraints.FILL_NONE, GridConstraints.SIZEPOLICY_FIXED, GridConstraints.SIZEPOLICY_FIXED, null, null, null, 0, false));
+        panel1.add(labelFullFlashHint, new GridConstraints(16, 3, 1, 1, GridConstraints.ANCHOR_WEST, GridConstraints.FILL_NONE, GridConstraints.SIZEPOLICY_FIXED, GridConstraints.SIZEPOLICY_FIXED, null, null, null, 0, false));
         eraseCompleteFlashCheckBox = new JCheckBox();
         this.$$$loadButtonText$$$(eraseCompleteFlashCheckBox, this.$$$getMessageFromBundle$$$("language/GuiMain", "eraseFlash"));
-        panel1.add(eraseCompleteFlashCheckBox, new GridConstraints(16, 2, 1, 1, GridConstraints.ANCHOR_WEST, GridConstraints.FILL_NONE, GridConstraints.SIZEPOLICY_CAN_SHRINK | GridConstraints.SIZEPOLICY_CAN_GROW, GridConstraints.SIZEPOLICY_FIXED, null, null, null, 0, false));
+        panel1.add(eraseCompleteFlashCheckBox, new GridConstraints(17, 2, 1, 1, GridConstraints.ANCHOR_WEST, GridConstraints.FILL_NONE, GridConstraints.SIZEPOLICY_CAN_SHRINK | GridConstraints.SIZEPOLICY_CAN_GROW, GridConstraints.SIZEPOLICY_FIXED, null, null, null, 0, false));
         labelEraseCompleteFlash = new JLabel();
         this.$$$loadLabelText$$$(labelEraseCompleteFlash, this.$$$getMessageFromBundle$$$("language/GuiMain", "eraseCompleteFlashHint"));
-        panel1.add(labelEraseCompleteFlash, new GridConstraints(16, 3, 1, 1, GridConstraints.ANCHOR_WEST, GridConstraints.FILL_NONE, GridConstraints.SIZEPOLICY_FIXED, GridConstraints.SIZEPOLICY_FIXED, null, null, null, 0, false));
+        panel1.add(labelEraseCompleteFlash, new GridConstraints(17, 3, 1, 1, GridConstraints.ANCHOR_WEST, GridConstraints.FILL_NONE, GridConstraints.SIZEPOLICY_FIXED, GridConstraints.SIZEPOLICY_FIXED, null, null, null, 0, false));
         noFlashCheckBox = new JCheckBox();
         this.$$$loadButtonText$$$(noFlashCheckBox, this.$$$getMessageFromBundle$$$("language/GuiMain", "noFlash"));
-        panel1.add(noFlashCheckBox, new GridConstraints(17, 2, 1, 1, GridConstraints.ANCHOR_WEST, GridConstraints.FILL_NONE, GridConstraints.SIZEPOLICY_CAN_SHRINK | GridConstraints.SIZEPOLICY_CAN_GROW, GridConstraints.SIZEPOLICY_FIXED, null, null, null, 0, false));
+        panel1.add(noFlashCheckBox, new GridConstraints(18, 2, 1, 1, GridConstraints.ANCHOR_WEST, GridConstraints.FILL_NONE, GridConstraints.SIZEPOLICY_CAN_SHRINK | GridConstraints.SIZEPOLICY_CAN_GROW, GridConstraints.SIZEPOLICY_FIXED, null, null, null, 0, false));
         labelNoFlashHint = new JLabel();
         this.$$$loadLabelText$$$(labelNoFlashHint, this.$$$getMessageFromBundle$$$("language/GuiMain", "noFlashHint"));
-        panel1.add(labelNoFlashHint, new GridConstraints(17, 3, 1, 1, GridConstraints.ANCHOR_WEST, GridConstraints.FILL_NONE, GridConstraints.SIZEPOLICY_FIXED, GridConstraints.SIZEPOLICY_FIXED, null, null, null, 0, false));
+        panel1.add(labelNoFlashHint, new GridConstraints(18, 3, 1, 1, GridConstraints.ANCHOR_WEST, GridConstraints.FILL_NONE, GridConstraints.SIZEPOLICY_FIXED, GridConstraints.SIZEPOLICY_FIXED, null, null, null, 0, false));
         final JLabel label6 = new JLabel();
         Font label6Font = this.$$$getFont$$$(null, Font.BOLD, 14, label6.getFont());
         if (label6Font != null) label6.setFont(label6Font);
         this.$$$loadLabelText$$$(label6, this.$$$getMessageFromBundle$$$("language/GuiMain", "KnxBusSettings"));
-        panel1.add(label6, new GridConstraints(19, 1, 1, 1, GridConstraints.ANCHOR_WEST, GridConstraints.FILL_NONE, GridConstraints.SIZEPOLICY_FIXED, GridConstraints.SIZEPOLICY_FIXED, null, null, null, 0, false));
+        panel1.add(label6, new GridConstraints(20, 1, 1, 1, GridConstraints.ANCHOR_WEST, GridConstraints.FILL_NONE, GridConstraints.SIZEPOLICY_FIXED, GridConstraints.SIZEPOLICY_FIXED, null, null, null, 0, false));
         labelBootloaderDeviceAddr = new JLabel();
         this.$$$loadLabelText$$$(labelBootloaderDeviceAddr, this.$$$getMessageFromBundle$$$("language/GuiMain", "knxProgDeviceAddr"));
-        panel1.add(labelBootloaderDeviceAddr, new GridConstraints(20, 1, 1, 1, GridConstraints.ANCHOR_WEST, GridConstraints.FILL_NONE, GridConstraints.SIZEPOLICY_FIXED, GridConstraints.SIZEPOLICY_FIXED, null, null, null, 0, false));
+        panel1.add(labelBootloaderDeviceAddr, new GridConstraints(21, 1, 1, 1, GridConstraints.ANCHOR_WEST, GridConstraints.FILL_NONE, GridConstraints.SIZEPOLICY_FIXED, GridConstraints.SIZEPOLICY_FIXED, null, null, null, 0, false));
         labelDeviceAddress = new JLabel();
         this.$$$loadLabelText$$$(labelDeviceAddress, this.$$$getMessageFromBundle$$$("language/GuiMain", "knxDeviceAddr"));
-        panel1.add(labelDeviceAddress, new GridConstraints(21, 1, 1, 1, GridConstraints.ANCHOR_WEST, GridConstraints.FILL_NONE, GridConstraints.SIZEPOLICY_FIXED, GridConstraints.SIZEPOLICY_FIXED, null, null, null, 0, false));
+        panel1.add(labelDeviceAddress, new GridConstraints(22, 1, 1, 1, GridConstraints.ANCHOR_WEST, GridConstraints.FILL_NONE, GridConstraints.SIZEPOLICY_FIXED, GridConstraints.SIZEPOLICY_FIXED, null, null, null, 0, false));
         labelOwnAddress = new JLabel();
         this.$$$loadLabelText$$$(labelOwnAddress, this.$$$getMessageFromBundle$$$("language/GuiMain", "knxOwnAddress"));
-        panel1.add(labelOwnAddress, new GridConstraints(22, 1, 1, 1, GridConstraints.ANCHOR_WEST, GridConstraints.FILL_NONE, GridConstraints.SIZEPOLICY_FIXED, GridConstraints.SIZEPOLICY_FIXED, null, null, null, 0, false));
+        panel1.add(labelOwnAddress, new GridConstraints(23, 1, 1, 1, GridConstraints.ANCHOR_WEST, GridConstraints.FILL_NONE, GridConstraints.SIZEPOLICY_FIXED, GridConstraints.SIZEPOLICY_FIXED, null, null, null, 0, false));
         textFieldOwnAddress = new JTextField();
-        panel1.add(textFieldOwnAddress, new GridConstraints(22, 2, 1, 1, GridConstraints.ANCHOR_WEST, GridConstraints.FILL_HORIZONTAL, GridConstraints.SIZEPOLICY_WANT_GROW, GridConstraints.SIZEPOLICY_FIXED, null, new Dimension(150, -1), null, 0, false));
+        panel1.add(textFieldOwnAddress, new GridConstraints(23, 2, 1, 1, GridConstraints.ANCHOR_WEST, GridConstraints.FILL_HORIZONTAL, GridConstraints.SIZEPOLICY_WANT_GROW, GridConstraints.SIZEPOLICY_FIXED, null, new Dimension(150, -1), null, 0, false));
         textFieldDelay = new JTextField();
-        panel1.add(textFieldDelay, new GridConstraints(23, 2, 1, 1, GridConstraints.ANCHOR_WEST, GridConstraints.FILL_HORIZONTAL, GridConstraints.SIZEPOLICY_WANT_GROW, GridConstraints.SIZEPOLICY_FIXED, null, new Dimension(150, -1), null, 0, false));
+        panel1.add(textFieldDelay, new GridConstraints(24, 2, 1, 1, GridConstraints.ANCHOR_WEST, GridConstraints.FILL_HORIZONTAL, GridConstraints.SIZEPOLICY_WANT_GROW, GridConstraints.SIZEPOLICY_FIXED, null, new Dimension(150, -1), null, 0, false));
         labelDelay = new JLabel();
         this.$$$loadLabelText$$$(labelDelay, this.$$$getMessageFromBundle$$$("language/GuiMain", "knxMessageDelay"));
-        panel1.add(labelDelay, new GridConstraints(23, 1, 1, 1, GridConstraints.ANCHOR_WEST, GridConstraints.FILL_NONE, GridConstraints.SIZEPOLICY_FIXED, GridConstraints.SIZEPOLICY_FIXED, null, null, null, 0, false));
-        panel1.add(comboBoxKnxTelegramPriority, new GridConstraints(25, 2, 1, 1, GridConstraints.ANCHOR_WEST, GridConstraints.FILL_HORIZONTAL, GridConstraints.SIZEPOLICY_CAN_GROW, GridConstraints.SIZEPOLICY_FIXED, null, null, null, 0, false));
+        panel1.add(labelDelay, new GridConstraints(24, 1, 1, 1, GridConstraints.ANCHOR_WEST, GridConstraints.FILL_NONE, GridConstraints.SIZEPOLICY_FIXED, GridConstraints.SIZEPOLICY_FIXED, null, null, null, 0, false));
+        panel1.add(comboBoxKnxTelegramPriority, new GridConstraints(26, 2, 1, 1, GridConstraints.ANCHOR_WEST, GridConstraints.FILL_HORIZONTAL, GridConstraints.SIZEPOLICY_CAN_GROW, GridConstraints.SIZEPOLICY_FIXED, null, null, null, 0, false));
         labelTelegramPriority = new JLabel();
         this.$$$loadLabelText$$$(labelTelegramPriority, this.$$$getMessageFromBundle$$$("language/GuiMain", "messagePriority"));
-        panel1.add(labelTelegramPriority, new GridConstraints(25, 1, 1, 1, GridConstraints.ANCHOR_WEST, GridConstraints.FILL_NONE, GridConstraints.SIZEPOLICY_FIXED, GridConstraints.SIZEPOLICY_FIXED, null, null, null, 0, false));
+        panel1.add(labelTelegramPriority, new GridConstraints(26, 1, 1, 1, GridConstraints.ANCHOR_WEST, GridConstraints.FILL_NONE, GridConstraints.SIZEPOLICY_FIXED, GridConstraints.SIZEPOLICY_FIXED, null, null, null, 0, false));
         labelKnxSecureUser = new JLabel();
         this.$$$loadLabelText$$$(labelKnxSecureUser, this.$$$getMessageFromBundle$$$("language/GuiMain", "knxSecureUser"));
-        panel1.add(labelKnxSecureUser, new GridConstraints(26, 1, 1, 1, GridConstraints.ANCHOR_WEST, GridConstraints.FILL_NONE, GridConstraints.SIZEPOLICY_FIXED, GridConstraints.SIZEPOLICY_FIXED, null, null, null, 0, false));
+        panel1.add(labelKnxSecureUser, new GridConstraints(27, 1, 1, 1, GridConstraints.ANCHOR_WEST, GridConstraints.FILL_NONE, GridConstraints.SIZEPOLICY_FIXED, GridConstraints.SIZEPOLICY_FIXED, null, null, null, 0, false));
         textFieldKnxSecureUser = new JTextField();
-        panel1.add(textFieldKnxSecureUser, new GridConstraints(26, 2, 1, 1, GridConstraints.ANCHOR_WEST, GridConstraints.FILL_HORIZONTAL, GridConstraints.SIZEPOLICY_WANT_GROW, GridConstraints.SIZEPOLICY_FIXED, null, new Dimension(150, -1), null, 0, false));
+        panel1.add(textFieldKnxSecureUser, new GridConstraints(27, 2, 1, 1, GridConstraints.ANCHOR_WEST, GridConstraints.FILL_HORIZONTAL, GridConstraints.SIZEPOLICY_WANT_GROW, GridConstraints.SIZEPOLICY_FIXED, null, new Dimension(150, -1), null, 0, false));
         labelKnxSecureUserHint = new JLabel();
         this.$$$loadLabelText$$$(labelKnxSecureUserHint, this.$$$getMessageFromBundle$$$("language/GuiMain", "knxSecureUserHint"));
-        panel1.add(labelKnxSecureUserHint, new GridConstraints(26, 3, 1, 1, GridConstraints.ANCHOR_WEST, GridConstraints.FILL_NONE, GridConstraints.SIZEPOLICY_FIXED, GridConstraints.SIZEPOLICY_FIXED, null, null, null, 0, false));
+        panel1.add(labelKnxSecureUserHint, new GridConstraints(27, 3, 1, 1, GridConstraints.ANCHOR_WEST, GridConstraints.FILL_NONE, GridConstraints.SIZEPOLICY_FIXED, GridConstraints.SIZEPOLICY_FIXED, null, null, null, 0, false));
         labelKnxSecureUserPwd = new JLabel();
         this.$$$loadLabelText$$$(labelKnxSecureUserPwd, this.$$$getMessageFromBundle$$$("language/GuiMain", "knxSecureUserPwd"));
-        panel1.add(labelKnxSecureUserPwd, new GridConstraints(27, 1, 1, 1, GridConstraints.ANCHOR_WEST, GridConstraints.FILL_NONE, GridConstraints.SIZEPOLICY_FIXED, GridConstraints.SIZEPOLICY_FIXED, null, null, null, 0, false));
+        panel1.add(labelKnxSecureUserPwd, new GridConstraints(28, 1, 1, 1, GridConstraints.ANCHOR_WEST, GridConstraints.FILL_NONE, GridConstraints.SIZEPOLICY_FIXED, GridConstraints.SIZEPOLICY_FIXED, null, null, null, 0, false));
         labelKnxSecureUserPwdHint = new JLabel();
         this.$$$loadLabelText$$$(labelKnxSecureUserPwdHint, this.$$$getMessageFromBundle$$$("language/GuiMain", "knxSecureUserPwdHint"));
-        panel1.add(labelKnxSecureUserPwdHint, new GridConstraints(27, 3, 1, 1, GridConstraints.ANCHOR_WEST, GridConstraints.FILL_NONE, GridConstraints.SIZEPOLICY_FIXED, GridConstraints.SIZEPOLICY_FIXED, null, null, null, 0, false));
+        panel1.add(labelKnxSecureUserPwdHint, new GridConstraints(28, 3, 1, 1, GridConstraints.ANCHOR_WEST, GridConstraints.FILL_NONE, GridConstraints.SIZEPOLICY_FIXED, GridConstraints.SIZEPOLICY_FIXED, null, null, null, 0, false));
         textFieldKnxSecureUserPwd = new JTextField();
-        panel1.add(textFieldKnxSecureUserPwd, new GridConstraints(27, 2, 1, 1, GridConstraints.ANCHOR_WEST, GridConstraints.FILL_HORIZONTAL, GridConstraints.SIZEPOLICY_WANT_GROW, GridConstraints.SIZEPOLICY_FIXED, null, new Dimension(150, -1), null, 0, false));
+        panel1.add(textFieldKnxSecureUserPwd, new GridConstraints(28, 2, 1, 1, GridConstraints.ANCHOR_WEST, GridConstraints.FILL_HORIZONTAL, GridConstraints.SIZEPOLICY_WANT_GROW, GridConstraints.SIZEPOLICY_FIXED, null, new Dimension(150, -1), null, 0, false));
         labelKnxSecureDevicePwd = new JLabel();
         this.$$$loadLabelText$$$(labelKnxSecureDevicePwd, this.$$$getMessageFromBundle$$$("language/GuiMain", "knxSecureDevicePwd"));
-        panel1.add(labelKnxSecureDevicePwd, new GridConstraints(28, 1, 1, 1, GridConstraints.ANCHOR_WEST, GridConstraints.FILL_NONE, GridConstraints.SIZEPOLICY_FIXED, GridConstraints.SIZEPOLICY_FIXED, null, null, null, 0, false));
+        panel1.add(labelKnxSecureDevicePwd, new GridConstraints(29, 1, 1, 1, GridConstraints.ANCHOR_WEST, GridConstraints.FILL_NONE, GridConstraints.SIZEPOLICY_FIXED, GridConstraints.SIZEPOLICY_FIXED, null, null, null, 0, false));
         textFieldKnxSecureDevicePwd = new JTextField();
-        panel1.add(textFieldKnxSecureDevicePwd, new GridConstraints(28, 2, 1, 1, GridConstraints.ANCHOR_WEST, GridConstraints.FILL_HORIZONTAL, GridConstraints.SIZEPOLICY_WANT_GROW, GridConstraints.SIZEPOLICY_FIXED, null, new Dimension(150, -1), null, 0, false));
+        panel1.add(textFieldKnxSecureDevicePwd, new GridConstraints(29, 2, 1, 1, GridConstraints.ANCHOR_WEST, GridConstraints.FILL_HORIZONTAL, GridConstraints.SIZEPOLICY_WANT_GROW, GridConstraints.SIZEPOLICY_FIXED, null, new Dimension(150, -1), null, 0, false));
         labelKnxSecureDevicePwdHint = new JLabel();
         this.$$$loadLabelText$$$(labelKnxSecureDevicePwdHint, this.$$$getMessageFromBundle$$$("language/GuiMain", "knxSecureDevicePwdHint"));
-        panel1.add(labelKnxSecureDevicePwdHint, new GridConstraints(28, 3, 1, 1, GridConstraints.ANCHOR_WEST, GridConstraints.FILL_NONE, GridConstraints.SIZEPOLICY_FIXED, GridConstraints.SIZEPOLICY_FIXED, null, null, null, 0, false));
+        panel1.add(labelKnxSecureDevicePwdHint, new GridConstraints(29, 3, 1, 1, GridConstraints.ANCHOR_WEST, GridConstraints.FILL_NONE, GridConstraints.SIZEPOLICY_FIXED, GridConstraints.SIZEPOLICY_FIXED, null, null, null, 0, false));
         buttonStartStopFlash = new JButton();
         this.$$$loadButtonText$$$(buttonStartStopFlash, this.$$$getMessageFromBundle$$$("language/GuiMain", "startFlash"));
-        panel1.add(buttonStartStopFlash, new GridConstraints(29, 2, 1, 1, GridConstraints.ANCHOR_CENTER, GridConstraints.FILL_HORIZONTAL, GridConstraints.SIZEPOLICY_CAN_SHRINK | GridConstraints.SIZEPOLICY_CAN_GROW, GridConstraints.SIZEPOLICY_FIXED, null, null, null, 0, false));
+        panel1.add(buttonStartStopFlash, new GridConstraints(30, 2, 1, 1, GridConstraints.ANCHOR_CENTER, GridConstraints.FILL_HORIZONTAL, GridConstraints.SIZEPOLICY_CAN_SHRINK | GridConstraints.SIZEPOLICY_CAN_GROW, GridConstraints.SIZEPOLICY_FIXED, null, null, null, 0, false));
         final JScrollPane scrollPane1 = new JScrollPane();
-        panel1.add(scrollPane1, new GridConstraints(30, 0, 1, 5, GridConstraints.ANCHOR_CENTER, GridConstraints.FILL_BOTH, GridConstraints.SIZEPOLICY_CAN_SHRINK | GridConstraints.SIZEPOLICY_WANT_GROW, GridConstraints.SIZEPOLICY_WANT_GROW, new Dimension(-1, 200), new Dimension(-1, 200), null, 0, false));
+        panel1.add(scrollPane1, new GridConstraints(31, 0, 1, 5, GridConstraints.ANCHOR_CENTER, GridConstraints.FILL_BOTH, GridConstraints.SIZEPOLICY_CAN_SHRINK | GridConstraints.SIZEPOLICY_WANT_GROW, GridConstraints.SIZEPOLICY_WANT_GROW, new Dimension(-1, 200), new Dimension(-1, 200), null, 0, false));
         jLoggingPane = new JTextPane();
         jLoggingPane.setEditable(false);
         scrollPane1.setViewportView(jLoggingPane);
         final JSeparator separator2 = new JSeparator();
-        panel1.add(separator2, new GridConstraints(18, 1, 1, 3, GridConstraints.ANCHOR_CENTER, GridConstraints.FILL_BOTH, GridConstraints.SIZEPOLICY_WANT_GROW, GridConstraints.SIZEPOLICY_FIXED, null, null, new Dimension(-1, 1), 0, false));
+        panel1.add(separator2, new GridConstraints(19, 1, 1, 3, GridConstraints.ANCHOR_CENTER, GridConstraints.FILL_BOTH, GridConstraints.SIZEPOLICY_WANT_GROW, GridConstraints.SIZEPOLICY_FIXED, null, null, new Dimension(-1, 1), 0, false));
         textFieldBootloaderDeviceAddress = new JTextField();
-        panel1.add(textFieldBootloaderDeviceAddress, new GridConstraints(20, 2, 1, 1, GridConstraints.ANCHOR_WEST, GridConstraints.FILL_HORIZONTAL, GridConstraints.SIZEPOLICY_WANT_GROW, GridConstraints.SIZEPOLICY_FIXED, null, new Dimension(150, -1), null, 0, false));
+        panel1.add(textFieldBootloaderDeviceAddress, new GridConstraints(21, 2, 1, 1, GridConstraints.ANCHOR_WEST, GridConstraints.FILL_HORIZONTAL, GridConstraints.SIZEPOLICY_WANT_GROW, GridConstraints.SIZEPOLICY_FIXED, null, new Dimension(150, -1), null, 0, false));
         textFieldDeviceAddress = new JTextField();
-        panel1.add(textFieldDeviceAddress, new GridConstraints(21, 2, 1, 1, GridConstraints.ANCHOR_WEST, GridConstraints.FILL_HORIZONTAL, GridConstraints.SIZEPOLICY_WANT_GROW, GridConstraints.SIZEPOLICY_FIXED, null, new Dimension(150, -1), null, 0, false));
+        panel1.add(textFieldDeviceAddress, new GridConstraints(22, 2, 1, 1, GridConstraints.ANCHOR_WEST, GridConstraints.FILL_HORIZONTAL, GridConstraints.SIZEPOLICY_WANT_GROW, GridConstraints.SIZEPOLICY_FIXED, null, new Dimension(150, -1), null, 0, false));
         panel1.add(comboBoxMedium, new GridConstraints(7, 2, 1, 1, GridConstraints.ANCHOR_WEST, GridConstraints.FILL_HORIZONTAL, GridConstraints.SIZEPOLICY_CAN_GROW, GridConstraints.SIZEPOLICY_FIXED, null, null, null, 0, false));
         panel1.add(comboBoxScenario, new GridConstraints(10, 2, 1, 1, GridConstraints.ANCHOR_WEST, GridConstraints.FILL_HORIZONTAL, GridConstraints.SIZEPOLICY_CAN_GROW, GridConstraints.SIZEPOLICY_FIXED, null, null, null, 0, false));
         reloadGatewaysButton = new JButton();
         this.$$$loadButtonText$$$(reloadGatewaysButton, this.$$$getMessageFromBundle$$$("language/GuiMain", "reloadKnxIpGateways"));
         panel1.add(reloadGatewaysButton, new GridConstraints(1, 3, 1, 1, GridConstraints.ANCHOR_WEST, GridConstraints.FILL_NONE, GridConstraints.SIZEPOLICY_CAN_SHRINK | GridConstraints.SIZEPOLICY_CAN_GROW, GridConstraints.SIZEPOLICY_FIXED, null, null, null, 0, false));
+        textFieldKNXSerialNumber = new JTextField();
+        textFieldKNXSerialNumber.setToolTipText(this.$$$getMessageFromBundle$$$("language/GuiMain", "knxSerialNumberHint"));
+        panel1.add(textFieldKNXSerialNumber, new GridConstraints(15, 2, 1, 1, GridConstraints.ANCHOR_WEST, GridConstraints.FILL_HORIZONTAL, GridConstraints.SIZEPOLICY_WANT_GROW, GridConstraints.SIZEPOLICY_FIXED, null, new Dimension(150, -1), null, 0, false));
+        labelKNXSerialNumber = new JLabel();
+        this.$$$loadLabelText$$$(labelKNXSerialNumber, this.$$$getMessageFromBundle$$$("language/GuiMain", "knxSerialNumberLabel"));
+        panel1.add(labelKNXSerialNumber, new GridConstraints(15, 1, 1, 1, GridConstraints.ANCHOR_WEST, GridConstraints.FILL_NONE, GridConstraints.SIZEPOLICY_FIXED, GridConstraints.SIZEPOLICY_FIXED, null, null, null, 0, false));
+        labelKNXSerialNumberInfo = new JLabel();
+        this.$$$loadLabelText$$$(labelKNXSerialNumberInfo, this.$$$getMessageFromBundle$$$("language/GuiMain", "labelKNXSerialNumberInfo"));
+        panel1.add(labelKNXSerialNumberInfo, new GridConstraints(15, 3, 1, 1, GridConstraints.ANCHOR_WEST, GridConstraints.FILL_NONE, GridConstraints.SIZEPOLICY_FIXED, GridConstraints.SIZEPOLICY_FIXED, null, null, null, 0, false));
         labelIpGateway.setLabelFor(comboBoxIpGateways);
         label2.setLabelFor(textBoxKnxGatewayIpAddr);
         label3.setLabelFor(textFieldPort);
@@ -934,6 +952,7 @@ public class GuiMain extends JFrame {
         labelKnxSecureUser.setLabelFor(textFieldKnxSecureUser);
         labelKnxSecureUserPwd.setLabelFor(textFieldKnxSecureUserPwd);
         labelKnxSecureDevicePwd.setLabelFor(textFieldKnxSecureDevicePwd);
+        labelKNXSerialNumber.setLabelFor(textFieldUid);
     }
 
     /**

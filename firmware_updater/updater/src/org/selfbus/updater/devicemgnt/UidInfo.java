@@ -14,8 +14,8 @@ import static org.selfbus.updater.upd.UPDProtocol.UID_LENGTH_MAX;
 public class UidInfo    {
     private static final Logger logger = LoggerFactory.getLogger(UidInfo.class);
 
-    final byte[] uid;
-    final String knxSerial;
+    private final byte[] uid;
+    private final String knxSerial;
 
     public UidInfo(String uid)
     {
@@ -48,6 +48,10 @@ public class UidInfo    {
 
     public String getUIDText() {
         return byteArrayToHex(uid);
+    }
+
+    public String getKNXSerialNumberText() {
+        return knxSerial;
     }
 
     private String getKNXSerialNumberFromUID(byte[] uid) {
