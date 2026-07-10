@@ -149,6 +149,7 @@ TEST_CASE("KNX serial number generation", "KNX")
                 }
 
                 REQUIRE(createKNXSerial(tc.uid, 16, newSerial, KNX_SERIAL_NUMBER_LENGTH) == true);
+                checkedSerialCounter++;
                 REQUIRE(newSerial[0] == KNX_SERIAL_NUMBER_MANUFACTURER_ID_HIGH_BYTE);
                 REQUIRE(newSerial[1] == KNX_SERIAL_NUMBER_MANUFACTURER_ID_LOW_BYTE);
 
@@ -176,7 +177,6 @@ TEST_CASE("KNX serial number generation", "KNX")
                     // If the last 4 bytes of the uid are defined, we don't need to iterate over all byte 12 values
                     break;
                 }
-                checkedSerialCounter++;
             }
         }
         WARN("createKNXSerial() found " << collisionCount << " collisions after checking " << checkedSerialCounter
@@ -211,6 +211,7 @@ TEST_CASE("KNX serial number generation", "KNX")
                 }
 
                 REQUIRE(hashUID(tc.uid, 16, newSerial, KNX_SERIAL_NUMBER_LENGTH) == true);
+                checkedSerialCounter++;
                 if (!uidIsMissingLast4Bytes)
                 {
                     // Compare only against "saved" MurmurHast3 if it's a defined uid
@@ -235,7 +236,6 @@ TEST_CASE("KNX serial number generation", "KNX")
                     // If the last 4 bytes of the uid are defined, we don't need to iterate over all byte 12 values
                     break;
                 }
-                checkedSerialCounter++;
             }
         }
         WARN("hashUID() found " << collisionCount << " collisions after checking " << checkedSerialCounter
