@@ -393,12 +393,16 @@ public class CliOptions {
         cliOptions.addOption(discover);
     }
 
-    public CliOptions(final String[] args, String helpApplicationName, String helpHeader, String helpFooter)
-            throws KNXFormatException, ParseException {
+    public CliOptions(String helpApplicationName, String helpHeader, String helpFooter) {
         this();
         this.helpApplicationName = helpApplicationName;
         this.helpHeader = helpHeader;
         this.helpFooter = helpFooter;
+    }
+
+    public CliOptions(final String[] args, String helpApplicationName, String helpHeader, String helpFooter)
+            throws KNXFormatException, ParseException {
+        this(helpApplicationName, helpHeader, helpFooter);
         parse(args);
     }
 
@@ -762,7 +766,7 @@ public class CliOptions {
         return nonNullString(knxInterface);
     }
 
-    private void setKnxInterface(String knxInterface) {
+    public void setKnxInterface(String knxInterface) {
         this.knxInterface = knxInterface;
         logger.debug("knxInterface={}", getKnxInterface());
     }
@@ -780,7 +784,7 @@ public class CliOptions {
         return localhost;
     }
 
-    private void setLocalhost(String localhost) {
+    public void setLocalhost(String localhost) {
         this.localhost = localhost;
         logger.debug("{}={}", OPT_LONG_LOCALHOST, getLocalhost());
     }
@@ -789,7 +793,7 @@ public class CliOptions {
         return localPort;
     }
 
-    private void setLocalPort(int localPort) {
+    public void setLocalPort(int localPort) {
         if ((localPort >= 0) && (localPort <= 65535)) {
             this.localPort = localPort;
             logger.debug("{}={}", OPT_LONG_LOCALPORT, getLocalPort());
@@ -819,7 +823,7 @@ public class CliOptions {
         return port;
     }
 
-    private void setPort(int port) {
+    public void setPort(int port) {
         if ((port >= 1) && (port <= 65535)) {
             this.port = port;
             logger.debug("{}={}", OPT_LONG_PORT, getPort());
@@ -858,7 +862,7 @@ public class CliOptions {
         return nonNullString(ft12SerialPort);
     }
 
-    private void setFt12SerialPort(String ft12SerialPort) {
+    public void setFt12SerialPort(String ft12SerialPort) {
         this.ft12SerialPort = ft12SerialPort;
         logger.debug("{}={}", OPT_LONG_FT12, getFt12SerialPort());
     }
@@ -867,7 +871,7 @@ public class CliOptions {
         return nonNullString(tpuartSerialPort);
     }
 
-    private void setTpuartSerialPort(String tpuartSerialPort) {
+    public void setTpuartSerialPort(String tpuartSerialPort) {
         this.tpuartSerialPort = tpuartSerialPort;
         logger.debug("{}={}", OPT_LONG_TPUART, getTpuartSerialPort());
         if (!tpuartSerialPort.isBlank()) {
@@ -898,7 +902,7 @@ public class CliOptions {
         return routingIsSet;
     }
 
-    private void setRoutingIsSet(boolean routingIsSet) {
+    public void setRoutingIsSet(boolean routingIsSet) {
         this.routingIsSet = routingIsSet;
         logger.debug("{}={}", OPT_LONG_ROUTING, getRoutingIsSet());
     }
@@ -916,7 +920,7 @@ public class CliOptions {
         return progDevicePhysicalAddress;
     }
 
-    private void setProgDevicePhysicalAddress(String progDevicePhysicalAddress) throws KNXFormatException {
+    public void setProgDevicePhysicalAddress(String progDevicePhysicalAddress) throws KNXFormatException {
         if ((progDevicePhysicalAddress != null) && (!progDevicePhysicalAddress.isBlank())) {
             this.progDevicePhysicalAddress = new IndividualAddress(progDevicePhysicalAddress);
         }
@@ -930,7 +934,7 @@ public class CliOptions {
         return devicePhysicalAddress;
     }
 
-    private void setDevicePhysicalAddress(String devicePhysicalAddress) throws KNXFormatException {
+    public void setDevicePhysicalAddress(String devicePhysicalAddress) throws KNXFormatException {
         if ((devicePhysicalAddress != null) && (!devicePhysicalAddress.isBlank())) {
             this.devicePhysicalAddress = new IndividualAddress(devicePhysicalAddress);
         }
@@ -944,7 +948,7 @@ public class CliOptions {
         return ownPhysicalAddress;
     }
 
-    private void setOwnPhysicalAddress(String ownPhysicalAddress) throws KNXFormatException {
+    public void setOwnPhysicalAddress(String ownPhysicalAddress) throws KNXFormatException {
         if ((ownPhysicalAddress != null) && (!ownPhysicalAddress.isBlank())) {
             this.ownPhysicalAddress = new IndividualAddress(ownPhysicalAddress);
         }
@@ -967,7 +971,7 @@ public class CliOptions {
         return flashingFullModeIsSet;
     }
 
-    private void setFlashingFullModeIsSet(boolean flashingFullModeIsSet) {
+    public void setFlashingFullModeIsSet(boolean flashingFullModeIsSet) {
         this.flashingFullModeIsSet = flashingFullModeIsSet;
         logger.debug("{}={}", OPT_LONG_FULL, getFlashingFullModeIsSet());
     }
@@ -976,7 +980,7 @@ public class CliOptions {
         return delayMs;
     }
 
-    private void setDelayMs(int delayMs) {
+    public void setDelayMs(int delayMs) {
         if ((delayMs < Updater.DELAY_MIN) || (delayMs > Updater.DELAY_MAX)) {
             logger.warn("{}option --{} {} is invalid (min:{}, max:{}) => set to {}{}",
                     ansi().fgBright(WARN), OPT_LONG_DELAY, delayMs, Updater.DELAY_MIN,
@@ -987,7 +991,7 @@ public class CliOptions {
         logger.debug("{}={}", OPT_LONG_DELAY, getDelayMs());
     }
 
-    private void setDelayMs(String delayMs) {
+    public void setDelayMs(String delayMs) {
         try {
             if (delayMs == null || delayMs.isBlank())
                 setDelayMs(Updater.DELAY_MIN);
@@ -1005,7 +1009,7 @@ public class CliOptions {
         return noFlashIsSet;
     }
 
-    private void setNoFlashIsSet(boolean noFlashIsSet) {
+    public void setNoFlashIsSet(boolean noFlashIsSet) {
         this.noFlashIsSet = noFlashIsSet;
         logger.debug("{}={}", OPT_LONG_NO_FLASH, getNoFlashIsSet());
     }
@@ -1014,7 +1018,7 @@ public class CliOptions {
         return eraseFullFlashIsSet;
     }
 
-    private void setEraseFullFlashIsSet(boolean eraseFullFlashIsSet) {
+    public void setEraseFullFlashIsSet(boolean eraseFullFlashIsSet) {
         this.eraseFullFlashIsSet = eraseFullFlashIsSet;
         logger.debug("{}={}", OPT_LONG_ERASEFLASH, getEraseFullFlashIsSet());
     }
@@ -1023,12 +1027,12 @@ public class CliOptions {
         return dumpFlashStartAddress;
     }
 
-    private void setDumpFlashStartAddress(long dumpFlashStartAddress) {
+    public void setDumpFlashStartAddress(long dumpFlashStartAddress) {
         this.dumpFlashStartAddress = dumpFlashStartAddress;
         logger.debug("dumpFlashStartAddress={}", getDumpFlashStartAddress());
     }
 
-    private void setDumpFlashStartAddress(String dumpFlashStartAddress) {
+    public void setDumpFlashStartAddress(String dumpFlashStartAddress) {
         try {
             setDumpFlashStartAddress(Long.decode(dumpFlashStartAddress));
         }
@@ -1044,12 +1048,12 @@ public class CliOptions {
         return dumpFlashEndAddress;
     }
 
-    private void setDumpFlashEndAddress(long dumpFlashEndAddress) {
+    public void setDumpFlashEndAddress(long dumpFlashEndAddress) {
         this.dumpFlashEndAddress = dumpFlashEndAddress;
         logger.debug("dumpFlashEndAddress={}", getDumpFlashEndAddress());
     }
 
-    private void setDumpFlashEndAddress(String dumpFlashEndAddress) {
+    public void setDumpFlashEndAddress(String dumpFlashEndAddress) {
         try {
             setDumpFlashEndAddress(Long.decode(dumpFlashEndAddress));
         }
@@ -1080,13 +1084,13 @@ public class CliOptions {
         return root.getLevel();
     }
 
-    private void setLogLevel(Level logLevel) {
+    public void setLogLevel(Level logLevel) {
         ch.qos.logback.classic.Logger root = (ch.qos.logback.classic.Logger) LoggerFactory.getLogger(Logger.ROOT_LOGGER_NAME);
         root.setLevel(logLevel);
         logger.debug("{}={}", OPT_LONG_LOGLEVEL, getLogLevel());
     }
 
-    private void setLogLevel(String newLevel) {
+    public void setLogLevel(String newLevel) {
         newLevel = newLevel.toUpperCase();
         if (VALID_LOG_LEVELS.contains(newLevel)) {
             setLogLevel(Level.toLevel(newLevel));
@@ -1101,7 +1105,7 @@ public class CliOptions {
         return knxSecureUserId;
     }
 
-    private void setKnxSecureUserId(int knxSecureUserId) {
+    public void setKnxSecureUserId(int knxSecureUserId) {
         if (knxSecureUserId == INVALID_SECURE_USER_ID) {
             this.knxSecureUserId = INVALID_SECURE_USER_ID;
             logger.debug("{}=", OPT_LONG_USER_ID);
@@ -1120,7 +1124,7 @@ public class CliOptions {
         }
     }
 
-    private void setKnxSecureUserId(String knxSecureUserId) {
+    public void setKnxSecureUserId(String knxSecureUserId) {
         try {
             if (knxSecureUserId == null || knxSecureUserId.isBlank())
                 setKnxSecureUserId(INVALID_SECURE_USER_ID);
@@ -1138,7 +1142,7 @@ public class CliOptions {
         return knxSecureUserPassword;
     }
 
-    private void setKnxSecureUserPassword(String knxSecureUserPassword) {
+    public void setKnxSecureUserPassword(String knxSecureUserPassword) {
         this.knxSecureUserPassword = knxSecureUserPassword;
         if (!nonNullString(this.knxSecureUserPassword).isBlank())
             logger.debug("{}=****", OPT_LONG_USER_PASSWORD); // log only that it's, but not the actual value
@@ -1150,7 +1154,7 @@ public class CliOptions {
         return knxSecureDevicePassword;
     }
 
-    private void setKnxSecureDevicePassword(String knxSecureDevicePassword) {
+    public void setKnxSecureDevicePassword(String knxSecureDevicePassword) {
         this.knxSecureDevicePassword = knxSecureDevicePassword;
         if (!nonNullString(this.knxSecureDevicePassword).isBlank())
             logger.debug("{}=*****", OPT_LONG_DEVICE_PASSWORD); // log only that it's, but not the actual value
@@ -1162,7 +1166,7 @@ public class CliOptions {
         return priority;
     }
 
-    private void setPriority(String priority) {
+    public void setPriority(String priority) {
         try {
             this.priority = Priority.get(priority);
             logger.debug("{}={}", OPT_LONG_PRIORITY, getPriority().toString());
@@ -1177,7 +1181,7 @@ public class CliOptions {
         return logStatisticsIsSet;
     }
 
-    private void setLogStatisticsIsSet(boolean logStatisticsIsSet) {
+    public void setLogStatisticsIsSet(boolean logStatisticsIsSet) {
         this.logStatisticsIsSet = logStatisticsIsSet;
         logger.debug("{}={}", OPT_LONG_LOGSTATISTIC , getLogStatisticsIsSet());
     }
@@ -1186,7 +1190,7 @@ public class CliOptions {
         return blockSize;
     }
 
-    private void setBlockSize(int blockSize) {
+    public void setBlockSize(int blockSize) {
         if (VALID_BLOCKSIZES.contains(blockSize)) {
             this.blockSize = blockSize;
         }
@@ -1198,7 +1202,7 @@ public class CliOptions {
         logger.debug("{}={}", OPT_LONG_BLOCKSIZE, getBlockSize());
     }
 
-    private void setBlockSize(String blockSize) {
+    public void setBlockSize(String blockSize) {
         try {
             if (blockSize == null || blockSize.isBlank())
                 setBlockSize(Mcu.UPD_PROGRAM_SIZE);
@@ -1216,7 +1220,7 @@ public class CliOptions {
         return nonNullString(usbVendorIdAndProductId);
     }
 
-    private void setUsbVendorIdAndProductId(String usbVendorIdAndProductId) {
+    public void setUsbVendorIdAndProductId(String usbVendorIdAndProductId) {
         this.usbVendorIdAndProductId = usbVendorIdAndProductId;
         logger.debug("{}={}", OPT_LONG_USB, getUsbVendorIdAndProductId());
     }
@@ -1234,7 +1238,7 @@ public class CliOptions {
         return reconnectMs;
     }
 
-    private void setReconnectMs(int reconnectMs) {
+    public void setReconnectMs(int reconnectMs) {
         if ((reconnectMs < RECONNECT_MIN_MS) || (reconnectMs > RECONNECT_MAX_MS)) {
             logger.warn("{}option --{} {} is invalid (min:{}, max:{}) => set to {}{}",
                     ansi().fgBright(WARN), OPT_LONG_RECONNECT, reconnectMs, RECONNECT_MIN_MS,
@@ -1245,7 +1249,7 @@ public class CliOptions {
         logger.debug("{}={}", OPT_LONG_RECONNECT, getReconnectMs());
     }
 
-    private void setReconnectMs(String reconnectMs) {
+    public void setReconnectMs(String reconnectMs) {
         try {
             if (reconnectMs == null || reconnectMs.isBlank())
                 setReconnectMs(RECONNECT_MIN_MS);
@@ -1263,7 +1267,7 @@ public class CliOptions {
         return reconnectSeqNumber;
     }
 
-    private void setReconnectSeqNumber(int reconnectSeqNumber) {
+    public void setReconnectSeqNumber(int reconnectSeqNumber) {
         if (((reconnectSeqNumber < RECONNECT_MIN_SEQ_NUMBER) || (reconnectSeqNumber > RECONNECT_MAX_SEQ_NUMBER)) &&
             (reconnectSeqNumber != RECONNECT_INVALID_SEQ_NUMBER)) {
             logger.warn("{}option --{} {} is invalid (min:{}, max:{}) => set to {}{}",
@@ -1275,7 +1279,7 @@ public class CliOptions {
         logger.debug("{}={}", OPT_LONG_RECONNECT_SEQ_NUMBER, getReconnectSeqNumber());
     }
 
-    private void setReconnectSeqNumber(String reconnectSeqNumber) {
+    public void setReconnectSeqNumber(String reconnectSeqNumber) {
         try {
             if (reconnectSeqNumber == null || reconnectSeqNumber.isBlank())
                 setReconnectSeqNumber(RECONNECT_INVALID_SEQ_NUMBER);
