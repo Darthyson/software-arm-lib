@@ -340,12 +340,21 @@ BootState startup()
             break;
     }
 
-    // Enter Updater when programming button was pressed at power up
-    pinMode(blDescriptor->programmingButton , INPUT | PULL_UP);
-    if (!digitalRead(blDescriptor->programmingButton))
+    if (blDescriptor->programmingButton == 0)
     {
-        dump(serial.println("Programming Button pressed");)
-        requestedBootState = BootState::BootLoader;
+        // If you land here, no RAM was reserved for the descriptor, check BootloaderDescriptor documentation
+        // It could also be that an older application with sblib <=1.20 was flashed onto this device
+        dump(serial.println("INVALID programmingButton");)
+    }
+    else
+    {
+        // Enter Updater when programming button was pressed at power up
+        pinMode(blDescriptor->programmingButton , INPUT | PULL_UP);
+        if (!digitalRead(blDescriptor->programmingButton))
+        {
+            dump(serial.println("Programming Button pressed");)
+            requestedBootState = BootState::BootLoader;
+        }
     }
 
     if (requestedBootState == BootState::Application)
