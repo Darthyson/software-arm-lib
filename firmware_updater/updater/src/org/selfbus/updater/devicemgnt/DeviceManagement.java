@@ -1,5 +1,6 @@
 package org.selfbus.updater.devicemgnt;
 
+import org.jetbrains.annotations.NotNull;
 import org.selfbus.updater.*;
 import org.selfbus.updater.bootloader.BootDescriptor;
 import org.selfbus.updater.bootloader.BootloaderIdentity;
@@ -31,6 +32,8 @@ import java.util.List;
 import java.util.Optional;
 
 import static org.fusesource.jansi.Ansi.*;
+import static org.selfbus.updater.CliOptions.OPT_LONG_DEVICE;
+import static org.selfbus.updater.CliOptions.OPT_LONG_PROG_DEVICE;
 import static org.selfbus.updater.logging.Color.*;
 import static org.selfbus.updater.Mcu.MAX_FLASH_ERASE_TIMEOUT;
 import static org.selfbus.updater.logging.Markers.CONSOLE_GUI_ONLY;
@@ -632,6 +635,90 @@ public class DeviceManagement implements AutoCloseable {
             }
         }
         return reachableDevices.toArray(IndividualAddress[]::new);
+    }
+
+    public boolean programNewPhysicalAddress(IndividualAddress device)
+            throws UpdaterException, InterruptedException {
+        logger.debug("Programming physical KNX address {}.", device);
+        try {
+            if (isLinkDead()) {
+                reconnect();
+            }
+
+            try (ManagementProcedures mgmt = new ManagementProceduresImpl(link)) {
+                return mgmt.writeAddress(device);
+            }
+        }
+        catch (KNXDisconnectException e) {
+            // Probably legacy bootloader
+            logger.warn("Failed to program new physical KNX address {}{}. {}{}: {}{}",
+                    ansi().fgBright(INFO), device, ansi().fgBright(WARN),
+                    e.getClass().getSimpleName(), e.getMessage(), ansi().reset());
+            return false;
+        }
+        catch (KNXException | UnknownHostException e) {
+            throw new UpdaterException(
+                    String.format("programNewPhysicalAddress failed. %s", e.getMessage()), e);
+        }
+    }
+
+    public IndividualAddress startIntoBootLoader(IndividualAddress device, @NotNull IndividualAddress progDevice)
+            throws UpdaterException, InterruptedException {
+        IndividualAddress deviceInProgMode;
+        if (device == null) {
+            // Only option --progDevice is set => check if it is already in programming mode
+            logger.debug("Check if --{} {} is in programming mode", OPT_LONG_PROG_DEVICE, progDevice);
+            deviceInProgMode = checkDevicesInProgrammingMode(progDevice);
+            return deviceInProgMode;
+        }
+
+        IndividualAddress[] devicesInProgMode = listDevicesInProgrammingMode();
+        if  (devicesInProgMode.length == 0) {
+            // No devices are in progMode --> restart --device into Bootloader
+            logger.debug("Starting device {} into bootloader mode", device);
+            restartDeviceToBootloader(device); // Try to restart the device into bootloader mode
+            devicesInProgMode = listDevicesInProgrammingMode();
+        }
+
+        if ((devicesInProgMode.length == 1) && ((devicesInProgMode[0].equals(device)))) {
+            // --device is already in progMode --> everything is fine
+            logger.debug("Device {} is already in programming mode", devicesInProgMode[0]);
+            deviceInProgMode = devicesInProgMode[0];
+            return deviceInProgMode;
+        }
+
+        if ((devicesInProgMode.length == 1) && (devicesInProgMode[0].equals(progDevice))) {
+            logger.debug("--{} {} is in programming mode", OPT_LONG_PROG_DEVICE, devicesInProgMode[0]);
+            // --progDevice is in progMode --> check if --device is not used
+            logger.info("Check if physical KNX address {}{}{} is unused. Be patient...",
+                    ansi().fgBright(INFO), device, ansi().reset());
+            if (isAddressOccupied(device)) {
+                throw new UpdaterException(String.format("%s--%s %s address is already in use by another device!%s",
+                        ansi().fgBright(WARN), OPT_LONG_DEVICE, device, ansi().reset()));
+            }
+
+            logger.info("Programming new physical KNX address {}{}{}...", ansi().fgBright(OK), device, ansi().reset());
+            // --device address is available --> try to program new PA
+            if (programNewPhysicalAddress(device)) {
+                logger.info("Successfully programmed new physical KNX address {}{}{}.",
+                        ansi().fgBright(OK), device, ansi().reset());
+                return device;
+            }
+
+            // Probably legacy bootloader ignoring KNX address programming, or wrong --device specified.
+            // Legacy bootloader remains at bootloader address (progDevice).
+            // Traffic to progDevice (e.g. 15.15.192) may be blocked by line couplers,
+            // if the device is not on same area/line.
+            logger.warn("{}Could not program new KNX address {}. Falling back to {}.{}",
+                    ansi().fgBright(INFO), device, progDevice, ansi().reset());
+            logger.warn("{}If device {} is behind a line coupler, disable line coupler filters." +
+                            " Otherwise update will fail.{}", ansi().fgBright(INFO), progDevice, ansi().reset());
+            return checkDevicesInProgrammingMode(progDevice);
+        }
+
+        // An unrelated device is in prog mode, or multiple devices are in prog mode.
+        throw new UpdaterException(getExceptionMessage(devicesInProgMode,
+                new IndividualAddress[]{device, progDevice}));
     }
 
     public UDPProtocolVersion getProtocolVersion() {

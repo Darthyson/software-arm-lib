@@ -18,7 +18,6 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import static org.fusesource.jansi.Ansi.*;
-import static org.selfbus.updater.devicemgnt.DeviceManagement.getExceptionMessage;
 import static org.selfbus.updater.logging.Color.*;
 import static org.selfbus.updater.logging.LoggingManager.CONSOLE_APPENDER_NAME;
 import static org.selfbus.updater.Utils.shortenPath;
@@ -218,7 +217,7 @@ public class Updater implements Runnable {
 
             IndividualAddress deviceAddress = cliOptions.getDevicePhysicalAddress();
             IndividualAddress progDeviceAddress = cliOptions.getProgDevicePhysicalAddress();
-            IndividualAddress deviceInProgMode = startIntoBootLoader(deviceAddress, progDeviceAddress);
+            IndividualAddress deviceInProgMode = dm.startIntoBootLoader(deviceAddress, progDeviceAddress);
 
             dm.openDevice(deviceInProgMode);
 
@@ -399,7 +398,7 @@ public class Updater implements Runnable {
             final IndividualAddress deviceAddress = cliOptions.getDevicePhysicalAddress();
             final IndividualAddress progDeviceAddress = cliOptions.getProgDevicePhysicalAddress();
 
-            final IndividualAddress deviceInProgMode = startIntoBootLoader(deviceAddress, progDeviceAddress);
+            final IndividualAddress deviceInProgMode = dm.startIntoBootLoader(deviceAddress, progDeviceAddress);
             dm.openDevice(deviceInProgMode);
 
             UidInfo uidInfo = dm.requestUIDFromDevice();
@@ -441,50 +440,5 @@ public class Updater implements Runnable {
                     cause.getClass().getSimpleName());
         }
         logger.debug("", e); // todo see logback issue https://github.com/qos-ch/logback/issues/876
-    }
-
-    public IndividualAddress startIntoBootLoader(IndividualAddress device, IndividualAddress progDevice)
-            throws UpdaterException, InterruptedException {
-        IndividualAddress deviceInProgMode;
-        if (device == null) {
-            // Only option --progDevice is set => check if device is already in programming mode
-            logger.debug("Check if progDevice {} is in programming mode", progDevice);
-            deviceInProgMode = dm.checkDevicesInProgrammingMode(progDevice);
-            return deviceInProgMode;
-        }
-
-        // Option --device handling
-//        if (dm.isAddressOccupied(device)) {
-//            logger.debug("device {} responded to APCI_DEVICEDESCRIPTOR_READ_PDU", device);
-            IndividualAddress[] devicesInProgMode = dm.listDevicesInProgrammingMode();
-            if  (devicesInProgMode.length == 0) {
-                // No devices in progMode
-                logger.debug("Starting device {} into bootloader mode", device);
-                dm.restartDeviceToBootloader(device); // Try to restart the device into bootloader mode
-                deviceInProgMode = dm.checkDevicesInProgrammingMode(device, progDevice);
-            }
-            else if ((devicesInProgMode.length == 1) &&
-                    ((devicesInProgMode[0].equals(device)) || (devicesInProgMode[0].equals(progDevice)))) {
-                logger.debug("device/progDevice {} is already in programming mode", devicesInProgMode[0]);
-                deviceInProgMode = devicesInProgMode[0];
-            }
-            else {
-                // Multiple devices are in progMode or device/progDevice is not in progMode
-                throw new UpdaterException(getExceptionMessage(devicesInProgMode,
-                        new IndividualAddress[]{device, progDevice}));
-            }
-//        }
-//        else {
-//            logger.info("{}Device {} is not responding or is running legacy bootloader!{}",
-//                    ansi().fgBright(INFO), device, ansi().reset());
-//            // todo this is old behavior, but in case of the wrong --device we can also land here with new behavior
-//            dm.restartDeviceToBootloader(device);
-//            deviceInProgMode = dm.checkDevicesInProgrammingMode(progDevice);
-//            if (deviceInProgMode == progDevice) {
-//                logger.warn("{}Falling back to --progDevice {}!{}", ansi().fgBright(WARN), progDevice, ansi().reset());
-//            }
-//        }
-
-        return deviceInProgMode;
     }
 }
