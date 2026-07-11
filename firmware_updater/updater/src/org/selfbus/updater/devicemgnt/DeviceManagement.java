@@ -171,7 +171,7 @@ public class DeviceManagement implements AutoCloseable {
      *
      * @param device the IndividualAddress of the device to restart
      */
-    public void restartDeviceToBootloader(IndividualAddress device) throws InterruptedException {
+    private void restartDeviceToBootloader(IndividualAddress device) throws InterruptedException {
         int restartProcessTime = Mcu.DEFAULT_RESTART_TIME_SECONDS;
         try (Destination dest = this.mc.createDestination(device, true, false, false)) {
             logger.info("Restarting device {}{}{} into bootloader", ansi().fgBright(OK), device, ansi().reset());
@@ -645,9 +645,20 @@ public class DeviceManagement implements AutoCloseable {
                 reconnect();
             }
 
-            try (ManagementProcedures mgmt = new ManagementProceduresImpl(link)) {
-                return mgmt.writeAddress(device);
+            synchronized (mc) {
+                final var oldTimeout = mc.responseTimeout();
+                try (Destination verify = mc.createDestination(device, true)) {
+                    mc.responseTimeout(Duration.ofSeconds(1));
+                    mc.writeAddress(device);
+                    // if this throws, either programming failed, or its
+                    // probably some network configuration issue
+                    mc.readDeviceDesc(verify, 0);
+                }
+                finally {
+                    mc.responseTimeout(oldTimeout);
+                }
             }
+            return true;
         }
         catch (KNXDisconnectException e) {
             // Probably legacy bootloader
