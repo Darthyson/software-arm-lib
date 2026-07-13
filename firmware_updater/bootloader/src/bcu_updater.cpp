@@ -63,10 +63,6 @@ bool BcuUpdate::processApci(const ApciCommand apciCmd, unsigned char * telegram,
 
     switch(apciCmd)
     {
-        case APCI_MEMORY_WRITE_PDU:
-            handleDeprecatedApciMemoryWrite(sendBuffer);
-            return true;
-
         case APCI_USERMSG_MANUFACTURER_0:
             handleApciUsermsgManufacturer(sendBuffer, &telegram[offset], dataLength);
             return true;

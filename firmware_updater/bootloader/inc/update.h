@@ -38,12 +38,5 @@ void handleApciUsermsgManufacturer(uint8_t * sendBuffer, uint8_t * data, uint16_
  */
 void resetUPDProtocol();
 
-/**
- * Handles deprecated KNX memory requests by sending the old @ref UPD_SEND_LAST_ERROR with the old value of @ref UDP_NOT_IMPLEMENTED
- *
- * @param sendBuffer The buffer to write the response into
- */
-void handleDeprecatedApciMemoryWrite(uint8_t * sendBuffer);
-
 #endif /* SB_BOOTLOADER_UPDATE_H_ */
 /** @}*/

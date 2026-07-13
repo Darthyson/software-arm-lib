@@ -930,19 +930,6 @@ void updProgramDecompressedDataToFlash(const uint8_t * data)
 #endif
 }
 
-void handleDeprecatedApciMemoryWrite(uint8_t * sendBuffer)
-{
-    sendBuffer[5] = 0x63 + 4; // routing count in high nibble + response length in low nibble
-    sendBuffer[6] = 0x42;     // APCI_MEMORY_RESPONSE_PDU
-    sendBuffer[7] = 0x40 | 4; // APCI_MEMORY_RESPONSE_PDU
-    sendBuffer[8] = 0;        // [8-9] old value of UPD_SEND_LAST_ERROR = 0x0015
-    sendBuffer[9] = 0x15;
-    sendBuffer[10] = 0xff;    // [10-13] old value of UDP_NOT_IMPLEMENTED = 0x0000FFFF
-    sendBuffer[11] = 0xff;
-    sendBuffer[12] = 0x00;
-    sendBuffer[13] = 0x00;
-}
-
 void handleApciUsermsgManufacturerInternal(uint8_t * data, uint16_t size)
 {
     if (size < sizeof(updCommands[idxInvalidUPDCommand].code))
