@@ -429,6 +429,11 @@ public class Updater implements Runnable {
                     ansi().fgBright(WARN), System.lineSeparator(), e, ansi().reset());
             throw e;
         }
+        finally {
+            if (dm != null) {
+                dm.close();
+            }
+        }
     }
 
     private static void logExceptionUserFriendly(Throwable e) {
