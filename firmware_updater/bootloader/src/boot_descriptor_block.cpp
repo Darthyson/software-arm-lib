@@ -53,6 +53,18 @@
      */
     extern uint32_t _image_size; // NOLINT(*-reserved-identifier)
 
+    /**
+     * @def APPLICATION_FIRST_ADDRESS
+     * @brief Start address of the application firmware in flash memory.
+     */
+#ifdef DEBUG
+    constexpr uint32_t APPLICATION_FIRST_ADDRESS = 0x7000;
+#else
+    constexpr uint32_t APPLICATION_FIRST_ADDRESS = 0x3000;
+#endif
+
+static_assert((APPLICATION_FIRST_ADDRESS % FLASH_PAGE_SIZE) == 0,
+    "APPLICATION_FIRST_ADDRESS must be FLASH_PAGE_SIZE aligned");
 
     ///\todo Implement these for unit tests in cpu-emulation (untested)
     // uint8_t __base_Flash = FLASH[0x0000]; // NOLINT(*-reserved-identifier)
@@ -185,15 +197,7 @@ uint32_t flashSize()
 
 uint8_t * applicationFirstAddress()
 {
-    uint8_t * appFirstAddress = bootLoaderFirstAddress() + bootLoaderSize();
-    // boot descriptor block is placed in front of the application,
-    // so we need space after bootloader and before the application
-    appFirstAddress += BOOT_BLOCK_DESC_SIZE;
-    // align to the next flash page
-    void * ptr = appFirstAddress;
-    std::size_t space = FLASH_PAGE_ALIGNMENT;
-    std::align(FLASH_PAGE_SIZE, 1, ptr, space);
-    return static_cast<uint8_t *>(ptr);
+    return reinterpret_cast<uint8_t *>(APPLICATION_FIRST_ADDRESS);
 }
 
 uint8_t * bootDescriptorBlockAddress()
