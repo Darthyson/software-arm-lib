@@ -1,6 +1,7 @@
 #include "LPC11xx.h"
 #include <string.h>
 #include "iap_emu.h"
+#include "sblib/platform.h"
 
 SCB_Type           _SCB;
 SysTick_Type       _SysTick;
@@ -37,16 +38,16 @@ unsigned int wfiSystemTimeInc = 0;
 
 typedef enum
 {
-    IAP_PREPARE = 50,         // Prepare sector(s) for write
-    IAP_COPY_RAM2FLASH,     // Copy RAM to Flash
-    IAP_ERASE,                 // Erase sector(s)
-    IAP_BLANK_CHECK,         // Blank check sector(s)
-    IAP_READ_PART_ID,         // Read chip part ID
-    IAP_READ_BOOT_VER,         // Read chip boot code version
-    IAP_COMPARE,             // Compare memory areas
-    IAP_REINVOKE_ISP,         // Reinvoke ISP
-    IAP_READ_UID,             // Read unique ID
-    IAP_ERASE_PAGE             // Erase page(s)
+    IAP_PREPARE = 50,   /** Prepare sector(s) for write */
+    IAP_COPY_RAM2FLASH, /** Copy RAM to Flash */
+    IAP_ERASE,          /** Erase sector(s) */
+    IAP_BLANK_CHECK,    /** Blank check sector(s) */
+    IAP_READ_PART_ID,   /** Read chip part ID */
+    IAP_READ_BOOT_VER,  /** Read chip boot code version */
+    IAP_COMPARE,        /** Compare memory areas */
+    IAP_REINVOKE_ISP,   /** Reinvoke ISP */
+    IAP_READ_UID,       /** Read unique ID */
+    IAP_ERASE_PAGE      /** Erase page(s) */
 } IAP_Commands;
 
 typedef enum
@@ -143,6 +144,15 @@ void IAP_Call (uintptr_t * cmd, uintptr_t * stat)
         memcpy(cmd, &guid, 16);
         break;
     }
+
+    case IAP_ERASE_PAGE:
+        i =  *(cmd + 1) * FLASH_PAGE_SIZE;        // start page number
+        end = (*(cmd + 2) + 1) * FLASH_PAGE_SIZE; // end page number
+        for (; i < end && i < FLASH_SIZE; i++)
+        {
+            FLASH[i] = 0xff;
+        }
+        break;
 
     default:
         * stat = INVALID_COMMAND;
