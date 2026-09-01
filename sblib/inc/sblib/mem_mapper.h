@@ -13,208 +13,440 @@
 #ifndef SBLIB_MEM_MAPPER_H_
 #define SBLIB_MEM_MAPPER_H_
 
-#include <sblib/types.h>
 #include <sblib/platform.h>
-#include <sys/param.h>
 
-#define MEM_MAPPER_SUCCESS         0
-#define MEM_MAPPER_INVALID_ADDRESS -1
-#define MEM_MAPPER_NOT_MAPPED      -2
-#define MEM_MAPPER_OUT_OF_MEMORY   -4
-#define MEM_MAPPER_INVALID_LENGTH  -8
-
-///\todo class Memory as base class for MemMapper
+/**
+ * @brief Maps a 16-bit (0x0-0xffff) virtual address space onto pages of physical flash memory.
+ *
+ * @details
+ * MemMapper provides a virtual memory abstraction over a region of on-chip flash memory.
+ * The virtual address space is partitioned into 256 byte pages.
+ * Entries are stored XOR-inverted (raw = value ^ 0xff) so that an erased flash
+ * byte (0xff) is interpreted as "unallocated" (logical value 0).
+ * Write operations are buffered in a RAM write buffer (@ref writeBuf) and only
+ * committed to flash on demand via @ref doFlash(). If @ref autoAddPage is
+ * @c true, a new physical flash page is allocated automatically when a write
+ * targets an unmapped virtual page. Otherwise, pages must be pre-allocated
+ * with @ref addRange() before writing.<br>
+ * Physical flash layout of the managed memory region:
+ * @code
+ *   Offset 0 : allocation table (one flash page, @ref FLASH_PAGE_SIZE bytes)
+ *   Offset FLASH_PAGE_SIZE: first usable data page
+ * @endcode
+ *
+ * @note The physical start address of the managed region is @code FLASH_BASE_ADDRESS + flashBase @endcode.
+ * @note One flash page is @c FLASH_PAGE_SIZE (256) bytes on supported targets.
+ *
+ * @warning The first flash page of the managed region is reserved for the <em>allocation
+ *          table</em> that maps virtual page indices to physical flash page numbers.
+ */
 class MemMapper
 {
 public:
+    /**
+     * @brief Constructs a MemMapper for the given flash region.
+     *
+     * Loads the allocation table from flash and verifies its integrity. If the
+     * table appears corrupted it is reset to unallocated.
+     *
+     * @param flashBase   Page-aligned offset (within the 16-bit address space)
+     *                    that marks the start of the managed flash region
+     *                    (e.g. @c 0xEF00. The effective first usable physical address is
+     *                    <tt>0xF000</tt>.)
+     * @param flashSize   Size of the managed region in bytes. Must be a
+     *                    multiple of @c FLASH_PAGE_SIZE (256 bytes).
+     * @param autoAddPage If @c true, writing to an unmapped virtual address
+     *                    automatically allocates a new flash page for it.
+     *                    If @c false (default), pages must be pre-allocated
+     *                    with @ref addRange() before writing.
+     * @warning The first flash page of the managed region is reserved for the <em>allocation
+     *          table</em> which is internally used to map virtual page indices to physical flash page numbers.
+     */
+    explicit MemMapper(uint32_t flashBase, uint32_t flashSize, bool autoAddPage = false);
+
+    /** Default constructor is not allowed. */
     MemMapper() = delete;
+
+    /** Default Virtual destructor */
     virtual ~MemMapper() = default;
-    /**
-     * Creates a MemMapper instance with flash base address and size
-     *
-     *
-     * @param flashBase - must be a page aligned address within 16 bit address space
-     * @param flashSize - must be a page aligned size in bytes
-     * @param autoAddPage - when set to true non existing pages are allocated automatically
-     */
-    explicit MemMapper(unsigned int flashBase = 0xf000, unsigned int flashSize = 0x1000,
-              bool autoAddPage = false);
 
     /**
-     * Write a single byte to virtual address
-     *
-     *
-     * @param virtAddress - a 16 bit virtual address
-     * @param data - a byte that should be written to the address
-     * @return 0 on success, else error
+     * @brief Error codes returned by MemMapper operations.
      */
-    int writeMem(int virtAddress, uint8_t data);
-
-    /**
-     * Write an array of byte to virtual address
-     *
-     *
-     * @param virtAddress - a 16 bit virtual address
-     * @param data - bytes that should be written to the address
-     * @param length - number of bytes to write
-     * @return 0 on success, else error
-     */
-    virtual int writeMemPtr(int virtAddress, uint8_t* data, int length);
-
-    /**
-     * Read a single byte from virtual address
-     *
-     *
-     * @param virtAddress - a 16 bit virtual address
-     * @param data - a reference to a byte that should contain the read data
-     * @param forceFlash - force pending data to be flashed before operation
-     * @return 0 on success, else error
-     */
-    int readMem(int virtAddress, uint8_t& data, bool forceFlash = false) const;
-
-    /**
-     * Read a single byte from virtual address
-     *
-     *
-     * @param virtAddress - a 16 bit virtual address
-     * @param data - a reference to a byte that should contain the read data
-     * @param length - number of bytes to read
-     * @param forceFlash - force pending data to be flashed before operation
-     * @return 0 on success, else error
-     */
-    virtual int readMemPtr(int virtAddress, uint8_t* data, int length, bool forceFlash =
-                                   false);
-
-    /**
-     * Add a prereserved range
-     *
-     *
-     * @param virtAddress - a 16 bit virtual address
-     * @param length - the size of the range
-     * @return 0 on success, else error
-     */
-    int addRange(int virtAddress, int length);
-
-    /**
-     * Force writing all pending data to flash
-     *
-     *
-     * @return 0 nothing flashed, 1 allocation table flashed, 2 data page flashed
-     */
-    int doFlash(void) const;
-
-    /**
-     * Change endianess of 16 and 32bit methods
-     *
-     * @param value - BIG_ENDIAN or LITTLE_ENDIAN
-     */
-    void setEndianess(const int value)
+    enum class Error: int8_t
     {
-        endianess = value;
-    }
+        Success        =  0,  ///< Operation completed successfully.
+        InvalidAddress = -1,  ///< Virtual address is out of range or not page-aligned.
+        NotMapped      = -2,  ///< Virtual address has no associated flash page.
+        OutOfMemory    = -4,  ///< No more flash pages are available for allocation.
+        InvalidLength  = -8,  ///< Length invalid.
+    };
 
     /**
-     * Access the user EEPROM to get a unsigned byte
-     *
-     * @param virtAddress - the virtual address of the data byte to access.
-     * @return The data byte.
+     * @brief Bitmask flags indicating which flash areas were written.
      */
-    unsigned char getUInt8(int virtAddress) const;
-    unsigned char& operator[](const int nIndex) const;
+    enum FlashResult: uint8_t
+    {
+        FlashedNothing         = 0, ///< Nothing needed to be written to flash.
+        FlashedAllocationTable = 1, ///< The allocation table page was written to flash.
+        FlashedWriteBuffer     = 2, ///< The data write buffer (one data page) was written to flash.
+    };
 
     /**
-     * Access the user EEPROM to get a unsigned short
+     * @brief Writes a single byte to a virtual address.
      *
-     * @param virtAddress - the virtual address of the 16 bit data to access.
-     * @return The 16bit as unsigned short.
+     * The write is buffered in RAM and not immediately committed to flash.
+     * Call @ref doFlash() to persist. If the target page is not yet mapped
+     * and @ref autoAddPage is @c true, a new flash page is allocated first.
+     *
+     * @param virtAddress 16-bit virtual address to write to.
+     * @param data        Byte value to write.
+     * @return @ref Error::Success on success, otherwise an @ref Error code.
      */
-    unsigned short getUInt16(int virtAddress) const;
+    Error writeMem(uint32_t virtAddress, uint8_t data);
 
     /**
-     * Access the user EEPROM to get a unsigned int
+     * @brief Writes an array of bytes starting at a virtual address.
      *
-     * @param virtAddress - the virtual address of the 32 bit data to access.
-     * @return The 32bit as unsigned int.
+     * Calls @ref writeMem() for each byte in sequence. Stops and returns the
+     * error code immediately if any individual write fails.
+     *
+     * @param virtAddress 16-bit virtual start address.
+     * @param data        Pointer to the source data buffer.
+     * @param length      Number of bytes to write.
+     * @return @ref Error::Success on success, otherwise an @ref Error code.
      */
-    unsigned int getUInt32(int virtAddress) const;
+    virtual Error writeMemPtr(uint32_t virtAddress, uint8_t* data, uint32_t length);
 
     /**
-     * Access the user EEPROM to set a unsigned byte
+     * @brief Reads a single byte from a virtual address.
      *
-     * @param virtAddress - the virtual address of the data byte to access.
-     * @param data - the value to be written
-     * @return error value of flash operation
-     */
-
-    int setUInt8(int virtAddress, uint8_t data);
-
-    /**
-     * Access the user EEPROM to set a unsigned short
+     * If @p forceFlash is @c true, pending writes are flushed to flash before
+     * reading. Otherwise the RAM write buffer is consulted when the requested page is currently buffered.
      *
-     * @param virtAddress - the virtual address of the 16 bit data to access.
-     * @param data - the value to be written
-     * @return error value of flash operation
+     * @param virtAddress 16-bit virtual address to read from.
+     * @param data        Reference that receives the read byte. Set to @c 0x00
+     *                    on error.
+     * @param forceFlash  Flush pending writes to flash before reading
+     *                    (default: @c false).
+     * @return @ref Error::Success on success, otherwise an @ref Error code.
      */
-    int setUInt16(int virtAddress, unsigned short data);
+    Error readMem(uint32_t virtAddress, uint8_t& data, bool forceFlash = false) const;
 
     /**
-     * Access the user EEPROM to set a unsigned int
+     * @brief Reads an array of bytes starting at @p virtAddress.
      *
-     * @param virtAddress - the virtual address of the 32 bit data to access.
-     * @param data - the value to be written
-     * @return error value of flash operation
+     * Calls @ref readMem() for each byte in sequence. Stops and returns the
+     * error code immediately if any individual read fails.
+     *
+     * @param virtAddress 16-bit virtual start address.
+     * @param data        Pointer to the destination data buffer.
+     * @param length      Number of bytes to read.
+     * @param forceFlash  Flush pending writes to flash before reading.
+     * @return @ref Error::Success on success, otherwise an @ref Error code.
      */
-    int setUInt32(int virtAddress, unsigned int data);
+    virtual Error readMemPtr(uint32_t virtAddress, uint8_t* data, uint32_t length, bool forceFlash);
 
     /**
-     * Access the user EEPROM as a pointer
+     * @brief Pre-allocates flash pages for a virtual address range.
      *
-     * @param virtAddress - the virtual address of the data block.
-     * @param forceFlash - force pending data to be flashed before operation
-     * @return a pointer to the desired data
+     * For each 256-byte virtual page within [@p virtAddress,
+     * @p virtAddress + @p length) that is not yet mapped, a new physical flash
+     * page is allocated and the allocation table is immediately committed to
+     * flash. Already-mapped pages are skipped.
+     *
+     * @param virtAddress Page-aligned 16-bit virtual start address.
+     *                    Must be a multiple of @c FLASH_PAGE_SIZE.
+     * @param length      Size of the range in bytes. Must be non-zero and a
+     *                    multiple of @c FLASH_PAGE_SIZE.
+     * @return @ref Error::Success on success, otherwise an @ref Error code.
+     * @retval Error::InvalidAddress if @p virtAddress is not page-aligned or
+     *                               the page index exceeds the allocation table size.
+     * @retval Error::InvalidLength  if @p length is zero or not a multiple of
+     *                               @c FLASH_PAGE_SIZE.
+     * @retval Error::OutOfMemory    if there are not enough free flash pages.
      */
-    uint8_t* memoryPtr(int virtAddress, bool forceFlash = true) const;
+    Error addRange(uint32_t virtAddress, uint32_t length);
 
     /**
-     * Query about mapping
+     * @brief Flushes all pending in-RAM changes to flash.
      *
-     * @param virtAddress - the virtual address of the data block.
-     * @return true if virtual address is mapped
+     * Commits the allocation table and/or the data write buffer to flash if
+     * either has been modified since the last flush.
+     *
+     * @return Bitmask of @ref FlashResult flags:
+     *         - @ref FlashedNothing         – nothing needed to be written.
+     *         - @ref FlashedAllocationTable – allocation table was committed.
+     *         - @ref FlashedWriteBuffer     – data page buffer was committed.
      */
-    virtual bool isMapped(int virtAddress);
+    int32_t doFlash() const;
 
     /**
-     * Query about range mapping
+     * @brief Sets the byte order used by the multi-byte accessor methods.
      *
-     * @param virtStartAddress - the virtual start address of the data block
-     * @param virtEndAddress - the virtual end address of the data block
-     * @return true if virtual address range is mapped
+     * @param value @c BIG_ENDIAN or @c LITTLE_ENDIAN.
      */
-    virtual bool isMappedRange(int virtStartAddress, int virtEndAddress);
+    void setEndianess(uint32_t value);
+
+    /**
+     * @brief Reads an unsigned byte from a virtual address.
+     *
+     * @param virtAddress 16-bit virtual address of the byte to read.
+     * @return The byte value at @p virtAddress, or @c 0 if the address is not
+     *         mapped or an error occurs.
+     */
+    uint8_t getUInt8(uint32_t virtAddress) const;
+
+    /**
+     * @brief The Array index operator returns a reference to the byte at a virtual address.
+     *
+     * Equivalent to <tt>*memoryPtr(nIndex, true)</tt>.
+     *
+     * @param nIndex 16-bit virtual address used as the index.
+     * @return Reference to the byte at @p nIndex.
+     * @warning Behaviour is undefined if @p nIndex is not mapped to a flash page.
+     */
+    uint8_t& operator[](uint32_t nIndex) const;
+
+    /**
+     * @brief Reads an unsigned 16-bit value from a virtual address.
+     *
+     * @param virtAddress 16-bit virtual address of the 16-bit word.
+     * @return The unsigned 16-bit value respecting the current endianness, or @c 0 on error.
+     */
+    uint16_t getUInt16(uint32_t virtAddress) const;
+
+    /**
+     * @brief Reads an unsigned 32-bit value from a virtual address.
+     *
+     * @param virtAddress 16-bit virtual address of the 32-bit word.
+     * @return The unsigned 32-bit value respecting the current endianness, or @c 0 on error.
+     */
+    uint32_t getUInt32(uint32_t virtAddress) const;
+
+    /**
+     * @brief Writes an unsigned byte to a virtual address.
+     *
+     * @param virtAddress 16-bit virtual address.
+     * @param data        Byte value to write.
+     * @return @ref Error::Success on success, otherwise an @ref Error code.
+     */
+    Error setUInt8(uint32_t virtAddress, uint8_t data);
+
+    /**
+     * @brief Writes an unsigned 16-bit value to a virtual address.
+     *
+     * @param virtAddress 16-bit virtual address.
+     * @param data        16-bit value to write.
+     * @return @ref Error::Success on success, otherwise an @ref Error code.
+     */
+    Error setUInt16(uint32_t virtAddress, uint16_t data);
+
+    /**
+     * @brief Writes an unsigned 32-bit value to a virtual address.
+     *
+     * @param virtAddress 16-bit virtual address.
+     * @param data        32-bit value to write.
+     * @return @ref Error::Success on success, otherwise an @ref Error code.
+     */
+    Error setUInt32(uint32_t virtAddress, uint32_t data);
+
+    /**
+     * @brief Returns a raw pointer to the byte at a virtual address.
+     *
+     * If the target page is currently buffered in the write buffer and
+     * @p forceFlash is @c false, a pointer into the RAM write buffer is
+     * returned. Otherwise the write buffer is first committed to flash and
+     * the returned pointer addresses the physical flash directly.
+     *
+     * @param virtAddress 16-bit virtual address.
+     * @param forceFlash  If @c true (default), flush the write buffer to flash
+     *                    first so the pointer addresses physical flash.
+     * @return Pointer to the byte at @p virtAddress, or @c nullptr if the
+     *         address is invalid or not mapped.
+     * @warning If @c forceFlash is @c false, pointer arithmic usage on the return pointer may cause access violations.
+     */
+    uint8_t* memoryPtr(uint32_t virtAddress, bool forceFlash = true) const;
+
+    /**
+     * @brief Checks whether a virtual address is mapped to a flash page.
+     *
+     * When @ref autoAddPage is @c true this method always returns @c true.
+     *
+     * @param virtAddress 16-bit virtual address to check.
+     * @return @c true if @p virtAddress is mapped to a physical flash page,
+     *         @c false otherwise.
+     */
+    virtual bool isMapped(uint32_t virtAddress);
+
+    /**
+     * @brief Checks whether both endpoints of a virtual address range are mapped.
+     *
+     * @param virtStartAddress 16-bit virtual start address of the range.
+     * @param virtEndAddress   16-bit virtual end address of the range (inclusive).
+     * @return @c true if both endpoints are mapped, @c false otherwise.
+     */
+    virtual bool isMappedRange(uint32_t virtStartAddress, uint32_t virtEndAddress);
 
 private:
-    int allocatePage(int virtPage);
-    int getFlashPageNum(int virtAddress) const;
-    unsigned int getUIntX(int virtAddress, int length) const;
-    int setUIntX(int virtAddress, int length, int val);
+    /**
+     * @brief Allocates the next available physical flash page for a virtual page.
+     *
+     * Scans @ref allocTable to determine @ref lastAllocated (the highest physical page in use),
+     * then assigns the following physical page to @p virtPage, records it in the allocation table,
+     * zeroes @ref writeBuf, and sets @ref writePage to the new page.
+     *
+     * @param virtPage Virtual page index
+     * @return @ref Error::Success on success, @ref Error::OutOfMemory if the managed flash region is exhausted.
+     */
+    Error allocatePage(uint32_t virtPage);
 
-    // These members are initialized in the constructor
-    uint8_t* flashBase; //memory layout: flashBase + 0 = allocTable, flashBase + 1 = usableMemory
-    unsigned int flashBasePage;
-    unsigned int flashSize;
-    unsigned int flashSizePages;
-    bool autoAddPage;
-    // End of members initialized in the constructor
+    /**
+     * @brief Looks up the physical flash page number for a virtual address.
+     *
+     * @param virtAddress     16-bit virtual address.
+     * @param flashPageNumber Output: receives the physical page number, or 0 if the virtual page is not mapped.
+     * @return @ref Error::Success, or @ref Error::InvalidAddress if @p virtAddress is outside the addressable range.
+     */
+    Error getFlashPageNum(uint32_t virtAddress, uint32_t* flashPageNumber) const;
 
-    static constexpr uint8_t InvalidAllocTableByte = 0xff;
-    alignas(FLASH_RAM_BUFFER_ALIGNMENT) uint8_t allocTable[FLASH_PAGE_SIZE]{};
-    alignas(FLASH_RAM_BUFFER_ALIGNMENT) mutable uint8_t writeBuf[FLASH_PAGE_SIZE]{};
-    mutable int writePage = 0;
-    unsigned int lastAllocated = 0;
-    int endianess = LITTLE_ENDIAN;
+    /**
+     * @brief Reads a multi-byte unsigned integer from a virtual address.
+     *
+     * Assembles bytes in the order defined by @ref endianess.
+     *
+     * @param virtAddress 16-bit virtual start address.
+     * @param length      Number of bytes to read.
+     * @return Assembled unsigned integer value, or @c 0 on error.
+     */
+    uint32_t getUIntX(uint32_t virtAddress, uint32_t length) const;
 
-    mutable bool flashMemModified = false;
-    mutable bool allocTableModified = false;
+    /**
+     * @brief Writes a multi-byte unsigned integer to a virtual address.
+     *
+     * Writes bytes in the order defined by @ref endianess.
+     *
+     * @param virtAddress 16-bit virtual start address.
+     * @param length      Number of bytes to write.
+     * @param data        Value to write.
+     * @return @ref Error::Success on success, otherwise an @ref Error code.
+     */
+    Error setUIntX(uint32_t virtAddress, uint32_t length, uint32_t data);
+
+    /**
+     * Pointer to the start of the managed flash region.
+     * @note Allocation table is located at offset 0
+     * @note Usable data starts from offset @c FLASH_PAGE_SIZE
+     * */
+    uint8_t* flashBase;
+    uint32_t flashBasePage;  ///< Physical page number of @ref flashBase which holds the allocation table.
+    uint32_t flashSize;      ///< Total size of the managed flash region in bytes.
+    uint32_t flashSizePages; ///< Total size of the managed region in pages (@ref flashSize / @c FLASH_PAGE_SIZE).
+    bool autoAddPage;        ///< When @c true, unmapped virtual pages are allocated automatically on write.
+
+    static constexpr uint8_t InvalidAllocTableByte = 0xff; ///< Raw flash byte representing an unallocated entry.
+
+    /**
+     * @brief RAM copy of the allocation table.
+     *
+     * Each byte stores a physical page number XOR-inverted (raw = value ^ 0xff).
+     * 0xff raw means unallocated.
+     */
+    alignas(FLASH_RAM_BUFFER_ALIGNMENT) uint8_t allocTable[FLASH_PAGE_SIZE];
+
+    /** @brief Number of entries in the @ref allocTable. */
+    static constexpr uint32_t allocTableSize = sizeof(allocTable)/sizeof(allocTable[0]);
+
+    /** @brief RAM write buffer for the currently active flash data page. */
+    alignas(FLASH_RAM_BUFFER_ALIGNMENT) mutable uint8_t writeBuf[FLASH_PAGE_SIZE];
+    static constexpr uint32_t writeBufSize = sizeof(writeBuf)/sizeof(writeBuf[0]); ///< Size of @ref writeBuf in bytes.
+
+    mutable uint32_t writePage; ///< Physical page number of the flash page currently loaded in @ref writeBuf.
+    uint32_t lastAllocated;     ///< Physical page number of the last allocated flash page (0 if none allocated yet).
+    uint32_t endianess;         ///< Byte order for multi-byte accessors: @c BIG_ENDIAN or @c LITTLE_ENDIAN.
+
+    mutable bool flashMemModified;   ///< @c true when @ref writeBuf contains changes not yet committed to flash.
+    mutable bool allocTableModified; ///< @c true when @ref allocTable contains changes not yet committed to flash.
+
+    /**
+     * @brief Writes the allocation table to flash if it has been modified.
+     * @return @c true if the table was written, @c false otherwise.
+     */
+    bool doFlashAllocTable() const;
+
+    /**
+     * @brief Writes the data write buffer to flash if it has been modified.
+     * @return @c true if the buffer was written, @c false otherwise.
+     */
+    bool doFlashWriteTable() const;
+
+    /**
+     * @brief Erases a flash page and programs it with the contents of @p buffer.
+     *
+     * @param buffer     Pointer to the @c FLASH_PAGE_SIZE byte buffer to write.
+     * @param pageNumber Physical flash page number to write.
+     * @warning Calls @c fatalError() if the IAP erase or program operation fails.
+     */
+    static void writeToFlashPage(const uint8_t* buffer, uint32_t pageNumber) ;
+
+    /**
+     * @brief Resets the in-RAM allocation table to unallocated.
+     *
+     * Fills @ref allocTable with @ref InvalidAllocTableByte and marks it as
+     * modified so it will be committed on the next @ref doFlash().
+     */
+    void clearAllocTable();
+
+    /**
+     * @brief Copies the allocation table from flash into the RAM buffer.
+     *
+     * Reads @c FLASH_PAGE_SIZE bytes from the flash allocation table page into
+     * @ref allocTable and clears @ref allocTableModified.
+     */
+    void loadAllocTable();
+
+    /**
+     * @brief Writes a single entry to the in-RAM allocation table.
+     *
+     * Stores the value XOR-inverted (value ^ 0xff) to match the raw flash
+     * representation where 0xff means "unallocated". Sets @ref allocTableModified
+     * if the stored value actually changes.
+     *
+     * @param index Entry index equal to the virtual page number.
+     * @param value Physical flash page number to store.
+     */
+    void writeAllocTableEntry(uint8_t index, uint8_t value);
+
+    /**
+     * @brief Reads a single entry from the in-RAM allocation table.
+     *
+     * Returns the XOR-inverted raw byte, yielding 0 for an unallocated entry
+     * and the physical page number for an allocated one.
+     *
+     * @param index Entry index equal to the virtual page number.
+     * @return Physical flash page number, or @c 0 if the entry is unallocated.
+     */
+    uint8_t readAllocTableEntry(uint8_t index) const;
+
+    /**
+     * @brief Checks the allocation table for corruption and resets it if corrupted.
+     *
+     * Scans @ref allocTable for raw zero bytes (which would represent the
+     * physical page number 0xff — an unlikely valid value). Finding more than
+     * one such byte is treated as a sign of table corruption (e.g. caused by a
+     * partial flash erase), and @ref clearAllocTable() is called to recover.
+     *
+     * @note A more thorough check should verify that no physical page number appears more than once in the table.
+     */
+    void verifyAllocTable();
+
+    /**
+     * @brief Returns the byte offset within a page from a virtual address.
+     *
+     * @param virtAddress A virtual address.
+     * @return The byte offset within the page.
+     */
+    static uint32_t virtualAddressToIndex(uint32_t virtAddress);
 };
 
 #endif /* SBLIB_MEM_MAPPER_H_ */

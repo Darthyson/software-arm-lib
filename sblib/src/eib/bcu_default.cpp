@@ -288,11 +288,17 @@ bool BcuDefault::processApciMemoryOperation(unsigned int addressStart, uint8_t* 
             if (startFound && endFound)
             {
                 // start & end fit into memMapper
-                bool operationResult = false;
+                bool operationResult;
                 if (readMem)
-                    operationResult = memMapper->readMemPtr(addressStart, &payLoad[0], lengthPayLoad) == MEM_MAPPER_SUCCESS;
+                {
+                    operationResult = memMapper->readMemPtr(addressStart, &payLoad[0], lengthPayLoad, false) ==
+                        MemMapper::Error::Success;
+                }
                 else
-                    operationResult = memMapper->writeMemPtr(addressStart, &payLoad[0], lengthPayLoad) == MEM_MAPPER_SUCCESS;
+                {
+                    operationResult = memMapper->writeMemPtr(addressStart, &payLoad[0], lengthPayLoad) ==
+                        MemMapper::Error::Success;
+                }
 
                 if (operationResult)
                 {
@@ -311,9 +317,15 @@ bool BcuDefault::processApciMemoryOperation(unsigned int addressStart, uint8_t* 
                     if (operationResult)
                     {
                         if (readMem)
-                            operationResult = memMapper->readMemPtr(addressStart, &payLoad[0], 1) == MEM_MAPPER_SUCCESS;
+                        {
+                            operationResult = memMapper->readMemPtr(addressStart, &payLoad[0], 1, false) ==
+                                MemMapper::Error::Success;
+                        }
                         else
-                            operationResult = memMapper->writeMemPtr(addressStart, &payLoad[0], 1) == MEM_MAPPER_SUCCESS;
+                        {
+                            operationResult = memMapper->writeMemPtr(addressStart, &payLoad[0], 1) ==
+                                MemMapper::Error::Success;
+                        }
                     }
 
                     if (operationResult)
