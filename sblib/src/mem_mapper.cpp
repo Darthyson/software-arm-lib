@@ -17,35 +17,27 @@
 #include <cstring>
 
 MemMapper::MemMapper(const uint32_t flashBase, const uint32_t flashSize, const bool autoAddPage) :
-    flashBase(FLASH_BASE_ADDRESS + flashBase),
-    flashBasePage(iapPageOfAddress(this->flashBase)),
+    allocationTablePtr(FLASH_BASE_ADDRESS + flashBase),
+    allocationTablePageNumber(iapPageOfAddress(this->allocationTablePtr)),
     flashSize(flashSize),
     flashSizePages(flashSize / FLASH_PAGE_SIZE),
     autoAddPage(autoAddPage),
-    allocTable{},
-    writeBuf{},
+    ramBuffer{},
     writePage(0),
     lastAllocated(0),
     endianess(LITTLE_ENDIAN),
     flashMemModified(false),
     allocTableModified(false)
 {
-    loadAllocTable();
     verifyAllocTable();
 }
 
-void MemMapper::loadAllocTable()
-{
-    memcpy(allocTable, this->flashBase, FLASH_PAGE_SIZE);
-    allocTableModified = false;
-}
-
-void MemMapper::verifyAllocTable()
+void MemMapper::verifyAllocTable() const
 {
     uint8_t zeroCounter = 0;
-    for (const uint8_t allocEntry : allocTable)
+    for (uint32_t i = 0; i < allocTableSize; i++)
     {
-        if (allocEntry != 0)
+        if (allocationTablePtr[i] != 0)
         {
             continue;
         }
@@ -60,25 +52,42 @@ void MemMapper::verifyAllocTable()
     }
 }
 
-void MemMapper::clearAllocTable()
+void MemMapper::clearAllocTable() const
 {
-    memset(allocTable, InvalidAllocTableByte, FLASH_PAGE_SIZE);
+    // Stage the cleared alloc table in ramBuffer, discarding any pending data page
+    flashMemModified = false;
+    writePage = allocationTablePageNumber;
+    memset(ramBuffer, InvalidAllocTableByte, ramBufferSize);
     allocTableModified = true;
+    static_cast<void>(doFlashAllocTable()); // static cast just to avoid compiler warning about unused return value
 }
 
-void MemMapper::writeAllocTableEntry(const uint8_t index, const uint8_t value)
+void MemMapper::writeAllocTableEntry(const uint8_t index, const uint8_t value) const
 {
     if (readAllocTableEntry(index) == value)
     {
         return;
     }
-    allocTable[index] = value ^ 0xff;
+    // Load the alloc table into ramBuffer if it is not already there
+    if (writePage != allocationTablePageNumber)
+    {
+        static_cast<void>(doFlashWriteTable()); // Flush any pending data page changes first
+        writePage = allocationTablePageNumber;  // Set writePage to the alloc table page
+        memcpy(ramBuffer, allocationTablePtr, ramBufferSize); // Copy alloc table from flash into ramBuffer
+    }
+    ramBuffer[index] = value ^ 0xff;
     allocTableModified = true;
 }
 
 uint8_t MemMapper::readAllocTableEntry(const uint8_t index) const
 {
-    return allocTable[index] ^ 0xff;
+    if (writePage == allocationTablePageNumber)
+    {
+        // Alloc table is currently staged in ramBuffer, read from there
+        return ramBuffer[index] ^ 0xff;
+    }
+
+    return allocationTablePtr[index] ^ 0xff;
 }
 
 void MemMapper::writeToFlashPage(const uint8_t* buffer, const uint32_t pageNumber)
@@ -100,8 +109,15 @@ bool MemMapper::doFlashAllocTable() const
         return false;
     }
 
-    writeToFlashPage(allocTable, flashBasePage);
+    if (writePage != allocationTablePageNumber)
+    {
+        return false;
+    }
+
+    // ramBuffer holds the modified alloc table
+    writeToFlashPage(ramBuffer, writePage);
     allocTableModified = false;
+    writePage = 0; // ramBuffer no longer holds a valid page
     return true;
 }
 
@@ -112,7 +128,12 @@ bool MemMapper::doFlashWriteTable() const
         return false;
     }
 
-    writeToFlashPage(writeBuf, writePage);
+    if (writePage == allocationTablePageNumber)
+    {
+        return false;
+    }
+
+    writeToFlashPage(ramBuffer, writePage);
     flashMemModified = false;
     return true;
 }
@@ -120,6 +141,7 @@ bool MemMapper::doFlashWriteTable() const
 int32_t MemMapper::doFlash() const
 {
     int result = FlashedNothing;
+    // Flush alloc table first. It uses ramBuffer so it must be done first
     if (doFlashAllocTable())
     {
         result = FlashedAllocationTable;
@@ -145,24 +167,29 @@ MemMapper::Error MemMapper::allocatePage(const uint32_t virtPage)
         }
     }
 
-    if (lastAllocated == (flashBasePage + flashSizePages - 1))
+    if (lastAllocated == (allocationTablePageNumber + flashSizePages - 1))
     {
         return Error::OutOfMemory; // we are out of memory
     }
 
+    uint32_t newPage;
     if (lastAllocated == 0)
     {
-        // no pages allocated yet.
-        writePage = flashBasePage + 1;
+        newPage = allocationTablePageNumber + 1;
     }
     else
     {
-        writePage = lastAllocated;
-        lastAllocated++;
+        newPage = lastAllocated + 1;
     }
-    memset(writeBuf, 0, writeBufSize);
+    lastAllocated = newPage;
 
-    writeAllocTableEntry(virtPage, writePage);
+    // Stage the alloc table update in ramBuffer and commit it to flash
+    writeAllocTableEntry(virtPage, newPage);
+    static_cast<void>(doFlashAllocTable()); // flushes ramBuffer (alloc table) to flash
+
+    // Now ramBuffer is free for the new data page
+    writePage = newPage;
+    memset(ramBuffer, 0, ramBufferSize);
     return Error::Success;
 }
 
@@ -245,7 +272,7 @@ MemMapper::Error MemMapper::writeMem(const uint32_t virtAddress, const uint8_t d
         if (writePage != 0)
         {
             // swap flash page into write buffer
-            memcpy(writeBuf, iapAddressOfPage(writePage), writeBufSize);
+            memcpy(ramBuffer, iapAddressOfPage(writePage), ramBufferSize);
         }
     }
 
@@ -261,7 +288,7 @@ MemMapper::Error MemMapper::writeMem(const uint32_t virtAddress, const uint8_t d
             }
         }
     }
-    writeBuf[virtualAddressToIndex(virtAddress)] = data;
+    ramBuffer[virtualAddressToIndex(virtAddress)] = data;
     flashMemModified = true;
 
     return Error::Success;
@@ -302,7 +329,7 @@ MemMapper::Error MemMapper::readMem(const uint32_t virtAddress, uint8_t& data, c
 
     if ((flashPageNum == writePage) && !forceFlash)
     {
-        data = writeBuf[virtualAddressToIndex(virtAddress)];
+        data = ramBuffer[virtualAddressToIndex(virtAddress)];
     }
     else
     {
@@ -361,7 +388,7 @@ uint8_t* MemMapper::memoryPtr(const uint32_t virtAddress, const bool forceFlash)
     }
     if ((flashPageNum == writePage) && !forceFlash)
     {
-        return writeBuf + virtualAddressToIndex(virtAddress);
+        return ramBuffer + virtualAddressToIndex(virtAddress);
     }
     return iapAddressOfPage(flashPageNum) + virtualAddressToIndex(virtAddress);
 }

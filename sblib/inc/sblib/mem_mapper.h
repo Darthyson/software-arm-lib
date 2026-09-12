@@ -23,9 +23,11 @@
  * The virtual address space is partitioned into 256 byte pages.
  * Entries are stored XOR-inverted (raw = value ^ 0xff) so that an erased flash
  * byte (0xff) is interpreted as "unallocated" (logical value 0).
- * Write operations are buffered in a RAM write buffer (@ref writeBuf) and only
- * committed to flash on demand via @ref doFlash(). If @ref autoAddPage is
- * @c true, a new physical flash page is allocated automatically when a write
+ * Write operations are buffered in a RAM write buffer (@ref ramBuffer) and only
+ * committed to flash on demand via @ref doFlash(). The allocation table is accessed
+ * directly in flash for reads. Writes stage the full table page into @ref ramBuffer
+ * before committing via IAP. If @ref autoAddPage is @c true,
+ * a new physical flash page is allocated automatically when a write
  * targets an unmapped virtual page. Otherwise, pages must be pre-allocated
  * with @ref addRange() before writing.<br>
  * Physical flash layout of the managed memory region:
@@ -34,7 +36,7 @@
  *   Offset FLASH_PAGE_SIZE: first usable data page
  * @endcode
  *
- * @note The physical start address of the managed region is @code FLASH_BASE_ADDRESS + flashBase @endcode.
+ * @note The physical start address of the managed region is @code FLASH_BASE_ADDRESS + allocationTablePtr @endcode.
  * @note One flash page is @c FLASH_PAGE_SIZE (256) bytes on supported targets.
  *
  * @warning The first flash page of the managed region is reserved for the <em>allocation
@@ -292,9 +294,9 @@ private:
     /**
      * @brief Allocates the next available physical flash page for a virtual page.
      *
-     * Scans @ref allocTable to determine @ref lastAllocated (the highest physical page in use),
+     * Scans the allocation table to determine @ref lastAllocated (the highest physical page in use),
      * then assigns the following physical page to @p virtPage, records it in the allocation table,
-     * zeroes @ref writeBuf, and sets @ref writePage to the new page.
+     * zeroes @ref ramBuffer, and sets @ref writePage to the new page.
      *
      * @param virtPage Virtual page index
      * @return @ref Error::Success on success, @ref Error::OutOfMemory if the managed flash region is exhausted.
@@ -334,42 +336,44 @@ private:
     Error setUIntX(uint32_t virtAddress, uint32_t length, uint32_t data);
 
     /**
-     * Pointer to the start of the managed flash region.
+     * Pointer to the start of the managed flash region starting with the allocation table.
      * @note Allocation table is located at offset 0
-     * @note Usable data starts from offset @c FLASH_PAGE_SIZE
+     * @note Usable data starts from offset @code allocationTablePtr + allocTableSize @endcode
      * */
-    uint8_t* flashBase;
-    uint32_t flashBasePage;  ///< Physical page number of @ref flashBase which holds the allocation table.
-    uint32_t flashSize;      ///< Total size of the managed flash region in bytes.
-    uint32_t flashSizePages; ///< Total size of the managed region in pages (@ref flashSize / @c FLASH_PAGE_SIZE).
-    bool autoAddPage;        ///< When @c true, unmapped virtual pages are allocated automatically on write.
+    const uint8_t* allocationTablePtr;
+    /**
+     * @brief Physical page number of @ref allocationTablePtr which holds the allocation table.
+     */
+    const uint32_t allocationTablePageNumber;
+    const uint32_t flashSize;      ///< Total size of the managed flash region in bytes.
+    const uint32_t flashSizePages; ///< Total size of the managed region in pages (@ref flashSize / @c FLASH_PAGE_SIZE).
+    const bool autoAddPage;        ///< When @c true, unmapped virtual pages are allocated automatically on write.
 
     static constexpr uint8_t InvalidAllocTableByte = 0xff; ///< Raw flash byte representing an unallocated entry.
 
-    /**
-     * @brief RAM copy of the allocation table.
-     *
-     * Each byte stores a physical page number XOR-inverted (raw = value ^ 0xff).
-     * 0xff raw means unallocated.
-     */
-    alignas(FLASH_RAM_BUFFER_ALIGNMENT) uint8_t allocTable[FLASH_PAGE_SIZE];
+    /** @brief Number of entries in the allocation table (one per virtual page). */
+    static constexpr uint32_t allocTableSize = FLASH_PAGE_SIZE;
 
-    /** @brief Number of entries in the @ref allocTable. */
-    static constexpr uint32_t allocTableSize = sizeof(allocTable)/sizeof(allocTable[0]);
+    /** @brief RAM write buffer for the currently active flash page. */
+    alignas(FLASH_RAM_BUFFER_ALIGNMENT) mutable uint8_t ramBuffer[FLASH_PAGE_SIZE];
 
-    /** @brief RAM write buffer for the currently active flash data page. */
-    alignas(FLASH_RAM_BUFFER_ALIGNMENT) mutable uint8_t writeBuf[FLASH_PAGE_SIZE];
-    static constexpr uint32_t writeBufSize = sizeof(writeBuf)/sizeof(writeBuf[0]); ///< Size of @ref writeBuf in bytes.
+    /** @brief Size of @ref ramBuffer in bytes. */
+    static constexpr uint32_t ramBufferSize = sizeof(ramBuffer)/sizeof(ramBuffer[0]);
 
-    mutable uint32_t writePage; ///< Physical page number of the flash page currently loaded in @ref writeBuf.
+    static_assert(allocTableSize <= ramBufferSize, "Allocation table must fit in RAM write buffer");
+
+    mutable uint32_t writePage; ///< Physical page number loaded in @ref ramBuffer (@ref allocationTablePageNumber = alloc table, 0 = empty).
     uint32_t lastAllocated;     ///< Physical page number of the last allocated flash page (0 if none allocated yet).
     uint32_t endianess;         ///< Byte order for multi-byte accessors: @c BIG_ENDIAN or @c LITTLE_ENDIAN.
 
-    mutable bool flashMemModified;   ///< @c true when @ref writeBuf contains changes not yet committed to flash.
-    mutable bool allocTableModified; ///< @c true when @ref allocTable contains changes not yet committed to flash.
+    mutable bool flashMemModified;   ///< @c true when @ref ramBuffer holds a modified data page not yet committed to flash.
+    mutable bool allocTableModified; ///< @c true when @ref ramBuffer holds a modified allocation table not yet committed to flash.
 
     /**
      * @brief Writes the allocation table to flash if it has been modified.
+     *
+     * Flushes any pending data page first, then writes @ref ramBuffer
+     * (which holds the modified allocation table) to @ref allocationTablePageNumber.
      * @return @c true if the table was written, @c false otherwise.
      */
     bool doFlashAllocTable() const;
@@ -390,55 +394,49 @@ private:
     static void writeToFlashPage(const uint8_t* buffer, uint32_t pageNumber) ;
 
     /**
-     * @brief Resets the in-RAM allocation table to unallocated.
+     * @brief Resets the allocation table to unallocated.
      *
-     * Fills @ref allocTable with @ref InvalidAllocTableByte and marks it as
-     * modified so it will be committed on the next @ref doFlash().
+     * Copies the allocation table from flash into @ref ramBuffer, fills it with
+     * @ref InvalidAllocTableByte, and marks @ref allocTableModified so the
+     * updated table is committed on the next @ref doFlash().
      */
-    void clearAllocTable();
+    void clearAllocTable() const;
 
     /**
-     * @brief Copies the allocation table from flash into the RAM buffer.
+     * @brief Verifies the allocation table in flash and resets it if corrupted.
      *
-     * Reads @c FLASH_PAGE_SIZE bytes from the flash allocation table page into
-     * @ref allocTable and clears @ref allocTableModified.
+     * Reads directly from flash. Scans for raw zero bytes (which would represent
+     * physical page 0xff, an unlikely valid value). Finding more than one such
+     * byte is treated as table corruption (e.g. from a partial flash erase),
+     * and @ref clearAllocTable() is called to recover.
+     *
+     * @note A more thorough check should verify that no physical page number appears more than once in the table.
      */
-    void loadAllocTable();
+    void verifyAllocTable() const;
 
     /**
-     * @brief Writes a single entry to the in-RAM allocation table.
+     * @brief Writes a single entry to the allocation table.
      *
-     * Stores the value XOR-inverted (value ^ 0xff) to match the raw flash
-     * representation where 0xff means "unallocated". Sets @ref allocTableModified
-     * if the stored value actually changes.
+     * Copies the allocation table from flash into @ref ramBuffer (if not already
+     * loaded), modifies the entry XOR-inverted (value ^ 0xff) to match the raw
+     * flash representation where 0xff means "unallocated", and sets
+     * @ref allocTableModified if the value actually changes.
      *
      * @param index Entry index equal to the virtual page number.
      * @param value Physical flash page number to store.
      */
-    void writeAllocTableEntry(uint8_t index, uint8_t value);
+    void writeAllocTableEntry(uint8_t index, uint8_t value) const;
 
     /**
-     * @brief Reads a single entry from the in-RAM allocation table.
+     * @brief Reads a single entry from the allocation table directly in flash.
      *
-     * Returns the XOR-inverted raw byte, yielding 0 for an unallocated entry
-     * and the physical page number for an allocated one.
+     * Returns the XOR-inverted raw flash byte, yielding 0 for an unallocated
+     * entry and the physical page number for an allocated one.
      *
      * @param index Entry index equal to the virtual page number.
      * @return Physical flash page number, or @c 0 if the entry is unallocated.
      */
     uint8_t readAllocTableEntry(uint8_t index) const;
-
-    /**
-     * @brief Checks the allocation table for corruption and resets it if corrupted.
-     *
-     * Scans @ref allocTable for raw zero bytes (which would represent the
-     * physical page number 0xff — an unlikely valid value). Finding more than
-     * one such byte is treated as a sign of table corruption (e.g. caused by a
-     * partial flash erase), and @ref clearAllocTable() is called to recover.
-     *
-     * @note A more thorough check should verify that no physical page number appears more than once in the table.
-     */
-    void verifyAllocTable();
 
     /**
      * @brief Returns the byte offset within a page from a virtual address.
