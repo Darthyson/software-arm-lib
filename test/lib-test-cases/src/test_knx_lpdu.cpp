@@ -155,6 +155,35 @@ TEST_CASE("LPDU initialization","[SBLIB][KNX][LPDU]")
     REQUIRE(testTelegram[0] ==  0xbc);
 }
 
+TEST_CASE("LPDU setting of sender address","[SBLIB][KNX][LPDU]")
+{
+    const uint16_t addr = 0x1234;
+    uint8_t testTelegram[24];
+
+    SECTION("standard frame")
+    {
+        memset(testTelegram, 0, sizeof(testTelegram) / sizeof(testTelegram[0]));
+        initLpdu(testTelegram, PRIORITY_LOW, false, FRAME_STANDARD);
+        setSenderAddress(testTelegram, addr);
+        REQUIRE(testTelegram[1] == 0x12);
+        REQUIRE(testTelegram[2] == 0x34);
+        REQUIRE(testTelegram[3] == 0x00);
+        REQUIRE(senderAddress(testTelegram) == addr);
+    }
+
+    SECTION("extended frame")
+    {
+        memset(testTelegram, 0, sizeof(testTelegram) / sizeof(testTelegram[0]));
+        initLpdu(testTelegram, PRIORITY_LOW, false, FRAME_EXTENDED);
+        setSenderAddress(testTelegram, addr);
+        // byte 1 holds the extended control field, which shifts the sender address by one byte
+        REQUIRE(testTelegram[1] == 0x00);
+        REQUIRE(testTelegram[2] == 0x12);
+        REQUIRE(testTelegram[3] == 0x34);
+        REQUIRE(testTelegram[4] == 0x00);
+    }
+}
+
 TEST_CASE("KNX physical address parsing","[SBLIB][KNX][LPDU]")
 {
     // Test default KNX address

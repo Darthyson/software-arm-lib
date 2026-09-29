@@ -9,7 +9,11 @@
 
 #include <cstdint>
 
-constexpr uint16_t TelegramBufferSize = 23; //!> TL4, Tx/Rx KNX telegram buffer size in bytes to allocate
+/**
+ * TL4, Tx/Rx KNX telegram buffer size in bytes to allocate. Holds any standard frame including the checksum.
+ * An extended frame needs 9 bytes plus its APDU length, e.g. 64 bytes for an APDU of 55 bytes.
+ */
+constexpr uint16_t TelegramBufferSize = 23;
 
 /**
  * BCU status bits for @ref status()

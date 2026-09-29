@@ -10,6 +10,7 @@ set(SBLIB_LIB_TEST_CASES_SRC
         src/prot_parameter.cpp
         src/prot_physical_address.cpp
         src/test_bootloader_commands.cpp
+        src/test_bus_frame_types.cpp
         src/test_datapoint_types.cpp
         src/test_digital_pin.cpp
         src/test_eeprom.cpp
@@ -17,6 +18,7 @@ set(SBLIB_LIB_TEST_CASES_SRC
         src/test_ioports.cpp
         src/test_ioports_get_pin_function_number.cpp
         src/test_knx_lpdu.cpp
+        src/test_knx_npdu.cpp
         src/test_mem_mapper.cpp
         src/test_platform.cpp
         src/test_print.cpp

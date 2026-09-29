@@ -152,6 +152,7 @@ set(SBLIB_KNX_SRC
         src/eib/com_objects_debug.cpp
         src/eib/datapoint_types.cpp
         src/eib/knx_lpdu.cpp
+        src/eib/knx_npdu.cpp
         src/eib/hardware_descriptor.cpp
         src/eib/knx_tlayer4.cpp
         src/eib/mask0701.cpp

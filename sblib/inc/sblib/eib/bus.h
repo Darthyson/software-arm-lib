@@ -38,9 +38,13 @@ public:
      * @param aCaptureChannel - the timer capture channel of rxPin, e.g. CAP0
      * @param aPwmChannel     - the timer match channel of txPin, e.g. MAT0
      * @param aCallback       - Callback class to inform bcu of events, e.g. telegram sending finished
+     * @param aTelegramBufferSize - Size of the receive buffers @ref telegram and @ref rx_telegram in bytes,
+     *                              including the checksum. The default holds any standard frame, extended frames
+     *                              need a larger buffer, see @ref TelegramBufferSize.
      */
     Bus(AddrTables* addrTable, Timer& aTimer, const uint32_t& aRxPin, const uint32_t& aTxPin,
-        const TimerCapture& aCaptureChannel, const TimerMatch& aPwmChannel, CallbackBus* aCallback);
+        const TimerCapture& aCaptureChannel, const TimerMatch& aPwmChannel, CallbackBus* aCallback,
+        uint16_t aTelegramBufferSize = TelegramBufferSize);
 
     /**
      * Begin using the bus.
@@ -147,12 +151,12 @@ public:
      * The received telegram.
      * The higher layer process should not change the telegram data in the buffer!
      */
-    uint8_t* telegram = new uint8_t[TelegramBufferSize]{};
+    uint8_t* telegram;
 
     /**
       * The total length of the received telegram in telegram[].
       */
-    volatile uint8_t telegramLen = 0;
+    volatile uint16_t telegramLen = 0;
 
 private:
     /**
@@ -260,7 +264,8 @@ private:
     uint16_t currentByte = 0;        //!< The current byte that is received/sent, including the parity bit
     uint16_t sendTelegramLen = 0;    //!< The size of the to be sent telegram in bytes (including the checksum).
     uint8_t* sendCurTelegram = nullptr; //!< The telegram that is currently being sent.
-    uint8_t* rx_telegram = new uint8_t[TelegramBufferSize]{}; //!< Telegram buffer for the L1/L2 receiving process
+    const uint16_t rxBufferSize;     //!< Size of @ref telegram and @ref rx_telegram in bytes
+    uint8_t* rx_telegram;            //!< Telegram buffer for the L1/L2 receiving process
     uint16_t bitMask = 0;            //!< Bit mask for the current byte
     uint32_t bitTime = 0;            //!< The bit-time within a byte when receiving
     bool parity = false;             //!< Parity bit of the current byte

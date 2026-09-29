@@ -22,6 +22,8 @@
 #ifndef SBLIB_KNX_NPDU_H_
 #define SBLIB_KNX_NPDU_H_
 
+#include <cstdint>
+
 #define NPDU_CONTROL_BYTE   (5)
 
 enum NPDU
@@ -36,15 +38,15 @@ enum Hop_count_type {};
 
 /**
  * Get the size of a telegram, including the protocol header but excluding
- * the checksum byte. The size is calculated by getting the length from byte 5 of the
- * telegram and adding 7 for the protocol overhead.
+ * the checksum byte.
+ * @details A standard frame holds the length in the low nibble of byte 5 and has 7 bytes protocol overhead,
+ *          an extended frame holds the length in byte 6 and has 8 bytes protocol overhead.
  *
- * @param tel - the telegram to get the size
+ * @param telegram Pointer to the telegram buffer
  *
  * @return The size of the telegram, excluding the checksum byte.
  */
-#define telegramSize(tel) (7 + (tel[5] & 15)) //FIXME telegramSize accesses tel[5] without any check
-
+uint16_t telegramSize(const uint8_t* telegram); //FIXME telegramSize accesses telegram[5] or telegram[6] without any check
 
 #endif /* SBLIB_KNX_NPDU_H_ */
 /** @}*/

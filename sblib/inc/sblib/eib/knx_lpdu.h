@@ -101,6 +101,7 @@ void setPriority(uint8_t* telegram, KNXPriority newPriority);
 
 /**
  * Get the sender address from a telegram
+ * @note Handles standard frames only.
  * @param telegram Pointer to the telegram buffer
  * @return The sender's physical address
  */
@@ -108,6 +109,8 @@ uint16_t senderAddress(const uint8_t* telegram);
 
 /**
  * Set the sender address in a telegram
+ * @details The extended control field of an extended frame shifts the address by one byte.
+ *          Set the frame type before, e.g. with @ref initLpdu.
  * @param telegram Pointer to the telegram buffer
  * @param newSenderAddress The sender's physical address to set
  */
@@ -115,6 +118,7 @@ void setSenderAddress(uint8_t* telegram, uint16_t newSenderAddress);
 
 /**
  * Get the destination address from a telegram
+ * @note Handles standard frames only.
  * @param telegram Pointer to the telegram buffer
  * @return The destination address (physical or group)
  */
@@ -122,6 +126,7 @@ uint16_t destinationAddress(const uint8_t* telegram);
 
 /**
  * Set the destination address in a telegram
+ * @note Handles standard frames only.
  * @param telegram Pointer to the telegram buffer
  * @param newDestinationAddress The destination address to set
  */

@@ -23,8 +23,10 @@
 
 // constructor for Bus object. Initialize basic interface parameter to bus and set SM to IDLE
 Bus::Bus(AddrTables* addrTable, Timer& aTimer, const uint32_t& aRxPin, const uint32_t& aTxPin,
-         const TimerCapture& aCaptureChannel, const TimerMatch& aPwmChannel, CallbackBus* aCallback)
+         const TimerCapture& aCaptureChannel, const TimerMatch& aPwmChannel, CallbackBus* aCallback,
+         const uint16_t aTelegramBufferSize)
     :
+    telegram(new uint8_t[aTelegramBufferSize]{}),
     addressTable(addrTable),
     timer(aTimer),
     rxPin(aRxPin),
@@ -33,7 +35,9 @@ Bus::Bus(AddrTables* addrTable, Timer& aTimer, const uint32_t& aRxPin, const uin
     pwmChannel(aPwmChannel),
     timeChannel(static_cast<TimerMatch>((pwmChannel + 2) & 3)), // +2 to be compatible to old code during refactoring
     callBack(aCallback),
-    ownAddress(PHY_ADDR_DEFAULT)
+    ownAddress(PHY_ADDR_DEFAULT),
+    rxBufferSize(aTelegramBufferSize),
+    rx_telegram(new uint8_t[aTelegramBufferSize]{})
 {
     setKNX_TX_Pin(txPin);
 }
@@ -356,11 +360,16 @@ void Bus::handleTelegram(const bool valid)
 
     DB_TELEGRAM(
         if (nextByteIndex) {
-            for (int i = 0; i < nextByteIndex; ++i)
+            const uint32_t telBufferSize = sizeof(telBuffer) / sizeof(telBuffer[0]);
+            telLength = nextByteIndex;
+            if (telLength > telBufferSize)
+            {
+                telLength = telBufferSize;
+            }
+            for (uint32_t i = 0; i < telLength; ++i)
             {
                 telBuffer[i] = rx_telegram[i];
             }
-            telLength = nextByteIndex;
             telcollisions = collisions;
         }
     );
@@ -373,11 +382,25 @@ void Bus::handleTelegram(const bool valid)
 
 #ifndef BUSMONITOR // no processing if we are in monitor mode
 
+    const uint8_t layerStatus = callBack->getLayerStatus();
+    const bool transportLayerEnabled = layerStatus & BCU_STATUS_TRANSPORT_LAYER;
+    const bool isDataFrame = (rx_telegram[0] & VALID_ANY_DATA_FRAME_TYPE_MASK) == VALID_ANY_DATA_FRAME_TYPE_VALUE;
+    const bool isExtendedFrame = frameType(rx_telegram) == FRAME_EXTENDED;
+    const bool fitsIntoBuffer = nextByteIndex <= rxBufferSize;
+
+    // The transport layer handles standard frames only. Extended frames are processed only with disabled transport layer
+    // by applications which handle them by themselves (e.g. ft12, knx-if).
+    const bool isSupportedFrameType = !isExtendedFrame || !transportLayerEnabled;
+
+    // telegramSize() excludes the checksum byte
+    //todo give upper layer error info
+    const bool hasValidLength = nextByteIndex == telegramSize(rx_telegram) + 1;
+
     // Received a valid telegram with correct checksum and valid control byte (normal data frame with preamble bits)?
-    //todo extended tel, check tel len, give upper layer error info
-    if (nextByteIndex >= 8 && valid && ((rx_telegram[0] & VALID_DATA_FRAME_TYPE_MASK) == VALID_DATA_FRAME_TYPE_VALUE)
-        && nextByteIndex <= TelegramBufferSize)
+    if (valid && isDataFrame && isSupportedFrameType && hasValidLength && fitsIntoBuffer)
     {
+        // Extended frames get here only with disabled transport layer, which processes every telegram anyway.
+        // So the address check below has to handle standard frames only.
         const int destAddr = (rx_telegram[3] << 8) | rx_telegram[4];
         bool processTel = false;
 
@@ -393,7 +416,7 @@ void Bus::handleTelegram(const bool valid)
         }
 
         // with disabled TL we also process the telegram, so the application (e.g. ft12, knx-if) can handle it completely by itself
-        processTel |= !(callBack->getLayerStatus() & BCU_STATUS_TRANSPORT_LAYER);
+        processTel |= !transportLayerEnabled;
 
         DB_TELEGRAM(telRXNotProcessed = !processTel);
 
@@ -437,7 +460,7 @@ void Bus::handleTelegram(const bool valid)
             }
 
             // LL_ACK only allowed, if link layer is in normal mode, not busmonitor mode
-            auto suppressAck = !(callBack->getLayerStatus() & BCU_STATUS_LINK_LAYER);
+            auto suppressAck = !(layerStatus & BCU_STATUS_LINK_LAYER);
             // LL_ACK only allowed for L_Data frames
             suppressAck |= rx_telegram[0] & SB_TEL_DATA_FRAME_FLAG;
             if (suppressAck)
@@ -805,7 +828,7 @@ STATE_SWITCH:
                 if ((!nextByteIndex) && (currentByte & PREAMBLE_MASK))
                     rx_error |= RX_PREAMBLE_ERROR; // preamble error, continue to read bytes - possibility to discard the telegram at higher layer
 
-                if (nextByteIndex < TelegramBufferSize)
+                if (nextByteIndex < rxBufferSize)
                 {
                     rx_telegram[nextByteIndex++] = currentByte;
                     checksum ^= currentByte;
@@ -1161,7 +1184,8 @@ STATE_SWITCH:
                         nextByteIndex--;
 
                         // Copy all bytes we transmitted without collision over to the receive buffer and update checksum accordingly.
-                        for (auto i = 0; i < nextByteIndex; i++)
+                        // A telegram longer than the receive buffer is rejected in handleTelegram() anyway.
+                        for (auto i = 0; i < nextByteIndex && i < rxBufferSize; i++)
                         {
                             const auto b = sendCurTelegram[i];
                             rx_telegram[i] = b;
@@ -1315,11 +1339,16 @@ STATE_SWITCH:
                 }
                 // dump previous tx-telegram and repeat counter and busy retry
                 DB_TELEGRAM(
-                    for (int i =0; i < sendTelegramLen; i++)
+                    const uint32_t txtelBufferSize = sizeof(txtelBuffer) / sizeof(txtelBuffer[0]);
+                    txtelLength = sendTelegramLen;
+                    if (txtelLength > txtelBufferSize)
+                    {
+                        txtelLength = txtelBufferSize;
+                    }
+                    for (uint32_t i = 0; i < txtelLength; i++)
                     {
                         txtelBuffer[i] = sendCurTelegram[i];
                     }
-                    txtelLength = sendTelegramLen;
                     tx_rep_count = sendRetries;
                     tx_busy_rep_count = sendBusyRetries;
                     tx_telrxerror = tx_error;

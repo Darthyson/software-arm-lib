@@ -27,7 +27,13 @@ class CallbackBcu;
 class BcuBase : public TLayer4
 {
 public:
-    BcuBase(UserRam* userRam, AddrTables* addrTables);
+    /**
+     * @param userRam            The user RAM of the BCU
+     * @param addrTables         The address tables of the BCU
+     * @param telegramBufferSize Size of the bus receive buffers in bytes, including the checksum.
+     *                           Applications passing extended frames need more than the default, see @ref TelegramBufferSize.
+     */
+    BcuBase(UserRam* userRam, AddrTables* addrTables, uint16_t telegramBufferSize = TelegramBufferSize);
     BcuBase() = delete;
 
     Bus* bus;

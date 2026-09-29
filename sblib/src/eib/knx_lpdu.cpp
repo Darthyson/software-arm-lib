@@ -62,6 +62,23 @@ void setPriority(uint8_t* telegram, const KNXPriority newPriority)
     telegram[LPDU_CONTROL_BYTE] = static_cast<uint8_t>(newPriority << 2) | (telegram[LPDU_CONTROL_BYTE] & 0xF3);
 }
 
+/**
+ * Get the offset of the address fields in a telegram
+ * @details An extended frame carries the extended control field in byte 1,
+ *          which shifts the address fields by one byte.
+ * @param telegram Pointer to the telegram buffer
+ * @return 0 for a standard frame, 1 for an extended frame
+ */
+static uint8_t addressOffset(const uint8_t* telegram)
+{
+    if (frameType(telegram) == FRAME_EXTENDED)
+    {
+        return 1;
+    }
+
+    return 0;
+}
+
 uint16_t senderAddress(const uint8_t* telegram)
 {
     return static_cast<uint16_t>(telegram[LPDU_SENDER_HIGH_BYTE] << 8 | telegram[LPDU_SENDER_LOW_BYTE]);
@@ -69,8 +86,9 @@ uint16_t senderAddress(const uint8_t* telegram)
 
 void setSenderAddress(uint8_t* telegram, const uint16_t newSenderAddress)
 {
-    telegram[LPDU_SENDER_HIGH_BYTE] = HIGH_BYTE(newSenderAddress);
-    telegram[LPDU_SENDER_LOW_BYTE] = lowByte(newSenderAddress);
+    const uint8_t offset = addressOffset(telegram);
+    telegram[LPDU_SENDER_HIGH_BYTE + offset] = HIGH_BYTE(newSenderAddress);
+    telegram[LPDU_SENDER_LOW_BYTE + offset] = lowByte(newSenderAddress);
 }
 
 uint16_t destinationAddress(const uint8_t* telegram)
